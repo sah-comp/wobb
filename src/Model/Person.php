@@ -148,6 +148,11 @@ class Model_Person extends Model
      */
     public function update()
     {
+        if ($this->bean->pricing_id) {
+            $this->bean->pricing = R::load('pricing', $this->bean->pricing_id);
+        } else {
+            unset($this->bean->pricing);
+        }
         if ($this->bean->email) {
             $this->addValidator('email', array(
                 new Validator_IsEmail(),

@@ -119,6 +119,24 @@
     <!-- end of grid based data -->
 </fieldset>
 <fieldset>
+    <legend class="verbose"><?php echo I18n::__('person_legend_wobb') ?></legend>
+    <div class="row <?php echo ($record->hasError('pricing_id')) ? 'error' : ''; ?>">
+        <label
+            for="person-pricing">
+            <?php echo I18n::__('person_label_pricing') ?>
+        </label>
+        <select
+            id="person-pricing"
+            name="dialog[pricing_id]">
+            <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing): ?>
+            <option
+                value="<?php echo $_pricing->getId() ?>"
+                <?php echo ($record->pricing_id == $_pricing->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_pricing->name) ?></option>   
+            <?php endforeach ?>
+        </select>
+    </div>
+</fieldset>
+<fieldset>
     <legend class="verbose"><?php echo I18n::__('person_legend_email') ?></legend>
     <div class="row <?php echo ($record->hasError('email')) ? 'error' : ''; ?>">
         <label

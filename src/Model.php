@@ -122,6 +122,21 @@ class Model extends RedBean_SimpleModel
     }
     
     /**
+     * Renders a decimal value nicely.
+     *
+     * @param string $attribute
+     * @param int $decimals defaults to 2
+     * @param string $decimal_point defaults to '.'
+     * @param string $thousands_separator defaults to ','
+     * @return string
+     */
+    public function decimal($attribute, $decimals = 2, $decimal_point = ',', $thousands_separator = '.')
+    {
+        if ( ! $this->bean->{$attribute}) return '';
+        return number_format($this->bean->{$attribute}, $decimals, $decimal_point, $thousands_separator);
+    }
+    
+    /**
      * Returns a localized datetime string.
      *
      * @param string $attribute name to localize

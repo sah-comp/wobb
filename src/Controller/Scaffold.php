@@ -583,7 +583,8 @@ class Controller_Scaffold extends Controller
             'title' => I18n::__("scaffold_head_title_{$this->action}", null, array(
                 I18n::__("domain_{$this->type}")
             )),
-            'language' => Flight::get('language')
+            'language' => Flight::get('language'),
+            'stylesheets' => array('custom', 'default')
         ));
 	}
 }

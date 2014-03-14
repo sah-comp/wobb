@@ -10,3 +10,14 @@
     text-decoration: none;
     margin-right: 2em;
 }
+
+.panel div.info {
+    margin-top: 0.25em;
+    /*margin-left: 30%;*/
+    margin-left: 25.404255317%;
+    margin-bottom: 0;
+    font-size: small;
+    padding-left: 0.5em;
+    color: gray;
+}
+

@@ -223,6 +223,7 @@ Flight::route('(/[a-z]{2})/forbidden', function() {
         'title' => I18n::__('forbidden_head_title')
     ));
 });
+
 /**
  * Show a 404 error page if no route has jumped in yet and the url can not be found in domain beans.
  *
