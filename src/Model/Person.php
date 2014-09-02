@@ -18,6 +18,27 @@
 class Model_Person extends Model
 {
     /**
+     * Constructor.
+     *
+     * Set actions for list views.
+     */
+    public function __construct()
+    {
+        $this->setAction('index', array('idle', 'toggleEnabled', 'expunge'));
+    }
+    
+    /**
+     * Toggle the enabled attribute and store the bean.
+     *
+     * @return void
+     */
+    public function toggleEnabled()
+    {
+        $this->bean->enabled = ! $this->bean->enabled;
+        R::store($this->bean);
+    }
+
+    /**
      * Returns an array with attributes for lists.
      *
      * @param string (optional) $layout
@@ -153,12 +174,14 @@ class Model_Person extends Model
         } else {
             unset($this->bean->pricing);
         }
+        /*
         if ($this->bean->email) {
             $this->addValidator('email', array(
                 new Validator_IsEmail(),
                 new Validator_IsUnique(array('bean' => $this->bean, 'attribute' => 'email'))
             ));
         }
+        */
 		// set the phonetic names
 		$this->bean->phoneticlastname = soundex($this->bean->lastname);
 		$this->bean->phoneticfirstname = soundex($this->bean->firstname);

@@ -18,6 +18,27 @@
 class Model_Domain extends Model
 {
     /**
+     * Constructor.
+     *
+     * Set actions for list views.
+     */
+    public function __construct()
+    {
+        $this->setAction('index', array('idle', 'toggleInvisible', 'expunge'));
+    }
+    
+    /**
+     * Toggle the invisible attribute and store the bean.
+     *
+     * @return void
+     */
+    public function toggleInvisible()
+    {
+        $this->bean->invisible = ! $this->bean->invisible;
+        R::store($this->bean);
+    }
+
+    /**
      * Returns an array with attributes for lists.
      *
      * @param string (optional) $layout
@@ -104,6 +125,8 @@ class Model_Domain extends Model
         );
         //load the contents and push it into our template data
         foreach ($pages as $id => $page) {
+            $template_data = $page->getContent($template_data);
+            /*
             foreach ($page->template->ownRegion as $region_id => $region) {
                 $slices = $page->getSlicesByRegion($region_id, false);
                 foreach ($slices as $slice_id => $slice) {
@@ -124,6 +147,7 @@ class Model_Domain extends Model
                     $template_data[mb_strtolower($region->name)] .= $content;
                 }
             }
+            */
         } 
         return $template_data;       
     }
@@ -170,7 +194,7 @@ class Model_Domain extends Model
     /**
      * Builds a hierarchical menu from an adjancy bean.
      *
-     * @todo get rid of ugly signature
+     * @todo get rid of ugly function signature
      *
      * @param string (optional) $url_prefix as a kind of basehref, e.g. 'http://localhost/s/de'
      * @param string (optional) $lng code of the language to retrieve
@@ -179,7 +203,7 @@ class Model_Domain extends Model
      * @param mixed (optional) $break at which level
      * @param string (optional) $orderclause defaults to 'sequence'
      * @param int (optional) $level the current depth of the hierarchical menu
-     * @return Cinnebar_Menu
+     * @return Menu
      */
     public function hierMenu($url_prefix = '', $lng = null, $invisible = false, 
                             $attr = 'url', $break = null, $order = 'sequence ASC', $level = 0)

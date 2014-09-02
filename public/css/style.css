@@ -509,8 +509,22 @@ article.main > p {
 }
 
 /* Main navigation */
-body > header > nav {
+
+body > header,
+header#header-toolbar {
     background-color: rgb(254, 254, 254);
+}
+
+body > header {
+    z-index: 1000000;
+}
+
+header#header-toolbar.scroll-to-fixed-fixed {
+    border-bottom: 1px solid silver;
+}
+
+body > header > nav {
+    /*background-color: rgb(254, 254, 254);*/
 }
 
 body > header > h1 {
@@ -730,6 +744,14 @@ fieldset {
     margin-bottom: 0.5em;
 }
 
+fieldset.tab > fieldset {
+    border-bottom: 1px dotted gray;
+}
+
+fieldset.tab > fieldset:last-child {
+    border-bottom: none;
+}
+
 legend {
     font-family: 'Georgia', serif;
     margin-bottom: 0.25em;
@@ -741,6 +763,7 @@ label {
     display: inline-block;
     font-weight: bold;
     margin-bottom: 0.25em;
+    color: rgb(0, 128, 212);
 }
 
 input[type=text],
@@ -791,7 +814,8 @@ textarea {
     margin-bottom: 0;
 }
 
-.panel .container {
+.panel .container,
+.panel .item {
     position: relative;
 }
 
@@ -799,7 +823,7 @@ textarea {
     position: relative;
     border-bottom: 1px solid gray;
     margin-bottom: 1em;
-    height: 1.5em;
+    height: 29px;
 }
 
 ul.tab-navigation {
@@ -819,7 +843,9 @@ ul.tab-navigation a {
     text-decoration: none;
     border: 1px solid gray;
     color: inherit;
-    padding: 0.222em 1em;
+    padding: 1px 25px;
+    display: inline-block;
+    margin-top: -12px;
 }
 
 ul.tab-navigation a.selected {
@@ -1218,6 +1244,7 @@ input[type=submit].danger {
     margin-left: -0.5em;
     padding-left: 1em;
     margin-bottom: 1em;
+    min-height: 1em;
 }
 .slice-container.active {
     border-left: 1px solid red;

@@ -24,6 +24,15 @@
 class Controller_Scaffold extends Controller
 {
     /**
+     * Container for javascripts to load.
+     *
+     * @var array
+     */
+    public $javascripts = array(
+        '/js/jquery.mjs.nestedSortable'
+    );
+
+    /**
      * Holds the base url.
      *
      * @var string
@@ -246,7 +255,7 @@ class Controller_Scaffold extends Controller
                 $attributes = array(
                     'name' => 'id',
                     'sort' => array(
-                        'name' => $this->bean->getMeta('type').'.name'
+                        'name' => $this->record->getMeta('type').'.name'
                     ),
                     'filter' => array(
                         'tag' => 'number'
@@ -584,7 +593,8 @@ class Controller_Scaffold extends Controller
                 I18n::__("domain_{$this->type}")
             )),
             'language' => Flight::get('language'),
-            'stylesheets' => array('custom', 'default')
+            'stylesheets' => array('custom', 'default'),
+            'javascripts' => $this->javascripts
         ));
 	}
 }
