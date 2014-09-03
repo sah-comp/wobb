@@ -45,7 +45,7 @@
         </label>
     </div>
 </fieldset>
-<fieldset>
+<fieldset class="tab">
     <legend class="verbose"><?php echo I18n::__('pricing_legend') ?></legend>
     <!-- grid based header -->
     <div class="row nomargins">
@@ -78,65 +78,21 @@
     </div>
     <!-- end of grid based header -->
     <!-- grid based data -->
+    <div
+        id="pricing-<?php echo $record->getId() ?>-margin-container"
+        class="container attachable detachable sortable">
     <?php $_margins = $record->with(' ORDER BY kind DESC, lo')->ownMargin ?>
-    <?php $_margins[] = R::dispense('margin') ?>
-    <?php $_i = 0 ?>
-    <?php foreach ($_margins as $_id => $_margin): ?>
-        <?php $_i++  ?>
-    <div class="row">
-        <div class="span3">&nbsp;</div>
-        <div class="span2">
-            <input type="hidden" name="dialog[ownMargin][<?php echo $_i ?>][type]" value="<?php echo $_margin->getMeta('type') ?>" />
-            <input type="hidden" name="dialog[ownMargin][<?php echo $_i ?>][id]" value="<?php echo $_margin->getId() ?>" />
-            <select
-                id="pricing-margin-<?php echo $_i ?>-kind"
-                name="dialog[ownMargin][<?php echo $_i ?>][kind]">
-                <option value=""><?php echo I18n::__('margin_label_select') ?></option>
-                <?php foreach (array('weight', 'mfa', 'mfasub') as $_kind): ?>
-                <option
-                    value="<?php echo $_kind ?>"
-                    <?php echo ($_margin->kind == $_kind) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars(I18n::__('margin_label_'.$_kind)) ?></option>   
-                <?php endforeach ?>
-            </select>
-        </div>
-        <div class="span2">
-            <input
-                id="pricing-margin-<?php echo $_i ?>-lo"
-                class="autowidth"
-                type="text"
-                name="dialog[ownMargin][<?php echo $_i ?>][lo]"
-                value="<?php echo htmlspecialchars($_margin->decimal('lo')) ?>" />
-        </div>
-        <div class="span2">
-            <input
-                id="pricing-margin-<?php echo $_i ?>-hi"
-                class="autowidth"
-                type="text"
-                name="dialog[ownMargin][<?php echo $_i ?>][hi]"
-                value="<?php echo htmlspecialchars($_margin->decimal('hi')) ?>" />
-        </div>
-        <div class="span2">
-            <select
-                id="pricing-margin-<?php echo $_i ?>-op"
-                name="dialog[ownMargin][<?php echo $_i ?>][op]">
-                <option value=""><?php echo I18n::__('margin_label_select') ?></option>
-                <?php foreach (array('-', '+', '=') as $_op): ?>
-                <option
-                    value="<?php echo $_op ?>"
-                    <?php echo ($_margin->op == $_op) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars(I18n::__('margin_label_'.$_op)) ?></option>   
-                <?php endforeach ?>
-            </select>
-        </div>
-        <div class="span1">
-            <input
-                id="pricing-margin-<?php echo $_i ?>-value"
-                class="autowidth"
-                type="text"
-                name="dialog[ownMargin][<?php echo $_i ?>][value]"
-                value="<?php echo htmlspecialchars($_margin->decimal('value')) ?>" />
-        </div>
-    </div>
+    <?php if (count($_margins) == 0) $_margins[] = R::dispense('margin') ?>
+    <?php $index = 0 ?>
+    <?php foreach ($_margins as $_margin_id => $_margin): ?>
+        <?php $index++  ?>
+        <?php Flight::render('model/pricing/own/margin', array(
+            'record' => $record,
+            '_margin' => $_margin,
+            'index' => $index
+        )) ?>
     <?php endforeach ?>
+    </div>
     <!-- end of grid based data -->
 </fieldset>
 <!-- end of pricing edit form -->
