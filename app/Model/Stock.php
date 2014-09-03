@@ -65,7 +65,7 @@ class Model_Stock extends Model
                 ),
                 'class' => 'number',
                 'filter' => array(
-                    'tag' => 'text'
+                    'tag' => 'number'
                 )
             ),
             array(
@@ -106,7 +106,7 @@ class Model_Stock extends Model
             array(
                 'name' => 'damage1',
                 'sort' => array(
-                    'name' => 'name'
+                    'name' => 'damage1'
                 ),
                 'filter' => array(
                     'tag' => 'text'
@@ -115,7 +115,7 @@ class Model_Stock extends Model
             array(
                 'name' => 'damage2',
                 'sort' => array(
-                    'name' => 'name'
+                    'name' => 'damage2'
                 ),
                 'filter' => array(
                     'tag' => 'text'
