@@ -79,6 +79,17 @@ class Model_Csbformat extends Model
     }
     
     /**
+     * Return the buyer code from a line of csb file.
+     *
+     * @param string $line from a CSB file
+     * @return string
+     */
+    public function getBuyerFromCSB($line = '')
+    {
+        return substr($line, 20, 2);
+    }
+    
+    /**
      * Returns a double from a german number.
      *
      * @return string
