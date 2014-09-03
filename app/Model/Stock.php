@@ -159,6 +159,9 @@ class Model_Stock extends Model
         $this->addConverter('speck', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('tare', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('name', array(
             new Validator_HasValue()
         ));
