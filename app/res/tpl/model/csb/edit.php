@@ -40,7 +40,7 @@
             id="csb-pubdate"
             type="date"
             name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->localizedDate('pubdate')) ?>"
+            value="<?php echo htmlspecialchars($record->pubdate) ?>"
             required="required" />
         <p class="info"><?php echo I18n::__('csb_info_pubdate') ?></p>
     </div>

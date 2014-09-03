@@ -36,7 +36,7 @@
             id="stock-pubdate"
             type="date"
             name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->localizedDate('pubdate')) ?>"
+            value="<?php echo htmlspecialchars($record->pubdate) ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('name')) ? 'error' : ''; ?>">
