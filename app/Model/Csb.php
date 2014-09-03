@@ -264,19 +264,12 @@ SQL;
         $this->bean->ownStock = array();
         while ( !feof($fh) ) {
             $line = fgets($fh, 4096);
+            if ($this->bean->csbformat->getBuyerFromCSB($line) != $this->bean->company->buyer) continue;
             $stock = R::dispense('stock');
             $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
-            if ($stock->buyer != $this->bean->company->buyer) continue;
-            try {
-                //R::store($stock);
-                $this->bean->ownStock[] = $stock;
-                $this->bean->piggery++;
-            } catch (Exception $e) {
-                //error_log($e);
-                //return false;
-            }
-            
+            $this->bean->ownStock[] = $stock;
+            $this->bean->piggery++;
         }
         fclose($fh);
         Flight::get('user')->notify(I18n::__('csb_already_imported', null, array($this->bean->piggery)));
