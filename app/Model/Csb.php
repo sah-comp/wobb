@@ -249,12 +249,14 @@ SQL;
         } else {
             unset($this->bean->csbformat);
         }
-        parent::update();
         $this->bean->imported = $this->import();
+        parent::update();
     }
     
     /**
      * Reads the file and tries to import stock from the given file.
+     *
+     * @todo Implement a test on imported. Already imported CSB file have to be rejected
      */
     public function import()
     {

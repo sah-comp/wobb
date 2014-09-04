@@ -65,6 +65,7 @@ class Model_Csbformat extends Model
             'buyer' => substr($line, 20, 2),
             'pubdate' => $this->makeDateFromCSBDate(substr($line, 3, 8)),
             'name' => (int)trim(substr($line, 12, 7)),
+            'supplier' => trim(substr($line, 22, 2)),
             'earmark' => trim(substr($line, 22, 6)),
             'quality' => trim(substr($line, 33, 1)),
             'weight' => trim($this->makeFloatFromCSBFloat(substr($line, 55, 6))),

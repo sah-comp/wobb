@@ -43,10 +43,19 @@ class Model_Stock extends Model
                     'name' => 'pubdate'
                 ),
                 'callback' => array(
-                    'name' => 'localizedDateTime'
+                    'name' => 'localizedDate'
                 ),
                 'filter' => array(
-                    'tag' => 'datetime'
+                    'tag' => 'date'
+                )
+            ),
+            array(
+                'name' => 'supplier',
+                'sort' => array(
+                    'name' => 'supplier'
+                ),
+                'filter' => array(
+                    'tag' => 'text'
                 )
             ),
             array(

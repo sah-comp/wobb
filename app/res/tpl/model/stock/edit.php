@@ -51,6 +51,18 @@
             value="<?php echo htmlspecialchars($record->name) ?>"
             required="required" />
     </div>
+    <div class="row <?php echo ($record->hasError('supplier')) ? 'error' : ''; ?>">
+        <label
+            for="stock-supplier">
+            <?php echo I18n::__('stock_label_supplier') ?>
+        </label>
+        <input
+            id="stock-supplier"
+            type="text"
+            name="dialog[supplier]"
+            value="<?php echo htmlspecialchars($record->supplier) ?>"
+            required="required" />
+    </div>
     <div class="row <?php echo ($record->hasError('earmark')) ? 'error' : ''; ?>">
         <label
             for="stock-earmark">
