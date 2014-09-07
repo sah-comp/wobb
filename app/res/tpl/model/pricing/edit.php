@@ -48,7 +48,7 @@
 <fieldset class="tab">
     <legend class="verbose"><?php echo I18n::__('pricing_legend') ?></legend>
     <!-- grid based header -->
-    <div class="row nomargins">
+    <div class="row">
         <div class="span3">&nbsp;</div>
         <div class="span2">
             <label>

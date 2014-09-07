@@ -96,7 +96,7 @@ class Model_Stock extends Model
                 ),
                 'class' => 'number',
                 'filter' => array(
-                    'tag' => 'text'
+                    'tag' => 'number'
                 )
             ),
             array(
@@ -109,7 +109,7 @@ class Model_Stock extends Model
                 ),
                 'class' => 'number',
                 'filter' => array(
-                    'tag' => 'text'
+                    'tag' => 'number'
                 )
             ),
             array(
@@ -152,9 +152,6 @@ class Model_Stock extends Model
     {
         $this->addConverter('pubdate', array(
             new Converter_MysqlDate()
-        ));
-        $this->addConverter('weight', array(
-            new Converter_Decimal()
         ));
         $this->addConverter('weight', array(
             new Converter_Decimal()

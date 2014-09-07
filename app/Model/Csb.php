@@ -71,6 +71,19 @@ class Model_Csb extends Model
                 )
             ),
             array(
+                'name' => 'baseprice',
+                'sort' => array(
+                    'name' => 'baseprice'
+                ),
+                'callback' => array(
+                    'name' => 'decimal'
+                ),
+                'class' => 'number',
+                'filter' => array(
+                    'tag' => 'number'
+                )
+            ),
+            array(
                 'name' => 'csbformat_id',
                 'sort' => array(
                     'name' => 'csbformat.name'
@@ -99,18 +112,6 @@ class Model_Csb extends Model
                 'class' => 'number',
                 'filter' => array(
                     'tag' => 'number'
-                )
-            ),
-            array(
-                'name' => 'imported',
-                'sort' => array(
-                    'name' => 'csb.imported'
-                ),
-                'callback' => array(
-                    'name' => 'boolean'
-                ),
-                'filter' => array(
-                    'tag' => 'bool'
                 )
             )
         );
@@ -194,11 +195,13 @@ SQL;
     public function dispense()
     {
         $this->bean->piggery = 0;
-        $this->bean->imported = false;
         $this->bean->pubdate = date('Y-m-d');
         $this->addConverter('pubdate',
             new Converter_Mysqldate()
         );
+        $this->addConverter('baseprice', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('pubdate', array(
             new Validator_HasValue()
         ));
@@ -219,8 +222,8 @@ SQL;
     {
         $files = reset(Flight::request()->files);
         $file = reset($files);
-        if ($this->bean->getId() && (empty($file) || $file['error'] == 4)) {
-            
+        if ($this->bean->getId() || (empty($file) || $file['error'] == 4)) {
+            // do not handle the file a second time
         }
         else
         {
@@ -249,7 +252,6 @@ SQL;
         } else {
             unset($this->bean->csbformat);
         }
-        $this->bean->imported = $this->import();
         parent::update();
     }
     
@@ -258,7 +260,7 @@ SQL;
      *
      * @todo Implement a test on imported. Already imported CSB file have to be rejected
      */
-    public function import()
+    public function importFromCsb()
     {
         $file = Flight::get('upload_dir') . '/' . $this->bean->file;
         if ( ! $fh = fopen($file, "r")) return false;
@@ -276,6 +278,41 @@ SQL;
         fclose($fh);
         Flight::get('user')->notify(I18n::__('csb_already_imported', null, array($this->bean->piggery)));
         return true;
+    }
+    
+    /**
+     * Create deliverer and their subdeliverer beans.
+     */
+    public function makeDeliverer()
+    {
+        $stocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
+        foreach ($stocks as $id => $stock) {
+            // Deliverer owns one or more earmarks of an csb day
+            $deliverer = R::dispense('deliverer');
+            if ( ! $deliverer->person = R::findOne('person', ' nickname = ? LIMIT 1', array($stock['supplier']))) {
+                $p = R::dispense('person');
+                $p->nickname = $stock['supplier'];
+                $deliverer->person = $p;
+            }
+            $deliverer->supplier = $stock['supplier'];
+            $deliverer->earmark = '';
+            $deliverer->piggery = $stock['total'];
+            $deliverer->dprice = $this->bean->baseprice;
+            $deliverer->sprice = $this->bean->baseprice;
+            // Subdeliverer is owned by deliverer bean
+            $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
+            foreach ($substocks as $_sub_id => $substock) {
+                $subdeliverer = R::dispense('deliverer');
+                $subdeliverer->person = $deliverer->person;
+                $subdeliverer->supplier = $substock['supplier'];
+                $subdeliverer->earmark = $substock['earmark'];
+                $subdeliverer->piggery = $substock['total'];
+                $subdeliverer->dprice = $this->bean->baseprice;
+                $subdeliverer->sprice = $this->bean->baseprice;
+                $deliverer->ownDeliverer[] = $subdeliverer;
+            }
+            $this->bean->ownDeliverer[] = $deliverer;
+        }
     }
     
     /**
