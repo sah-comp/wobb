@@ -32,4 +32,26 @@ class Model_Deliverer extends Model
             new Converter_Decimal()
         ));
     }
+    
+    /**
+     * Calculates the prices of all stock that belongs to this deliverer of the given csb bean.
+     *
+     * @param RedBean_OODBBean $csb
+     * @return void
+     */
+    public function calculation($csb)
+    {
+        $stocks = R::find('stock', " csb_id = ? AND earmark = ? ORDER BY weight ", array(
+            $csb->getId(),
+            $this->bean->earmark
+        ));
+        if ( ! $pricing = $this->bean->person->pricing) {
+            throw new Exception(I18n::__('Missing pricing information on deliverer ' . $this->bean->supplier));
+        }
+        foreach ($stocks as $id => $stock) {
+            $stock->calculation($this->bean, $pricing);
+        }
+        R::storeAll($stocks);
+        return null;
+    }
 }

@@ -316,6 +316,21 @@ SQL;
     }
     
     /**
+     * Calculates prices for each stock of this slaughter charge.
+     *
+     * @return void
+     */
+    public function calculation()
+    {
+        foreach ($this->bean->with(" ORDER BY supplier ")->ownDeliverer as $_id => $deliverer) {
+            foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
+                $subdeliverer->calculation($this->bean);
+            }
+        }
+        return null;
+    }
+    
+    /**
      * after_delete.
      *
      * After the bean was deleted from the database, we will also delete the real file.

@@ -122,12 +122,36 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_day_edit_success'));
-                $this->redirect(sprintf('/purchase/day/%d', $this->record->getId()));
+                $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
             }
             catch (Exception $e) {
                 error_log($e);
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('purchase_day_edit_error'), 'error');
+            }
+        }
+        $this->render();
+    }
+    
+    /**
+     * Calculates prices of the current slaughter charge.
+     */
+    public function calculation()
+    {
+        Permission::check(Flight::get('user'), 'purchase', 'edit');
+        $this->layout = 'calculation';
+        if (Flight::request()->method == 'POST') {
+            R::begin();
+            try {
+                $this->record->calculation();
+                R::commit();
+                Flight::get('user')->notify(I18n::__('purchase_calculation_edit_success'));
+                $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_calculation_edit_error'), 'error');
             }
         }
         $this->render();
