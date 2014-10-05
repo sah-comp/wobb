@@ -195,9 +195,13 @@ SQL;
     public function dispense()
     {
         $this->bean->piggery = 0;
+        $this->bean->calcdate = null;
         $this->bean->pubdate = date('Y-m-d');
         $this->addConverter('pubdate',
             new Converter_Mysqldate()
+        );
+        $this->addConverter('calcdate',
+            new Converter_Mysqldatetime()
         );
         $this->addConverter('baseprice', array(
             new Converter_Decimal()
@@ -323,10 +327,28 @@ SQL;
     public function calculation()
     {
         foreach ($this->bean->with(" ORDER BY supplier ")->ownDeliverer as $_id => $deliverer) {
+            $deliverer->totalnet = 0;
+            $deliverer->totalweight = 0;
+            $deliverer->totalmfa = 0;
+            $deliverer->hasmfacount = 0;
+            $deliverer->meanweight = 0;
+            $deliverer->meanmfa = 0;
+            $deliverer->meandprice = 0;
             foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
-                $subdeliverer->calculation($this->bean);
+                $summary = $subdeliverer->calculation($this->bean);
+                // add all up
+                $deliverer->totalnet += $summary['totalnet'];
+                $deliverer->totalweight += $summary['totalweight'];
+                $deliverer->totalmfa += $summary['totalmfa'];
+                $deliverer->hasmfacount += $summary['hasmfacount'];
             }
+            // calculate means
+            $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
+            $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
+            $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
+            $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated
         }
+        $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated
         return null;
     }
     

@@ -150,7 +150,7 @@ class Model_Stock extends Model
      *
      * @param RedBean_OODBBean $deliverer
      * @param RedBean_OODBBean $pricing
-     * @return void
+     * @return array $sum
      */
     public function calculation(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
     {

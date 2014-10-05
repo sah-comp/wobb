@@ -27,6 +27,9 @@
                 <div class="span2 number">
                     <label><?php echo I18n::__('purchase_label_piggery') ?></label>
                 </div>
+                <div class="span7">
+                    <label><?php echo I18n::__('purchase_label_calcdate') ?></label>
+                </div>
             </div>
             
             <?php foreach ($records as $_id => $_record): ?>
@@ -43,6 +46,9 @@
                         </div>
                         <div class="span2 number">
                             <?php echo $_record->piggery ?>
+                        </div>
+                        <div class="span7">
+                            <?php echo htmlspecialchars($_record->localizedDateTime('calcdate')) ?>
                         </div>
                     </div>
                 </a>

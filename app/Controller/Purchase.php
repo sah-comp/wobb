@@ -144,6 +144,7 @@ class Controller_Purchase extends Controller
             R::begin();
             try {
                 $this->record->calculation();
+                R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_calculation_edit_success'));
                 $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
