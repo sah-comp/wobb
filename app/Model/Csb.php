@@ -266,7 +266,7 @@ SQL;
         if ( ! $fh = fopen($file, "r")) return false;
         $this->bean->piggery = 0;
         $this->bean->ownStock = array();
-        while ( !feof($fh) ) {
+        while ( ! feof($fh) ) {
             $line = fgets($fh, 4096);
             if ($this->bean->csbformat->getBuyerFromCSB($line) != $this->bean->company->buyer) continue;
             $stock = R::dispense('stock');

@@ -74,7 +74,7 @@ class Controller_Purchase extends Controller
             //spread data like prices and such
             //if all went well goto /purchase/day/n with given new bean
             //or generate a error notification and stay here
-            Flight::get('user')->notify(I18n::__('purchase_day_select_successful'));
+            Flight::get('user')->notify(I18n::__('purchase_day_select_success'));
         }
         $this->render();
     }
@@ -178,7 +178,7 @@ class Controller_Purchase extends Controller
         Flight::render('html5', array(
             'title' => I18n::__("purchase_head_title"),
             'language' => Flight::get('language'),
-            'stylesheets' => array('custom', 'default'),
+            'stylesheets' => array('custom', 'default', 'tk'),
             'javascripts' => $this->javascripts
         ));
     }

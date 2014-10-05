@@ -55,7 +55,7 @@
                 </div>
                 <div class="row">
                     <div class="span1">
-                        &nbsp;
+                        <span class="fn pday-supplier"><?php echo htmlspecialchars($_deliverer->supplier) ?></span>
                     </div>
                     <div class="span5">
                         <b><?php echo htmlspecialchars($_deliverer->person->name) ?></b>
@@ -140,7 +140,7 @@
                 type="submit"
                 name="submit"
                 accesskey="s"
-                value="<?php echo I18n::__('purchase_submit') ?>" />
+                value="<?php echo I18n::__('purchase_submit_day') ?>" />
         </div>
         <!-- End of Purchase buttons -->
     </form>

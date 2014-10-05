@@ -18,6 +18,133 @@
 class Model_Pricing extends Model
 {
     /**
+     * Calculate the agio and disagio of a stock bean with this pricing.
+     *
+     * @todo I say, it's truly all the same, so implement a loop for weight and mfa
+     *
+     * @param RedBean_OODBBean $stock
+     * @param RedBean_OODBBean $deliverer
+     * @return bool
+     */
+    public function calculate(RedBean_OODBBean $stock, RedBean_OODBBean $deliverer)
+    {
+        $stock->agio = 0;
+        $stock->disagio = 0;
+        $optimalWeightMargin = $this->getOptimalMargin('weight');
+        $mfaMarginKind = 'mfa'; // use mfa kind for mfa margins
+        if ( ($stock->weight >= $optimalWeightMargin->lo AND
+              $stock->weight <= $optimalWeightMargin->hi ) ) {
+            // optimal weight
+        } else if ( $stock->weight < $optimalWeightMargin->lo ) {
+            // underweight
+            $mfaMarginKind = 'mfasub'; // we have a underweight stock, use mfasub
+            $lowerWeights = $this->getLowerMargins('weight', $optimalWeightMargin);
+            foreach ( $lowerWeights as $id => $lowerWeight ) {
+                $this->calculateAgioDisago('weight', $stock, $lowerWeight);
+            }
+        } else if ( $stock->weight > $optimalWeightMargin->hi ) {
+            // overweight
+            $overWeights = $this->getOverMargins('weight', $optimalWeightMargin);
+            foreach ( $overWeights as $id => $overWeight ) {
+                $this->calculateAgioDisago('weight', $stock, $overWeight);
+            }
+        }
+        // calculate mfa margins, using either mfa or mfasub if the stock is underweight
+        $optimalMfaMargin = $this->getOptimalMargin($mfaMarginKind); // can be 'mfa' or 'mfasub'
+        if ( ($stock->mfa >= $optimalMfaMargin->lo AND
+              $stock->mfa <= $optimalMfaMargin->hi ) ) {
+            // optimal mfa
+        } else if ( $stock->mfa < $optimalMfaMargin->lo ) {
+            // mfa lower than optimal
+            $lowerMfas = $this->getLowerMargins($mfaMarginKind, $optimalMfaMargin);
+            foreach ( $lowerMfas as $id => $lowerMfa ) {
+                $this->calculateAgioDisago('mfa', $stock, $lowerMfa);
+            }
+        } else if ( $stock->mfa > $optimalMfaMargin->hi ) {
+            // mfa higher than optimal
+            $overMfas = $this->getOverMargins($mfaMarginKind, $optimalMfaMargin);
+            foreach ( $overMfas as $id => $overMfa ) {
+                $this->calculateAgioDisago('mfa', $stock, $overMfa);
+            }
+        }      
+        return true;
+    }
+    
+    /**
+     * Calculates a difference and adjusts agio and disagion of the given stock.
+     *
+     * @param string $field must be either 'weight' or 'mfa'
+     * @param RedBean_OODBBean $stock
+     * @param RedBean_OODBBean $margin
+     * @return float
+     */
+    public function calculateAgioDisago($field = 'mfa', RedBean_OODBBean $stock, RedBean_OODBBean $margin)
+    {
+        $diff = 0;        
+        if ( $margin->op == '-') {
+            
+            if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = ( $margin->hi - $stock->$field);
+            }
+            else if ( $stock->$field <= $margin->lo ) {
+                $diff = ( $margin->hi - $margin->lo );
+            }
+            $stock->disagio += $diff * $margin->value;
+        }
+        elseif ( $margin->op == '+') {
+            
+            if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = ( $stock->$field - $margin->lo);
+            }
+            else if ( $stock->$field >= $margin->hi ) {
+                $diff = ( $margin->hi - $margin->lo );
+            }
+            $stock->agio += $diff * $margin->value;
+        }
+        return (float)$diff;
+    }
+    
+    /**
+     * Returns a margin bean which holds the values for a optimal mfa stock.
+     *
+     * @param string $kind defaults to 'mfa'
+     * @return RedBean_OODBBean $margin
+     */
+    public function getOptimalMargin($kind = 'mfa')
+    {
+        $margins = $this->bean->withCondition(" kind = ? AND op = '=' ", array(
+            $kind
+        ))->ownMargin;
+        return reset($margins);
+    }
+    
+    /**
+     * Returns an array with margin beans that have lower mfa compared to given optimal mfa margin.
+      *
+      * @param string $kind defaults to 'mfa'
+      * @param RedBean_OODBBean $optimalMargin
+      * @return array
+      */
+     public function getLowerMargins($kind = 'mfa', RedBean_OODBBean $optimalMargin)
+    {
+        $margins = $this->bean->withCondition(" kind = ? AND lo < ? AND op != '=' ORDER BY lo DESC ", array($kind, $optimalMargin->lo))->ownMargin;
+        return $margins;
+    }
+    
+    /**
+     * Returns an array with margin beans that have over mfa compared to given optimal mfa margin.
+     *
+     * @param string $kind defaults to 'mfa'
+     * @param RedBean_OODBBean $optimalMargin
+     * @return array
+     */
+    public function getOverMargins($kind = 'mfa', RedBean_OODBBean $optimalMargin)
+    {
+        $margins = $this->bean->withCondition(" kind = ? AND hi > ? AND op != '=' ORDER BY lo ASC ", array($kind, $optimalMargin->hi))->ownMargin;
+        return $margins;
+    }
+
+    /**
      * Returns an array with attributes for lists.
      *
      * @param string (optional) $layout

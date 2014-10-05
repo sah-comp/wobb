@@ -22,7 +22,7 @@
                 type="submit"
                 name="submit"
                 accesskey="s"
-                value="<?php echo I18n::__('purchase_submit') ?>" />
+                value="<?php echo I18n::__('purchase_submit_add') ?>" />
         </div>
         <!-- End of Purchase buttons -->
     </form>

@@ -56,12 +56,12 @@
             </label>
         </div>
         <div class="span2">
-            <label>
+            <label class="number">
                 <?php echo I18n::__('pricing_label_margin_low') ?>
             </label>
         </div>
         <div class="span2">
-            <label>
+            <label class="number">
                 <?php echo I18n::__('pricing_label_margin_heigh') ?>
             </label>
         </div>
@@ -71,7 +71,7 @@
             </label>
         </div>
         <div class="span1">
-            <label>
+            <label class="number">
                 <?php echo I18n::__('pricing_label_margin_value') ?>
             </label>
         </div>

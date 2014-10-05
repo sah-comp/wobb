@@ -21,3 +21,11 @@
     color: gray;
 }
 
+.panel label.number {
+    float: right;
+}
+
+.panel .tab [class*="span"] label.number {
+    text-align: right;
+}
+

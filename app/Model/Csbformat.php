@@ -55,6 +55,8 @@ class Model_Csbformat extends Model
     /**
      * Returns an array with stock information taken from a line of csb file.
      *
+     * @todo Configurable Format
+     *
      * @param RedBean_OODBBean $company
      * @param string $line from a CSB file
      * @return array
@@ -73,8 +75,8 @@ class Model_Csbformat extends Model
             'flesh' => trim($this->makeFloatFromCSBFloat(substr($line, 45, 4))),
             'speck' => trim($this->makeFloatFromCSBFloat(substr($line, 50, 4))),
             'tare' => trim($this->makeFloatFromCSBFloat(substr($line, 62, 4))),
-            'damage1' => trim(substr($line, 67, 19)),
-            'damage2' => trim(substr($line, 88, 20)),
+            'damage1' => trim(substr($line, 67, 2)),
+            'damage2' => trim(substr($line, 88, 3)),
             'qs' => (trim(substr($line, 109, 1)) == 'Q') ? true : false
         );
     }

@@ -45,7 +45,7 @@
         <div class="span2">
             <input
                 id="pricing-margin-<?php echo $index ?>-lo"
-                class="autowidth"
+                class="autowidth number"
                 type="text"
                 name="dialog[ownMargin][<?php echo $index ?>][lo]"
                 value="<?php echo htmlspecialchars($_margin->decimal('lo')) ?>" />
@@ -53,7 +53,7 @@
         <div class="span2">
             <input
                 id="pricing-margin-<?php echo $index ?>-hi"
-                class="autowidth"
+                class="autowidth number"
                 type="text"
                 name="dialog[ownMargin][<?php echo $index ?>][hi]"
                 value="<?php echo htmlspecialchars($_margin->decimal('hi')) ?>" />
@@ -73,7 +73,7 @@
         <div class="span1">
             <input
                 id="pricing-margin-<?php echo $index ?>-value"
-                class="autowidth"
+                class="autowidth number"
                 type="text"
                 name="dialog[ownMargin][<?php echo $index ?>][value]"
                 value="<?php echo htmlspecialchars($_margin->decimal('value')) ?>" />

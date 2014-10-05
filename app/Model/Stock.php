@@ -155,7 +155,7 @@ class Model_Stock extends Model
     public function calculation(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
     {
         $this->bean->agio = 0;
-        $this->bean->disagion = 0;
+        $this->bean->disagio = 0;
         if ( ! $this->calculateFixedPrice($deliverer)) {
             $this->calculatePrice($deliverer, $pricing);
         }
@@ -171,48 +171,47 @@ class Model_Stock extends Model
      */
     public function calculatePrice(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
     {
-        $this->calculateAgio($deliverer, $pricing);
-        $this->calculateDisagio($deliverer, $pricing);
+        
+        $pricing->calculate($this->bean, $deliverer);
+        
         $this->bean->sprice = $deliverer->sprice + $this->bean->agio - $this->bean->disagio;
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
-        return null;
-    }
-    
-    /**
-     * Calculate the additional fees according to the deliverer bean pricing relation.
-     *
-     * @param RedBean_OODBBean $deliverer
-     * @param RedBean_OODBBean $pricing
-     * @return void
-     */
-    public function calculateAgio(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
-    {
-        $this->bean->agio = 0.06;
-        return null;
-    }
-    
-    /**
-     * Calculate the fees to subtract according to the deliverer bean pricing relation.
-     *
-     * @param RedBean_OODBBean $deliverer
-     * @param RedBean_OODBBean $pricing
-     * @return void
-     */
-    public function calculateDisagio(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
-    {
-        $this->bean->disagio = 0.04;
+        
+        $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+        $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        
         return null;
     }
     
     /**
      * Checks for fixed price.
      *
+     * If stock has a code in damage1 that code will be looked up in var. If there is either
+     * a var entry for the given deliverers supplier code and the given damage code the fixed
+     * price is used and the function will return true.
+     * If no fixed price can be found the function will return false.
+     *
      * @param RedBean_OODBBean $deliverer
      * @return bool wether a fixed price was used or not
      */
     public function calculateFixedPrice(RedBean_OODBBean $deliverer)
     {
-        return false;
+        if ( ! $fixedPrice = R::findOne('var', " ( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '') LIMIT 1 ", array(
+            ':quality' => $this->bean->quality,
+            ':supplier' => $deliverer->supplier
+        ))) {
+            
+            if ( empty( $this->bean->damage1 )) return false;
+            if ( ! $fixedPrice = R::findOne('var', " ( name = :damage AND supplier = :supplier ) OR ( name = :damage AND supplier = '') LIMIT 1 ", array(
+                ':damage' => $this->bean->damage1,
+                ':supplier' => $deliverer->supplier
+            ))) {
+                return false;
+            }
+        }
+        $this->bean->sprice = $fixedPrice->sprice;
+        $this->bean->dprice = $fixedPrice->dprice;
+        return true;
     }
     
     /**

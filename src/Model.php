@@ -149,7 +149,7 @@ class Model extends RedBean_SimpleModel
      * @param string $thousands_separator defaults to ','
      * @return string
      */
-    public function decimal($attribute, $decimals = 2, $decimal_point = ',', $thousands_separator = '.')
+    public function decimal($attribute, $decimals = 3, $decimal_point = ',', $thousands_separator = '.')
     {
         if ( ! $this->bean->{$attribute}) return '';
         return number_format($this->bean->{$attribute}, $decimals, $decimal_point, $thousands_separator);
