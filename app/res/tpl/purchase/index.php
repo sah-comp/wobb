@@ -44,11 +44,11 @@
                         <div class="span2">
                             <?php echo htmlspecialchars($_record->localizedDate('pubdate')) ?>
                         </div>
-                        <div class="span2 number">
-                            <?php echo $_record->piggery ?>
+                        <div class="span2">
+                            <span class="number"><?php echo $_record->piggery ?></span>
                         </div>
                         <div class="span7">
-                            <?php echo htmlspecialchars($_record->localizedDateTime('calcdate')) ?>
+                            <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDateTime('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
                         </div>
                     </div>
                 </a>

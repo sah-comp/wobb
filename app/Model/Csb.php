@@ -36,6 +36,26 @@ class Model_Csb extends Model
     {
         return $this->bean->sanename;
     }
+    
+    /**
+     * Returns wether the csb was already calculated or not.
+     *
+     * @return bool
+     */
+    public function wasCalculated()
+    {
+        return ( $this->bean->calcdate != '0000-00-00 00:00:00');
+    }
+    
+    /**
+     * Returns a string to be used as a headline.
+     *
+     * @return string
+     */
+    public function getHeadline()
+    {
+        return I18n::__('purchase_h1_mask', null, array($this->localizedDate('pubdate')));
+    }
 
     /**
      * Returns an array with attributes for lists.
@@ -311,8 +331,8 @@ SQL;
                 $subdeliverer->supplier = $substock['supplier'];
                 $subdeliverer->earmark = $substock['earmark'];
                 $subdeliverer->piggery = $substock['total'];
-                $subdeliverer->dprice = $this->bean->baseprice;
-                $subdeliverer->sprice = $this->bean->baseprice;
+                $subdeliverer->dprice = 0;
+                $subdeliverer->sprice = 0;
                 $deliverer->ownDeliverer[] = $subdeliverer;
             }
             $this->bean->ownDeliverer[] = $deliverer;
@@ -335,6 +355,8 @@ SQL;
             $deliverer->meanmfa = 0;
             $deliverer->meandprice = 0;
             foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
+                if ( ! $subdeliverer->dprice ) $subdeliverer->dprice = $deliverer->dprice;
+                if ( ! $subdeliverer->sprice ) $subdeliverer->sprice = $deliverer->sprice;
                 $summary = $subdeliverer->calculation($this->bean);
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];

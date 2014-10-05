@@ -5,3 +5,14 @@
     font-size: 2em;
     color: #666;
 }
+
+input[type=submit] {
+    padding: 0.5em 1em;
+    background-color: rgb(0, 128, 212);
+    color: white;
+    border: none;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    -o-border-radius: 0.5em;
+    border-radius: 0.5em;
+}
