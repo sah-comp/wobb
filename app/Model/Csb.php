@@ -365,9 +365,12 @@ SQL;
                 $deliverer->hasmfacount += $summary['hasmfacount'];
             }
             // calculate means
-            $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
-            $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
-            $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
+            if ( $deliverer->piggery != 0 ) 
+                $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
+            if ( $deliverer->hasmfacount ) 
+                $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
+            if ( $deliverer->totalweight ) 
+                $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated

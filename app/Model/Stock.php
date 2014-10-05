@@ -211,6 +211,9 @@ class Model_Stock extends Model
         }
         $this->bean->sprice = $fixedPrice->sprice;
         $this->bean->dprice = $fixedPrice->dprice;
+        
+        $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+        $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
         return true;
     }
     
