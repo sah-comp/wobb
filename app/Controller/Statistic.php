@@ -59,6 +59,58 @@ class Controller_Statistic extends Controller
     }
 
     /**
+     * A new lanuv statistic.
+     */
+    public function add()
+    {
+        Permission::check(Flight::get('user'), 'statistic', 'add');
+        $this->layout = 'add';
+        if (Flight::request()->method == 'POST') {
+            $this->record = R::graph(Flight::request()->data->dialog, true);
+            R::begin();
+            try {
+                R::store($this->record);
+                $this->record->generateReport();
+                R::store($this->record);
+                R::commit();
+                Flight::get('user')->notify(I18n::__('statistic_lanuv_add_success'));
+                $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('statistic_lanuv_add_error'), 'error');
+            }
+        }
+        $this->render();
+    }
+    
+    /**
+     * A certain lanuv summary.
+     */
+    public function lanuv()
+    {
+        Permission::check(Flight::get('user'), 'statistic', 'edit');
+        $this->layout = 'lanuv';
+        if (Flight::request()->method == 'POST') {
+            $this->record = R::graph(Flight::request()->data->dialog, true);
+            R::begin();
+            try {
+                R::store($this->record);
+                R::commit();
+                Flight::get('user')->notify(I18n::__('statistic_lanuv_edit_success'));
+                $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('statistic_lanuv_edit_error'), 'error');
+            }
+        }
+        $this->render();
+    }
+
+    /**
      * Choose an already existing day or create a new one.
      */
     public function index()

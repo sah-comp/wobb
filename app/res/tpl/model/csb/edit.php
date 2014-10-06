@@ -80,7 +80,7 @@
         </label>
         <input
             id="stock-baseprice"
-            type="text"
+            type="number"
             name="dialog[baseprice]"
             value="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
             required="required" />

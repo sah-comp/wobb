@@ -15,16 +15,43 @@
 </div>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('lanuv_legend') ?></legend>
-    <div class="row <?php echo ($record->hasError('name')) ? 'error' : ''; ?>">
+    <div class="row <?php echo ($record->hasError('company_id')) ? 'error' : ''; ?>">
         <label
-            for="lanuv-name">
-            <?php echo I18n::__('lanuv_label_name') ?>
+            for="lanuv-company">
+            <?php echo I18n::__('lanuv_label_company') ?>
+        </label>
+        <select
+            id="lanuv-company"
+            name="dialog[company_id]">
+            <?php foreach (R::find('company', ' active = 1 ORDER BY name') as $_id => $_company): ?>
+            <option
+                value="<?php echo $_company->getId() ?>"
+                <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name) ?></option>   
+            <?php endforeach ?>
+        </select>
+    </div>
+    <div class="row <?php echo ($record->hasError('startdate')) ? 'error' : ''; ?>">
+        <label
+            for="lanuv-startdate">
+            <?php echo I18n::__('lanuv_label_startdate') ?>
         </label>
         <input
-            id="lanuv-name"
-            type="text"
-            name="dialog[name]"
-            value="<?php echo htmlspecialchars($record->name) ?>"
+            id="lanuv-startdate"
+            type="date"
+            name="dialog[startdate]"
+            value="<?php echo htmlspecialchars($record->startdate) ?>"
+            required="required" />
+    </div>
+    <div class="row <?php echo ($record->hasError('enddate')) ? 'error' : ''; ?>">
+        <label
+            for="lanuv-enddate">
+            <?php echo I18n::__('lanuv_label_enddate') ?>
+        </label>
+        <input
+            id="lanuv-enddate"
+            type="date"
+            name="dialog[enddate]"
+            value="<?php echo htmlspecialchars($record->enddate) ?>"
             required="required" />
     </div>
 </fieldset>
