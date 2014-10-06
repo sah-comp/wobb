@@ -81,7 +81,7 @@
     <div
         id="pricing-<?php echo $record->getId() ?>-margin-container"
         class="container attachable detachable sortable">
-    <?php $_margins = $record->with(' ORDER BY kind DESC, lo')->ownMargin ?>
+    <?php $_margins = $record->with(' ORDER BY kind DESC, lo, hi')->ownMargin ?>
     <?php if (count($_margins) == 0) $_margins[] = R::dispense('margin') ?>
     <?php $index = 0 ?>
     <?php foreach ($_margins as $_margin_id => $_margin): ?>

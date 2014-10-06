@@ -74,8 +74,7 @@
         id="person-<?php echo $record->getId() ?>-condition-<?php echo $_condition->getId() ?>-value"
         type="text"
         name="dialog[ownCondition][<?php echo $index ?>][value]"
-        value="<?php echo htmlspecialchars($_condition->decimal('value', 3)) ?>"
-        required="required" />
+        value="<?php echo htmlspecialchars($_condition->decimal('value', 3)) ?>" />
 </div>
 </fieldset>
 <!-- /address edit subform -->
