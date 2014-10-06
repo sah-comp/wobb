@@ -305,7 +305,7 @@
         'tab_id' => 'person-tabs',
         'tabs' => array(
             'person-address' => I18n::__('person_address_tab'),
-            'person-role' => I18n::__('person_role_tab')
+            'person-condition' => I18n::__('person_condition_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -330,31 +330,24 @@
             </div>
     </fieldset>
     <fieldset
-        id="person-role"
+        id="person-condition"
         class="tab"
         style="display: none;">
-        <legend class="verbose"><?php echo I18n::__('person_legend_role') ?></legend>
-        <?php foreach (R::findAll('role') as $_id => $_role): ?>
-        <div class="row">
-            <input
-                type="hidden"
-                name="dialog[sharedRole][<?php echo $_role->getId() ?>][type]"
-                value="role" />
-            <input
-                type="hidden"
-                name="dialog[sharedRole][<?php echo $_role->getId() ?>][id]"
-                value="0" />
-            <label
-                for="person-<?php echo $record->getId() ?>-role-<?php echo $_role->getId() ?>"
-                class="cb"><?php echo htmlspecialchars($_role->i18n(Flight::get('language'))->name) ?></label>
-            <input
-                type="checkbox"
-                id="person-<?php echo $record->getId() ?>-role-<?php echo $_role->getId() ?>"
-                name="dialog[sharedRole][<?php echo $_role->getId() ?>][id]"
-                value="<?php echo $_role->getId() ?>"
-                <?php echo (isset($record->sharedRole[$_role->getId()])) ? 'checked="checked"' : '' ?> />
+        <legend class="verbose"><?php echo I18n::__('person_legend_condition') ?></legend>
+        <div
+            id="person-<?php echo $record->getId() ?>-condition-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownCondition) == 0) $record->ownCondition[] = R::dispense('condition') ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownCondition as $_condition_id => $_condition): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/person/own/condition', array(
+                'record' => $record,
+                '_condition' => $_condition,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
         </div>
-        <?php endforeach ?>
     </fieldset>
 </div>
 <!-- end of person edit form -->

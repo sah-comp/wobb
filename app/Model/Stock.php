@@ -177,8 +177,9 @@ class Model_Stock extends Model
         $this->bean->sprice = $deliverer->sprice + $this->bean->agio - $this->bean->disagio;
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
         
-        $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
-        $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
+        $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight ) + 
+                                                                $deliverer->calculate($this->bean);
         
         return null;
     }
@@ -252,6 +253,9 @@ class Model_Stock extends Model
         $this->addConverter('totaldprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('bonus', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('name', array(
             new Validator_HasValue()
         ));
@@ -262,8 +266,6 @@ class Model_Stock extends Model
      */
     public function update()
     {
-        $this->bean->totalsprice = $this->bean->weight * $this->bean->sprice;
-        $this->bean->totaldprice = $this->bean->weight * $this->bean->dprice;
         parent::update();
     }
 }

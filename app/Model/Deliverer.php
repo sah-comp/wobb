@@ -48,6 +48,37 @@ class Model_Deliverer extends Model
     }
     
     /**
+     * Calculates conditions of this deliverer with given stock bean and returns the added bonus.
+     *
+     * @param RedBean_OODBBean $stock
+     * @return float
+     */
+    public function calculate(RedBean_OODBBean $stock)
+    {
+        if ( ! $this->bean->person) return false;
+        $conditions = $this->bean->person->ownCondition; // fetch it from the person
+        if ( count ($conditions) == 0) return false;
+        $bonus = 0;
+        foreach ($conditions as $id => $condition) {
+            switch ( $condition->label ) {
+                case 'stockperitem':
+                    $bonus += $condition->value;
+                    break;
+                
+                case 'stockperweight':
+                    $bonus += $stock->weight * $condition->value;
+                    break;
+            
+                default:
+                    // dunno?! nothing.
+                    break;
+            }
+        }
+        $stock->bonus = $bonus;
+        return (float)$bonus;
+    }
+    
+    /**
      * Calculates the prices of all stock that belongs to this deliverer of the given csb bean and
      * returns an array with a summery of the calculation.
      *

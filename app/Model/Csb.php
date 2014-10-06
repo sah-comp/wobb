@@ -371,9 +371,9 @@ SQL;
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
             if ( $deliverer->totalweight ) 
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
-            $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated
+            $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
         }
-        $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated
+        $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
         return null;
     }
     

@@ -138,8 +138,8 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgdprice]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgdprice', 3)) ?>"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgprice]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgprice', 3)) ?>"
                             disabled="disabled"
                         />
                     </div>
