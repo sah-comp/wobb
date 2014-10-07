@@ -16,3 +16,17 @@ input[type=submit] {
     -o-border-radius: 0.5em;
     border-radius: 0.5em;
 }
+
+:focus {
+    /*outline: none;*/
+}
+
+a.logo {
+    display: block;
+    width: 98px;
+    height: 2em;
+    background-image: url(/img/tk-logo.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 48px 18px;
+}
