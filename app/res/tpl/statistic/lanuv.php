@@ -1,6 +1,6 @@
 <article class="main">
     <header id="header-toolbar" class="fixable">
-        <h1>LANUV</h1>
+        <h1><?php echo I18n::__('lanuv_h1') ?></h1>
         <nav>
             <?php echo $toolbar ?>
         </nav>
@@ -76,13 +76,16 @@
                     <label class="number"><?php echo I18n::__('lanuv_label_sumweight') ?></label>
                 </div>
                 <div class="span2">
+                    <label class="number"><?php echo I18n::__('lanuv_label_sumtotaldprice') ?></label>
+                </div>
+                <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_avgmfa') ?></label>
                 </div>
                 <div class="span2">
-                    <label class="number"><?php echo I18n::__('lanuv_label_avgprice') ?></label>
-                </div>
-                <div class="span3">
                     <label class="number"><?php echo I18n::__('lanuv_label_avgweight') ?></label>
+                </div>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('lanuv_label_avgprice') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
@@ -129,6 +132,15 @@
                         <input
                             type="text"
                             class="number"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][sumtotaldprice]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('sumtotaldprice', 3)) ?>"
+                            disabled="disabled"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][avgmfa]"
                             value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgmfa', 3)) ?>"
                             disabled="disabled"
@@ -138,17 +150,17 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgprice]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgprice', 3)) ?>"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgweight]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgweight', 3)) ?>"
                             disabled="disabled"
                         />
                     </div>
-                    <div class="span3">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgweight]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgweight', 3)) ?>"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgprice]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgprice', 3)) ?>"
                             disabled="disabled"
                         />
                     </div>

@@ -145,6 +145,7 @@ SQL;
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
+            $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
             $lanuvitem->avgmfa = $summary['avgmfa'];
             $lanuvitem->avgprice = $summary['avgprice'];
             $lanuvitem->avgweight = $summary['avgweight'];
@@ -158,6 +159,7 @@ SQL;
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
+            $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
             $lanuvitem->avgmfa = $summary['avgmfa'];
             $lanuvitem->avgprice = $summary['avgprice'];
             $lanuvitem->avgweight = $summary['avgweight'];
@@ -180,6 +182,7 @@ SQL;
             count(id) as piggery, 
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
             (sum(totaldprice) / sum(weight)) as avgprice,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
@@ -214,6 +217,7 @@ SQL;
             count(id) as piggery, 
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
             (sum(totaldprice) / sum(weight)) as avgprice,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice

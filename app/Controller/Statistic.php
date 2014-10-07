@@ -97,6 +97,8 @@ class Controller_Statistic extends Controller
             R::begin();
             try {
                 R::store($this->record);
+                $this->record->generateReport();
+                R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('statistic_lanuv_edit_success'));
                 $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
