@@ -67,7 +67,7 @@
             <!-- row with labels -->
             <div class="row">
                 <div class="span1">
-                    &nbsp;
+                    <label><?php echo I18n::__('lanuv_label_quality') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_piggery') ?></label>
@@ -109,7 +109,12 @@
                 </div>
                 <div class="row">
                     <div class="span1">
-                        <span class="fn lanuv-quality"><?php echo htmlspecialchars($_lanuvitem->quality) ?></span>
+                        <input
+                            type="text"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][quality]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->quality) ?>"
+                            disabled="disabled"
+                        />
                     </div>
                     <div class="span2">
                         <input

@@ -36,6 +36,29 @@ class Model_Deliverer extends Model
             new Converter_MysqlDatetime()
         ));
     }
+
+    /**
+     * Returns wether the deliverer needs a service calculation or billing.
+     *
+     * @return bool
+     */
+    public function hasService()
+    {
+        return $this->bean->person->hasservice;
+    }
+
+    /**
+     * Returns information about this deliverer.
+     *
+     * @return string
+     */
+    public function getInformation()
+    {
+        return I18n::__('deliverer_information_mask', null, array(
+            '',
+            $this->bean->person->pricing->name
+        ));
+    }
     
     /**
      * Returns wether the deliverer was already calculated or not.

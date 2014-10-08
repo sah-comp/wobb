@@ -23,6 +23,7 @@ class Controller_Purchase extends Controller
       * @var array
       */
     public $javascripts = array(
+        '/js/tk'
     );
     
     /**
@@ -97,7 +98,7 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_day_add_success'));
-                $this->redirect(sprintf('/purchase/day/%d', $this->record->getId()));
+                $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
             }
             catch (Exception $e) {
                 error_log($e);
@@ -110,6 +111,8 @@ class Controller_Purchase extends Controller
     
     /**
      * A current slaughter charge.
+     *
+     * @deprecated since calculation can do all of day
      */
     public function day()
     {
@@ -135,14 +138,18 @@ class Controller_Purchase extends Controller
     
     /**
      * Calculates prices of the current slaughter charge.
+     *
+     * @todo this has to be a controller on its own?
      */
     public function calculation()
     {
         Permission::check(Flight::get('user'), 'purchase', 'edit');
         $this->layout = 'calculation';
         if (Flight::request()->method == 'POST') {
+            $this->record = R::graph(Flight::request()->data->dialog, true);
             R::begin();
             try {
+                R::store($this->record); //must do this, because otherwise prices dont copy!!
                 $this->record->calculation();
                 R::store($this->record);
                 R::commit();

@@ -1,6 +1,64 @@
 /**
  * Extras for TK
  */
+ 
+body {
+    background-color: rgb(249, 249, 249);
+}
+
+.not-yet-implemented {
+    position: absolute;
+    background: url(/upload/fly.gif) no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.not-yet-implemented h1 { display: none; }
+
+.deliverer-info {
+    font-size: small;
+}
+
+.buttons a {
+    font-size: small;
+    text-decoration: none;
+    margin-right: 1em;
+}
+
+a.toggle {
+    text-decoration: none;
+}
+
+a.toggle.open {
+    color: gray;
+}
+
+.subdeliverer-container {
+    display: none;
+}
+
+.subdeliverer-container .subdeliverer-earmark {
+}
+
+h2.date-slaughter {
+    font-weight: normal;
+    position: absolute;
+    top: 0.5em;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.7em;
+    color: gray;
+}
+
+h2.year-purchase {
+    font-size: 2em;
+    color: rgb(0, 128, 212);
+    margin-bottom: .5em;
+    text-align: center;
+}
+
 .pday-supplier {
     font-size: 2em;
     color: #666;

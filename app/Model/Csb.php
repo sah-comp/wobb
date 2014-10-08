@@ -48,13 +48,35 @@ class Model_Csb extends Model
     }
     
     /**
+     * Returns a string with nicely formatted date of slaughter.
+     *
+     * It's a happy date, isn't it? Not for the poor piggy, my dear.
+     *
+     * @return string
+     */
+    public function getDateOfSlaughter()
+    {
+        Flight::setlocale();
+        return strftime( "%A, %e. %B %Y Woche %V", strtotime( $this->bean->pubdate ) );
+    }
+    
+    /**
      * Returns a string to be used as a headline.
      *
      * @return string
      */
     public function getHeadline()
     {
-        return I18n::__('purchase_h1_mask', null, array($this->localizedDate('pubdate')));
+        return I18n::__('purchase_h1_calculation');
+        /*
+        return I18n::__('purchase_h1_mask', null, 
+            array(
+                $this->localizedDate('pubdate'),
+                $this->bean->company->name,
+                $this->decimal('baseprice', 3)
+            )
+        );
+        */
     }
 
     /**
@@ -358,6 +380,8 @@ SQL;
                 if ( ! $subdeliverer->dprice ) $subdeliverer->dprice = $deliverer->dprice;
                 if ( ! $subdeliverer->sprice ) $subdeliverer->sprice = $deliverer->sprice;
                 $summary = $subdeliverer->calculation($this->bean);
+                // save some of the summary to the subdeliverer
+                $subdeliverer->totalnet = $summary['totalnet'];
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];
                 $deliverer->totalweight += $summary['totalweight'];

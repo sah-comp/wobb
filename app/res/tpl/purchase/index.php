@@ -1,6 +1,6 @@
 <article class="main">
     <header id="header-toolbar" class="fixable">
-        <h1><?php echo I18n::__("purchase_h1") ?></h1>
+        <h1><?php echo I18n::__("purchase_h1_index") ?></h1>
         <nav>
             <?php echo $toolbar ?>
         </nav>
@@ -17,38 +17,57 @@
             class="tab">
             <legend class="verbose"><?php echo I18n::__('purchase_history_legend') ?></legend>
             
+
+            <?php 
+                Flight::setlocale();
+                $_lastYear = null;
+            ?>
+            <?php foreach ($records as $_id => $_record): ?>
+                <?php 
+                    $ts = strtotime( $_record->pubdate );
+                    $_year = date('Y', $ts);
+                ?>
+                <?php if ( $_lastYear != $_year): 
+                        $_lastYear = $_year;
+                ?>
+            <h2 class="year-purchase"><?php echo $_year ?></h2>
             <div class="row">
                 <div class="span1">
-                    &nbsp;
+                    <label><?php echo I18n::__('purchase_label_week') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span3">
                     <label><?php echo I18n::__('purchase_label_date') ?></label>
                 </div>
-                <div class="span2 number">
+                <div class="span1 number">
                     <label><?php echo I18n::__('purchase_label_piggery') ?></label>
                 </div>
-                <div class="span7">
+                <div class="span2 number">
+                    <label><?php echo I18n::__('purchase_label_baseprice') ?></label>
+                </div>
+                <div class="span5">
                     <label><?php echo I18n::__('purchase_label_calcdate') ?></label>
                 </div>
             </div>
-            
-            <?php foreach ($records as $_id => $_record): ?>
+                <?php endif ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('purchase_history_item_legend') ?></legend>
                 <a
-                    href="<?php echo Url::build(sprintf('/purchase/day/%d', $_record->getId())) ?>">
+                    href="<?php echo Url::build(sprintf('/purchase/calculation/%d', $_record->getId())) ?>">
                     <div class="row">
                         <div class="span1">
-                            &nbsp;
+                            <?php echo strftime( "%V", $ts) ?>
                         </div>
-                        <div class="span2">
-                            <?php echo htmlspecialchars($_record->localizedDate('pubdate')) ?>
+                        <div class="span3">
+                            <?php echo strftime( "%a, %e. %b", $ts) ?>
                         </div>
-                        <div class="span2">
+                        <div class="span1">
                             <span class="number"><?php echo $_record->piggery ?></span>
                         </div>
-                        <div class="span7">
-                            <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDateTime('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
+                        <div class="span2">
+                            <span class="number"><?php echo $_record->decimal('baseprice', 3) ?></span>
+                        </div>
+                        <div class="span5">
+                            <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
                         </div>
                     </div>
                 </a>

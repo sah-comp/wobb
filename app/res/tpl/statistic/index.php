@@ -18,9 +18,6 @@
             <legend class="verbose"><?php echo I18n::__('statistic_history_legend') ?></legend>
             
             <div class="row">
-                <div class="span1">
-                    &nbsp;
-                </div>
                 <div class="span3">
                     <label><?php echo I18n::__('lanuv_label_company_id') ?></label>
                 </div>
@@ -38,9 +35,6 @@
                 <a
                     href="<?php echo Url::build(sprintf('/statistic/lanuv/%d', $_record->getId())) ?>">
                     <div class="row">
-                        <div class="span1">
-                            &nbsp;
-                        </div>
                         <div class="span3">
                             <?php echo htmlspecialchars($_record->company->name) ?>
                         </div>

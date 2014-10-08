@@ -57,18 +57,9 @@ class Model_Person extends Model
                 )
             ),
             array(
-                'name' => 'lastname',
+                'name' => 'account',
                 'sort' => array(
-                    'name' => 'person.lastname'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'firstname',
-                'sort' => array(
-                    'name' => 'person.firstname'
+                    'name' => 'person.account'
                 ),
                 'filter' => array(
                     'tag' => 'text'

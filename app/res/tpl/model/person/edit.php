@@ -305,7 +305,8 @@
         'tab_id' => 'person-tabs',
         'tabs' => array(
             'person-address' => I18n::__('person_address_tab'),
-            'person-condition' => I18n::__('person_condition_tab')
+            'person-condition' => I18n::__('person_condition_tab'),
+            'person-billing' => I18n::__('person_billing_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -348,6 +349,46 @@
             )) ?>
             <?php endforeach ?>
         </div>
+    </fieldset>
+    <fieldset
+        id="person-billing"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_billing_tab') ?></legend>
+            <div class="row <?php echo ($record->hasError('hasservice')) ? 'error' : ''; ?>">
+                <label
+                    for="person-hasservice"
+                    class="cb">
+                    <?php echo I18n::__('person_label_hasservice') ?>
+                </label>
+                <input
+                    type="hidden"
+                    name="dialog[hasservice]"
+                    value="0" />
+                <input
+                    id="person-hasservice"
+                    type="checkbox"
+                    name="dialog[hasservice]"
+                    <?php echo ($record->hasservice) ? 'checked="checked"' : '' ?>
+                    value="1" />
+            </div>
+            <div class="row <?php echo ($record->hasError('hasdealer')) ? 'error' : ''; ?>">
+                <label
+                    for="person-hasdealer"
+                    class="cb">
+                    <?php echo I18n::__('person_label_hasdealer') ?>
+                </label>
+                <input
+                    type="hidden"
+                    name="dialog[hasdealer]"
+                    value="0" />
+                <input
+                    id="person-hasdealer"
+                    type="checkbox"
+                    name="dialog[hasdealer]"
+                    <?php echo ($record->hasdealer) ? 'checked="checked"' : '' ?>
+                    value="1" />
+            </div>
     </fieldset>
 </div>
 <!-- end of person edit form -->
