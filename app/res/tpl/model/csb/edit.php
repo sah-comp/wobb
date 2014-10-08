@@ -29,6 +29,7 @@
             type="file"
             name="file"
             value="<?php echo htmlspecialchars($record->file) ?>" />
+        <p class="info"><?php echo I18n::__('csb_info_file') ?></p>
     </div>
     <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
         <label

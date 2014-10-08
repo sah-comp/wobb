@@ -118,7 +118,8 @@
                     </div>
                     <div class="span2">
                         <input
-                            type="number"
+                            type="text"
+                            class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][piggery]"
                             value="<?php echo htmlspecialchars($_lanuvitem->piggery) ?>"
                             disabled="disabled"
