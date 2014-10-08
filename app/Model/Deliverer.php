@@ -54,6 +54,7 @@ class Model_Deliverer extends Model
      */
     public function getInformation()
     {
+        if ( ! $this->bean->person->pricing ) return I18n::__('deliverer_person_pricemask_not_set');
         return I18n::__('deliverer_information_mask', null, array(
             '',
             $this->bean->person->pricing->name
