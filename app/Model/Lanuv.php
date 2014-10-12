@@ -41,16 +41,6 @@ class Model_Lanuv extends Model
     );
 
     /**
-     * Holds the weight margins which go into a summary.
-     *
-     * @var array
-     */
-    protected $weightMargins = array(
-        'lo' => 80,
-        'hi' => 110
-    );
-
-    /**
      * Returns an array with attributes for lists.
      *
      * @param string (optional) $layout
@@ -140,7 +130,7 @@ SQL;
         $this->bean->ownLanuvitem = array();
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {
-            $summary = $this->getSummaryQuality($quality); // totals and averages of the stock
+            $summary = $this->getSummaryQuality($quality, 80.0, 110.0); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
@@ -173,9 +163,11 @@ SQL;
      * Returns an array with information about a certain stock quality.
      *
      * @param string $quality
+     * @param float $margin_lo
+     * @param float $margin_hi
      * @return array
      */
-    public function getSummaryQuality($quality)
+    public function getSummaryQuality($quality, $margin_lo, $margin_hi)
     {
 		$sql = <<<SQL
         SELECT 
@@ -199,8 +191,8 @@ SQL;
             ':quality' => $quality,
             ':startdate' => $this->bean->startdate,
             ':enddate' => $this->bean->enddate,
-            ':lo' => $this->weightMargins['lo'],
-            ':hi' => $this->weightMargins['hi']
+            ':lo' => $margin_lo,
+            ':hi' => $margin_hi
         ));
     }
     
