@@ -20,12 +20,6 @@ body {
     font-size: small;
 }
 
-.buttons a {
-    font-size: small;
-    text-decoration: none;
-    margin-right: 1em;
-}
-
 a.toggle {
     text-decoration: none;
 }
