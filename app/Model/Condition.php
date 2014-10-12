@@ -26,8 +26,7 @@ class Model_Condition extends Model
     {
         return array(
             'stockperitem',
-            'stockperweight',
-            'total'
+            'stockperweight'
         );
     }
   
