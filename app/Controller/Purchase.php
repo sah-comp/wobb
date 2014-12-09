@@ -98,7 +98,7 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_day_add_success'));
-                $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
+                $this->redirect(sprintf('/purchase/damage/%d', $this->record->getId()));
             }
             catch (Exception $e) {
                 error_log($e);
@@ -131,6 +131,72 @@ class Controller_Purchase extends Controller
                 error_log($e);
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('purchase_day_edit_error'), 'error');
+            }
+        }
+        $this->render();
+    }
+
+    /**
+     * Display and edit the damage code based prices of the current slaughter charge.
+     *
+     * @todo this has to be a controller on its own?
+     */
+    public function damage()
+    {
+        Permission::check(Flight::get('user'), 'purchase', 'edit');
+        $this->layout = 'damage';
+        if (Flight::request()->method == 'POST') {
+            $this->record = R::graph(Flight::request()->data->dialog, true);
+            R::begin();
+            try {
+                R::store($this->record); //must do this, because otherwise prices dont copy!!
+                //$this->record->calculation();
+                //R::store($this->record);
+                R::commit();
+                Flight::get('user')->notify(I18n::__('purchase_damage_edit_success'));
+                $this->redirect(sprintf('/purchase/damage/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_damage_edit_error'), 'error');
+            }
+        }
+        $this->render();
+    }
+    
+    /**
+     * Display and edit the stock with damages.
+     *
+     * @todo this has to be a controller on its own?
+     */
+    public function stock()
+    {
+        Permission::check(Flight::get('user'), 'purchase', 'edit');
+        $this->layout = 'stock';
+        if (Flight::request()->method == 'POST') {
+            //$this->record = R::graph(Flight::request()->data->dialog, true);
+            $dialog = Flight::request()->data->dialog;
+            $stock_list = $dialog['stock'];
+            R::begin();
+            try {
+                $this->record->ownDamagedaily = array(); //kill old damagedailys
+                R::store($this->record); //must do this, because otherwise prices dont copy!!
+                
+                foreach ($stock_list as $id => $stock) {
+                    $stock_bean = R::graph($stock);
+                    R::store($stock_bean);
+                }
+                //$this->record->calculation();
+                //R::store($this->record);
+                R::commit();
+                Flight::get('user')->notify(I18n::__('purchase_stock_edit_success'));
+                $this->redirect(sprintf('/purchase/stock/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_stock_edit_error'), 'error');
             }
         }
         $this->render();

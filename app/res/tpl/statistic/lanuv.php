@@ -76,7 +76,7 @@
                     <label class="number"><?php echo I18n::__('lanuv_label_sumweight') ?></label>
                 </div>
                 <div class="span2">
-                    <label class="number"><?php echo I18n::__('lanuv_label_sumtotaldprice') ?></label>
+                    <label class="number"><?php echo I18n::__('lanuv_label_sumtotallanuvprice') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_avgmfa') ?></label>
@@ -85,7 +85,7 @@
                     <label class="number"><?php echo I18n::__('lanuv_label_avgweight') ?></label>
                 </div>
                 <div class="span1">
-                    <label class="number"><?php echo I18n::__('lanuv_label_avgprice') ?></label>
+                    <label class="number"><?php echo I18n::__('lanuv_label_avgpricelanuv') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
@@ -113,7 +113,7 @@
                             type="text"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][quality]"
                             value="<?php echo htmlspecialchars($_lanuvitem->quality) ?>"
-                            disabled="disabled"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span2">
@@ -122,7 +122,7 @@
                             class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][piggery]"
                             value="<?php echo htmlspecialchars($_lanuvitem->piggery) ?>"
-                            disabled="disabled"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span2">
@@ -131,16 +131,16 @@
                             class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][sumweight]"
                             value="<?php echo htmlspecialchars($_lanuvitem->decimal('sumweight', 3)) ?>"
-                            disabled="disabled"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span2">
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownLanuvitem][<?php echo $_id ?>][sumtotaldprice]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('sumtotaldprice', 3)) ?>"
-                            disabled="disabled"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][sumtotallanuvprice]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('sumtotallanuvprice', 3)) ?>"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span2">
@@ -149,7 +149,7 @@
                             class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][avgmfa]"
                             value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgmfa', 3)) ?>"
-                            disabled="disabled"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span2">
@@ -158,16 +158,16 @@
                             class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][avgweight]"
                             value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgweight', 3)) ?>"
-                            disabled="disabled"
+                            readonly="readonly"
                         />
                     </div>
                     <div class="span1">
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgprice]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgprice', 3)) ?>"
-                            disabled="disabled"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][avgpricelanuv]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('avgpricelanuv', 3)) ?>"
+                            readonly="readonly"
                         />
                     </div>
                 </div>

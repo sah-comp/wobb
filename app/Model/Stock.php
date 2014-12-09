@@ -158,6 +158,8 @@ class Model_Stock extends Model
         $this->bean->disagio = 0;
         if ( ! $this->calculateFixedPrice($deliverer)) {
             $this->calculatePrice($deliverer, $pricing);
+            $this->calculateDamage1Price($deliverer);
+            $this->calculateDamage2Price($deliverer);
         }
         return null;
     }
@@ -178,43 +180,121 @@ class Model_Stock extends Model
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
         
         $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
-        $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight ) + 
-                                                                $deliverer->calculate($this->bean);
-        
+        $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight );
+        $this->bean->totallanuvprice = $this->bean->totaldprice + $deliverer->calculate($this->bean);
         return null;
     }
     
     /**
      * Checks for fixed price.
      *
-     * If stock has a code in damage1 that code will be looked up in var. If there is either
-     * a var entry for the given deliverers supplier code and the given damage code the fixed
-     * price is used and the function will return true.
-     * If no fixed price can be found the function will return false.
+     * If stock has a quality with a fixed price, that one is used. Fixed prices are var beans.
      *
      * @param RedBean_OODBBean $deliverer
      * @return bool wether a fixed price was used or not
      */
     public function calculateFixedPrice(RedBean_OODBBean $deliverer)
     {
-        if ( ! $fixedPrice = R::findOne('var', " ( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '') LIMIT 1 ", array(
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", array(
             ':quality' => $this->bean->quality,
-            ':supplier' => $deliverer->supplier
+            ':del_id' => $deliverer->deliverer->getId()
         ))) {
-            
-            if ( empty( $this->bean->damage1 )) return false;
-            if ( ! $fixedPrice = R::findOne('var', " ( name = :damage AND supplier = :supplier ) OR ( name = :damage AND supplier = '') LIMIT 1 ", array(
-                ':damage' => $this->bean->damage1,
-                ':supplier' => $deliverer->supplier
-            ))) {
-                return false;
-            }
+            return false;
         }
+        
+        $this->bean->agio = 0;
+        $this->bean->disagio = 0;
+        $this->bean->bonus = 0;
         $this->bean->sprice = $fixedPrice->sprice;
         $this->bean->dprice = $fixedPrice->dprice;
         
         $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
         $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        $this->bean->totallanuvprice = $this->bean->totaldprice;
+        return true;
+    }
+    
+    /**
+     * Checks for damage1 code.
+     *
+     * If stock has a code in damage1 a fixed price or agio or disagio apply.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @return bool wether a fixed price was used or not
+     */
+    public function calculateDamage1Price(RedBean_OODBBean $deliverer)
+    {
+        if ( empty($this->bean->damage1) ) return false;
+        
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", array(
+            ':damage1' => $this->bean->damage1,
+            ':del_id' => $deliverer->deliverer->getId()
+        ))) {
+            return false;
+        }
+        
+        if ( $fixedPrice->condition == 'fixed' ) {
+            $this->bean->agio = 0;
+            $this->bean->disagio = 0;
+            $this->bean->bonus = 0;
+            $this->bean->sprice = $fixedPrice->sprice;
+            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } elseif ( $fixedPrice->condition == 'disagio') {
+            $this->bean->totalsprice -= $fixedPrice->sprice;
+            $this->bean->totaldprice -= $fixedPrice->dprice;
+        } elseif ( $fixedPrice->condition == 'agio') {
+            $this->bean->totalsprice += $fixedPrice->sprice;
+            $this->bean->totaldprice += $fixedPrice->dprice;
+        }
+        
+        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+            $this->bean->totallanuvprice = $this->bean->totaldprice;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Checks for damage2 code.
+     *
+     * If stock has a code in damage2 a fixed price or agio or disagio apply.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @return bool wether a fixed price was used or not
+     */
+    public function calculateDamage2Price(RedBean_OODBBean $deliverer)
+    {
+        if ( empty($this->bean->damage2) ) return false;
+        
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", array(
+            ':damage2' => $this->bean->damage2,
+            ':del_id' => $deliverer->deliverer->getId()
+        ))) {
+            return false;
+        }
+        
+        if ( $fixedPrice->condition == 'fixed' ) {
+            $this->bean->agio = 0;
+            $this->bean->disagio = 0;
+            $this->bean->bonus = 0;
+            $this->bean->sprice = $fixedPrice->sprice;
+            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } elseif ( $fixedPrice->condition == 'disagio') {
+            $this->bean->totalsprice -= $fixedPrice->sprice;
+            $this->bean->totaldprice -= $fixedPrice->dprice;
+        } elseif ( $fixedPrice->condition == 'agio') {
+            $this->bean->totalsprice += $fixedPrice->sprice;
+            $this->bean->totaldprice += $fixedPrice->dprice;
+        }
+        
+        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+            $this->bean->totallanuvprice = $this->bean->totaldprice;
+        }
+        
         return true;
     }
     

@@ -136,8 +136,10 @@ SQL;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
             $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
+            $lanuvitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
             $lanuvitem->avgmfa = $summary['avgmfa'];
             $lanuvitem->avgprice = $summary['avgprice'];
+            $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
@@ -149,9 +151,11 @@ SQL;
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
+            $lanuvitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
             $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
             $lanuvitem->avgmfa = $summary['avgmfa'];
             $lanuvitem->avgprice = $summary['avgprice'];
+            $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
@@ -175,7 +179,9 @@ SQL;
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
             sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
             (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
         FROM stock 
@@ -184,7 +190,7 @@ SQL;
             quality = :quality AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
             (weight >= :lo AND weight <= :hi) AND 
-            damage1 = '';
+            (damage1 = '' OR damage1 = '02')
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
@@ -210,7 +216,9 @@ SQL;
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
             sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
             (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
         FROM stock 
@@ -218,7 +226,7 @@ SQL;
             buyer = :buyer AND 
             quality = :quality AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            damage1 = '';
+            (damage1 = '' OR damage1 = '02')
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,

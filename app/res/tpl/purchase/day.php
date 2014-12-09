@@ -143,6 +143,7 @@
         <!-- Purchase buttons -->
         <div class="buttons">
             <a
+                class="btn"
                 href="<?php echo Url::build(sprintf("/purchase/calculation/%d", $record->getId())) ?>">
                 <?php echo I18n::__('purchase_href_goto_calculation') ?>
             </a>

@@ -39,7 +39,7 @@
                 </div>
             </div>
             <!-- end of row with labels -->
-            
+            <?php $_n = 0 ?>
             <?php foreach ($record->with(' ORDER BY supplier, earmark ')->ownDeliverer as $_id => $_deliverer): ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('purchase_deliverer_sub_legend') ?></legend>
@@ -71,9 +71,10 @@
                         <input
                             type="text"
                             class="number"
+                            readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][piggery]"
                             value="<?php echo htmlspecialchars($_deliverer->piggery) ?>"
-                            disabled="disabled"
+                            
                         />
                     </div>
                     <div class="span2">
@@ -91,6 +92,7 @@
                             class="number"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][dprice]"
                             value="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
+                            required="required"
                             placeholder="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
                         />
                     </div>
@@ -98,9 +100,10 @@
                         <input
                             type="text"
                             class="number"
+                            readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][totalnet]"
                             value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
-                            disabled="disabled"
+                            
                         />
                         
                     </div>
@@ -131,9 +134,10 @@
                         <input
                             type="text"
                             class="number"
+                            readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownDeliverer][<?php echo $_sub_id ?>][piggery]"
                             value="<?php echo htmlspecialchars($_sub->piggery) ?>"
-                            disabled="disabled"
+                            
                         />
                     </div>
                     <div class="span2">
@@ -158,15 +162,89 @@
                         <input
                             type="text"
                             class="number"
+                            readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownDeliverer][<?php echo $_sub_id ?>][totalnet]"
                             value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_sub->decimal('totalnet', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
-                            disabled="disabled"
+                            
                         />
                     </div>
                 </div>
                 
                 
                 <?php endforeach ?>
+                
+                <?php if ($_sprices = $_deliverer->getSpecialPrices()): ?>
+                <div>
+                    <?php foreach ($_sprices as $_sprice_id => $_sprice): ?>
+                    <?php $_n++; ?>
+                    <div>
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][type]"
+                            value="specialprice" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][id]"
+                            value="<?php echo $_sprice->getId() ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][note]"
+                            value="<?php echo htmlspecialchars($_sprice->note) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][name]"
+                            value="<?php echo htmlspecialchars($_sprice->name) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][condition]"
+                            value="<?php echo htmlspecialchars($_sprice->condition) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][kind]"
+                            value="<?php echo htmlspecialchars($_sprice->kind) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][doesnotaffectlanuv]"
+                            value="<?php echo htmlspecialchars($_sprice->doesnotaffectlanuv) ?>" />
+                    </div>
+                        
+                    <div class="row">
+                        <div class="span4">
+                            <small><?php echo htmlspecialchars($_sprice->note) ?></small>
+                        </div>
+                        <div class="span1">
+                            <input
+                                type="text"
+                                class="number"
+                                readonly="readonly"
+                                name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][piggery]"
+                                value="<?php echo htmlspecialchars($_sprice->piggery) ?>"
+                            />
+                        </div>
+                        <div class="span2">
+                            <input
+                                type="text"
+                                class="number <?php echo ( $_deliverer->hasService() ) ? '' : 'invisible' ?>"
+                                name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][sprice]"
+                                value="<?php echo htmlspecialchars($_sprice->decimal('sprice', 3)) ?>"
+                                placeholder="<?php echo htmlspecialchars($_sprice->decimal('sprice', 3)) ?>"
+                            />
+                        </div>
+                        <div class="span2">
+                            <input
+                                type="text"
+                                class="number"
+                                name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][dprice]"
+                                value="<?php echo htmlspecialchars($_sprice->decimal('dprice', 3)) ?>"
+                                placeholder="<?php echo htmlspecialchars($_sprice->decimal('dprice', 3)) ?>"
+                            />
+                        </div>
+                    </div>
+
+                    <?php endforeach ?>
+                </div>
+                <?php endif ?>
+                
                 </div>
                 
             </fieldset>

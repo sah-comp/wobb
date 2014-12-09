@@ -27,6 +27,18 @@ class Model_Var extends Model
     {
         return array(
             array(
+                'name' => 'kind',
+                'sort' => array(
+                    'name' => 'kind'
+                ),
+                'callback' => array(
+                    'name' => 'kindName'
+                ),
+                'filter' => array(
+                    'tag' => 'text'
+                )
+            ),
+            array(
                 'name' => 'name',
                 'sort' => array(
                     'name' => 'name'
@@ -48,6 +60,18 @@ class Model_Var extends Model
                 'name' => 'note',
                 'sort' => array(
                     'name' => 'note'
+                ),
+                'filter' => array(
+                    'tag' => 'text'
+                )
+            ),
+            array(
+                'name' => 'condition',
+                'sort' => array(
+                    'name' => 'condition'
+                ),
+                'callback' => array(
+                    'name' => 'conditionName'
                 ),
                 'filter' => array(
                     'tag' => 'text'
@@ -79,6 +103,59 @@ class Model_Var extends Model
                     'tag' => 'number'
                 )
             )
+        );
+    }
+    
+    /**
+     * Returns the i18n of condition token.
+     *
+     * @return string
+     */
+    public function conditionName()
+    {
+        return I18n::__('var_condition_' . $this->bean->condition);
+    }
+    
+    /**
+     * Returns the i18n of kind token.
+     *
+     * @return string
+     */
+    public function kindName()
+    {
+        return I18n::__('var_kind_' . $this->bean->kind);
+    }
+    
+    /**
+     * Returns an array with condition names.
+     *
+     * @return array
+     */
+    public function getConditions()
+    {
+        return array(
+            'fixed',
+            'disagio',
+            'agio'
+        );
+    }
+    
+    /**
+     * Returns an array with kind names.
+     *
+     * A var bean may be of a certain kind. Some may apply to stock damage1 or damage2 or
+     * other may apply to stock quality.
+     *
+     * @return array
+     */
+    public function getKinds()
+    {
+        return array(
+            'quality',
+            'damage1',
+            'damage2',
+            'qs',
+            'other'
         );
     }
     

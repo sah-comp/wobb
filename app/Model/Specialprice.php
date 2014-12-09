@@ -9,17 +9,16 @@
  */
 
 /**
- * Damage model.
+ * Specialprice model.
  *
- * There are codes like "08" or "06" which are given to stock beans. Some of them have
- * to be announced to the LANUV, some not. Some are calculated with fixed prices, some
- * not. This model handles these quality information.
+ * For any supplier there may be special prices applying to stock that is damaged or stock that
+ * qualifies as a Sau, schweres Schwein.
  *
  * @package Cinnebar
  * @subpackage Model
  * @version $Id$
  */
-class Model_Damage extends Model
+class Model_Specialprice extends Model
 {
     /**
      * Returns an array with attributes for lists.
@@ -40,18 +39,9 @@ class Model_Damage extends Model
                 )
             ),
             array(
-                'name' => 'supplier',
-                'sort' => array(
-                    'name' => 'supplier'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
                 'name' => 'desc',
                 'sort' => array(
-                    'name' => 'damage.desc'
+                    'name' => 'specialprice.desc'
                 ),
                 'filter' => array(
                     'tag' => 'text'
@@ -82,33 +72,7 @@ class Model_Damage extends Model
                 'filter' => array(
                     'tag' => 'number'
                 )
-            ),
-            array(
-                'name' => 'enabled',
-                'sort' => array(
-                    'name' => 'enabled'
-                ),
-                'callback' => array(
-                    'name' => 'boolean'
-                ),
-                'filter' => array(
-                    'tag' => 'bool'
-                )
-            ),
-        );
-    }
-    
-    /**
-     * Returns an array with condition names.
-     *
-     * @return array
-     */
-    public function getConditions()
-    {
-        return array(
-            'fixed',
-            'disagio',
-            'agio'
+            )
         );
     }
     
@@ -117,9 +81,6 @@ class Model_Damage extends Model
      */
     public function dispense()
     {
-        $this->addValidator('name', array(
-            new Validator_HasValue()
-        ));
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));

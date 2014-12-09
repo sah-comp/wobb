@@ -305,6 +305,7 @@
         'tab_id' => 'person-tabs',
         'tabs' => array(
             'person-address' => I18n::__('person_address_tab'),
+            'person-baseprice' => I18n::__('person_baseprice_tab'),
             'person-condition' => I18n::__('person_condition_tab'),
             'person-billing' => I18n::__('person_billing_tab')
         ),
@@ -389,6 +390,36 @@
                     <?php echo ($record->hasdealer) ? 'checked="checked"' : '' ?>
                     value="1" />
             </div>
+    </fieldset>
+    <fieldset
+        id="person-baseprice"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_baseprice_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('relsprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-relsprice">
+                <?php echo I18n::__('person_label_relsprice') ?>
+            </label>
+            <input
+                id="person-relsprice"
+                type="text"
+                class="number"
+                name="dialog[relsprice]"
+                value="<?php echo htmlspecialchars($record->decimal('relsprice', 3)) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('reldprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-reldprice">
+                <?php echo I18n::__('person_label_reldprice') ?>
+            </label>
+            <input
+                id="person-reldprice"
+                type="text"
+                class="number"
+                name="dialog[reldprice]"
+                value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
+        </div>
     </fieldset>
 </div>
 <!-- end of person edit form -->

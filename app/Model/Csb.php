@@ -61,6 +61,89 @@ class Model_Csb extends Model
     }
     
     /**
+     * Returns an array with DamageDaily beans.
+     *
+     * If there are no own damagedaily beans the damage beans of the system will
+     * be copied and presented as the default set.
+     *
+     * @return array
+     */
+    public function getDamageDaily()
+    {
+        if ( ! $this->bean->ownDamagedaily ) {
+            foreach (R::find('damage', " supplier IS NULL OR supplier = '' ORDER BY name ") as $id => $damage) {
+                $daily = R::dispense('damagedaily');
+                $daily->supplier = NULL;
+                $daily->name = $damage->name;
+                $daily->condition = $damage->condition;
+                $daily->desc = $damage->desc;
+                $daily->sprice = $damage->sprice;
+                $daily->dprice = $damage->dprice;
+                
+                if ( $this->bean->hasDamageCode($damage->name) ) {
+                    $stock_list = $this->bean->getStockWithDamage($damage->name);
+                    $last_supplier = NULL;
+                    foreach ($stock_list as $id => $stock) {
+                        if ($last_supplier != $stock->supplier) {
+
+                            $damage_for_supplier = R::findOne('damage', ' supplier = ? AND name = ? LIMIT 1', array($stock->supplier, $damage->name));
+
+                            $own_daily = R::dispense('damagedaily');
+                            
+                            $own_daily->condition = $damage->condition;
+                            $own_daily->supplier = $stock->supplier;
+                            $own_daily->name = $damage->name;
+                            $own_daily->desc = $damage->desc;
+                            $own_daily->sprice = ( $damage_for_supplier ) ? $damage_for_supplier->sprice : $damage->sprice;
+                            $own_daily->dprice = ( $damage_for_supplier ) ? $damage_for_supplier->dprice : $damage->dprice;
+                            
+                            $daily->ownDamageDaily[] = $own_daily;
+                            
+                            $last_supplier = $stock->supplier;
+                        }
+                    }
+                }
+                
+                $this->bean->ownDamagedaily[] = $daily;
+                R::store($this->bean);
+            }
+            return $this->bean->ownDamagedaily;
+        }
+        return $this->bean->with(' ORDER BY name ')->ownDamagedaily;
+    }
+    
+    /**
+     * Returns the count of a certain damage code within this days stock.
+     *
+     * @param string The damage code
+     * @return bool
+     */
+    public function hasDamageCode($code)
+    {
+        return $this->bean
+                    ->withCondition(' ( damage1 = :code OR damage2 = :code ) ', array(
+                        ':code' => $code
+                    ))
+                    ->countOwn('stock');
+    }
+    
+    /**
+     * Returns the stock beans which have a certain code.
+     *
+     * @param string The damage code
+     * @return bool
+     */
+    public function getStockWithDamage($code)
+    {
+        //R::debug(true);
+        return $this->bean
+                    ->withCondition(' ( damage1 = :code OR damage2 = :code ) ORDER by supplier ', array(
+                        ':code' => $code
+                    ))
+                    ->ownStock;
+    }
+    
+    /**
      * Returns a string to be used as a headline.
      *
      * @return string
@@ -328,6 +411,11 @@ SQL;
     
     /**
      * Create deliverer and their subdeliverer beans.
+     *
+     * When there is no person matching a main deliverer a new person bean will be created.
+     * The baseprice will be added with rel*price values of the found person bean. A subdeliverer
+     * will not have a *price because they will inherit from their each and every main deliverer bean.
+     *
      */
     public function makeDeliverer()
     {
@@ -343,8 +431,8 @@ SQL;
             $deliverer->supplier = $stock['supplier'];
             $deliverer->earmark = '';
             $deliverer->piggery = $stock['total'];
-            $deliverer->dprice = $this->bean->baseprice;
-            $deliverer->sprice = $this->bean->baseprice;
+            $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
+            $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
@@ -370,6 +458,7 @@ SQL;
     {
         foreach ($this->bean->with(" ORDER BY supplier ")->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
+            $deliverer->totalnetlanuv = 0;
             $deliverer->totalweight = 0;
             $deliverer->totalmfa = 0;
             $deliverer->hasmfacount = 0;
@@ -384,6 +473,7 @@ SQL;
                 $subdeliverer->totalnet = $summary['totalnet'];
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];
+                $deliverer->totalnetlanuv += $summary['totalnetlanuv'];
                 $deliverer->totalweight += $summary['totalweight'];
                 $deliverer->totalmfa += $summary['totalmfa'];
                 $deliverer->hasmfacount += $summary['hasmfacount'];
@@ -393,8 +483,10 @@ SQL;
                 $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
             if ( $deliverer->hasmfacount ) 
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
-            if ( $deliverer->totalweight ) 
+            if ( $deliverer->totalweight ) {
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
+                $deliverer->meandpricelanuv = $deliverer->totalnetlanuv / $deliverer->totalweight;
+            }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean

@@ -31,6 +31,9 @@ class Model_Deliverer extends Model
         $this->addConverter('dprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('totalnet', array(
+            new Converter_Decimal()
+        ));
         
         $this->addConverter('calcdate', array(
             new Converter_MysqlDatetime()
@@ -103,6 +106,91 @@ class Model_Deliverer extends Model
     }
     
     /**
+     * Returns an array with special prices for damaged stock.
+     *
+     * @todo Clean up the searches and sections damage1, damage2 and quality to make it clearer what happens
+     *
+     * @return array
+     */
+    public function getSpecialPrices()
+    {
+        if ( ! $this->bean->ownSpecialprice) {
+            // damage1
+            $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", array($this->bean->csb->getId(), $this->bean->supplier));
+            foreach ($stocks as $id => $stock) {
+                
+                if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' LIMIT 1 ", array(
+                    ':damage1' => $stock['damage1'],
+                    ':supplier' => $this->bean->supplier
+                ))) {
+                    $var = R::dispense('var');
+                }
+                
+                $price = R::dispense('specialprice');
+                $price->piggery = $stock['total'];
+                $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
+                $price->kind = $var->kind;
+                $price->sprice = $var->sprice;
+                $price->dprice = $var->dprice;
+                $price->name = $var->name;
+                $price->note = $var->note;
+                $price->condition = $var->condition;
+                $this->bean->ownSpecialprice[] = $price;
+            }
+            
+            // damage2
+            $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", array($this->bean->csb->getId(), $this->bean->supplier));
+            foreach ($stocks as $id => $stock) {
+                
+                if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' LIMIT 1 ", array(
+                    ':damage2' => $stock['damage2'],
+                    ':supplier' => $this->bean->supplier
+                ))) {
+                    $var = R::dispense('var');
+                }
+                
+                $price = R::dispense('specialprice');
+                $price->piggery = $stock['total'];
+                $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
+                $price->kind = $var->kind;
+                $price->sprice = $var->sprice;
+                $price->dprice = $var->dprice;
+                $price->name = $var->name;
+                $price->note = $var->note;
+                $price->condition = $var->condition;
+                $this->bean->ownSpecialprice[] = $price;
+            }
+            
+            $qualities = R::find('var', " kind='quality' AND supplier = ''");
+            foreach ($qualities as $id => $quality) {
+                // quality
+                $stocks = R::getAll("SELECT COUNT(id) AS total, quality FROM stock WHERE csb_id = ? AND supplier = ? AND quality = ? GROUP BY quality ORDER BY quality ", array($this->bean->csb->getId(), $this->bean->supplier, $quality->name));
+                foreach ($stocks as $id => $stock) {
+
+                    if ( ! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' LIMIT 1 ", array(
+                        ':quality' => $stock['quality'],
+                        ':supplier' => $this->bean->supplier
+                    ))) {
+                        $var = R::dispense('var');
+                    }
+
+                    $price = R::dispense('specialprice');
+                    $price->piggery = $stock['total'];
+                    $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
+                    $price->kind = $var->kind;
+                    $price->sprice = $var->sprice;
+                    $price->dprice = $var->dprice;
+                    $price->name = $var->name;
+                    $price->note = $var->note;
+                    $price->condition = $var->condition;
+                    $this->bean->ownSpecialprice[] = $price;
+                }
+            }
+        }
+        return $this->bean->ownSpecialprice;
+    }
+    
+    /**
      * Calculates the prices of all stock that belongs to this deliverer of the given csb bean and
      * returns an array with a summery of the calculation.
      *
@@ -120,6 +208,7 @@ class Model_Deliverer extends Model
         }
         $ret = array(
             'totalnet' => 0,
+            'totalnetlanuv' => 0,
             'totalweight' => 0,
             'totalmfa' => 0,
             'hasmfacount' => 0,
@@ -128,6 +217,7 @@ class Model_Deliverer extends Model
         foreach ($stocks as $id => $stock) {
             $stock->calculation($this->bean, $pricing);
             $ret['totalnet'] += $stock->totaldprice;
+            $ret['totalnetlanuv'] += $stock->totallanuvprice;
             $ret['totalweight'] += $stock->weight;
             $ret['totalmfa'] += $stock->mfa;
             if ($stock->mfa) $ret['hasmfacount']++;

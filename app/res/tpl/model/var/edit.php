@@ -27,6 +27,24 @@
             value="<?php echo htmlspecialchars($record->name) ?>"
             required="required" />
     </div>
+    <div class="row <?php echo ($record->hasError('kind')) ? 'error' : ''; ?>">
+        <label
+            for="var-kind">
+            <?php echo I18n::__('var_label_kind') ?>
+        </label>
+        <select
+            id="var-kind"
+            name="dialog[kind]">
+            <?php foreach ($record->getKinds() as $_kind): ?>
+            <option
+                value="<?php echo $_kind ?>"
+                <?php echo ($record->kind == $_kind) ? 'selected="selected"' : '' ?>>
+                <?php echo I18n::__('var_kind_'.$_kind) ?>
+            </option>
+            <?php endforeach ?>
+        </select>
+        <p class="info"><?php echo I18n::__('var_info_kind') ?></p>
+    </div>
     <div class="row <?php echo ($record->hasError('supplier')) ? 'error' : ''; ?>">
         <label
             for="var-supplier">
@@ -50,6 +68,23 @@
             rows="3"
             cols="60"><?php echo htmlspecialchars($record->note) ?></textarea>
     </div>
+    <div class="row <?php echo ($record->hasError('condition')) ? 'error' : ''; ?>">
+        <label
+            for="var-condition">
+            <?php echo I18n::__('var_label_condition') ?>
+        </label>
+        <select
+            id="var-condition"
+            name="dialog[condition]">
+            <?php foreach ($record->getConditions() as $_condition): ?>
+            <option
+                value="<?php echo $_condition ?>"
+                <?php echo ($record->condition == $_condition) ? 'selected="selected"' : '' ?>>
+                <?php echo I18n::__('var_condition_'.$_condition) ?>
+            </option>
+            <?php endforeach ?>
+        </select>
+    </div>
     <div class="row <?php echo ($record->hasError('sprice')) ? 'error' : ''; ?>">
         <label
             for="var-sprice">
@@ -71,6 +106,23 @@
             type="text"
             name="dialog[dprice]"
             value="<?php echo htmlspecialchars($record->decimal('dprice', 3)) ?>" />
+    </div>
+    <div class="row <?php echo ($record->hasError('doesnotaffectlanuv')) ? 'error' : ''; ?>">
+        <input
+            type="hidden"
+            name="dialog[doesnotaffectlanuv]"
+            value="0" />
+        <input
+            id="var-doesnotaffectlanuv"
+            type="checkbox"
+            name="dialog[doesnotaffectlanuv]"
+            <?php echo ($record->doesnotaffectlanuv) ? 'checked="checked"' : '' ?>
+            value="1" />
+        <label
+            for="var-doesnotaffectlanuv"
+            class="cb">
+            <?php echo I18n::__('var_label_doesnotaffectlanuv') ?>
+        </label>
     </div>
 </fieldset>
 <!-- end of var edit form -->

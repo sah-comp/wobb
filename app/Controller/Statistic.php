@@ -23,6 +23,7 @@ class Controller_Statistic extends Controller
       * @var array
       */
     public $javascripts = array(
+        '/js/tk'
     );
     
     /**

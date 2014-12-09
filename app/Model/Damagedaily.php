@@ -9,17 +9,15 @@
  */
 
 /**
- * Damage model.
+ * Damagedaily model.
  *
- * There are codes like "08" or "06" which are given to stock beans. Some of them have
- * to be announced to the LANUV, some not. Some are calculated with fixed prices, some
- * not. This model handles these quality information.
+ * For each csb bean there is a list of special prices for damaged stock.
  *
  * @package Cinnebar
  * @subpackage Model
  * @version $Id$
  */
-class Model_Damage extends Model
+class Model_Damagedaily extends Model
 {
     /**
      * Returns an array with attributes for lists.
@@ -40,18 +38,9 @@ class Model_Damage extends Model
                 )
             ),
             array(
-                'name' => 'supplier',
-                'sort' => array(
-                    'name' => 'supplier'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
                 'name' => 'desc',
                 'sort' => array(
-                    'name' => 'damage.desc'
+                    'name' => 'damagedaily.desc'
                 ),
                 'filter' => array(
                     'tag' => 'text'
@@ -82,34 +71,21 @@ class Model_Damage extends Model
                 'filter' => array(
                     'tag' => 'number'
                 )
-            ),
-            array(
-                'name' => 'enabled',
-                'sort' => array(
-                    'name' => 'enabled'
-                ),
-                'callback' => array(
-                    'name' => 'boolean'
-                ),
-                'filter' => array(
-                    'tag' => 'bool'
-                )
-            ),
+            )
         );
     }
     
     /**
-     * Returns an array with condition names.
+     * Returns the person bean which is the supplier
      *
-     * @return array
+     * @return Model_Person
      */
-    public function getConditions()
+    public function getSupplier()
     {
-        return array(
-            'fixed',
-            'disagio',
-            'agio'
-        );
+        if ( ! $person = R::findOne('person', ' nickname = ? ', array($this->bean->supplier)) ) {
+            $person = R::dispense('person');
+        }
+        return $person;
     }
     
     /**
@@ -117,9 +93,6 @@ class Model_Damage extends Model
      */
     public function dispense()
     {
-        $this->addValidator('name', array(
-            new Validator_HasValue()
-        ));
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));

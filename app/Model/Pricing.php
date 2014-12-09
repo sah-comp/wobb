@@ -28,8 +28,8 @@ class Model_Pricing extends Model
      */
     public function calculate(RedBean_OODBBean $stock, RedBean_OODBBean $deliverer)
     {
-        $stock->agio = 0;
-        $stock->disagio = 0;
+        //$stock->agio = 0;
+        //$stock->disagio = 0;
         $optimalWeightMargin = $this->getOptimalMargin('weight');
         $mfaMarginKind = 'mfa'; // use mfa kind for mfa margins
         if ( ($stock->weight >= $optimalWeightMargin->lo AND
