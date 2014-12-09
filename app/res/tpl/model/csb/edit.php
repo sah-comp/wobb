@@ -85,6 +85,7 @@
             class="number"
             name="dialog[baseprice]"
             value="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
+            placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>"
             required="required" />
     </div>
 </fieldset>

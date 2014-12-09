@@ -146,6 +146,23 @@ class Model_Stock extends Model
     }
     
     /**
+     * Returns a person bean.
+     *
+     * Based on the value of attribute supplier this will look up the person bean and return it.
+     * If no person can be found a empty person bean is returned.
+     *
+     * @return RedBean_OODBBean $person
+     */
+    public function getPersonBySupplier()
+    {
+        if ( ! $person = R::findOne('person', " nickname = ? ", array($this->bean->supplier))) {
+            $person = R::dispense('person');
+            $person->name = I18n::__('person_name_unknown');
+        }
+        return $person;
+    }
+    
+    /**
      * Calculates the price of this stock bean according to given parameters by the deliverer bean.
      *
      * @param RedBean_OODBBean $deliverer

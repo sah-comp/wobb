@@ -61,58 +61,6 @@ class Model_Csb extends Model
     }
     
     /**
-     * Returns an array with DamageDaily beans.
-     *
-     * If there are no own damagedaily beans the damage beans of the system will
-     * be copied and presented as the default set.
-     *
-     * @return array
-     */
-    public function getDamageDaily()
-    {
-        if ( ! $this->bean->ownDamagedaily ) {
-            foreach (R::find('damage', " supplier IS NULL OR supplier = '' ORDER BY name ") as $id => $damage) {
-                $daily = R::dispense('damagedaily');
-                $daily->supplier = NULL;
-                $daily->name = $damage->name;
-                $daily->condition = $damage->condition;
-                $daily->desc = $damage->desc;
-                $daily->sprice = $damage->sprice;
-                $daily->dprice = $damage->dprice;
-                
-                if ( $this->bean->hasDamageCode($damage->name) ) {
-                    $stock_list = $this->bean->getStockWithDamage($damage->name);
-                    $last_supplier = NULL;
-                    foreach ($stock_list as $id => $stock) {
-                        if ($last_supplier != $stock->supplier) {
-
-                            $damage_for_supplier = R::findOne('damage', ' supplier = ? AND name = ? LIMIT 1', array($stock->supplier, $damage->name));
-
-                            $own_daily = R::dispense('damagedaily');
-                            
-                            $own_daily->condition = $damage->condition;
-                            $own_daily->supplier = $stock->supplier;
-                            $own_daily->name = $damage->name;
-                            $own_daily->desc = $damage->desc;
-                            $own_daily->sprice = ( $damage_for_supplier ) ? $damage_for_supplier->sprice : $damage->sprice;
-                            $own_daily->dprice = ( $damage_for_supplier ) ? $damage_for_supplier->dprice : $damage->dprice;
-                            
-                            $daily->ownDamageDaily[] = $own_daily;
-                            
-                            $last_supplier = $stock->supplier;
-                        }
-                    }
-                }
-                
-                $this->bean->ownDamagedaily[] = $daily;
-                R::store($this->bean);
-            }
-            return $this->bean->ownDamagedaily;
-        }
-        return $this->bean->with(' ORDER BY name ')->ownDamagedaily;
-    }
-    
-    /**
      * Returns the count of a certain damage code within this days stock.
      *
      * @param string The damage code
@@ -125,6 +73,33 @@ class Model_Csb extends Model
                         ':code' => $code
                     ))
                     ->countOwn('stock');
+    }
+
+    /**
+     * Returns count of stock beans which need the users attention.
+     *
+     * @return int
+     */
+    public function hasStockThatNeedsAttention()
+    {
+        return $this->bean
+                    ->withCondition(" damage1 IN (?) ORDER BY supplier, name", array(
+                        '06'
+                    ))
+                    ->countOwn('stock');
+    }
+    
+    /**
+     * Returns an array with stock that needs manual work.
+     *
+     * These are frontmost those stock beans which have damage1 equal to '06' as the code
+     * for being vorlaeufig.
+     *
+     * @return array
+     */
+    public function getStockThatNeedsAttention()
+    {
+        return R::find('stock', " csb_id = ? AND damage1 IN (?) ORDER BY supplier, name", array($this->bean->getId(), "06"));
     }
     
     /**
@@ -141,6 +116,19 @@ class Model_Csb extends Model
                         ':code' => $code
                     ))
                     ->ownStock;
+    }
+    
+    /**
+     * Returns the latest csb bean.
+     *
+     * @return RedBean_OODBBean $csb
+     */
+    public function getLatest()
+    {
+        if ( ! $latest = R::findOne('csb', " ORDER BY pubdate DESC LIMIT 1 ")) {
+            $latest = R::dispense('csb');
+        }
+        return $latest;
     }
     
     /**

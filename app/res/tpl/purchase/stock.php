@@ -18,11 +18,8 @@
             
             <!-- row with labels -->
             <div class="row">
-                <div class="span1">
+                <div class="span4">
                     <label><?php echo I18n::__('stock_label_supplier') ?></label>
-                </div>
-                <div class="span2">
-                    <label><?php echo I18n::__('stock_label_earmark') ?></label>
                 </div>
                 <div class="span2">
                     <label><?php echo I18n::__('stock_label_name') ?></label>
@@ -36,35 +33,30 @@
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('stock_label_mfa') ?></label>
                 </div>
-                <div class="span4">
+                <div class="span3">
                     <label><?php echo I18n::__('stock_label_damage1') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
             
-            <?php foreach (R::find('stock', " csb_id = ? AND damage1 != '' ORDER BY name, damage1", array($record->getId())) as $_stock_id => $_stock): ?>
+            <?php foreach ($records as $_stock_id => $_stock): ?>
                 
             <div>                
                 <input type="hidden" name="dialog[stock][<?php echo $_stock_id ?>][type]" value="stock" />
                 <input type="hidden" name="dialog[stock][<?php echo $_stock_id ?>][id]" value="<?php echo $_stock->getId() ?>" />
+                <input
+                    type="hidden"
+                    name="dialog[stock][<?php echo $_stock_id ?>][supplier]"
+                    value="<?php echo htmlspecialchars($_stock->supplier) ?>" />
             </div>
                 
             <div class="row">
                 
-                <div class="span1">
-                    <input
-                        type="text"
-                        name="dialog[stock][<?php echo $_stock_id ?>][supplier]"
-                        value="<?php echo htmlspecialchars($_stock->supplier) ?>"
-                        required="required" />
-                </div>
-                
-                <div class="span2">
-                    <input
-                        type="text"
-                        name="dialog[stock][<?php echo $_stock_id ?>][earmark]"
-                        value="<?php echo htmlspecialchars($_stock->earmark) ?>"
-                        required="required" />
+                <div class="span4">
+                    <?php echo htmlspecialchars($_stock->getPersonBySupplier()->name) ?>
+                    <div class="deliverer-info">
+                        <?php echo $_stock->supplier . ', ' . $_stock->earmark ?>
+                    </div>
                 </div>
                 
                 <div class="span2">
@@ -101,10 +93,10 @@
                         required="required" />
                 </div>
                 
-                <div class="span4">
+                <div class="span3">
                     <select
                         name="dialog[stock][<?php echo $_stock_id ?>][damage1]">
-                        <option value=""><?php echo I18n::__('select_one_or_leave_empty') ?></option>
+                        <option value=""><?php echo I18n::__('damage1_select_one_or_empty') ?></option>
                         <?php foreach (R::find('var', " supplier = '' AND kind = 'damage1' ORDER BY name ") as $_damage_id => $_damage): ?>
                             <option
                                 value="<?php echo htmlspecialchars($_damage->name) ?>"
@@ -124,11 +116,6 @@
         
         <!-- Purchase buttons -->
         <div class="buttons">
-            <a
-                href="<?php echo Url::build(sprintf("/purchase/damage/%d", $record->getId())) ?>"
-                class="btn">
-                <?php echo I18n::__('calculation_href_goto_damage') ?>
-            </a>
             <input
                 type="submit"
                 name="submit"

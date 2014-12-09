@@ -44,8 +44,11 @@
                 <div class="span2 number">
                     <label><?php echo I18n::__('purchase_label_baseprice') ?></label>
                 </div>
-                <div class="span5">
+                <div class="span3">
                     <label><?php echo I18n::__('purchase_label_calcdate') ?></label>
+                </div>
+                <div class="span2">
+                    <label><?php echo I18n::__('purchase_label_attention') ?></label>
                 </div>
             </div>
                 <?php endif ?>
@@ -66,8 +69,11 @@
                         <div class="span2">
                             <span class="number"><?php echo $_record->decimal('baseprice', 3) ?></span>
                         </div>
-                        <div class="span5">
+                        <div class="span3">
                             <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
+                        </div>
+                        <div class="span2">
+                            <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, array(htmlspecialchars($_record->hasStockThatNeedsAttention()))) : I18n::__('purchase_needs_no_attention') ?>
                         </div>
                     </div>
                 </a>
