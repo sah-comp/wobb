@@ -438,13 +438,15 @@ SQL;
     }
     
     /**
-     * Calculates prices for each stock of this slaughter charge.
+     * Calculates prices for each stock of all enabled deliveres of this csb bean.
      *
      * @return void
      */
     public function calculation()
     {
-        foreach ($this->bean->with(" ORDER BY supplier ")->ownDeliverer as $_id => $deliverer) {
+        foreach ($this->bean
+                      ->withCondition(" enabled = 1 ORDER BY supplier ")
+                      ->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
             $deliverer->totalnetlanuv = 0;
             $deliverer->totalweight = 0;

@@ -54,8 +54,16 @@
                         value="<?php echo $_id ?>" />
                 </div>
                 <div class="row">
-
                     <div class="span4">
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
+                            value="0" />
+                        <input
+                            type="checkbox"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
+                            <?php echo ($_deliverer->enabled) ? 'checked="checked"' : '' ?>
+                            value="1" />
                         <a 
                             href="#toggle"
                             class="toggle"
@@ -126,7 +134,7 @@
                 
                 <div class="row">
                     <div class="span4">
-                        <span class="subdeliverer-earmark">
+                        <span class="subdeliverer-earmark indent">
                             <?php echo htmlspecialchars($_sub->earmark) ?>
                         </span>
                     </div>
@@ -210,7 +218,9 @@
                         
                     <div class="row">
                         <div class="span4">
+                            <span class="indent">
                             <small><?php echo htmlspecialchars($_sprice->note) ?></small>
+                            </span>
                         </div>
                         <div class="span1">
                             <input

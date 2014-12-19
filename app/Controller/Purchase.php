@@ -151,6 +151,7 @@ class Controller_Purchase extends Controller
             $stock_list = $dialog['stock'];
             R::begin();
             try {
+                $this->record->cntattention++;
                 R::store($this->record); //must do this, because otherwise prices dont copy!!
                 
                 foreach ($stock_list as $id => $stock) {
@@ -183,7 +184,8 @@ class Controller_Purchase extends Controller
     {
         Permission::check(Flight::get('user'), 'purchase', 'edit');
         $this->layout = 'calculation';
-        if ( $count_attention = $this->record->hasStockThatNeedsAttention()) {
+        if ( ( $count_attention = $this->record->hasStockThatNeedsAttention() ) 
+                                                            && $this->record->cntattention < 3 ) {
             Flight::get('user')->notify(I18n::__('purchase_stock_needs_your_attention_again', null, array($count_attention)), 'warning');
             $this->redirect(sprintf('/purchase/stock/%d', $this->record->getId()));
         }
@@ -197,6 +199,11 @@ class Controller_Purchase extends Controller
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_calculation_edit_success'));
                 $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
+            }
+            catch (Exception_Missingpricemask $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('calculation_missingpricemask', null, array($e->getMessage())), 'error');
             }
             catch (Exception $e) {
                 error_log($e);

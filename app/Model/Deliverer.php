@@ -25,6 +25,7 @@ class Model_Deliverer extends Model
      */
     public function dispense()
     {
+        $this->bean->enabled = true;
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));
@@ -204,7 +205,7 @@ class Model_Deliverer extends Model
             $this->bean->earmark
         ));
         if ( ! $pricing = $this->bean->person->pricing) {
-            throw new Exception(I18n::__('Missing pricing information on deliverer ' . $this->bean->supplier));
+            throw new Exception_Missingpricemask( $this->bean->supplier );
         }
         $ret = array(
             'totalnet' => 0,

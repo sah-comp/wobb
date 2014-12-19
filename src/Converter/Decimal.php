@@ -21,11 +21,24 @@ class Converter_Decimal extends Converter
     /**
      * Replaces comma against a decimal point and casts the value as float.
      *
-     * @param mixed $value
+     * @param mixed The string to be converted
      * @return float $floatingPointValue
      */
-    public function convert($value)
+    public function convert($num)
     {
-        return (float)str_replace(',', '.', $value);
+        //return (float)str_replace(',', '.', $value);
+        $dotPos = strrpos($num, '.');
+        $commaPos = strrpos($num, ',');
+        $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos : 
+            ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+
+        if (!$sep) {
+            return floatval(preg_replace("/[^0-9]/", "", $num));
+        } 
+
+        return floatval(
+            preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+            preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
+        );
     }
 }

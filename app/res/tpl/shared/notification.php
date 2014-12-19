@@ -14,6 +14,8 @@
     id="notification"
     class="notification"
     style="display: none;">
+    <?php $_lastclass = null ?>
+    <?php $_content = null ?>
     <?php foreach ($items as $id => $item): ?>
     <div class="alert alert-<?php echo $item->class ?>">
         <?php echo Flight::textile($item->content) ?>

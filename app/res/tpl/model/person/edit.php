@@ -128,6 +128,7 @@
         <select
             id="person-pricing"
             name="dialog[pricing_id]">
+            <option value=""><?php echo I18n::__('person_pricing_please_select') ?></option>
             <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing): ?>
             <option
                 value="<?php echo $_pricing->getId() ?>"

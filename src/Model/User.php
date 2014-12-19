@@ -178,7 +178,7 @@ class Model_User extends Model
      */
     public function getNotifications($readOnlyOnce = true)
     {
-        $all = R::related($this->bean, 'notification', ' 1 ORDER BY stamp');
+        $all = R::related($this->bean, 'notification', ' 1 ORDER BY class, stamp DESC');
         if ($readOnlyOnce === true) R::trashAll($all);
         return $all;
     }
