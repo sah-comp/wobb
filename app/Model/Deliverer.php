@@ -106,6 +106,18 @@ class Model_Deliverer extends Model
     }
     
     /**
+     * Calculates the vat values of this bean.
+     *
+     * @return bool
+     */
+    public function calcVat()
+    {
+        $this->bean->vatvalue = $this->bean->subtotalnet * $this->bean->person->vat->value / 100;
+        $this->bean->totalgros = $this->bean->subtotalnet + $this->bean->vatvalue;
+        return true;
+    }
+    
+    /**
      * Calculates conditions of this deliverer with given stock bean and returns the added bonus.
      *
      * @param RedBean_OODBBean $stock

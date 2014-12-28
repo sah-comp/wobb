@@ -462,6 +462,10 @@ SQL;
                       ->withCondition(" enabled = 1 ORDER BY supplier ")
                       ->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
+            $deliverer->subtotalnet = 0;
+            $deliverer->vatvalue = 0;
+            $deliverer->totalgros = 0;
+            $deliverer->totalcost = 0;
             $deliverer->totalnetlanuv = 0;
             $deliverer->totalweight = 0;
             $deliverer->totalmfa = 0;
@@ -493,6 +497,7 @@ SQL;
             }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
             $deliverer->calcCost();
+            $deliverer->calcVat();
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
         return null;

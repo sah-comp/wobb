@@ -175,6 +175,12 @@ class Model_Person extends Model
         } else {
             unset($this->bean->pricing);
         }
+        
+        if ($this->bean->vat_id) {
+            $this->bean->vat = R::load('vat', $this->bean->vat_id);
+        } else {
+            unset($this->bean->vat);
+        }
         /*
         if ($this->bean->email) {
             $this->addValidator('email', array(

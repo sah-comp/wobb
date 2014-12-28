@@ -136,6 +136,22 @@
             <?php endforeach ?>
         </select>
     </div>
+    <div class="row <?php echo ($record->hasError('vat_id')) ? 'error' : ''; ?>">
+        <label
+            for="person-vat">
+            <?php echo I18n::__('person_label_vat') ?>
+        </label>
+        <select
+            id="person-vat"
+            name="dialog[vat_id]">
+            <option value=""><?php echo I18n::__('person_vat_please_select') ?></option>
+            <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
+            <option
+                value="<?php echo $_vat->getId() ?>"
+                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+            <?php endforeach ?>
+        </select>
+    </div>
 </fieldset>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('person_legend_email') ?></legend>
