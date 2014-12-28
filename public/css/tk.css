@@ -17,7 +17,7 @@ body {
 .not-yet-implemented h1 { display: none; }
 
 .deliverer-info {
-    padding-left: 1.8em;
+    /*padding-left: 1.8em;*/
     font-size: small;
 }
 

@@ -66,16 +66,22 @@ class Controller_Billing extends Controller
     {
         Permission::check(Flight::get('user'), 'billing', 'index');
         $this->layout = 'index';
-        //$this->records = R::findAll('csb', ' ORDER BY pubdate DESC');
         if (Flight::request()->method == 'POST') {
-            //try to create a new csb bean with data from form
-            //which imports the csb data to stock
-            //from given stock
-            //create each deliverer with its subdeliverers
-            //spread data like prices and such
-            //if all went well goto /purchase/day/n with given new bean
-            //or generate a error notification and stay here
-            Flight::get('user')->notify(I18n::__('billing_success'));
+            $this->record = R::graph(Flight::request()->data->dialog, true);
+            R::begin();
+            try {
+                R::store($this->record); //must do this, because otherwise prices dont copy!!
+                $this->record->billing();
+                R::store($this->record);
+                R::commit();
+                Flight::get('user')->notify(I18n::__('billing_index_success'));
+                $this->redirect(sprintf('/billing/index/%d', $this->record->getId()));
+            }
+            catch (Exception $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('billing_index_success_error'), 'error');
+            }
         }
         $this->render();
     }

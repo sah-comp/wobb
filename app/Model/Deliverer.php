@@ -76,6 +76,36 @@ class Model_Deliverer extends Model
     }
     
     /**
+     * Calculates the cost beans of this deliverer.
+     *
+     * Based on the method of the dcost bean and the number of stock or weight
+     * the additional costs will be calculated.
+     *
+     * @return bool
+     */
+    public function calcCost()
+    {
+        $this->bean->totalcost = 0;
+        foreach ($this->bean->ownDcost as $dcost_id => $dcost) {
+            switch ($dcost->label) {
+                case 'stockperitem':
+                    $dcost->factor = $this->bean->piggery;
+                    break;
+                case 'stockperweight':
+                    $dcost->factor = $this->bean->totalweight;
+                    break;
+                default:
+                    $dcost->factor = 1;
+                    break;
+            }
+            $dcost->net = $dcost->factor * $dcost->value;
+            $this->bean->totalcost += $dcost->net;
+        }
+        $this->bean->subtotalnet = $this->bean->totalnet - $this->bean->totalcost;
+        return true;
+    }
+    
+    /**
      * Calculates conditions of this deliverer with given stock bean and returns the added bonus.
      *
      * @param RedBean_OODBBean $stock

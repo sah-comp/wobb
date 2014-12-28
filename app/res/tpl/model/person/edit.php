@@ -308,6 +308,7 @@
             'person-address' => I18n::__('person_address_tab'),
             'person-baseprice' => I18n::__('person_baseprice_tab'),
             'person-condition' => I18n::__('person_condition_tab'),
+            'person-cost' => I18n::__('person_cost_tab'),
             'person-billing' => I18n::__('person_billing_tab')
         ),
         'default_tab' => 'person-address'
@@ -347,6 +348,26 @@
             <?php Flight::render('model/person/own/condition', array(
                 'record' => $record,
                 '_condition' => $_condition,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
+        </div>
+    </fieldset>
+    <fieldset
+        id="person-cost"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_cost') ?></legend>
+        <div
+            id="person-<?php echo $record->getId() ?>-cost-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownCost) == 0) $record->ownCost[] = R::dispense('cost') ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownCost as $_cost_id => $_cost): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/person/own/cost', array(
+                'record' => $record,
+                '_cost' => $_cost,
                 'index' => $index
             )) ?>
             <?php endforeach ?>
@@ -408,6 +429,7 @@
                 class="number"
                 name="dialog[relsprice]"
                 value="<?php echo htmlspecialchars($record->decimal('relsprice', 3)) ?>" />
+            <p class="info"><?php echo I18n::__('person_info_relsprice') ?></p>
         </div>
         <div class="row <?php echo ($record->hasError('reldprice')) ? 'error' : ''; ?>">
             <label
@@ -420,6 +442,7 @@
                 class="number"
                 name="dialog[reldprice]"
                 value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
+            <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
         </div>
     </fieldset>
 </div>

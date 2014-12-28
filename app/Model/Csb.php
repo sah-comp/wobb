@@ -134,11 +134,12 @@ class Model_Csb extends Model
     /**
      * Returns a string to be used as a headline.
      *
+     * @param string $label
      * @return string
      */
-    public function getHeadline()
+    public function getHeadline($label = 'calculation')
     {
-        return I18n::__('purchase_h1_calculation');
+        return I18n::__('purchase_h1_' . $label);
         /*
         return I18n::__('purchase_h1_mask', null, 
             array(
@@ -421,6 +422,19 @@ SQL;
             $deliverer->piggery = $stock['total'];
             $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
             $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+            
+            foreach ($deliverer->person->ownCost as $cost_id => $cost) {
+                $dcost = R::dispense('dcost');
+                //$dcost->import($cost->export());
+                $dcost->cost = $cost;
+                $dcost->label = $cost->label;
+                $dcost->content = $cost->content;
+                $dcost->value = $cost->value;
+                $dcost->factor = 0;
+                $dcost->net = 0;
+                $deliverer->ownDcost[] = $dcost;
+            }
+            
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
@@ -471,13 +485,14 @@ SQL;
             // calculate means
             if ( $deliverer->piggery != 0 ) 
                 $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
-            if ( $deliverer->hasmfacount ) 
+            if ( $deliverer->hasmfacount != 0 ) 
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
-            if ( $deliverer->totalweight ) {
+            if ( $deliverer->totalweight != 0 ) {
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
                 $deliverer->meandpricelanuv = $deliverer->totalnetlanuv / $deliverer->totalweight;
             }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
+            $deliverer->calcCost();
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
         return null;

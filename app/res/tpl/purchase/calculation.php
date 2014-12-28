@@ -22,8 +22,11 @@
             
             <!-- row with labels -->
             <div class="row">
-                <div class="span4">
+                <div class="span3">
                     <label><?php echo I18n::__('deliverer_label_name') ?></label>
+                </div>
+                <div class="span1">
+                    <label><?php echo I18n::__('deliverer_label_enabled') ?></label>
                 </div>
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('deliverer_label_piggery') ?></label>
@@ -54,16 +57,7 @@
                         value="<?php echo $_id ?>" />
                 </div>
                 <div class="row">
-                    <div class="span4">
-                        <input
-                            type="hidden"
-                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
-                            value="0" />
-                        <input
-                            type="checkbox"
-                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
-                            <?php echo ($_deliverer->enabled) ? 'checked="checked"' : '' ?>
-                            value="1" />
+                    <div class="span3">
                         <a 
                             href="#toggle"
                             class="toggle"
@@ -74,6 +68,17 @@
                         <div class="deliverer-info">
                             <?php echo $_deliverer->getInformation() ?>
                         </div>
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
+                            value="0" />
+                        <input
+                            type="checkbox"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
+                            <?php echo ($_deliverer->enabled) ? 'checked="checked"' : '' ?>
+                            value="1" />
                     </div>
                     <div class="span1">
                         <input
@@ -134,7 +139,7 @@
                 
                 <div class="row">
                     <div class="span4">
-                        <span class="subdeliverer-earmark indent">
+                        <span class="subdeliverer-earmark">
                             <?php echo htmlspecialchars($_sub->earmark) ?>
                         </span>
                     </div>
@@ -218,9 +223,7 @@
                         
                     <div class="row">
                         <div class="span4">
-                            <span class="indent">
                             <small><?php echo htmlspecialchars($_sprice->note) ?></small>
-                            </span>
                         </div>
                         <div class="span1">
                             <input
