@@ -48,6 +48,16 @@ class Model_Csb extends Model
     }
     
     /**
+     * Returns wether the csb was already billed or not.
+     *
+     * @return bool
+     */
+    public function wasBilled()
+    {
+        return ( $this->bean->billingdate != '0000-00-00 00:00:00');
+    }
+    
+    /**
      * Returns a string with nicely formatted date of slaughter.
      *
      * It's a happy date, isn't it? Not for the poor piggy, my dear.
@@ -450,7 +460,7 @@ SQL;
             $this->bean->ownDeliverer[] = $deliverer;
         }
     }
-    
+
     /**
      * Calculates prices for each stock of all enabled deliveres of this csb bean.
      *
@@ -500,6 +510,22 @@ SQL;
             $deliverer->calcVat();
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
+        return null;
+    }
+    
+    /**
+     * Generates bills for all enabled supplier beans of this csb bean.
+     *
+     * @return void
+     */
+    public function billing()
+    {
+        foreach ($this->bean
+                      ->withCondition(" enabled = 1 ORDER BY supplier ")
+                      ->ownDeliverer as $_id => $deliverer) {
+            $deliverer->billing($this->bean);
+        }
+        $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
         return null;
     }
     

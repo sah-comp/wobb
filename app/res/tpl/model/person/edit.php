@@ -428,6 +428,24 @@
                     <?php echo ($record->hasdealer) ? 'checked="checked"' : '' ?>
                     value="1" />
             </div>
+            <div class="row <?php echo ($record->hasError('billingtransport')) ? 'error' : ''; ?>">
+                <label
+                    for="var-billingtransport">
+                    <?php echo I18n::__('person_label_billingtransport') ?>
+                </label>
+                <select
+                    id="person-billingtransport"
+                    name="dialog[billingtransport]">
+                    <?php foreach ($record->getBillingtransports() as $_kind): ?>
+                    <option
+                        value="<?php echo $_kind ?>"
+                        <?php echo ($record->billingtransport == $_kind) ? 'selected="selected"' : '' ?>>
+                        <?php echo I18n::__('person_billingtransport_'.$_kind) ?>
+                    </option>
+                    <?php endforeach ?>
+                </select>
+                <p class="info"><?php echo I18n::__('person_info_billingtransport') ?></p>
+            </div>
     </fieldset>
     <fieldset
         id="person-baseprice"

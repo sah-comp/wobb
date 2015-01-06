@@ -28,6 +28,23 @@ class Model_Person extends Model
     }
     
     /**
+     * Returns an array with billingtransport names.
+     *
+     * This determines which way the bills are proccessed. They might be printed, send by
+     * email or both ways.
+     *
+     * @return array
+     */
+    public function getBillingtransports()
+    {
+        return array(
+            'email',
+            'print',
+            'both'
+        );
+    }
+    
+    /**
      * Toggle the enabled attribute and store the bean.
      *
      * @return void

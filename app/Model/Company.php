@@ -19,6 +19,25 @@
  */
 class Model_Company extends Model
 {
+
+    /**
+     * Returns an integer number representing the next serial number.
+     *
+     * @return int
+     */
+    public function nextBillingnumber()
+    {
+        try {
+            $nextbillingnumber = $this->bean->nextbillingnumber;
+            $this->bean->nextbillingnumber++;
+            R::store($this->bean);
+            return $nextbillingnumber;
+        } catch (Exception $e) {
+            Cinnebar_Logger::instance()->log($e, 'exceptions');
+            return null;
+        }
+    }
+
     /**
      * Returns an array with attributes for lists.
      *

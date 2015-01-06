@@ -56,5 +56,18 @@
             value="<?php echo htmlspecialchars($record->buyer) ?>"
             required="required" />
     </div>
+    <div class="row <?php echo ($record->hasError('nextbillingnumber')) ? 'error' : ''; ?>">
+        <label
+            for="company-nextbillingnumber">
+            <?php echo I18n::__('company_label_nextbillingnumber') ?>
+        </label>
+        <input
+            id="company-nextbillingnumber"
+            type="number"
+            step="1"
+            name="dialog[nextbillingnumber]"
+            value="<?php echo htmlspecialchars($record->nextbillingnumber) ?>"
+            required="required" />
+    </div>
 </fieldset>
 <!-- end of company edit form -->

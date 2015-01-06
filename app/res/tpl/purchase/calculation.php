@@ -269,7 +269,7 @@
         <div class="buttons"> 
             <?php if ($record->wasCalculated()): ?>
                 <a
-                    href="<?php echo Url::build(sprintf("/billing/index/%d", $record->getId())) ?>"
+                    href="<?php echo Url::build(sprintf("/purchase/billing/%d", $record->getId())) ?>"
                     class="btn">
                     <?php echo I18n::__('calculation_href_goto_billing') ?>
                 </a>

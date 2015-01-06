@@ -66,6 +66,32 @@ class Model_Deliverer extends Model
     }
     
     /**
+     * Returns wether the deliverer was already billed or not.
+     *
+     * A deliverer was billed if the invoice bean it owns already was stored.
+     *
+     * @return bool
+     */
+    public function wasBilled()
+    {
+        if ( ! $this->bean->invoice()->getId()) return false;
+        return true;
+    }
+    
+    /**
+     * Returns the an invoice bean.
+     *
+     * @return RedBean_OODBBean
+     */
+    public function invoice()
+    {
+        if ( ! $this->bean->invoice ) {
+            $this->bean->invoice = R::dispense('invoice');
+        }
+        return $this->bean->invoice;
+    }
+
+    /**
      * Returns wether the deliverer was already calculated or not.
      *
      * @return bool
@@ -231,6 +257,63 @@ class Model_Deliverer extends Model
             }
         }
         return $this->bean->ownSpecialprice;
+    }
+
+    /**
+     * Generates a bill for this deliverer for the given slaughterday csb bean.
+     *
+     * @param RedBean_OODBBean $csb
+     * @return void
+     */
+    public function billing($csb)
+    {
+        if ( ! $this->bean->invoice()->name ) {
+            //$this->bean->invoice = R::dispense('invoice');
+            if ( ! $nextbillingnumber = $csb->company->nextBillingnumber() ) {
+                throw new Exception();
+            }
+            $this->bean->invoice->name = $nextbillingnumber;
+        }
+        $this->bean->invoice->fy = Flight::setting()->fiscalyear;
+        $this->bean->invoice->company = $csb->company;
+        $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
+        // copy to invoice from this deliverer
+        $this->bean->invoice->import($this->bean->export(), 'totalnet, totalcost, subtotalnet, vatvalue, totalgros');
+        $this->bean->invoice->person = $this->bean->person;
+        $this->bean->invoice->kind = 0;//depends on the kind of invoice. 0 = Slaughter, 1 = other
+        $this->bean->invoice->dateofslaughter = $csb->pubdate;
+        $this->bean->invoice->vat = $this->bean->person->vat;
+        // end of establishing a new invoice
+        // transport to that person of interest
+        $this->bean->transport();
+        // end of transport
+        return null;
+    }
+    
+    /**
+     * The attached invoice will be transferred to the person (company).
+     *
+     * @return void
+     */
+    public function transport()
+    {
+        switch ( $this->bean->person->billingtransport ) {
+            case 'email':
+                error_log('email to ' . $this->bean->person->email);
+                break;
+
+            case 'print':
+                error_log('print to printer');
+                break;
+
+            case 'both':
+                error_log('email and print');
+                break;
+            
+            default:
+                # code...
+                break;
+        }
     }
     
     /**

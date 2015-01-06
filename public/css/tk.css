@@ -113,3 +113,11 @@ input[type=submit][disabled=disabled].processing {
 .damagedaily.found input {
     font-weight: bold;
 }
+
+.little {
+    font-size: small;
+}
+
+label.lottle {
+    color: orange;
+}
