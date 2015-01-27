@@ -284,19 +284,19 @@ class Model_Deliverer extends Model
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
         $this->bean->invoice->vat = $this->bean->person->vat;
         // end of establishing a new invoice
-        // transport to that person of interest
-        $this->bean->transport();
         // end of transport
         return null;
     }
     
     /**
-     * The attached invoice will be transferred to the person (company).
+     * Depending on the given template a pdf is generated or whatever.
      *
+     * @param string $template
      * @return void
      */
-    public function transport()
+    public function transport($template)
     {
+        error_log('Do ' . $template . ' to ' . $this->bean->person->name);
         switch ( $this->bean->person->billingtransport ) {
             case 'email':
                 error_log('email to ' . $this->bean->person->email);
@@ -311,7 +311,7 @@ class Model_Deliverer extends Model
                 break;
             
             default:
-                # code...
+                error_log('nothing');
                 break;
         }
     }

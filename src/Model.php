@@ -144,7 +144,7 @@ class Model extends RedBean_SimpleModel
      * Renders a decimal value nicely.
      *
      * @param string $attribute
-     * @param int $decimals defaults to 2
+     * @param int $decimals defaults to 3
      * @param string $decimal_point defaults to '.'
      * @param string $thousands_separator defaults to ','
      * @return string

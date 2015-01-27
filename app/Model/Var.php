@@ -136,7 +136,8 @@ class Model_Var extends Model
         return array(
             'fixed',
             'disagio',
-            'agio'
+            'agio',
+            'skip'
         );
     }
     

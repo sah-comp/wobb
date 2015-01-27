@@ -489,6 +489,7 @@ SQL;
                 $summary = $subdeliverer->calculation($this->bean);
                 // save some of the summary to the subdeliverer
                 $subdeliverer->totalnet = $summary['totalnet'];
+                $subdeliverer->totalweight = $summary['totalweight'];
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];
                 $deliverer->totalnetlanuv += $summary['totalnetlanuv'];
@@ -526,6 +527,22 @@ SQL;
             $deliverer->billing($this->bean);
         }
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
+        return null;
+    }
+    
+    /**
+     * Generates pdf files for all enabled supplier beans of this csb bean.
+     *
+     * @param string $template
+     * @return void
+     */
+    public function transport($template = 'interal')
+    {
+        foreach ($this->bean
+                      ->withCondition(" enabled = 1 ORDER BY supplier ")
+                      ->ownDeliverer as $_id => $deliverer) {
+            $deliverer->transport($template);
+        }
         return null;
     }
     

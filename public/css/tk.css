@@ -121,3 +121,87 @@ input[type=submit][disabled=disabled].processing {
 label.lottle {
     color: orange;
 }
+
+th {
+    text-align: left;
+}
+
+th.number,
+td.number,
+td.label {
+    text-align: right;
+}
+
+.invoice-wrapper {
+    padding: 1em;
+}
+
+/**
+ * Invoice table
+ */
+
+table.invoice {
+    width: 100%;
+}
+
+table.invoice tr > td,
+table.invoice tr > th {
+    padding: 0.25em 0.25em;
+}
+
+table.invoice tr > td.section {
+    padding-top: 1em;
+}
+
+table.invoice tr.info {
+    font-size: small;
+}
+
+table.invoice thead {
+    background-color: #666;
+    color: white;
+}
+
+tr.total.dealer,
+tr.gros {
+    font-size: 1.33em;
+}
+
+/**
+ * Info to a subject.
+ *
+ * e.g. "Sie verpflichten sich zu..."
+ */
+table.invoice span.info {
+    font-size: small;
+    color: gray;
+    display: block;
+}
+
+/**
+ * Addresslabel
+ */
+
+.addresslabel {
+    margin-bottom: 1em;
+    width: 50%;
+    float: left;
+}
+
+.addresslabel .name {
+    margin-top: 0.5em;
+}
+
+.addresslabel .senderline {
+    font-size: 0.6em;
+    border-bottom: 1px solid gray;
+}
+
+/**
+ * Infolabel
+ */
+.infolabel {
+    width: 50%;
+    float: right;
+    font-size: small;
+}

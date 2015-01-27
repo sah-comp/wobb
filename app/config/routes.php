@@ -265,6 +265,16 @@ Flight::route('(/[a-z]{2})/billing(/@method:[a-z]+(/@id:[0-9]+))', function($met
 });
 
 /**
+ * Route to the deliverer controller.
+ */
+Flight::route('(/[a-z]{2})/deliverer(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
+    if ( $method === null) $method = 'index';
+    if ( $id === null) $id = 0;
+	$controller = new Controller_Deliverer($id);
+	$controller->$method();
+});
+
+/**
  * Show a 404 error page if no route has jumped in yet and the url can not be found in domain beans.
  *
  * This is the last resort, all other urls of your domain tree should have been covered by

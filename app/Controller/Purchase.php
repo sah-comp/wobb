@@ -94,6 +94,7 @@ class Controller_Purchase extends Controller
                 R::store($this->record); //must do this, because otherwise prices dont copy!!
                 $this->record->billing();
                 R::store($this->record);
+                $this->record->transport('internal');//company internal check sheet
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_billing_success'));
                 $this->redirect(sprintf('/purchase/billing/%d', $this->record->getId()));

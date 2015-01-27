@@ -70,4 +70,18 @@
             required="required" />
     </div>
 </fieldset>
+<fieldset>
+    <legend class="verbose"><?php echo I18n::__('company_address_legend') ?></legend>
+    <div class="row <?php echo ($record->hasError('senderline')) ? 'error' : ''; ?>">
+        <label
+            for="company-senderline">
+            <?php echo I18n::__('company_label_senderline') ?>
+        </label>
+        <input
+            id="company-senderline"
+            type="text"
+            name="dialog[senderline]"
+            value="<?php echo htmlspecialchars($record->senderline) ?>" />
+    </div>
+</fieldset>
 <!-- end of company edit form -->
