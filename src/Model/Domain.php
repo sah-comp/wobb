@@ -290,6 +290,7 @@ SQL;
         $this->bean->invisible = false;
         //$this->bean->blessed = false;
         $this->bean->sequence = 0;
+        $this->bean->lastmodified = 0;
         $this->addValidator('name', array(
             new Validator_HasValue()
         ));
