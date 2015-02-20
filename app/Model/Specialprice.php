@@ -81,7 +81,7 @@ class Model_Specialprice extends Model
      */
     public function dispense()
     {
-        $this->bean->doesnoteffectlanuv = 0;
+        $this->bean->doesnotaffectlanuv = 0;
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));
