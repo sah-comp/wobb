@@ -190,7 +190,8 @@ SQL;
             quality = :quality AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
             (weight >= :lo AND weight <= :hi) AND 
-            (damage1 = '' OR damage1 = '02')
+            (damage1 = '' OR damage1 = '02') AND
+            csb_id IS NOT NULL
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
@@ -226,7 +227,8 @@ SQL;
             buyer = :buyer AND 
             quality = :quality AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            (damage1 = '' OR damage1 = '02')
+            (damage1 = '' OR damage1 = '02') AND
+            csb_id IS NOT NULL
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
