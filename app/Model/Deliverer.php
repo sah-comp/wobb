@@ -155,14 +155,18 @@ class Model_Deliverer extends Model
         $conditions = $this->bean->person->ownCondition; // fetch it from the person
         if ( count ($conditions) == 0) return false;
         $bonus = 0;
+        $stock->bonusitem = 0;
+        $stock->bonusweight = 0;
         foreach ($conditions as $id => $condition) {
             switch ( $condition->label ) {
                 case 'stockperitem':
                     $bonus += $condition->value;
+                    $stock->bonusitem += $condition->value;
                     break;
                 
                 case 'stockperweight':
                     $bonus += $stock->weight * $condition->value;
+                    $stock->bonusweight += $condition->value;
                     break;
             
                 default:
