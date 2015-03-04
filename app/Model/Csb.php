@@ -400,6 +400,11 @@ SQL;
             $stock = R::dispense('stock');
             $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
+            
+            $stock->lanuvreported = 0;
+            $stock->billnumber = 0;
+            $stock->person = $stock->getPersonBySupplier();
+            
             $this->bean->ownStock[] = $stock;
             $this->bean->piggery++;
         }
@@ -523,7 +528,7 @@ SQL;
     {
         foreach ($this->bean
                       ->withCondition(" enabled = 1 ORDER BY supplier ")
-                      ->ownDeliverer as $_id => $deliverer) {
+                      ->ownDeliverer as $id => $deliverer) {
             $deliverer->billing($this->bean);
         }
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
