@@ -316,7 +316,7 @@ SQL;
 		$sql = <<<SQL
         SELECT
             stock.pubdate,
-            stock.name,
+            stock.name AS sname,
             stock.earmark,
             stock.billnumber,
             person.nickname,
@@ -335,8 +335,7 @@ SQL;
             stock.totallanuvprice,
             stock.qs,
             0,
-            stock.lanuvreported,
-            0
+            stock.lanuvreported
         FROM
             stock
         LEFT JOIN
