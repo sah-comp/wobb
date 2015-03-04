@@ -272,7 +272,6 @@ class Model_Deliverer extends Model
     public function billing($csb)
     {
         if ( ! $this->bean->invoice()->name ) {
-            //$this->bean->invoice = R::dispense('invoice');
             if ( ! $nextbillingnumber = $csb->company->nextBillingnumber() ) {
                 throw new Exception();
             }
@@ -288,7 +287,24 @@ class Model_Deliverer extends Model
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
         $this->bean->invoice->vat = $this->bean->person->vat;
         // end of establishing a new invoice
-        // end of transport
+        $this->dispatchBillingNumberToStock($csb);
+        return null;
+    }
+    
+    /**
+     * Dispatches the billingnumber (invoice->name) of this deliverer of the given csb to its stock.
+     *
+     * @param RedBean_OODBBean $csb
+     * @return void
+     */
+    public function dispatchBillingNumberToStock($csb)
+    {
+        $sql = "UPDATE stock SET billnumber = :billnumber WHERE supplier = :supplier AND csb_id = :csb_id";
+        R::exec($sql, array(
+            ':billnumber' => $this->bean->invoice->name,
+            ':supplier' => $this->bean->supplier,
+            ':csb_id' => $csb->getId()
+        ));
         return null;
     }
     
