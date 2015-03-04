@@ -160,6 +160,8 @@ SQL;
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
+        $this->markAsReportedNoWeight($this->nonQualities);
+        $this->markAsReportedWeight($this->qualities, 80.0, 110.0);
         return true;
     }
     
@@ -233,6 +235,122 @@ SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
             ':quality' => $quality,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Marks stock as reported to LANUV that have a certain quality.
+     *
+     * @param array $quality
+     * @return void
+     */
+    public function markAsReportedNoWeight(array $qualities)
+    {
+		$sql = <<<SQL
+        UPDATE stock
+        SET lanuvreported = 1
+        WHERE 
+            buyer = :buyer AND 
+            quality IN ('M', 'V') AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            (damage1 = '' OR damage1 = '02') AND
+            csb_id IS NOT NULL
+SQL;
+        return R::exec($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+
+    /**
+     * Marks stock as reported to LANUV that have a certain quality within the weight range.
+     *
+     * @param string $qualities
+     * @param float $margin_lo
+     * @param float $margin_hi
+     * @return void
+     */
+    public function markAsReportedWeight(array $qualities, $margin_lo, $margin_hi)
+    {
+		$sql = <<<SQL
+        UPDATE stock
+        SET lanuvreported = 1 
+        WHERE 
+            buyer = :buyer AND 
+            quality IN ('S', 'E', 'U', 'R', 'O', 'P') AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            (weight >= :lo AND weight <= :hi) AND 
+            (damage1 = '' OR damage1 = '02') AND
+            csb_id IS NOT NULL
+SQL;
+        return R::exec($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate,
+            ':lo' => $margin_lo,
+            ':hi' => $margin_hi
+        ));
+    }
+    
+    /**
+     * Export the lanuv bean as csv.
+     */
+    public function exportAsCsv()
+    {
+        $stocks = $this->getStock();
+        require_once '../app/lib/parsecsv.lib.php';
+        $csv = new parseCSV();
+        $csv->output('lanuv.csv', $stocks, ',');
+    }
+    
+    /**
+     * Returns an array of all stock within the lanuv time periode.
+     *
+     * @return array
+     */
+    public function getStock()
+    {
+		$sql = <<<SQL
+        SELECT
+            stock.pubdate,
+            stock.name,
+            stock.earmark,
+            stock.billnumber,
+            person.nickname,
+            person.account,
+            person.name,
+            stock.quality,
+            stock.mfa,
+            stock.weight,
+            stock.damage1,
+            stock.damage2,
+            stock.dprice,
+            stock.totaldprice,
+            0,
+            stock.bonusitem,
+            stock.bonusweight,
+            stock.totallanuvprice,
+            stock.qs,
+            0,
+            stock.lanuvreported,
+            0
+        FROM
+            stock
+        LEFT JOIN
+            person ON person.id = stock.person_id
+        WHERE
+            stock.buyer = :buyer AND
+            (stock.pubdate >= :startdate AND stock.pubdate <= :enddate)
+        ORDER BY
+            stock.pubdate,
+            stock.supplier,
+            stock.name
+SQL;
+        return R::getAll($sql, array(
+            ':buyer' => $this->bean->company->buyer,
             ':startdate' => $this->bean->startdate,
             ':enddate' => $this->bean->enddate
         ));

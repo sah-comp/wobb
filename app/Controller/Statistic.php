@@ -112,6 +112,17 @@ class Controller_Statistic extends Controller
         }
         $this->render();
     }
+    
+    /**
+     * Export stock of the lanuv bean as csv for usage with Excel.
+     */
+    public function csv()
+    {
+        Permission::check(Flight::get('user'), 'statistic', 'edit');
+        $this->layout = 'lanuv';
+        $this->record->exportAsCsv();
+        $this->render();
+    }
 
     /**
      * Choose an already existing day or create a new one.
