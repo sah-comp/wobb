@@ -329,12 +329,12 @@ SQL;
             stock.damage2,
             stock.dprice,
             stock.totaldprice,
-            0,
+            'Abzug',
             stock.bonusitem,
             stock.bonusweight,
             stock.totallanuvprice,
             stock.qs,
-            0,
+            'Pauschal',
             stock.lanuvreported
         FROM
             stock
