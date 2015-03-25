@@ -40,13 +40,13 @@ class Model_Pricing extends Model
             $mfaMarginKind = 'mfasub'; // we have a underweight stock, use mfasub
             $lowerWeights = $this->getLowerMargins('weight', $optimalWeightMargin);
             foreach ( $lowerWeights as $id => $lowerWeight ) {
-                $this->calculateAgioDisago('weight', $stock, $lowerWeight);
+                $this->calculateAgioDisagoLo('weight', $stock, $lowerWeight);
             }
         } else if ( $stock->weight > $optimalWeightMargin->hi ) {
             // overweight
             $overWeights = $this->getOverMargins('weight', $optimalWeightMargin);
             foreach ( $overWeights as $id => $overWeight ) {
-                $this->calculateAgioDisago('weight', $stock, $overWeight);
+                $this->calculateAgioDisagoHi('weight', $stock, $overWeight);
             }
         }
         // calculate mfa margins, using either mfa or mfasub if the stock is underweight
@@ -58,51 +58,82 @@ class Model_Pricing extends Model
             // mfa lower than optimal
             $lowerMfas = $this->getLowerMargins($mfaMarginKind, $optimalMfaMargin);
             foreach ( $lowerMfas as $id => $lowerMfa ) {
-                $this->calculateAgioDisago('mfa', $stock, $lowerMfa);
+                $this->calculateAgioDisagoLo('mfa', $stock, $lowerMfa);
             }
         } else if ( $stock->mfa > $optimalMfaMargin->hi ) {
             // mfa higher than optimal
             $overMfas = $this->getOverMargins($mfaMarginKind, $optimalMfaMargin);
             foreach ( $overMfas as $id => $overMfa ) {
-                $this->calculateAgioDisago('mfa', $stock, $overMfa);
+                $this->calculateAgioDisagoHi('mfa', $stock, $overMfa);
             }
         }      
         return true;
     }
     
     /**
-     * Calculates a difference and adjusts agio and disagion of the given stock.
+     * Calculates a difference and adjusts agio and disagion of the given stock when stock is low.
      *
      * @param string $field must be either 'weight' or 'mfa'
      * @param RedBean_OODBBean $stock
      * @param RedBean_OODBBean $margin
      * @return float
      */
-    public function calculateAgioDisago($field = 'mfa', RedBean_OODBBean $stock, RedBean_OODBBean $margin)
+    public function calculateAgioDisagoLo($field = 'mfa', RedBean_OODBBean $stock, RedBean_OODBBean $margin)
     {
         $diff = 0;        
         if ( $margin->op == '-') {
-            
-            if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
-                $diff = ( $margin->hi - $stock->$field);
+            if ( $stock->$field < $margin->lo ) {
+                $diff = $margin->hi - $margin->lo;
             }
-            else if ( $stock->$field <= $margin->lo ) {
-                $diff = ( $margin->hi - $margin->lo );
+            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = $margin->hi - $stock->$field;
             }
             $stock->disagio += $diff * $margin->value;
         }
         elseif ( $margin->op == '+') {
-            
-            if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
-                $diff = ( $stock->$field - $margin->lo);
+            if ( $stock->$field > $margin->hi ) {
+                $diff = $margin->hi - $margin->lo;
             }
-            else if ( $stock->$field >= $margin->hi ) {
-                $diff = ( $margin->hi - $margin->lo );
+            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = $margin->hi - $stock->$field;
             }
             $stock->agio += $diff * $margin->value;
         }
         return (float)$diff;
     }
+
+    /**
+     * Calculates a difference and adjusts agio and disagion of the given stock when stock is high.
+     *
+     * @param string $field must be either 'weight' or 'mfa'
+     * @param RedBean_OODBBean $stock
+     * @param RedBean_OODBBean $margin
+     * @return float
+     */
+    public function calculateAgioDisagoHi($field = 'mfa', RedBean_OODBBean $stock, RedBean_OODBBean $margin)
+    {
+        $diff = 0;        
+        if ( $margin->op == '-') {
+            if ( $stock->$field > $margin->hi ) {
+                $diff = $margin->hi - $margin->lo;
+            }
+            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = $stock->$field - $margin->lo;
+            }
+            $stock->disagio += $diff * $margin->value;
+        }
+        elseif ( $margin->op == '+') {
+            if ( $stock->$field > $margin->hi ) {
+                $diff = $margin->hi - $margin->lo;
+            }
+            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+                $diff = $stock->$field - $margin->lo;
+            }
+            $stock->agio += $diff * $margin->value;
+        }
+        return (float)$diff;
+    }
+
     
     /**
      * Returns a margin bean which holds the values for a optimal mfa stock.
