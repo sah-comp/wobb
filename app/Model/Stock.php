@@ -167,16 +167,17 @@ class Model_Stock extends Model
      *
      * @param RedBean_OODBBean $deliverer
      * @param RedBean_OODBBean $pricing
-     * @return array $sum
+     * @return void
      */
     public function calculation(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
     {
         $this->bean->agio = 0;
         $this->bean->disagio = 0;
-        if ( ! $this->calculateFixedPrice($deliverer)) {
-            $this->calculatePrice($deliverer, $pricing);
-            $this->calculateDamage1Price($deliverer);
-            $this->calculateDamage2Price($deliverer);
+        $lanuv_tax = $deliverer->calculate($this->bean);
+        if ( ! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
+            $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
+            $this->calculateDamage1Price($deliverer, $lanuv_tax);
+            $this->calculateDamage2Price($deliverer, $lanuv_tax);
         }
         return null;
     }
@@ -186,9 +187,10 @@ class Model_Stock extends Model
      *
      * @param RedBean_OODBBean $deliverer
      * @param RedBean_OODBBean $pricing
+     * @param float $tax will be added to the lanuv total price
      * @return void
      */
-    public function calculatePrice(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
+    public function calculatePrice(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing, $tax)
     {
         
         $pricing->calculate($this->bean, $deliverer);
@@ -198,7 +200,7 @@ class Model_Stock extends Model
         
         $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
         $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight );
-        $this->bean->totallanuvprice = $this->bean->totaldprice + $deliverer->calculate($this->bean);
+        $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return null;
     }
     
@@ -208,9 +210,10 @@ class Model_Stock extends Model
      * If stock has a quality with a fixed price, that one is used. Fixed prices are var beans.
      *
      * @param RedBean_OODBBean $deliverer
+     * @param float $tax
      * @return bool wether a fixed price was used or not
      */
-    public function calculateFixedPrice(RedBean_OODBBean $deliverer)
+    public function calculateFixedPrice(RedBean_OODBBean $deliverer, $tax)
     {
         if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", array(
             ':quality' => $this->bean->quality,
@@ -221,13 +224,13 @@ class Model_Stock extends Model
         
         $this->bean->agio = 0;
         $this->bean->disagio = 0;
-        $this->bean->bonus = 0;
+        //$this->bean->bonus = 0;
         $this->bean->sprice = $fixedPrice->sprice;
         $this->bean->dprice = $fixedPrice->dprice;
         
         $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
         $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-        $this->bean->totallanuvprice = $this->bean->totaldprice;
+        $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return true;
     }
     
@@ -237,9 +240,10 @@ class Model_Stock extends Model
      * If stock has a code in damage1 a fixed price or agio or disagio apply.
      *
      * @param RedBean_OODBBean $deliverer
+     * @param float $tax
      * @return bool wether a fixed price was used or not
      */
-    public function calculateDamage1Price(RedBean_OODBBean $deliverer)
+    public function calculateDamage1Price(RedBean_OODBBean $deliverer, $tax)
     {
         if ( empty($this->bean->damage1) ) return false;
         
@@ -253,7 +257,7 @@ class Model_Stock extends Model
         if ( $fixedPrice->condition == 'fixed' ) {
             $this->bean->agio = 0;
             $this->bean->disagio = 0;
-            $this->bean->bonus = 0;
+            //$this->bean->bonus = 0;
             $this->bean->sprice = $fixedPrice->sprice;
             $this->bean->dprice = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
@@ -267,7 +271,7 @@ class Model_Stock extends Model
         }
         
         if ( ! $fixedPrice->doesnotaffectlanuv ) {
-            $this->bean->totallanuvprice = $this->bean->totaldprice;
+            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         }
         
         return true;
@@ -279,9 +283,10 @@ class Model_Stock extends Model
      * If stock has a code in damage2 a fixed price or agio or disagio apply.
      *
      * @param RedBean_OODBBean $deliverer
+     * @param float §tax
      * @return bool wether a fixed price was used or not
      */
-    public function calculateDamage2Price(RedBean_OODBBean $deliverer)
+    public function calculateDamage2Price(RedBean_OODBBean $deliverer, $tax)
     {
         if ( empty($this->bean->damage2) ) return false;
         
@@ -295,7 +300,7 @@ class Model_Stock extends Model
         if ( $fixedPrice->condition == 'fixed' ) {
             $this->bean->agio = 0;
             $this->bean->disagio = 0;
-            $this->bean->bonus = 0;
+            //$this->bean->bonus = 0;
             $this->bean->sprice = $fixedPrice->sprice;
             $this->bean->dprice = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
@@ -309,7 +314,7 @@ class Model_Stock extends Model
         }
         
         if ( ! $fixedPrice->doesnotaffectlanuv ) {
-            $this->bean->totallanuvprice = $this->bean->totaldprice;
+            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         }
         
         return true;
@@ -351,6 +356,21 @@ class Model_Stock extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('bonus', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('bonusitem', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('bonusweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('cost', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('costitem', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('costweight', array(
             new Converter_Decimal()
         ));
         $this->addValidator('name', array(

@@ -35,7 +35,7 @@
 /**
  * Load some layout vars
  */
-$_ownDcost = $record->ownDcost;
+$_ownDcost = array();
 $_sprices = $record->getSpecialPrices();
 ?>
 <body>

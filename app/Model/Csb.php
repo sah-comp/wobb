@@ -420,6 +420,8 @@ SQL;
      * The baseprice will be added with rel*price values of the found person bean. A subdeliverer
      * will not have a *price because they will inherit from their each and every main deliverer bean.
      *
+     * For each deliverer the persons cost will be replicated.
+     *
      */
     public function makeDeliverer()
     {
@@ -437,18 +439,6 @@ SQL;
             $deliverer->piggery = $stock['total'];
             $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
             $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
-            
-            foreach ($deliverer->person->ownCost as $cost_id => $cost) {
-                $dcost = R::dispense('dcost');
-                //$dcost->import($cost->export());
-                $dcost->cost = $cost;
-                $dcost->label = $cost->label;
-                $dcost->content = $cost->content;
-                $dcost->value = $cost->value;
-                $dcost->factor = 0;
-                $dcost->net = 0;
-                $deliverer->ownDcost[] = $dcost;
-            }
             
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
@@ -512,7 +502,6 @@ SQL;
                 $deliverer->meandpricelanuv = $deliverer->totalnetlanuv / $deliverer->totalweight;
             }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
-            $deliverer->calcCost();
             $deliverer->calcVat();
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean

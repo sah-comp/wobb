@@ -102,36 +102,6 @@ class Model_Deliverer extends Model
     }
     
     /**
-     * Calculates the cost beans of this deliverer.
-     *
-     * Based on the method of the dcost bean and the number of stock or weight
-     * the additional costs will be calculated.
-     *
-     * @return bool
-     */
-    public function calcCost()
-    {
-        $this->bean->totalcost = 0;
-        foreach ($this->bean->ownDcost as $dcost_id => $dcost) {
-            switch ($dcost->label) {
-                case 'stockperitem':
-                    $dcost->factor = $this->bean->piggery;
-                    break;
-                case 'stockperweight':
-                    $dcost->factor = $this->bean->totalweight;
-                    break;
-                default:
-                    $dcost->factor = 1;
-                    break;
-            }
-            $dcost->net = $dcost->factor * $dcost->value;
-            $this->bean->totalcost += $dcost->net;
-        }
-        $this->bean->subtotalnet = $this->bean->totalnet - $this->bean->totalcost;
-        return true;
-    }
-    
-    /**
      * Calculates the vat values of this bean.
      *
      * @return bool
@@ -144,19 +114,33 @@ class Model_Deliverer extends Model
     }
     
     /**
-     * Calculates conditions of this deliverer with given stock bean and returns the added bonus.
+     * Calculates conditions and costs of this deliverer with given stock bean and returns total mix.
      *
      * @param RedBean_OODBBean $stock
      * @return float
      */
     public function calculate(RedBean_OODBBean $stock)
     {
-        if ( ! $this->bean->person) return false;
+        if ( ! $this->bean->person) return (float)0;
+        $mix = 0;
+        $mix += $this->calculateCondition($stock);
+        $mix += $this->calculateCost($stock);
+        return (float)$mix;
+    }
+    
+    /**
+     * Calculates conditions of this deliverer with given stock bean and returns the total bonus.
+     *
+     * @param RedBean_OODBBean $stock
+     * @return float
+     */
+    protected function calculateCondition(RedBean_OODBBean $stock)
+    {
         $conditions = $this->bean->person->ownCondition; // fetch it from the person
-        if ( count ($conditions) == 0) return false;
         $bonus = 0;
         $stock->bonusitem = 0;
         $stock->bonusweight = 0;
+        if ( count ($conditions) == 0) return (float)0.00;
         foreach ($conditions as $id => $condition) {
             switch ( $condition->label ) {
                 case 'stockperitem':
@@ -176,6 +160,40 @@ class Model_Deliverer extends Model
         }
         $stock->bonus = $bonus;
         return (float)$bonus;
+    }
+    
+    /**
+     * Calculates cost of this deliverer with given stock bean and returns the total cost.
+     *
+     * @param RedBean_OODBBean $stock
+     * @return float
+     */
+    protected function calculateCost(RedBean_OODBBean $stock)
+    {
+        $costs = $this->bean->person->ownCost; // fetch it from the person
+        $cost_sum = 0;
+        $stock->costitem = 0;
+        $stock->costweight = 0;
+        if ( count ($costs) == 0) return (float)0.00;
+        foreach ($costs as $id => $cost) {
+            switch ( $cost->label ) {
+                case 'stockperitem':
+                    $cost_sum += $cost->value;
+                    $stock->costitem += $cost->value;
+                    break;
+                
+                case 'stockperweight':
+                    $cost_sum += $stock->weight * $cost->value;
+                    $stock->costweight += $cost->value;
+                    break;
+            
+                default:
+                    // dunno?! nothing.
+                    break;
+            }
+        }
+        $stock->cost = $cost_sum;
+        return (float)$cost_sum;
     }
     
     /**

@@ -76,5 +76,22 @@
         name="dialog[ownCost][<?php echo $index ?>][value]"
         value="<?php echo htmlspecialchars($_cost->decimal('value', 3)) ?>" />
 </div>
+<div class="row <?php echo ($_cost->hasError('doesnotaffectlanuv')) ? 'error' : ''; ?>">
+    <input
+        type="hidden"
+        name="dialog[ownCost][<?php echo $index ?>][doesnotaffectlanuv]"
+        value="0" />
+    <input
+        id="person-<?php echo $record->getId() ?>-cost-<?php echo $index ?>-doesnotaffectlanuv"
+        type="checkbox"
+        name="dialog[ownCost][<?php echo $index ?>][doesnotaffectlanuv]"
+        <?php echo ($_cost->doesnotaffectlanuv) ? 'checked="checked"' : '' ?>
+        value="1" />
+    <label
+        for="person-<?php echo $record->getId() ?>-cost-<?php echo $index ?>-doesnotaffectlanuv"
+        class="cb">
+        <?php echo I18n::__('var_label_doesnotaffectlanuv') ?>
+    </label>
+</div>
 </fieldset>
 <!-- /address edit subform -->

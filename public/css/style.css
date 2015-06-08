@@ -876,7 +876,7 @@ th.label {
     width: 25.404255317%;
 }
 
-.panel label.cb {
+label.cb {
     text-align: left;
     width: auto;
     padding-left: 26.0%;
@@ -920,7 +920,7 @@ select.filter-select {
     width: auto;
 }
 
-.panel select.cb {
+select.cb {
     /*margin-left: 32%;*/
     margin-left: 27.666%;
 }
