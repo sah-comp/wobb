@@ -23,6 +23,16 @@
 class Model_Lanuv extends Model
 {
     /**
+      * Define the lower margin for stock.
+      */
+    const LOWER_MARGIN = 80.0;
+    
+    /**
+      * Define the upper margin for stock.
+      */
+    const UPPER_MARGIN = 110.0;
+
+    /**
      * Holds the qualities (Handelsklasse) of stock to pick up in a summary.
      *
      * @var array
@@ -121,16 +131,30 @@ SQL;
     }
     
     /**
+     * Returns the week of year from a given attribute.
+     *
+     * @param string Name of the attribute
+     * @return int Week of the year
+     */
+    public function weekOfYear($attr = 'startdate')
+    {
+        $date = new DateTime($this->bean->$attr);
+        return $date->format("W");
+    }
+    
+    /**
      * Generate report for this lanuv bean.
      *
+     * @param float $lowerMargin
+     * @param float $upperMargin
      * @return void
      */
-    public function generateReport()
+    public function generateReport($lowerMargin = self::LOWER_MARGIN, $upperMargin = self::UPPER_MARGIN)
     {
         $this->bean->ownLanuvitem = array();
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {
-            $summary = $this->getSummaryQuality($quality, 80.0, 110.0); // totals and averages of the stock
+            $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
@@ -161,7 +185,7 @@ SQL;
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
         $this->markAsReportedNoWeight($this->nonQualities);
-        $this->markAsReportedWeight($this->qualities, 80.0, 110.0);
+        $this->markAsReportedWeight($this->qualities, $lowerMargin, $upperMargin);
         return true;
     }
     
