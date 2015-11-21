@@ -37,6 +37,21 @@ class Model_Company extends Model
             return null;
         }
     }
+    
+    /**
+     * Returns a string that works as a postal senderline.
+     *
+     * The returned string is a combination of the company legalname and address attributes.
+     *
+     * @return string
+     */
+    public function getSenderline()
+    {
+        return $this->bean->legalname . ' - ' .
+               $this->bean->street . ' - ' .
+               $this->bean->zip . ' ' .
+               $this->bean->city;
+    }
 
     /**
      * Returns an array with attributes for lists.
