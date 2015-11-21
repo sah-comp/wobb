@@ -40,18 +40,11 @@
                 <?php echo I18n::__('person_label_language') ?>
             </label>
         </div>
-        <div class="span2">
+        <div class="span4">
             <label
                 for="person-account"
                 class="<?php echo ($record->hasError('account')) ? 'error' : ''; ?>">
                 <?php echo I18n::__('person_label_account') ?>
-            </label>
-        </div>
-        <div class="span2">
-            <label
-                for="person-vatid"
-                class="<?php echo ($record->hasError('vatid')) ? 'error' : ''; ?>">
-                <?php echo I18n::__('person_label_vatid') ?>
             </label>
         </div>
     </div>
@@ -82,21 +75,13 @@
                 <?php endforeach ?>
             </select>
         </div>
-        <div class="span2">
+        <div class="span4">
             <input
                 id="person-account"
                 class="autowidth"
                 type="text"
                 name="dialog[account]"
                 value="<?php echo htmlspecialchars($record->account) ?>" />
-        </div>
-        <div class="span2">
-            <input
-                id="person-vatid"
-                class="autowidth"
-                type="text"
-                name="dialog[vatid]"
-                value="<?php echo htmlspecialchars($record->vatid) ?>" />
         </div>
     </div>
     <div class="row <?php echo ($record->hasError('enabled')) ? 'error' : ''; ?>">
@@ -325,7 +310,8 @@
             'person-baseprice' => I18n::__('person_baseprice_tab'),
             'person-condition' => I18n::__('person_condition_tab'),
             'person-cost' => I18n::__('person_cost_tab'),
-            'person-billing' => I18n::__('person_billing_tab')
+            'person-billing' => I18n::__('person_billing_tab'),
+            'person-bankaccount' => I18n::__('person_bankaccount_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -477,6 +463,100 @@
                 name="dialog[reldprice]"
                 value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
             <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
+        </div>
+    </fieldset>
+    <fieldset
+        id="person-bankaccount"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_bankaccount_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('bankname')) ? 'error' : ''; ?>">
+            <label
+                for="person-bankname">
+                <?php echo I18n::__('person_label_bankname') ?>
+            </label>
+            <input
+                id="person-bankname"
+                type="text"
+                name="dialog[bankname]"
+                value="<?php echo htmlspecialchars($record->bankname) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('bankcode')) ? 'error' : ''; ?>">
+            <label
+                for="person-bankcode">
+                <?php echo I18n::__('person_label_bankcode') ?>
+            </label>
+            <input
+                id="person-bankcode"
+                type="text"
+                name="dialog[bankcode]"
+                value="<?php echo htmlspecialchars($record->bankcode) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('bankaccount')) ? 'error' : ''; ?>">
+            <label
+                for="person-bankaccountfield">
+                <?php echo I18n::__('person_label_bankaccount') ?>
+            </label>
+            <input
+                id="person-bankaccountfield"
+                type="text"
+                name="dialog[bankaccount]"
+                value="<?php echo htmlspecialchars($record->bankaccount) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('bic')) ? 'error' : ''; ?>">
+            <label
+                for="person-bic">
+                <?php echo I18n::__('person_label_bic') ?>
+            </label>
+            <input
+                id="person-bic"
+                type="text"
+                name="dialog[bic]"
+                value="<?php echo htmlspecialchars($record->bic) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('iban')) ? 'error' : ''; ?>">
+            <label
+                for="person-iban">
+                <?php echo I18n::__('person_label_iban') ?>
+            </label>
+            <input
+                id="person-iban"
+                type="text"
+                name="dialog[iban]"
+                value="<?php echo htmlspecialchars($record->iban) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('taxoffice')) ? 'error' : ''; ?>">
+            <label
+                for="person-taxoffice">
+                <?php echo I18n::__('person_label_taxoffice') ?>
+            </label>
+            <input
+                id="person-taxoffice"
+                type="text"
+                name="dialog[taxoffice]"
+                value="<?php echo htmlspecialchars($record->taxoffice) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('taxid')) ? 'error' : ''; ?>">
+            <label
+                for="person-taxid">
+                <?php echo I18n::__('person_label_taxid') ?>
+            </label>
+            <input
+                id="person-taxid"
+                type="text"
+                name="dialog[taxid]"
+                value="<?php echo htmlspecialchars($record->taxid) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('vatid')) ? 'error' : ''; ?>">
+            <label
+                for="person-vatid">
+                <?php echo I18n::__('person_label_vatid') ?>
+            </label>
+            <input
+                id="person-vatid"
+                type="text"
+                name="dialog[vatid]"
+                value="<?php echo htmlspecialchars($record->vatid) ?>" />
         </div>
     </fieldset>
 </div>

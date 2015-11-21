@@ -132,7 +132,10 @@ class Model_Person extends Model
      */
     public function getAddress($label = 'default')
     {
-        return R::findOne('address', 'label = ? AND person_id = ?', array($label, $this->bean->getId()));
+        if ( ! $address = R::findOne('address', 'label = ? AND person_id = ?', array($label, $this->bean->getId())) ) {
+            $address = R::dispense('address');
+        }
+        return $address;
     }
 
     /**
