@@ -27,6 +27,9 @@
                 <div class="span2">
                     <label><?php echo I18n::__('lanuv_label_enddate') ?></label>
                 </div>
+                <div class="span2">
+                    <label><?php echo I18n::__('lanuv_label_weekofyear') ?></label>
+                </div>
             </div>
             
             <?php foreach ($records as $_id => $_record): ?>
@@ -43,6 +46,9 @@
                         </div>
                         <div class="span2">
                             <?php echo htmlspecialchars($_record->localizedDate('enddate')) ?>
+                        </div>
+                        <div class="span2">
+                            <?php echo htmlspecialchars($_record->weekOfYear()) ?>
                         </div>
                     </div>
                 </a>
