@@ -37,12 +37,89 @@
  */
 $_ownDcost = array();
 $_sprices = $record->getSpecialPrices();
+$_stocks = R::find('stock', " billnumber = ? ORDER BY earmark, mfa DESC, weight DESC ", array($record->invoice->name));
 ?>
 <body>
     <div class="invoice-wrapper">
+    <div class="company-header">
+        <div class="name-logo">
+            <?php echo htmlspecialchars($record->invoice->company->legalname) ?>
+        </div>
+        <div class="column communication">
+            <table>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_phone') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->phone) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_fax') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->fax) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_email') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->email) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_website') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->website) ?></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column postaladdress">
+            <table>
+                <tr>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->street) ?></td>
+                </tr>
+                <tr>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->zip) ?> <?php echo htmlspecialchars($record->invoice->company->city) ?></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column taxid">
+            <table>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_taxoffice') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->taxoffice) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_taxid') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->taxid) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_vatid') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->vatid) ?></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column bankdata">
+            <table>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_bankname') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankname) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_bankcode') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankcode) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_bankaccount') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankaccount) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_bic') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->bic) ?></td>
+                </tr>
+                <tr>
+                    <td class="label"><?php echo I18n::__('company_label_iban') ?></td>
+                    <td class="value"><?php echo htmlspecialchars($record->invoice->company->iban) ?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="addressinfowrapper">
     <div class="addresslabel">
         <div class="senderline">
-        <?php echo htmlspecialchars($record->invoice->company->senderline) ?>
+        <?php echo htmlspecialchars($record->invoice->company->getSenderline()) ?>
         </div>
         <div class="name">
         <?php echo htmlspecialchars($record->person->name) ?>
@@ -69,14 +146,16 @@ $_sprices = $record->getSpecialPrices();
             </tr>
             <tr>
                 <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></label>
-                <td class="value"><?php echo $record->invoice->bookingdate ?></label>
+                <td class="value"><?php echo $record->invoice->localizedDate('bookingdate') ?></label>
             </tr>
             <tr>
                 <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></label>
-                <td class="value"><?php echo $record->csb->pubdate ?></label>
+                <td class="value"><?php echo $record->csb->localizedDate('pubdate') ?></label>
             </tr>
         </table>
     </div>
+    </div>
+    <div class="summary">
     <table class="invoice internal">
         <thead>
             <tr>
@@ -126,7 +205,7 @@ $_sprices = $record->getSpecialPrices();
                 <td class="number section"><?php echo htmlspecialchars($record->decimal('subtotalnet', 2)) ?></td>
             </tr>
             <tr>
-                <td colspan="4" class="number"><?php echo htmlspecialchars($record->person->vat->name) ?> <span class="info"><?php echo I18n::__('wawi_vat_info_must_payback_if_lower') ?></span></td>
+                <td colspan="4" class="number"><?php echo htmlspecialchars($record->person->vat->name) ?></td>
                 <td class="number"><?php echo htmlspecialchars($record->decimal('vatvalue', 2)) ?></td>
             </tr>
             <tr class="gros">
@@ -162,6 +241,37 @@ $_sprices = $record->getSpecialPrices();
     <?php endforeach ?>
         </tbody>
     </table>
+    </div>
+    <div class="details">
+    <table class="invoice internal stock">
+        <thead>
+            <tr>
+                <th><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
+                <th><?php echo I18n::__('invoice_internal_label_name') ?></th>
+                <th><?php echo I18n::__('invoice_internal_label_quality') ?></th>
+                <th><?php echo I18n::__('invoice_internal_label_damagestock') ?></th>
+                <th class="number"><?php echo I18n::__('invoice_internal_label_mfa') ?></th>
+                <th class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
+                <th class="number"><?php echo I18n::__('invoice_internal_label_dprice') ?></th>
+                <th class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($_stocks as $_stock_id => $_stock): ?>
+            <tr>
+                <td><?php echo $_stock->earmark ?></td>
+                <td><?php echo $_stock->name ?></td>
+                <td><?php echo $_stock->quality ?></td>
+                <td><?php echo $_stock->getDamageAsText() ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('dprice', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('totaldprice', 2)) ?></td>
+            </tr>
+    <?php endforeach ?>
+        </tbody>
+    </table>
+    </div>
     </div>
     </body>
 </html>

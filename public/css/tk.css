@@ -132,76 +132,192 @@ td.label {
     text-align: right;
 }
 
+/**
+ * Style an invoice.
+ */
 .invoice-wrapper {
-    padding: 1em;
+    margin: 0 5%;
 }
 
-/**
- * Invoice table
- */
-
-table.invoice {
+.company-header {
     width: 100%;
+    float: left;
+    margin-bottom: 2em;
 }
 
-table.invoice tr > td,
-table.invoice tr > th {
-    padding: 0.25em 0.25em;
+.company-header .name-logo {
+    font-size: 1.5em;
+    text-align: center;
+    line-height: 1.8em;
 }
 
-table.invoice tr > td.section {
-    padding-top: 1em;
+.company-header .column {
+    float: left;
+    width: 25%;
+    font-size: 0.5em;
 }
 
-table.invoice tr.info {
-    font-size: small;
-}
-
-table.invoice thead {
-    background-color: #666;
-    color: white;
-}
-
-tr.total.dealer,
-tr.gros {
-    font-size: 1.33em;
-}
-
-/**
- * Info to a subject.
- *
- * e.g. "Sie verpflichten sich zu..."
- */
-table.invoice span.info {
-    font-size: small;
-    color: gray;
-    display: block;
+.company-header td {
+    padding: 2px;
 }
 
 /**
  * Addresslabel
  */
-
-.addresslabel {
-    margin-bottom: 1em;
-    width: 50%;
+ 
+.addressinfowrapper {
     float: left;
+    margin-bottom: 2em;
+    width: 100%;
 }
 
-.addresslabel .name {
-    margin-top: 0.5em;
+.addresslabel {
+    width: 75%;
+    float: left;
+    font-size: 0.8em;
 }
 
 .addresslabel .senderline {
     font-size: 0.6em;
-    border-bottom: 1px solid gray;
+    margin-bottom: 0.2em;
 }
 
 /**
  * Infolabel
  */
 .infolabel {
-    width: 50%;
+    width: 25%;
     float: right;
-    font-size: small;
+    font-size: 0.8em;
+}
+
+.infolabel td {
+    padding: 2px;
+    text-align: right;
+}
+
+/**
+ * Invoice table
+ */
+table.invoice {
+    width: 100%;
+}
+
+table.invoice thead {
+    background-color: gray;
+    color: white;
+}
+
+table.invoice thead th {
+    font-size: 0.6em;
+    padding: 4px;
+}
+
+@media print {
+    body {
+        font-family: 'Helvetica', sans-serif;
+        font-size: 12pt;
+        background-color: white;
+    }
+    
+    /**
+     * Style an invoice.
+     */
+    .invoice-wrapper {
+    }
+
+    .company-header {
+        height: 3.5cm;
+    }
+
+    .company-header .name-logo {
+        font-size: 20pt;
+    }
+
+    .company-header .column {
+        float: left;
+        width: 25%;
+    }
+
+    .company-header td {
+    }
+
+    .company-header td.label,
+    .company-header td.value {
+        font-size: 6pt;
+    }
+    
+    /**
+     * Addresslabel
+     */
+
+    .addresslabel {
+        width: 8.5cm;
+        height: 4.5cm;
+    }
+
+    .addresslabel .senderline {
+        line-height: 0.5cm;
+        font-size: 6pt;
+    }
+
+    /**
+     * Infolabel
+     */
+    .infolabel {
+        width: 8.5cm;
+    }
+    
+    .summary {
+    }
+    
+    .details {
+        page-break-before: always;
+    }
+
+    /**
+     * Invoice table
+     */
+
+    table.invoice {
+        width: 100%;
+    }
+
+    /* list of stock beans, can get very long */
+    table.stock {
+        font-size: 7pt;
+    }
+
+    table.invoice tr > td,
+    table.invoice tr > th {
+        padding: 0.1em;
+    }
+    
+    table.stock tbody tr td:before,
+    table.stock tbody tr td:after {
+        content: "";
+        height: 1px;
+        display: block;
+    }
+
+    table.invoice tr > td.section {
+    }
+
+    table.invoice tr.info {
+        font-size: 8pt;
+    }
+
+    tr.total.dealer,
+    tr.gros {
+        font-size: 14pt;
+    }
+
+    /**
+     * Info to a subject.
+     *
+     * e.g. "Sie verpflichten sich zu..."
+     */
+    table.invoice span.info {
+        display: block;
+    }
 }
