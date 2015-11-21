@@ -163,6 +163,17 @@ class Model_Stock extends Model
     }
     
     /**
+     * Returns a string with all the damages of this stock.
+     *
+     * @return string
+     */
+    public function getDamageAsText()
+    {
+        if ( ! $this->bean->damage1 && ! $this->bean->damage2) return '';
+        return trim($this->bean->damage1 . ' ' . $this->bean->damage2);
+    }
+    
+    /**
      * Calculates the price of this stock bean according to given parameters by the deliverer bean.
      *
      * @param RedBean_OODBBean $deliverer
