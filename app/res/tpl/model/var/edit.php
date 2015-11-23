@@ -125,4 +125,33 @@
         </label>
     </div>
 </fieldset>
+<div class="tab-container">
+    <?php Flight::render('shared/navigation/tabs', array(
+        'tab_id' => 'var-tabs',
+        'tabs' => array(
+            'var-cost' => I18n::__('var_cost_tab')
+        ),
+        'default_tab' => 'var-cost'
+    )) ?>
+    <fieldset
+        id="var-cost"
+        class="tab"
+        style="display: block;">
+        <legend class="verbose"><?php echo I18n::__('var_legend_cost') ?></legend>
+        <div
+            id="var-<?php echo $record->getId() ?>-cost-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownCost) == 0) $record->ownCost[] = R::dispense('cost') ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownCost as $_cost_id => $_cost): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/var/own/cost', array(
+                'record' => $record,
+                '_cost' => $_cost,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
+        </div>
+    </fieldset>
+</div>
 <!-- end of var edit form -->
