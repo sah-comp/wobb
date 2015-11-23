@@ -126,68 +126,6 @@
                 <div
                     id="deliverer-<?php echo $_deliverer->getId() ?>-cost"
                     class="subdeliverer-container">
-                    <?php $_ownDcost = $_deliverer->ownDcost; ?>
-                    <?php foreach ($_ownDcost as $_cost_id => $_cost): ?>
-                    <div class="row">
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo I18n::__('cost_label_' . $_cost->label) ?>"
-                            />
-                        </div>
-                        <div class="span2">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_cost->decimal('factor', 3)) ?>"
-                            />
-                        </div>
-                        <div class="span2">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_cost->decimal('value', 3)) ?>"
-                            />
-                        </div>
-                        <div class="span2">
-                            <label class="number little"><?php echo htmlspecialchars($_cost->content) ?></label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_cost->decimal('net', 3)) ?>"
-                            />
-                        </div>
-                    </div>
-                    <?php endforeach ?>
-                    
-                    <?php if ( count($_ownDcost) ): ?>
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number"><?php echo I18n::__('wawi_label_cost') ?></label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->decimal('totalcost', 3)) ?>"
-                            />
-                        </div>
-                    </div>
-                    <?php endif ?>
-                    
                     <div class="row">
                         <div class="span9">
                             <label class="number"><?php echo I18n::__('wawi_label_net') ?></label>
@@ -198,14 +136,14 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->decimal('subtotalnet', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('subtotalnet', 3)) ?>"
                             />
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="span9">
-                            <label class="number"><?php echo ( $_deliverer->invoice()->vat()->getId() ) ? $_deliverer->invoice()->vat()->name : $_deliverer->person->vat->name ?></label>
+                            <label class="number"><?php echo ( $_deliverer->invoice()->vat()->getId() ) ? $_deliverer->invoice()->vat()->name : $_deliverer->invoice()->vat()->name ?></label>
                         </div>
                         <div class="span3">
                             <input
@@ -213,7 +151,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->decimal('vatvalue', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('vatvalue', 3)) ?>"
                             />
                         </div>
                     </div>
@@ -228,7 +166,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->decimal('totalgros', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('totalgros', 3)) ?>"
                             />
                         </div>
                     </div>
