@@ -42,7 +42,13 @@
                 </div>
             </div>
             <!-- end of row with labels -->
-            <?php $_n = 0 ?>
+            <?php
+                /**
+                 * Reset counters for specialprice and specialprice->ownCost.
+                 */
+                $_n = 0;
+                $_m = 0;
+            ?>
             <?php foreach ($record->with(' ORDER BY supplier, earmark ')->ownDeliverer as $_id => $_deliverer): ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('purchase_deliverer_sub_legend') ?></legend>
@@ -253,7 +259,31 @@
                             />
                         </div>
                     </div>
-
+                    <?php foreach ($_sprice->ownScost as $_scost_id => $_scost): ?>
+                    <?php $_m++ ?>
+                    <div>
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][type]"
+                            value="scost" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][id]"
+                            value="<?php echo $_scost->getId() ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][label]"
+                            value="<?php echo htmlspecialchars($_scost->label) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][content]"
+                            value="<?php echo htmlspecialchars($_scost->content) ?>" />
+                        <input
+                            type="hidden"
+                            name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][value]"
+                            value="<?php echo htmlspecialchars($_scost->value) ?>" />
+                    </div>
+                    <?php endforeach ?>
                     <?php endforeach ?>
                 </div>
                 <?php endif ?>
