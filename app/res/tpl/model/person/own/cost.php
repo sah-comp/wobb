@@ -8,7 +8,7 @@
  * @version $Id$
  */
 ?>
-<!-- address edit subform cost -->
+<!-- person edit subform cost -->
 <fieldset
     id="person-<?php echo $record->getId() ?>-owncost-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('person_legend_cost') ?></legend>
@@ -94,4 +94,4 @@
     </label>
 </div>
 </fieldset>
-<!-- /address edit subform -->
+<!-- /cost edit subform -->

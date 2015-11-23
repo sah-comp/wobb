@@ -8,7 +8,7 @@
  * @version $Id$
  */
 ?>
-<!-- address edit subform condition -->
+<!-- person edit subform condition -->
 <fieldset
     id="person-<?php echo $record->getId() ?>-owncondition-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('person_legend_condition') ?></legend>
@@ -77,4 +77,4 @@
         value="<?php echo htmlspecialchars($_condition->decimal('value', 3)) ?>" />
 </div>
 </fieldset>
-<!-- /address edit subform -->
+<!-- /condition edit subform -->
