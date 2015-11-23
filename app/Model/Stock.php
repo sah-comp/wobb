@@ -241,6 +241,9 @@ class Model_Stock extends Model
         
         $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
         $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        
+        $this->calculateFixedpriceCost($fixedPrice);
+        
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return true;
     }
@@ -249,6 +252,9 @@ class Model_Stock extends Model
      * Checks for damage1 code.
      *
      * If stock has a code in damage1 a fixed price or agio or disagio apply.
+     * If the fixedPrice condition is not either of type 'fixed', 'agio' or 'disagio'
+     * nothing will happen and the stock is left with the already calculated price.
+     * This applies e.g. for 'Binneneber', damage code '02'.
      *
      * @param RedBean_OODBBean $deliverer
      * @param float $tax
@@ -280,6 +286,8 @@ class Model_Stock extends Model
             $this->bean->totalsprice += $fixedPrice->sprice;
             $this->bean->totaldprice += $fixedPrice->dprice;
         }
+        
+        $this->calculateFixedpriceCost($fixedPrice);
         
         if ( ! $fixedPrice->doesnotaffectlanuv ) {
             $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
@@ -324,11 +332,36 @@ class Model_Stock extends Model
             $this->bean->totaldprice += $fixedPrice->dprice;
         }
         
+        $this->calculateFixedpriceCost($fixedPrice);
+        
         if ( ! $fixedPrice->doesnotaffectlanuv ) {
             $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         }
         
         return true;
+    }
+    
+    /**
+     * The given fixedprice eventually has additional costs to be applied.
+     *
+     * @param RedBean_OODBBean $fixedprice
+     * @return void
+     */
+    public function calculateFixedpriceCost(RedBean_OODBBean $fixedprice)
+    {
+        if ( ! $fixedprice->ownScost ) return false;
+        $sum = 0;
+        foreach ($fixedprice->ownScost as $id => $cost) {
+            if ( $cost->label == 'flat' ) {
+                $sum += $cost->value;
+            } elseif ( $cost->label == 'stockperitem' ) {
+                $sum += $cost->value;
+            } elseif ( $cost->label == 'stockperweight' ) {
+                $sum += $cost->value * $this->bean->weight;
+            }
+        }        
+        $this->bean->totalsprice -= $sum;
+        $this->bean->totaldprice -= $sum;
     }
     
     /**
