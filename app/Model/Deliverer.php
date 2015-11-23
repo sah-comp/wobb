@@ -199,7 +199,11 @@ class Model_Deliverer extends Model
     /**
      * Returns an array with special prices for damaged stock.
      *
-     * @todo Clean up the searches and sections damage1, damage2 and quality to make it clearer what happens
+     * If no specialprice beans for this deliverer exists yet they will be created.
+     * There are three sections of specialprices. One is for damage1, the second for
+     * damage2 and another for certain qualities.
+     * A specialprice can also have a number of costs connected to it. E.g. a damage1
+     * of '08', a 'Kotelettschaden' will be charged with 'Attestkosten' of 4.10 Euros.
      *
      * @return array
      */
@@ -226,6 +230,11 @@ class Model_Deliverer extends Model
                 $price->name = $var->name;
                 $price->note = $var->note;
                 $price->condition = $var->condition;
+                foreach ($var->ownCost as $id => $cost) {
+                    $scost = R::dispense('scost');
+                    $scost->import($cost->export(), 'label,content,value');
+                    $price->ownScost[] = $scost;
+                }
                 $this->bean->ownSpecialprice[] = $price;
             }
             
@@ -249,6 +258,11 @@ class Model_Deliverer extends Model
                 $price->name = $var->name;
                 $price->note = $var->note;
                 $price->condition = $var->condition;
+                foreach ($var->ownCost as $id => $cost) {
+                    $scost = R::dispense('scost');
+                    $scost->import($cost->export(), 'label,content,value');
+                    $price->ownScost[] = $scost;
+                }
                 $this->bean->ownSpecialprice[] = $price;
             }
             
@@ -274,6 +288,11 @@ class Model_Deliverer extends Model
                     $price->name = $var->name;
                     $price->note = $var->note;
                     $price->condition = $var->condition;
+                    foreach ($var->ownCost as $id => $cost) {
+                        $scost = R::dispense('scost');
+                        $scost->import($cost->export(), 'label,content,value');
+                        $price->ownScost[] = $scost;
+                    }
                     $this->bean->ownSpecialprice[] = $price;
                 }
             }
@@ -294,16 +313,22 @@ class Model_Deliverer extends Model
                 throw new Exception();
             }
             $this->bean->invoice->name = $nextbillingnumber;
+            $this->bean->invoice->fy = Flight::setting()->fiscalyear;
+            $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
         }
-        $this->bean->invoice->fy = Flight::setting()->fiscalyear;
         $this->bean->invoice->company = $csb->company;
-        $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
-        // copy to invoice from this deliverer
-        $this->bean->invoice->import($this->bean->export(), 'totalnet, totalcost, subtotalnet, vatvalue, totalgros');
         $this->bean->invoice->person = $this->bean->person;
+        $this->bean->invoice->vat = $this->bean->person->vat;
+
+        $this->bean->invoice->totalnet = $this->bean->totalnet;
+        $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet; // -cost +boni in real
+        $this->bean->invoice->vatvalue = 
+                                $this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100;
+        $this->bean->invoice->totalgros = 
+                                $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue;
+        
         $this->bean->invoice->kind = 0;//depends on the kind of invoice. 0 = Slaughter, 1 = other
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
-        $this->bean->invoice->vat = $this->bean->person->vat;
         // end of establishing a new invoice
         $this->dispatchBillingNumberToStock($csb);
         return null;
