@@ -191,6 +191,7 @@ SQL;
     
     /**
      * Returns an array with information about a certain stock quality.
+     * Stock beans with attribute damage1 = '02' are collected.
      *
      * @param string $quality
      * @param float $margin_lo
