@@ -301,9 +301,10 @@ class Model_Deliverer extends Model
     }
 
     /**
-     * Generates a bill for this deliverer for the given slaughterday csb bean.
+     * Generates an invoice for this deliverer for the given slaughterday csb bean.
      *
      * @param RedBean_OODBBean $csb
+     * @throws Exception if no billing number can be generated
      * @return void
      */
     public function billing($csb)
@@ -319,9 +320,30 @@ class Model_Deliverer extends Model
         $this->bean->invoice->company = $csb->company;
         $this->bean->invoice->person = $this->bean->person;
         $this->bean->invoice->vat = $this->bean->person->vat;
-
         $this->bean->invoice->totalnet = $this->bean->totalnet;
-        $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet; // -cost +boni in real
+        $bonusnet = 0;
+        foreach ($this->bean->person->ownCondition as $id => $condition) {
+            if ( $condition->label == 'stockperitem' ) {
+                $bonusnet += $this->bean->piggery * $condition->value;
+            } elseif ( $condition->label == 'stockperweight' ) {
+                $bonusnet += $this->bean->totalweight * $condition->value;
+            }
+        }
+        $costnet = 0;
+        foreach ($this->bean->person->ownCost as $id => $cost) {
+            if ( $cost->label == 'stockperitem' ) {
+                $costnet += $this->bean->piggery * $cost->value;
+            } elseif ( $cost->label == 'stockperweight' ) {
+                $costnet += $this->bean->totalweight * $cost->value;
+            } elseif ( $cost->label == 'flat' ) {
+                $costnet += $cost->value;
+            }
+        }
+        $this->bean->invoice->bonusnet = $bonusnet;
+        $this->bean->invoice->costnet = $costnet;
+        $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet;
+        $this->bean->invoice->subtotalnet += $this->bean->invoice->bonusnet;
+        $this->bean->invoice->subtotalnet -= $this->bean->invoice->costnet;
         $this->bean->invoice->vatvalue = 
                                 $this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100;
         $this->bean->invoice->totalgros = 
