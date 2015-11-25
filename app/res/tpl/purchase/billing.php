@@ -74,7 +74,8 @@
                             <?php echo htmlspecialchars($_deliverer->person->name) ?>
                         </a>
                         <div class="deliverer-info">
-                            <?php echo $_deliverer->getInformation() ?>
+                            <?php echo $_deliverer->getInformation() ?> 
+                            <a class="pdf" href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a>
                         </div>
                     </div>
                     <div class="span1">
@@ -126,6 +127,45 @@
                 <div
                     id="deliverer-<?php echo $_deliverer->getId() ?>-cost"
                     class="subdeliverer-container">
+                    
+                    <?php if ( $_deliverer->invoice->bonusnet ): ?>
+                    <div class="row">
+                        <div class="span9">
+                            <label class="number">
+                                <?php echo I18n::__('wawi_billing_label_bonus') ?>
+                            </label>
+                        </div>
+                        <div class="span3">
+                            <input
+                                type="text"
+                                class="number"
+                                readonly="readonly"
+                                name="num"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('bonusnet', 3)) ?>"
+                            />
+                        </div>
+                    </div>
+                    <?php endif ?>
+                    
+                    <?php if ($_deliverer->invoice->costnet ): ?>
+                    <div class="row">
+                        <div class="span9">
+                            <label class="number">
+                                <?php echo I18n::__('wawi_billing_label_cost') ?>
+                                </label>
+                        </div>
+                        <div class="span3">
+                            <input
+                                type="text"
+                                class="number"
+                                readonly="readonly"
+                                name="num"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('costnet', 3)) ?>"
+                            />
+                        </div>
+                    </div>
+                    <?php endif ?>
+                    
                     <div class="row">
                         <div class="span9">
                             <label class="number"><?php echo I18n::__('wawi_label_net') ?></label>
