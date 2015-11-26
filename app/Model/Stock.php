@@ -187,9 +187,9 @@ class Model_Stock extends Model
         $lanuv_tax = $deliverer->calculate($this->bean);
         if ( ! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
             $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
-            $this->calculateDamage1Price($deliverer, $lanuv_tax);
-            $this->calculateDamage2Price($deliverer, $lanuv_tax);
         }
+        $this->calculateDamage1Price($deliverer, $lanuv_tax);
+        $this->calculateDamage2Price($deliverer, $lanuv_tax);
         return null;
     }
     
