@@ -117,7 +117,7 @@
                             class="number"
                             readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][totalnet]"
-                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
+                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 2)) : I18n::__('deliverer_not_yet_calculated')  ?>"
                             
                         />
                         
@@ -141,7 +141,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('bonusnet', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('bonusnet', 2)) ?>"
                             />
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('costnet', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('costnet', 2)) ?>"
                             />
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('subtotalnet', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('subtotalnet', 2)) ?>"
                             />
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('vatvalue', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('vatvalue', 2)) ?>"
                             />
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                                 class="number"
                                 readonly="readonly"
                                 name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('totalgros', 3)) ?>"
+                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('totalgros', 2)) ?>"
                             />
                         </div>
                     </div>

@@ -121,7 +121,7 @@
                             class="number"
                             readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][totalnet]"
-                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
+                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 2)) : I18n::__('deliverer_not_yet_calculated')  ?>"
                             
                         />
                         
@@ -183,7 +183,7 @@
                             class="number"
                             readonly="readonly"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownDeliverer][<?php echo $_sub_id ?>][totalnet]"
-                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_sub->decimal('totalnet', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
+                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_sub->decimal('totalnet', 2)) : I18n::__('deliverer_not_yet_calculated')  ?>"
                             
                         />
                     </div>
