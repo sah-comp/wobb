@@ -94,7 +94,10 @@ class Controller_Deliverer extends Controller
         ob_start();
         Flight::render('deliverer/' . $this->layout, array(
             'record' => $this->record,
-            'records' => $this->records,            
+            'records' => $this->records,
+            'conditions' => $this->record->person->ownCondition,
+            'costs' => $this->record->person->ownCost, 
+            'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),
