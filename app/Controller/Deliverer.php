@@ -76,13 +76,21 @@ class Controller_Deliverer extends Controller
     {
         //Permission::check(Flight::get('user'), 'deliverer', 'index');
 
-        $mpdf = new mPDF();
-        $this->layout = 'internal';
         $filename = I18n::__('deliverer_invoice_filename', null, 
             array(
                 $this->record->invoice->name
             )
         );
+        $docname = I18n::__('deliverer_invoice_docname', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $mpdf = new mPDF('c', 'A4');
+        $mpdf->SetTitle($docname);
+        $mpdf->SetAuthor($this->record->invoice->company->legalname);
+        $mpdf->SetDisplayMode('fullpage');
+        $this->layout = 'internal';
         ob_start();
         Flight::render('deliverer/' . $this->layout, array(
             'record' => $this->record,
