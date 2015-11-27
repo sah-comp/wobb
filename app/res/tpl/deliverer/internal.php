@@ -8,12 +8,11 @@
 	        font-size: 10pt;
         }
         p {
-            margin: 0pt;
+            margin: 0pt 0pt 20pt 0pt;
         }
         .senderline {
             font-size: 6pt;
             border-bottom: 0.1mm solid #000000;
-            margin-bottom: 3mm;
         }
         .name,
         .postal {
@@ -23,8 +22,18 @@
             font-weight: bold;
             font-size: 11pt;
         }
+        .uberemphasize {
+            font-size: 14pt;
+            font-weight: bold;
+        }
         .dinky {
             font-size: 8pt;
+        }
+        .moredinky {
+            font-size: 6pt;
+        }
+        .centered {
+            text-align: center;
         }
         table {
             border-collapse: collapse;
@@ -34,6 +43,9 @@
         }
         td.bt {
             border-top: 0.1mm solid #000000;
+        }
+        td.br {
+            border-right: 0.1mm solid #000000;
         }
         th,
         td.bb {
@@ -47,6 +59,16 @@
         table.info td.value {
             text-align: right;
         }
+        table.pageheader td.label,
+        table.pageheader td.value {
+            font-size: 6pt;
+        }
+        table.pageheader td.label {
+            text-align: right;
+        }
+        table.pageheader td.value {
+            text-align: left;
+        }
         
     </style>
 </head>
@@ -55,8 +77,84 @@
     <htmlpageheader name="tkheader-firstpage" style="display: none;">
         <table width="100%">
             <tr>
-                <td style="text-align: right; font-size: 14pt; font-weight: bold;">
-                    <?php echo htmlspecialchars($record->invoice->company->legalname) ?>
+                <td style="vertical-align: top; width: 120px;">
+                    <img src="/img/tk-logo.png" width="98" height="37" alt="" />
+                </td>
+                <td style="vertical-align: top;">
+                    <table class="pageheader" width="100%">
+                        <tr>
+                            <td class="value">
+                                <?php echo htmlspecialchars($record->invoice->company->legalname) ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="value">
+                            <?php echo htmlspecialchars($record->invoice->company->street) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->zip) ?> <?php echo htmlspecialchars($record->invoice->company->city) ?></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: top;">
+                    <table class="pageheader" width="100%">
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_phone') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->phone) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_fax') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->fax) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_email') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->email) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_website') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->website) ?></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: top;">
+                    <table class="pageheader" width="100%">
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_taxoffice') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->taxoffice) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_taxid') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->taxid) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_vatid') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->vatid) ?></td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="vertical-align: top;">
+                    <table class="pageheader" width="100%">
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_bankname') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankname) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_bankcode') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankcode) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_bankaccount') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->bankaccount) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_bic') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->bic) ?></td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo I18n::__('company_label_iban') ?></td>
+                            <td class="value"><?php echo htmlspecialchars($record->invoice->company->iban) ?></td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -78,12 +176,13 @@
     <sethtmlpagefooter name="tkfooter" value="on" />
     mpdf-->
     
-    <div style="height: 30mm;"></div>
+    <div style="height: 25mm;"></div>
     <table width="100%">
         <tr>
             <td style="width: 85mm; vertical-align: top;">
                 <div class="senderline">
                     <?php echo htmlspecialchars($record->invoice->company->getSenderline()) ?>
+                    <br /><br />
                 </div>
                 <div class="name">
                     <?php echo htmlspecialchars($record->person->name) ?>
@@ -98,7 +197,7 @@
                 <table class="info" width="100%">
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_serial') ?></label>
-                        <td class="value"><?php echo $record->invoice->name ?></label>
+                        <td class="value emphasize"><?php echo $record->invoice->name ?></label>
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></label>
@@ -125,7 +224,7 @@
         </tr>
     </table>
     
-    <div style="height: 10mm;"></div>
+    <div style="height: 20mm;"></div>
     
     <table class="deliverer" width="100%">
         <thead>
@@ -165,9 +264,8 @@
     <?php endforeach ?>
         </tbody>
     </table>
-    
     <div style="height: 5mm;"></div>
-    
+    <?php if ( $conditions ): ?>
     <table width="100%">
         <thead>
             <tr>
@@ -184,7 +282,7 @@
             </tr>
         </tfoot>
         <tbody>
-    <?php foreach ($record->person->ownCondition as $_id => $_condition): ?>
+    <?php foreach ($conditions as $_id => $_condition): ?>
             <tr>
                 <td colspan="2">
                     <?php echo $_condition->content, ' ', I18n::__('condition_label_'.$_condition->label) ?>
@@ -212,13 +310,21 @@
     <?php endforeach ?>
         </tbody>
     </table>
+    <?php endif ?>
+    <?php if ( $costs ): ?>
     <table width="100%">
         <thead>
             <tr>
                 <th width="40%" colspan="2"><?php echo I18n::__('invoice_internal_label_cost') ?></th>
+                <?php if ( ! $conditions): ?>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_unitprice') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_unit') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_total') ?></th>
+                <?php else: ?>                    
                 <th width="20%" class="number">&nbsp;</th>
                 <th width="20%" class="number">&nbsp;</th>
                 <th width="20%" class="number">&nbsp;</th>
+                <?php endif ?>
             </tr>
         </thead>
         <tfoot>
@@ -228,7 +334,7 @@
             </tr>
         </tfoot>
         <tbody>
-    <?php foreach ($record->person->ownCost as $_id => $_cost): ?>
+    <?php foreach ($costs as $_id => $_cost): ?>
             <tr>
                 <td colspan="2">
                     <?php echo $_cost->content, ' ', I18n::__('cost_label_'.$_cost->label) ?>
@@ -261,12 +367,13 @@
     <?php endforeach ?>
         </tbody>
     </table>
-    
     <div style="height: 5mm;"></div>
+    <?php endif ?>
     
     <table width="100%">
         <tr>
             <td width="40%" style="vertical-align: top;">
+                <?php if ( $specialprices ): ?>
                 <table width="100%">
                     <thead>
                         <tr>
@@ -280,7 +387,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                <?php foreach ($record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice as $_id => $_specialprice): ?>
+                <?php foreach ($specialprices as $_id => $_specialprice): ?>
                         <tr>
                             <td class="dinky number"><?php echo htmlspecialchars($_specialprice->piggery) ?></td>
                             <td class="dinky"><?php echo htmlspecialchars($_specialprice->note) ?></td>
@@ -290,6 +397,7 @@
                 <?php endforeach ?>
                     </tbody>
                 </table>
+                <?php endif ?>
             </td>
             <td width="20%"></td>
             <td width="40%" style="vertical-align: top;">
@@ -303,11 +411,106 @@
                         <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalue', 2)) ?></td>
                     </tr>
                     <tr>
-                        <td width="50%" class="bt bb number"><?php echo I18n::__('wawi_label_gros') ?></td>            
-                        <td width="50%" class="bt bb emphasize number"><?php echo htmlspecialchars($record->invoice->decimal('totalgros', 2)) ?></td>
+                        <td width="50%" class="bt number"><?php echo I18n::__('wawi_label_gros') ?></td>            
+                        <td width="50%" class="bt uberemphasize number"><?php echo htmlspecialchars($record->invoice->decimal('totalgros', 2)) ?></td>
                     </tr>
                 </table>
                 
+            </td>
+        </tr>
+    </table>
+    
+    <div style="height: 5mm;"></div>
+    
+    <table width="60%">
+        <tr>
+            <td colspan="3" class="dinky centered"><?php echo I18n::__('invoice_internal_label_pricing') ?></td>
+        </tr>
+        <tr>
+            <td width="33.3%" class="br" style="vertical-align: top;">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_weightmargin') ?></td>
+                        </tr>
+                        <tr>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
+                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
+                        </tr>
+                        <tbody>
+                    <?php foreach ($record->person->pricing->withCondition(" kind='weight' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
+                            <tr>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
+                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
+                            </tr>
+                    <?php endforeach ?>
+                        </tbody>
+                    </thead>
+                </table>
+            </td>
+            <td width="33.3%" class="br" style="vertical-align: top;">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_mfamargin') ?></td>
+                        </tr>
+                        <tr>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
+                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
+                        </tr>
+                        <tbody>
+                    <?php foreach ($record->person->pricing->withCondition(" kind='mfa' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
+                            <tr>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
+                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
+                            </tr>
+                    <?php endforeach ?>
+                        </tbody>
+                    </thead>
+                </table>
+            </td>
+            <td width="33.3%" class="br" style="vertical-align: top;">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_mfasubmargin') ?></td>
+                        </tr>
+                        <tr>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
+                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
+                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
+                        </tr>
+                        <tbody>
+                    <?php foreach ($record->person->pricing->withCondition(" kind='mfasub' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
+                            <tr>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
+                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
+                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
+                            </tr>
+                    <?php endforeach ?>
+                        </tbody>
+                    </thead>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <div style="height: 5mm;"></div>
+    
+    <table width="60%">
+        <tr>
+            <td class="dinky" style="vertical-align: top;">
+                <?php echo Flight::textile(I18n::__('invoice_internal_text_legal')) ?>
             </td>
         </tr>
     </table>
