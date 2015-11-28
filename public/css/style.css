@@ -872,6 +872,10 @@ ul.tab-navigation a.selected {
     color: gray;
 }
 
+.panel .tab p.info {
+    margin-bottom: 1em;
+}
+
 th.label {
     width: 25.404255317%;
 }
