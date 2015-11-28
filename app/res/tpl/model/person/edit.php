@@ -311,7 +311,8 @@
             'person-condition' => I18n::__('person_condition_tab'),
             'person-cost' => I18n::__('person_cost_tab'),
             'person-billing' => I18n::__('person_billing_tab'),
-            'person-bankaccount' => I18n::__('person_bankaccount_tab')
+            'person-bankaccount' => I18n::__('person_bankaccount_tab'),
+            'person-kidnap' => I18n::__('person_kidnap_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -557,6 +558,27 @@
                 type="text"
                 name="dialog[vatid]"
                 value="<?php echo htmlspecialchars($record->vatid) ?>" />
+        </div>
+    </fieldset>
+    <fieldset
+        id="person-kidnap"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_kidnap') ?></legend>
+        <p class="info"><?php echo I18n::__('person_info_kidnap') ?></p>
+        <div
+            id="person-<?php echo $record->getId() ?>-kidnap-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownKidnap) == 0) $record->ownKidnap[] = R::dispense('kidnap') ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownKidnap as $_kidnap_id => $_kidnap): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/person/own/kidnap', array(
+                'record' => $record,
+                '_kidnap' => $_kidnap,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
         </div>
     </fieldset>
 </div>
