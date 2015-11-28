@@ -122,6 +122,7 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 $this->record->importFromCsb();
                 R::store($this->record);
+                $this->record->checkAliasses();
                 $this->record->makeDeliverer();
                 R::store($this->record);
                 R::commit();
