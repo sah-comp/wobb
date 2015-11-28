@@ -414,6 +414,35 @@ SQL;
     }
     
     /**
+     * Looks up possible aliasses for stock beans and transfers them to their new owner.
+     *
+     * For example stock beans with earmark 'VO8603' have to be transferred to 'VX8603' as
+     * they do not belong to 'Vollmer Viehhandel' but to 'Vollmer Landwirt' which runs under
+     * VX instead of VO. As it happened to be forgotten often to do this manually therefore
+     * we developed this function for convenience.
+     *
+     * @return bool either true when aliasses where checked and transffered or false if not
+     */
+    public function checkAliasses()
+    {
+        $aliasses = R::findAll('kidnap');
+        if ( ! $aliasses ) return false;
+        $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE earmark = :earmark AND csb_id = :csb_id";
+        foreach ($aliasses as $id => $alias) {
+            $new_earmark = strtoupper( $alias->person->nickname . substr( $alias->earmark, 2 ) );
+            R::exec($sql, array(
+                ':new_earmark' => $new_earmark,
+                ':new_pid' => $alias->person->getId(),
+                ':new_supplier' => strtoupper( $alias->person->nickname ),
+                ':earmark' => $alias->earmark,
+                ':csb_id' => $this->bean->getId()
+            ));
+            error_log('Transffered ' . $alias->earmark . ' to ' . $new_earmark);
+        }
+        return true;
+    }
+    
+    /**
      * Create deliverer and their subdeliverer beans.
      *
      * When there is no person matching a main deliverer a new person bean will be created.
