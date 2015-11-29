@@ -229,16 +229,18 @@
     <table class="deliverer" width="100%">
         <thead>
             <tr>
-                <th width="20%">Ohrmarke</th>
-                <th width="20%" class="number">Anzahl</th>
-                <th width="20%" class="number">Basispreis</th>
-                <th width="20%" class="number">Gewicht KG</th>
-                <th width="20%" class="number">Wert in Euro</th>
+                <th width="10%"><?php echo I18n::__(invoice_internal_label_earmark) ?></th>
+                <th width="10%" class="number"><?php echo I18n::__(invoice_internal_label_qs) ?></th>
+                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_piggery) ?></th>
+                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_baseprice) ?></th>
+                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_weight) ?></th>
+                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_totalmerch) ?></th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
+                <td class="bt bb number">&nbsp;</td>
                 <td class="bt bb number">&nbsp;</td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanweight', 2)) ?></td>
@@ -246,6 +248,7 @@
             </tr>
             <tr>
                 <td class="bt emphasize"><?php echo I18n::__('invoice_internal_label_dealertotal') ?></td>
+                <td class="bt emphasize number"><?php echo $record->qspiggery ?></td>
                 <td class="bt emphasize number"><?php echo $record->piggery ?></td>
                 <td class="bt number"></td>
                 <td class="bt emphasize number"><?php echo htmlspecialchars($record->decimal('totalweight', 2)) ?></td>
@@ -256,6 +259,7 @@
     <?php foreach ($record->with(' ORDER BY earmark ')->ownDeliverer as $_sub_id => $_sub): ?>
             <tr>
                 <td><?php echo $_sub->earmark ?></td>
+                <td class="number"><?php echo $_sub->qspiggery ?></td>
                 <td class="number"><?php echo $_sub->piggery ?></td>
                 <td class="number"><?php echo htmlspecialchars($_sub->decimal('dprice', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
