@@ -316,6 +316,10 @@ class Model_Deliverer extends Model
             $this->bean->invoice->name = $nextbillingnumber;
             $this->bean->invoice->fy = Flight::setting()->fiscalyear;
             $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
+            $this->bean->invoice->paid = false;
+            $this->bean->invoice->duedate = date('Y-m-d', strtotime(
+                $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
+            ));
         }
         $this->bean->invoice->company = $csb->company;
         $this->bean->invoice->person = $this->bean->person;
