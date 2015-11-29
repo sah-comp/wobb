@@ -167,16 +167,15 @@ class Model_Person extends Model
     {
         $this->autoTag(true);
         $this->autoInfo(true);
-        
-        
         $this->addConverter('relsprice', array(
             new Converter_Decimal()
         ));
         $this->addConverter('reldprice', array(
             new Converter_Decimal()
         ));
-        
-        
+        $this->addConverter('qsdiscount', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('nickname', array(
             new Validator_HasValue(),
             new Validator_IsUnique(array('bean' => $this->bean, 'attribute' => 'nickname'))
