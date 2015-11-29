@@ -449,11 +449,11 @@ SQL;
      * The baseprice will be added with rel*price values of the found person bean. A subdeliverer
      * will not have a *price because they will inherit from their each and every main deliverer bean.
      *
-     * For each deliverer the persons cost will be replicated.
-     *
      */
     public function makeDeliverer()
     {
+        $sqlqsd = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND qs = 1";
+        $sqlqss = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND qs = 1";
         $stocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
         foreach ($stocks as $id => $stock) {
             // Deliverer owns one or more earmarks of an csb day
@@ -468,7 +468,10 @@ SQL;
             $deliverer->piggery = $stock['total'];
             $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
             $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
-            
+            $deliverer->qspiggery = R::getCell($sqlqsd, array(
+                ':csb_id' => $this->bean->getId(),
+                ':supplier' => $deliverer->supplier
+            ));
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
@@ -479,6 +482,10 @@ SQL;
                 $subdeliverer->piggery = $substock['total'];
                 $subdeliverer->dprice = 0;
                 $subdeliverer->sprice = 0;
+                $subdeliverer->qspiggery = R::getCell($sqlqss, array(
+                    ':csb_id' => $this->bean->getId(),
+                    ':earmark' => $subdeliverer->earmark
+                ));
                 $deliverer->ownDeliverer[] = $subdeliverer;
             }
             $this->bean->ownDeliverer[] = $deliverer;
