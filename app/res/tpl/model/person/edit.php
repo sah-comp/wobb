@@ -341,6 +341,17 @@
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_condition') ?></legend>
+        <div class="row <?php echo ($record->hasError('qsdiscount')) ? 'error' : ''; ?>">
+            <label
+                for="person-qsdiscount">
+                <?php echo I18n::__('person_label_qsdiscount') ?>
+            </label>
+            <input
+                id="person-qsdiscount"
+                type="text"
+                name="dialog[qsdiscount]"
+                value="<?php echo htmlspecialchars($record->decimal('qsdiscount', 3)) ?>" />
+        </div>
         <div
             id="person-<?php echo $record->getId() ?>-condition-container"
             class="container attachable detachable sortable">
@@ -381,58 +392,69 @@
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_billing_tab') ?></legend>
-            <div class="row <?php echo ($record->hasError('hasservice')) ? 'error' : ''; ?>">
-                <label
-                    for="person-hasservice"
-                    class="cb">
-                    <?php echo I18n::__('person_label_hasservice') ?>
-                </label>
-                <input
-                    type="hidden"
-                    name="dialog[hasservice]"
-                    value="0" />
-                <input
-                    id="person-hasservice"
-                    type="checkbox"
-                    name="dialog[hasservice]"
-                    <?php echo ($record->hasservice) ? 'checked="checked"' : '' ?>
-                    value="1" />
-            </div>
-            <div class="row <?php echo ($record->hasError('hasdealer')) ? 'error' : ''; ?>">
-                <label
-                    for="person-hasdealer"
-                    class="cb">
-                    <?php echo I18n::__('person_label_hasdealer') ?>
-                </label>
-                <input
-                    type="hidden"
-                    name="dialog[hasdealer]"
-                    value="0" />
-                <input
-                    id="person-hasdealer"
-                    type="checkbox"
-                    name="dialog[hasdealer]"
-                    <?php echo ($record->hasdealer) ? 'checked="checked"' : '' ?>
-                    value="1" />
-            </div>
-            <div class="row <?php echo ($record->hasError('billingtransport')) ? 'error' : ''; ?>">
-                <label
-                    for="var-billingtransport">
-                    <?php echo I18n::__('person_label_billingtransport') ?>
-                </label>
-                <select
-                    id="person-billingtransport"
-                    name="dialog[billingtransport]">
-                    <?php foreach ($record->getBillingtransports() as $_kind): ?>
-                    <option
-                        value="<?php echo $_kind ?>"
-                        <?php echo ($record->billingtransport == $_kind) ? 'selected="selected"' : '' ?>>
-                        <?php echo I18n::__('person_billingtransport_'.$_kind) ?>
-                    </option>
-                    <?php endforeach ?>
-                </select>
-                <p class="info"><?php echo I18n::__('person_info_billingtransport') ?></p>
-            </div>
+        <div class="row <?php echo ($record->hasError('hasservice')) ? 'error' : ''; ?>">
+            <label
+                for="person-hasservice"
+                class="cb">
+                <?php echo I18n::__('person_label_hasservice') ?>
+            </label>
+            <input
+                type="hidden"
+                name="dialog[hasservice]"
+                value="0" />
+            <input
+                id="person-hasservice"
+                type="checkbox"
+                name="dialog[hasservice]"
+                <?php echo ($record->hasservice) ? 'checked="checked"' : '' ?>
+                value="1" />
+        </div>
+        <div class="row <?php echo ($record->hasError('hasdealer')) ? 'error' : ''; ?>">
+            <label
+                for="person-hasdealer"
+                class="cb">
+                <?php echo I18n::__('person_label_hasdealer') ?>
+            </label>
+            <input
+                type="hidden"
+                name="dialog[hasdealer]"
+                value="0" />
+            <input
+                id="person-hasdealer"
+                type="checkbox"
+                name="dialog[hasdealer]"
+                <?php echo ($record->hasdealer) ? 'checked="checked"' : '' ?>
+                value="1" />
+        </div>
+        <div class="row <?php echo ($record->hasError('billingtransport')) ? 'error' : ''; ?>">
+            <label
+                for="var-billingtransport">
+                <?php echo I18n::__('person_label_billingtransport') ?>
+            </label>
+            <select
+                id="person-billingtransport"
+                name="dialog[billingtransport]">
+                <?php foreach ($record->getBillingtransports() as $_kind): ?>
+                <option
+                    value="<?php echo $_kind ?>"
+                    <?php echo ($record->billingtransport == $_kind) ? 'selected="selected"' : '' ?>>
+                    <?php echo I18n::__('person_billingtransport_'.$_kind) ?>
+                </option>
+                <?php endforeach ?>
+            </select>
+            <p class="info"><?php echo I18n::__('person_info_billingtransport') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('timeforpay')) ? 'error' : ''; ?>">
+            <label
+                for="person-timeforpay">
+                <?php echo I18n::__('person_label_timeforpay') ?>
+            </label>
+            <input
+                id="person-timeforpay"
+                type="number"
+                name="dialog[timeforpay]"
+                value="<?php echo htmlspecialchars($record->timeforpay) ?>" />
+        </div>
     </fieldset>
     <fieldset
         id="person-baseprice"
@@ -565,7 +587,7 @@
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_kidnap') ?></legend>
-        <p class="info"><?php echo I18n::__('person_info_kidnap') ?></p>
+        <p class="info above"><?php echo I18n::__('person_info_kidnap') ?></p>
         <div
             id="person-<?php echo $record->getId() ?>-kidnap-container"
             class="container attachable detachable sortable">
