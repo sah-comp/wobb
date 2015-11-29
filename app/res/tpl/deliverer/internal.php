@@ -377,7 +377,7 @@
     <table width="100%">
         <tr>
             <td width="40%" style="vertical-align: top;">
-                <?php if ( $specialprices ): ?>
+                <?php if ( $specialprices || $nonqs ): ?>
                 <table width="100%">
                     <thead>
                         <tr>
@@ -399,6 +399,14 @@
                             <td class="dinky number"><?php echo $_specialprice->decimal('dprice', 3) ?></td>
                         </tr>
                 <?php endforeach ?>
+                <?php if ( $nonqs ): ?>
+                        <tr>
+                            <td class="dinky number"><?php echo htmlspecialchars($nonqs) ?></td>
+                            <td class="dinky"><?php echo I18n::__('invoice_internal_label_nonqs') ?></td>
+                            <td class="dinky"><?php echo I18n::__('invoice_internal_method_nonqs') ?></td>
+                            <td class="dinky number"><?php echo $record->person->decimal('qsdiscount', 3) ?></td>
+                        </tr>
+                <?php endif ?>
                     </tbody>
                 </table>
                 <?php endif ?>

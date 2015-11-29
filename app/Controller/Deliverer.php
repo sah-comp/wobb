@@ -98,6 +98,7 @@ class Controller_Deliverer extends Controller
             'conditions' => $this->record->person->ownCondition,
             'costs' => $this->record->person->ownCost, 
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
+            'nonqs' => ( $this->record->piggery - $this->record->qspiggery ),
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),

@@ -190,6 +190,11 @@ class Model_Stock extends Model
         }
         $this->calculateDamage1Price($deliverer, $lanuv_tax);
         $this->calculateDamage2Price($deliverer, $lanuv_tax);
+        if ( ! $this->bean->qs ) {
+            $this->bean->totalsprice -= $this->bean->person->qsdiscount;
+            $this->bean->totaldprice -= $this->bean->person->qsdiscount;
+            $this->bean->totallanuvprice -= $this->bean->person->qsdiscount;
+        }
         return null;
     }
     
