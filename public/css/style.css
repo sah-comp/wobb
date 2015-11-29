@@ -872,7 +872,7 @@ ul.tab-navigation a.selected {
     color: gray;
 }
 
-.panel .tab p.info {
+.panel .tab p.info.above {
     margin-bottom: 1em;
 }
 
@@ -959,6 +959,9 @@ fieldset.tab fieldset:last-child .attach {
     display: block;
 }
 
+.panel .row.nomargins label {
+    text-align: left;
+}
 
 /* label in .tab will stretch */
 .panel .tab [class*="span"] label,
