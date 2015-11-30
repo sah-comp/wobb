@@ -99,6 +99,8 @@ class Controller_Deliverer extends Controller
             'costs' => $this->record->person->ownCost, 
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => ( $this->record->piggery - $this->record->qspiggery ),
+            'stocks' => R::find('stock', " billnumber = ? ORDER BY earmark, mfa DESC, weight DESC", array($this->record->invoice->name)),
+            'bookingdate' => $this->record->invoice->localizedDate('bookingdate'),
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),
