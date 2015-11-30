@@ -174,6 +174,17 @@ class Model_Stock extends Model
     }
     
     /**
+     * Returns a literal when stock has QS.
+     *
+     * @return string
+     */
+    public function getQsAsText()
+    {
+        if ( ! $this->bean->qs ) return '';
+        return 'QS';
+    }
+    
+    /**
      * Calculates the price of this stock bean according to given parameters by the deliverer bean.
      *
      * @param RedBean_OODBBean $deliverer
