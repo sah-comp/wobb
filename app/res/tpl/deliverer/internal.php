@@ -69,6 +69,13 @@
         table.pageheader td.value {
             text-align: left;
         }
+        .page-break {
+            page-break-after: always;
+        }
+        table.stock th,
+        table.stock td {
+            font-size: 8pt;
+        }
         
     </style>
 </head>
@@ -162,7 +169,8 @@
     <htmlpageheader name="tkheader" style="display: none;">
         <table width="100%">
             <tr>
-                <td>Gutschrift</td>
+                <td width="50%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->company->legalname) ?></td>
+                <td width="50%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_voucher', null, array($record->invoice->name, $bookingdate)) ?></td>
             </tr>
         </table>
     </htmlpageheader>
@@ -201,7 +209,7 @@
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></label>
-                        <td class="value"><?php echo $record->invoice->localizedDate('bookingdate') ?></label>
+                        <td class="value"><?php echo $bookingdate ?></label>
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></label>
@@ -381,11 +389,12 @@
                 <table width="100%">
                     <thead>
                         <tr>
-                            <td colspan="4" class="dinky number"><?php echo I18n::__('invoice_internal_label_specialprice') ?></td>
+                            <td colspan="5" class="dinky number"><?php echo I18n::__('invoice_internal_label_specialprice') ?></td>
                         </tr>
                         <tr>
                             <th class="dinky number"><?php echo I18n::__('invoice_internal_label_piggery') ?></th>
                             <th class="dinky"><?php echo I18n::__('invoice_internal_label_description') ?></th>
+                            <th class="dinky"><?php echo I18n::__('invoice_internal_label_code') ?></th>
                             <th class="dinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
                             <th class="dinky number"><?php echo I18n::__('invoice_internal_label_unitprice') ?></th>
                         </tr>
@@ -395,6 +404,7 @@
                         <tr>
                             <td class="dinky number"><?php echo htmlspecialchars($_specialprice->piggery) ?></td>
                             <td class="dinky"><?php echo htmlspecialchars($_specialprice->note) ?></td>
+                            <td class="dinky"><?php echo htmlspecialchars($_specialprice->name) ?></td>
                             <td class="dinky"><?php echo htmlspecialchars(I18n::__('var_condition_' . $_specialprice->condition)) ?></td>
                             <td class="dinky number"><?php echo $_specialprice->decimal('dprice', 3) ?></td>
                         </tr>
@@ -403,6 +413,7 @@
                         <tr>
                             <td class="dinky number"><?php echo htmlspecialchars($nonqs) ?></td>
                             <td class="dinky"><?php echo I18n::__('invoice_internal_label_nonqs') ?></td>
+                            <td></td>
                             <td class="dinky"><?php echo I18n::__('invoice_internal_method_nonqs') ?></td>
                             <td class="dinky number"><?php echo $record->person->decimal('qsdiscount', 3) ?></td>
                         </tr>
@@ -526,6 +537,36 @@
             </td>
         </tr>
     </table>
-    
+    <div class="page-break"></div>
+    <table width="100%" class="stock">
+        <thead>
+            <tr>
+                <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_internal_label_name') ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_internal_label_quality') ?></th>
+                <th width="15%"><?php echo I18n::__('invoice_internal_label_damagestock') ?></th>
+                <th width="5%"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_mfa') ?></th>
+                <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
+                <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_dprice') ?></th>
+                <th width="15%" class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+    <?php foreach ($stocks as $_stock_id => $_stock): ?>
+            <tr>
+                <td><?php echo $_stock->earmark ?></td>
+                <td><?php echo $_stock->name ?></td>
+                <td><?php echo $_stock->quality ?></td>
+                <td><?php echo $_stock->getDamageAsText() ?></td>
+                <td><?php echo $_stock->getQsAsText() ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('dprice', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_stock->decimal('totaldprice', 2)) ?></td>
+            </tr>
+    <?php endforeach ?>
+        </tbody>
+    </table>
 </body>
 </html>
