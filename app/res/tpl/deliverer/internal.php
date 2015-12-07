@@ -537,36 +537,5 @@
             </td>
         </tr>
     </table>
-    <div class="page-break"></div>
-    <table width="100%" class="stock">
-        <thead>
-            <tr>
-                <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_internal_label_name') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_internal_label_quality') ?></th>
-                <th width="15%"><?php echo I18n::__('invoice_internal_label_damagestock') ?></th>
-                <th width="5%"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_mfa') ?></th>
-                <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
-                <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_dprice') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-    <?php foreach ($stocks as $_stock_id => $_stock): ?>
-            <tr>
-                <td><?php echo $_stock->earmark ?></td>
-                <td><?php echo $_stock->name ?></td>
-                <td><?php echo $_stock->quality ?></td>
-                <td><?php echo $_stock->getDamageAsText() ?></td>
-                <td><?php echo $_stock->getQsAsText() ?></td>
-                <td class="number"><?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_stock->decimal('dprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_stock->decimal('totaldprice', 2)) ?></td>
-            </tr>
-    <?php endforeach ?>
-        </tbody>
-    </table>
 </body>
 </html>
