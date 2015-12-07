@@ -75,7 +75,7 @@
                         </a>
                         <div class="deliverer-info">
                             <?php echo $_deliverer->getInformation() ?> 
-                            <a class="pdf" href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a>
+                            <a class="pdf" href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a> <a class="pdf" href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a>
                         </div>
                     </div>
                     <div class="span1">
