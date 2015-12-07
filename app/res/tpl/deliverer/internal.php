@@ -216,6 +216,10 @@
                         <td class="value"><?php echo $record->csb->localizedDate('pubdate') ?></label>
                     </tr>
                     <tr>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_vezgprice') ?></label>
+                        <td class="value"><?php echo $record->csb->decimal('baseprice', 2) ?></label>
+                    </tr>
+                    <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_nickname') ?></label>
                         <td class="value"><?php echo $record->person->nickname ?></label>
                     </tr>
@@ -232,7 +236,7 @@
         </tr>
     </table>
     
-    <div style="height: 20mm;"></div>
+    <div style="height: 18mm;"></div>
     
     <table class="deliverer" width="100%">
         <thead>
