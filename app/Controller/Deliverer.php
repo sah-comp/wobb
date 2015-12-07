@@ -70,27 +70,62 @@ class Controller_Deliverer extends Controller
     }
     
     /**
-     * Generates an invoice PDF using mPDF library and downloads it to the client.
+     * Generates the invoice PDF for dealer audience.
+     *
+     * @uses generatePDF()
+     * @return void
+     */
+    public function dealer()
+    {
+        $this->layout = 'dealer';
+        $filename = I18n::__('deliverer_dealer_invoice_filename', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $docname = I18n::__('deliverer_dealer_invoice_docname', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $this->generatePDF($filename, $docname);
+    }
+
+    /**
+     * Generates the invoice PDF for company's internal archive process.
+     *
+     * @uses generatePDF()
+     * @return void
      */
     public function internal()
     {
-        //Permission::check(Flight::get('user'), 'deliverer', 'index');
-
-        $filename = I18n::__('deliverer_invoice_filename', null, 
+        $this->layout = 'internal';
+        $filename = I18n::__('deliverer_company_invoice_filename', null, 
             array(
                 $this->record->invoice->name
             )
         );
-        $docname = I18n::__('deliverer_invoice_docname', null, 
+        $docname = I18n::__('deliverer_company_invoice_docname', null, 
             array(
                 $this->record->invoice->name
             )
         );
+        $this->generatePDF($filename, $docname);
+    }
+    
+    /**
+     * Generates an PDF using mPDF library and downloads it to the client.
+     *
+     * @param string $filename defaults to 'invoice'
+     * @param string $docname defaults to 'invoice'
+     * @return void
+     */
+    private function generatePDF($filename = 'invoice', $docname = 'invoice')
+    {
         $mpdf = new mPDF('c', 'A4');
         $mpdf->SetTitle($docname);
         $mpdf->SetAuthor($this->record->invoice->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
-        $this->layout = 'internal';
         ob_start();
         Flight::render('deliverer/' . $this->layout, array(
             'record' => $this->record,
@@ -99,7 +134,6 @@ class Controller_Deliverer extends Controller
             'costs' => $this->record->person->ownCost, 
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => false,
-            'stocks' => R::find('stock', " billnumber = ? ORDER BY earmark, mfa DESC, weight DESC", array($this->record->invoice->name)),
             'bookingdate' => $this->record->invoice->localizedDate('bookingdate'),
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
