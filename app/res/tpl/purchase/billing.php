@@ -34,11 +34,8 @@
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('invoice_label_name') ?></label>
                 </div>
-                <div class="span2">
-                    &nbsp;
-                </div>
-                <div class="span3">
-                    <label class="number"><?php echo I18n::__('wawi_label_net_header') ?></label>
+                <div class="span5">
+                    <label><?php echo I18n::__('invoice_label_action') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
@@ -63,19 +60,16 @@
                         type="hidden"
                         name="dialog[ownDeliverer][<?php echo $_id ?>][invoice][id]"
                         value="<?php echo $_deliverer->invoice()->getId() ?>" />
+                    <input
+                        type="hidden"
+                        name="dialog[ownDeliverer][<?php echo $_id ?>][totalnet]"
+                        value="<?php echo htmlspecialchars($_deliverer->decimal('totalnet', 2)) ?>" />
                 </div>
                 <div class="row">
                     <div class="span3">
-                        <a 
-                            href="#toggle"
-                            class="toggle"
-                            data-target="deliverer-<?php echo $_deliverer->getId() ?>-cost"
-                            title="<?php echo I18n::__('deliverer_toggle_cost') ?>">
                             <?php echo htmlspecialchars($_deliverer->person->name) ?>
-                        </a>
                         <div class="deliverer-info">
                             <?php echo $_deliverer->getInformation() ?> 
-                            <a class="pdf" href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a> <a class="pdf" href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_download') ?></a>
                         </div>
                     </div>
                     <div class="span1">
@@ -108,111 +102,20 @@
                             value="<?php echo ($_deliverer->wasBilled()) ? htmlspecialchars($_deliverer->invoice()->name) : I18n::__('deliverer_not_yet_billed')  ?>"
                         />
                     </div>
-                    <div class="span2">
-                        <label class="number"><?php echo I18n::__('deliverer_label_totalnet') ?></label>
-                    </div>
-                    <div class="span3">
-                        <input
-                            type="text"
-                            class="number"
-                            readonly="readonly"
-                            name="dialog[ownDeliverer][<?php echo $_id ?>][totalnet]"
-                            value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 2)) : I18n::__('deliverer_not_yet_calculated')  ?>"
-                            
-                        />
-                        
+                    <div class="span5">
+                        <ul class="action">
+                            <li>
+                                <a class="pdf" href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_internal') ?></a>
+                            </li>
+                            <li>
+                                <a class="pdf" href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
+                            </li>
+                            <li>
+                                <a class="pdf" href="<?php echo Url::build('/deliverer/service/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_service') ?></a>
+                            </li>
                     </div>
                 </div>
-                
-                <div
-                    id="deliverer-<?php echo $_deliverer->getId() ?>-cost"
-                    class="subdeliverer-container">
-                    
-                    <?php if ( $_deliverer->invoice->bonusnet ): ?>
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number">
-                                <?php echo I18n::__('wawi_billing_label_bonus') ?>
-                            </label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('bonusnet', 2)) ?>"
-                            />
-                        </div>
-                    </div>
-                    <?php endif ?>
-                    
-                    <?php if ($_deliverer->invoice->costnet ): ?>
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number">
-                                <?php echo I18n::__('wawi_billing_label_cost') ?>
-                                </label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('costnet', 2)) ?>"
-                            />
-                        </div>
-                    </div>
-                    <?php endif ?>
-                    
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number"><?php echo I18n::__('wawi_label_net') ?></label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('subtotalnet', 2)) ?>"
-                            />
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number"><?php echo ( $_deliverer->invoice()->vat()->getId() ) ? $_deliverer->invoice()->vat()->name : $_deliverer->invoice()->vat()->name ?></label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('vatvalue', 2)) ?>"
-                            />
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="span9">
-                            <label class="number lottle"><?php echo I18n::__('wawi_label_gros') ?></label>
-                        </div>
-                        <div class="span3">
-                            <input
-                                type="text"
-                                class="number"
-                                readonly="readonly"
-                                name="num"
-                                value="<?php echo htmlspecialchars($_deliverer->invoice->decimal('totalgros', 2)) ?>"
-                            />
-                        </div>
-                    </div>
-                    
-                </div>
-                
+                <!-- put subinfo here -->
             </fieldset>
             <?php endforeach ?>
         </fieldset>
