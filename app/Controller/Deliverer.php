@@ -90,6 +90,28 @@ class Controller_Deliverer extends Controller
         );
         $this->generatePDF($filename, $docname);
     }
+    
+    /**
+     * Generates the service PDF for dealer audience.
+     *
+     * @uses generatePDF()
+     * @return void
+     */
+    public function service()
+    {
+        $this->layout = 'service';
+        $filename = I18n::__('deliverer_dealer_service_filename', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $docname = I18n::__('deliverer_dealer_service_docname', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $this->generatePDF($filename, $docname);
+    }
 
     /**
      * Generates the invoice PDF for company's internal archive process.
