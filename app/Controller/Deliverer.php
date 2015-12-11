@@ -157,6 +157,7 @@ class Controller_Deliverer extends Controller
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => false,
             'bookingdate' => $this->record->invoice->localizedDate('bookingdate'),
+            'pubdate' => $this->record->csb->localizedDate('pubdate'),
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),

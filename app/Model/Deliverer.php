@@ -423,6 +423,7 @@ class Model_Deliverer extends Model
         }
         $ret = array(
             'totalnet' => 0,
+            'totalnetsprice' => 0,
             'totalnetlanuv' => 0,
             'totalweight' => 0,
             'totalmfa' => 0,
@@ -432,6 +433,7 @@ class Model_Deliverer extends Model
         foreach ($stocks as $id => $stock) {
             $stock->calculation($this->bean, $pricing);
             $ret['totalnet'] += $stock->totaldprice;
+            $ret['totalnetsprice'] += $stock->totalsprice;
             $ret['totalnetlanuv'] += $stock->totallanuvprice;
             $ret['totalweight'] += $stock->weight;
             $ret['totalmfa'] += $stock->mfa;

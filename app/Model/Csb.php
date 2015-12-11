@@ -495,6 +495,8 @@ SQL;
     /**
      * Calculates prices for each stock of all enabled deliveres of this csb bean.
      *
+     * For each deliverer and it subdeliverers sums and averages get calculated.
+     *
      * @return void
      */
     public function calculation()
@@ -503,6 +505,7 @@ SQL;
                       ->withCondition(" enabled = 1 ORDER BY supplier ")
                       ->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
+            $deliverer->totalnetsprice = 0;
             $deliverer->subtotalnet = 0;
             $deliverer->vatvalue = 0;
             $deliverer->totalgros = 0;
@@ -514,15 +517,30 @@ SQL;
             $deliverer->meanweight = 0;
             $deliverer->meanmfa = 0;
             $deliverer->meandprice = 0;
+            $deliverer->meansprice = 0;
             foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
                 if ( ! $subdeliverer->dprice ) $subdeliverer->dprice = $deliverer->dprice;
                 if ( ! $subdeliverer->sprice ) $subdeliverer->sprice = $deliverer->sprice;
                 $summary = $subdeliverer->calculation($this->bean);
                 // save some of the summary to the subdeliverer
                 $subdeliverer->totalnet = $summary['totalnet'];
+                $subdeliverer->totalnetsprice = $summary['totalnetsprice'];
                 $subdeliverer->totalweight = $summary['totalweight'];
+                // subdeliverer mean values
+                if ( $summary['piggery'] != 0 ) {
+                    $subdeliverer->meanweight = $summary['totalweight'] / $summary['piggery'];
+                }
+                if ( $summary['hasmfacount'] != 0 ) {
+                    $subdeliverer->meanmfa = $summary['totalmfa'] / $summary['hasmfacount'];
+                }
+                if ( $summary['totalweight'] != 0 ) {
+                    $subdeliverer->meandprice = $summary['totalnet'] / $summary['totalweight'];
+                    $subdeliverer->meansprice = $summary['totalnetsprice'] / $summary['totalweight'];
+                    $subdeliverer->meandpricelanuv = $summary['totalnetlanuv'] / $summary['totalweight'];
+                }
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];
+                $deliverer->totalnetsprice += $summary['totalnetsprice'];
                 $deliverer->totalnetlanuv += $summary['totalnetlanuv'];
                 $deliverer->totalweight += $summary['totalweight'];
                 $deliverer->totalmfa += $summary['totalmfa'];
@@ -535,6 +553,7 @@ SQL;
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
             if ( $deliverer->totalweight != 0 ) {
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
+                $deliverer->meansprice = $deliverer->totalnetsprice / $deliverer->totalweight;
                 $deliverer->meandpricelanuv = $deliverer->totalnetlanuv / $deliverer->totalweight;
             }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer

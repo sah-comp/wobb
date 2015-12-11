@@ -176,7 +176,7 @@
     </htmlpageheader>
     <htmlpagefooter name="tkfooter" style="display: none;">
         <div style="border-top: 0.1mm solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm;">
-            <?php echo I18n::__('invoice_text_page') ?> {PAGENO} <?php echo I18n::__('invoice_text_of') ?> {nb}
+            <?php echo I18n::__('invoice_text_page') ?> {PAGENO} <?php echo I18n::__('invoice_text_of') ?> {nbpg}
         </div>
     </htmlpagefooter>
     <sethtmlpageheader name="tkheader-firstpage" value="on" show-this-page="1" />
@@ -213,7 +213,7 @@
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></label>
-                        <td class="value"><?php echo $record->csb->localizedDate('pubdate') ?></label>
+                        <td class="value"><?php echo $pubdate ?></label>
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_vezgprice') ?></label>
@@ -557,6 +557,30 @@
                 <th width="15%" class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
             </tr>
         </thead>
+        <tfoot>
+            <tr>
+                <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanmfa', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanweight', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meansprice', 3)) ?></td>
+                <td class="bt bb">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="bt emphasize"><?php echo I18n::__('invoice_internal_label_dealertotal') ?></td>
+                <td class="bt emphasize"><?php echo htmlspecialchars($_sub->piggery) ?></td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnetsprice', 2)) ?></td>
+            </tr>
+        </tfoot>
         <tbody>
         <?php foreach (R::find('stock', " earmark = :earmark AND csb_id = :csb_id ORDER BY mfa DESC, weight DESC ", array(':earmark' => $_sub->earmark, ':csb_id' => $record->csb_id)) as $_stock_id => $_stock): ?>
             <tr>
@@ -575,5 +599,97 @@
     </table>
     <div style="height: 5mm;"></div>
 <?php endforeach; ?>
+<?php if ( $record->invoice->person->hasservice): ?>
+        <!--mpdf
+        <pagebreak resetpagenum="1" />
+        <htmlpageheader name="dealerheader" style="display: none;">
+            <table width="100%">
+                <tr>
+                    <td width="50%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->person->name) ?></td>
+                    <td width="50%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_service', null, array($record->invoice->name, $pubdate)) ?></td>
+                </tr>
+            </table>
+        </htmlpageheader>
+        <htmlpagefooter name="dealerfooter" style="display: none;">
+            <div style="border-top: 0.1mm solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm;">
+                <?php echo I18n::__('invoice_text_page') ?> {PAGENO} <?php echo I18n::__('invoice_text_of') ?> {nbpg}
+            </div>
+        </htmlpagefooter>
+        <sethtmlpageheader name="dealerheader" value="on" show-this-page="1" />
+        <sethtmlpagefooter name="dealerfooter" value="on" />
+        mpdf-->
+
+        <div style="height: 5mm;"></div>
+
+    <?php
+    /**
+     * Get all deliverers and the last one to learn about page break in the loop.
+     */
+    $deliverers = $record->with(' ORDER BY earmark ')->ownDeliverer;
+    $end_sub = end($deliverers);
+    ?>
+    <?php foreach ($deliverers as $_sub_id => $_sub): ?>    
+        <table width="100%" class="stock">
+            <thead>
+                <tr>
+                    <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
+                    <th width="10%"><?php echo I18n::__('invoice_internal_label_name') ?></th>
+                    <th width="10%"><?php echo I18n::__('invoice_internal_label_quality') ?></th>
+                    <th width="15%"><?php echo I18n::__('invoice_internal_label_damagestock') ?></th>
+                    <th width="5%"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
+                    <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_mfa') ?></th>
+                    <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
+                    <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_sprice') ?></th>
+                    <th width="15%" class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
+                    <td class="bt bb">&nbsp;</td>
+                    <td class="bt bb">&nbsp;</td>
+                    <td class="bt bb">&nbsp;</td>
+                    <td class="bt bb">&nbsp;</td>
+                    <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanmfa', 2)) ?></td>
+                    <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanweight', 2)) ?></td>
+                    <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meansprice', 3)) ?></td>
+                    <td class="bt bb">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="bt emphasize"><?php echo I18n::__('invoice_internal_label_dealertotal') ?></td>
+                    <td class="bt emphasize"><?php echo htmlspecialchars($_sub->piggery) ?></td>
+                    <td class="bt">&nbsp;</td>
+                    <td class="bt">&nbsp;</td>
+                    <td class="bt">&nbsp;</td>
+                    <td class="bt">&nbsp;</td>
+                    <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
+                    <td class="bt">&nbsp;</td>
+                    <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnetsprice', 2)) ?></td>
+                </tr>
+            </tfoot>
+            <tbody>
+            <?php foreach (R::find('stock', " earmark = :earmark AND csb_id = :csb_id ORDER BY mfa DESC, weight DESC ", array(':earmark' => $_sub->earmark, ':csb_id' => $record->csb_id)) as $_stock_id => $_stock): ?>
+                <tr>
+                    <td><?php echo $_stock->earmark ?></td>
+                    <td><?php echo $_stock->name ?></td>
+                    <td><?php echo $_stock->quality ?></td>
+                    <td><?php echo $_stock->getDamageAsText() ?></td>
+                    <td><?php echo $_stock->getQsAsText() ?></td>
+                    <td class="number"><?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?></td>
+                    <td class="number"><?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?></td>
+                    <td class="number"><?php echo htmlspecialchars($_stock->decimal('sprice', 3)) ?></td>
+                    <td class="number"><?php echo htmlspecialchars($_stock->decimal('totalsprice', 2)) ?></td>
+                </tr>
+            <?php endforeach ?>
+            </tbody>
+        </table>
+
+        <?php if ( $end_sub->getId() != $_sub->getId() ): ?>
+        <!--mpdf
+        <pagebreak resetpagenum="1" />
+        mpdf-->
+        <?php endif ?>
+    <?php endforeach; ?>   
+<?php endif ?>
 </body>
 </html>

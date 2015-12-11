@@ -77,6 +77,11 @@
             font-size: 8pt;
         }
         
+        table.stock caption span {
+            font-weight: bold;
+            padding-bottom: 0.2em;
+        }
+        
     </style>
 </head>
 <body>
@@ -84,151 +89,30 @@
     <htmlpageheader name="dealerheader" style="display: none;">
         <table width="100%">
             <tr>
-                <td width="50%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->person->name()) ?></td>
-                <td width="50%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_voucher', null, array($record->invoice->name, $bookingdate)) ?></td>
+                <td width="50%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->person->name) ?></td>
+                <td width="50%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_service', null, array($record->invoice->name, $pubdate)) ?></td>
             </tr>
         </table>
     </htmlpageheader>
     <htmlpagefooter name="dealerfooter" style="display: none;">
         <div style="border-top: 0.1mm solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm;">
-            <?php echo I18n::__('invoice_text_page') ?> {PAGENO} <?php echo I18n::__('invoice_text_of') ?> {nb}
+            <?php echo I18n::__('invoice_text_page') ?> {PAGENO} <?php echo I18n::__('invoice_text_of') ?> {nbpg}
         </div>
     </htmlpagefooter>
-    <sethtmlpageheader name="dealerheader" value="on" />
+    <sethtmlpageheader name="dealerheader" value="on" show-this-page="1" />
     <sethtmlpagefooter name="dealerfooter" value="on" />
     mpdf-->
-    
-    <table width="100%">
-        <tr>
-            <td width="40%" style="vertical-align: top;">
-                <?php if ( $specialprices || $nonqs ): ?>
-                <table width="100%">
-                    <thead>
-                        <tr>
-                            <td colspan="5" class="dinky number"><?php echo I18n::__('invoice_internal_label_specialprice') ?></td>
-                        </tr>
-                        <tr>
-                            <th class="dinky number"><?php echo I18n::__('invoice_internal_label_piggery') ?></th>
-                            <th class="dinky"><?php echo I18n::__('invoice_internal_label_description') ?></th>
-                            <th class="dinky"><?php echo I18n::__('invoice_internal_label_code') ?></th>
-                            <th class="dinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
-                            <th class="dinky number"><?php echo I18n::__('invoice_internal_label_unitprice') ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                <?php foreach ($specialprices as $_id => $_specialprice): ?>
-                        <tr>
-                            <td class="dinky number"><?php echo htmlspecialchars($_specialprice->piggery) ?></td>
-                            <td class="dinky"><?php echo htmlspecialchars($_specialprice->note) ?></td>
-                            <td class="dinky"><?php echo htmlspecialchars($_specialprice->name) ?></td>
-                            <td class="dinky"><?php echo htmlspecialchars(I18n::__('var_condition_' . $_specialprice->condition)) ?></td>
-                            <td class="dinky number"><?php echo $_specialprice->decimal('sprice', 3) ?></td>
-                        </tr>
-                <?php endforeach ?>
-                <?php if ( $nonqs ): ?>
-                        <tr>
-                            <td class="dinky number"><?php echo htmlspecialchars($nonqs) ?></td>
-                            <td class="dinky"><?php echo I18n::__('invoice_internal_label_nonqs') ?></td>
-                            <td></td>
-                            <td class="dinky"><?php echo I18n::__('invoice_internal_method_nonqs') ?></td>
-                            <td class="dinky number"><?php echo $record->person->decimal('qsdiscount', 3) ?></td>
-                        </tr>
-                <?php endif ?>
-                    </tbody>
-                </table>
-                <?php endif ?>
-            </td>
-        </tr>
-    </table>
-    
-    <div style="height: 5mm;"></div>
-    
-    <table width="60%">
-        <tr>
-            <td colspan="3" class="dinky centered"><?php echo I18n::__('invoice_internal_label_pricing') ?></td>
-        </tr>
-        <tr>
-            <td width="33.3%" class="br" style="vertical-align: top;">
-                <table width="100%">
-                    <thead>
-                        <tr>
-                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_weightmargin') ?></td>
-                        </tr>
-                        <tr>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
-                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
-                        </tr>
-                        <tbody>
-                    <?php foreach ($record->person->pricing->withCondition(" kind='weight' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
-                            <tr>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
-                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
-                            </tr>
-                    <?php endforeach ?>
-                        </tbody>
-                    </thead>
-                </table>
-            </td>
-            <td width="33.3%" class="br" style="vertical-align: top;">
-                <table width="100%">
-                    <thead>
-                        <tr>
-                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_mfamargin') ?></td>
-                        </tr>
-                        <tr>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
-                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
-                        </tr>
-                        <tbody>
-                    <?php foreach ($record->person->pricing->withCondition(" kind='mfa' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
-                            <tr>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
-                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
-                            </tr>
-                    <?php endforeach ?>
-                        </tbody>
-                    </thead>
-                </table>
-            </td>
-            <td width="33.3%" class="br" style="vertical-align: top;">
-                <table width="100%">
-                    <thead>
-                        <tr>
-                            <td colspan="4" class="moredinky centered"><?php echo I18n::__('invoice_internal_label_mfasubmargin') ?></td>
-                        </tr>
-                        <tr>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_lo') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_hi') ?></th>
-                            <th class="moredinky"><?php echo I18n::__('invoice_internal_label_kind') ?></th>
-                            <th class="moredinky number"><?php echo I18n::__('invoice_internal_label_value') ?></th>
-                        </tr>
-                        <tbody>
-                    <?php foreach ($record->person->pricing->withCondition(" kind='mfasub' ORDER BY lo ASC ")->ownMargin as $_id => $_margin): ?>
-                            <tr>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('lo', 1)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('hi', 1)) ?></td>
-                                <td class="moredinky"><?php echo htmlspecialchars(I18n::__('margin_label_' . $_margin->op)) ?></td>
-                                <td class="moredinky number"><?php echo htmlspecialchars($_margin->decimal('value', 3)) ?></td>
-                            </tr>
-                    <?php endforeach ?>
-                        </tbody>
-                    </thead>
-                </table>
-            </td>
-        </tr>
-    </table>
-    
+
     <div style="height: 5mm;"></div>
 
-<?php foreach ($record->with(' ORDER BY earmark ')->ownDeliverer as $_sub_id => $_sub): ?>
+<?php
+/**
+ * Get all deliverers and the last one to learn about page break in the loop.
+ */
+$deliverers = $record->with(' ORDER BY earmark ')->ownDeliverer;
+$end_sub = end($deliverers);
+?>
+<?php foreach ($deliverers as $_sub_id => $_sub): ?>    
     <table width="100%" class="stock">
         <thead>
             <tr>
@@ -243,6 +127,30 @@
                 <th width="15%" class="number"><?php echo I18n::__('invoice_internal_label_dtotal') ?></th>
             </tr>
         </thead>
+        <tfoot>
+            <tr>
+                <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb">&nbsp;</td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanmfa', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanweight', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meansprice', 3)) ?></td>
+                <td class="bt bb">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="bt emphasize"><?php echo I18n::__('invoice_internal_label_dealertotal') ?></td>
+                <td class="bt emphasize"><?php echo htmlspecialchars($_sub->piggery) ?></td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
+                <td class="bt">&nbsp;</td>
+                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnetsprice', 2)) ?></td>
+            </tr>
+        </tfoot>
         <tbody>
         <?php foreach (R::find('stock', " earmark = :earmark AND csb_id = :csb_id ORDER BY mfa DESC, weight DESC ", array(':earmark' => $_sub->earmark, ':csb_id' => $record->csb_id)) as $_stock_id => $_stock): ?>
             <tr>
@@ -259,7 +167,12 @@
         <?php endforeach ?>
         </tbody>
     </table>
-    <div class="page-break"></div>
+    
+    <?php if ( $end_sub->getId() != $_sub->getId() ): ?>
+    <!--mpdf
+    <pagebreak resetpagenum="1" />
+    mpdf-->
+    <?php endif ?>
 <?php endforeach; ?>
 </body>
 </html>

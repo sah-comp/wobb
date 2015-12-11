@@ -110,9 +110,7 @@
                             <li>
                                 <a class="pdf" href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
                             </li>
-                            <li>
-                                <a class="pdf" href="<?php echo Url::build('/deliverer/service/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_service') ?></a>
-                            </li>
+                        </ul>
                     </div>
                 </div>
                 <!-- put subinfo here -->

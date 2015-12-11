@@ -155,5 +155,17 @@ ul.action li:last-child a {
     padding-right: 0;
 }
 
+a.voucher-dealer,
+a.voucher-internal {
+    width: 24px;
+    height: 26px;
+}
+a.voucher-dealer {
+    background-image: url(/img/glyphicons/glyphicons_135_inbox_out.png);
+}
+a.voucher-internal {
+    background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
+}
+
 @media print {
 }

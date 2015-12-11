@@ -31,14 +31,20 @@
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('deliverer_label_piggery') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('deliverer_label_sprice') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('deliverer_label_dprice') ?></label>
                 </div>
-                <div class="span3">
+                <div class="span2">
                     <label class="number"><?php echo I18n::__('deliverer_label_totalnet') ?></label>
+                </div>
+                <div class="span2">
+                    <label class="number"><?php echo I18n::__('deliverer_label_invoice') ?></label>
+                </div>
+                <div class="span1">
+                    <label><?php echo I18n::__('deliverer_label_pdf') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
@@ -96,7 +102,7 @@
                             
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number <?php echo ( $_deliverer->hasService() ) ? '' : 'invisible' ?>"
@@ -105,7 +111,7 @@
                             placeholder="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -115,7 +121,7 @@
                             placeholder="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
                         />
                     </div>
-                    <div class="span3">
+                    <div class="span2">
                         <input
                             type="text"
                             class="number"
@@ -125,6 +131,37 @@
                             
                         />
                         
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            readonly="readonly"
+                            name="stash_invoice_name"
+                            value="<?php echo ($_deliverer->wasBilled()) ? htmlspecialchars($_deliverer->invoice->name) : I18n::__('deliverer_not_yet_billed')  ?>"
+                            
+                        />
+                        
+                    </div>
+                    <div class="span1">
+                        <?php if ( $_deliverer->wasBilled() ): ?>
+                        <ul class="action">
+                            <li>
+                                <a
+                                    class="ir voucher-internal"
+                                    title="<?php echo I18n::__('invoice_link_internal_title') ?>"
+                                    href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_internal') ?></a>
+                            </li>
+                            <li>
+                                <a
+                                    class="ir voucher-dealer"
+                                    title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
+                                    href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
+                            </li>
+                        </ul>
+                        <?php else: ?>
+                            &nbsp;
+                        <?php endif ?>
                     </div>
                 </div>
                 
@@ -159,7 +196,7 @@
                             
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number <?php echo ( $_deliverer->hasService() ) ? '' : 'invisible' ?>"
@@ -168,7 +205,7 @@
                             placeholder="<?php echo htmlspecialchars($_deliverer->decimal('sprice', 3)) ?>"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -177,7 +214,7 @@
                             placeholder="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
                         />
                     </div>
-                    <div class="span3">
+                    <div class="span2">
                         <input
                             type="text"
                             class="number"
@@ -240,7 +277,7 @@
                                 value="<?php echo htmlspecialchars($_sprice->piggery) ?>"
                             />
                         </div>
-                        <div class="span2">
+                        <div class="span1">
                             <input
                                 type="text"
                                 class="number <?php echo ( $_deliverer->hasService() ) ? '' : 'invisible' ?>"
@@ -249,7 +286,7 @@
                                 placeholder="<?php echo htmlspecialchars($_sprice->decimal('sprice', 3)) ?>"
                             />
                         </div>
-                        <div class="span2">
+                        <div class="span1">
                             <input
                                 type="text"
                                 class="number"
@@ -297,13 +334,6 @@
         
         <!-- Purchase buttons -->
         <div class="buttons"> 
-            <?php if ($record->wasCalculated()): ?>
-                <a
-                    href="<?php echo Url::build(sprintf("/purchase/billing/%d", $record->getId())) ?>"
-                    class="btn">
-                    <?php echo I18n::__('calculation_href_goto_billing') ?>
-                </a>
-            <?php endif ?>
             <input
                 type="submit"
                 name="submit"

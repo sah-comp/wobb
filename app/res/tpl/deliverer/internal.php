@@ -213,7 +213,7 @@
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></label>
-                        <td class="value"><?php echo $record->csb->localizedDate('pubdate') ?></label>
+                        <td class="value"><?php echo $pubdate ?></label>
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_vezgprice') ?></label>
