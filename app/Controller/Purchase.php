@@ -81,34 +81,6 @@ class Controller_Purchase extends Controller
     }
     
     /**
-     * Choose an already existing day or create a new one.
-     */
-    public function billing()
-    {
-        Permission::check(Flight::get('user'), 'billing', 'index');
-        $this->layout = 'billing';
-        if (Flight::request()->method == 'POST') {
-            $this->record = R::graph(Flight::request()->data->dialog, true);
-            R::begin();
-            try {
-                R::store($this->record); //must do this, because otherwise prices dont copy!!
-                $this->record->billing();
-                R::store($this->record);
-                $this->record->transport('internal');//company internal check sheet
-                R::commit();
-                Flight::get('user')->notify(I18n::__('purchase_billing_success'));
-                $this->redirect(sprintf('/purchase/billing/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
-                error_log($e);
-                R::rollback();
-                Flight::get('user')->notify(I18n::__('purchase_billing_error'), 'error');
-            }
-        }
-        $this->render();
-    }
-    
-    /**
      * A new slaughter charge.
      */
     public function add()

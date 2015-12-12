@@ -378,34 +378,6 @@ class Model_Deliverer extends Model
     }
     
     /**
-     * Depending on the given template a pdf is generated or whatever.
-     *
-     * @param string $template
-     * @return void
-     */
-    public function transport($template)
-    {
-        error_log('Do ' . $template . ' to ' . $this->bean->person->name);
-        switch ( $this->bean->person->billingtransport ) {
-            case 'email':
-                error_log('email to ' . $this->bean->person->email);
-                break;
-
-            case 'print':
-                error_log('print to printer');
-                break;
-
-            case 'both':
-                error_log('email and print');
-                break;
-            
-            default:
-                error_log('nothing');
-                break;
-        }
-    }
-    
-    /**
      * Calculates the prices of all stock that belongs to this deliverer of the given csb bean and
      * returns an array with a summery of the calculation.
      *

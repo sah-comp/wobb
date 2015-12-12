@@ -580,22 +580,6 @@ SQL;
     }
     
     /**
-     * Generates pdf files for all enabled supplier beans of this csb bean.
-     *
-     * @param string $template
-     * @return void
-     */
-    public function transport($template = 'interal')
-    {
-        foreach ($this->bean
-                      ->withCondition(" enabled = 1 ORDER BY supplier ")
-                      ->ownDeliverer as $_id => $deliverer) {
-            $deliverer->transport($template);
-        }
-        return null;
-    }
-    
-    /**
      * after_delete.
      *
      * After the bean was deleted from the database, we will also delete the real file.
