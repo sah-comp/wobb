@@ -85,7 +85,7 @@
         <table width="100%">
             <tr>
                 <td style="vertical-align: top; width: 120px;">
-                    <img src="/img/tk-logo.png" width="98" height="37" alt="" />
+                    <img src="/img/tk-logo-print.jpg" width="120px" height="58px" alt="" />
                 </td>
                 <td style="vertical-align: top;">
                     <table class="pageheader" width="100%">
@@ -169,8 +169,8 @@
     <htmlpageheader name="tkheader" style="display: none;">
         <table width="100%">
             <tr>
-                <td width="50%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->company->legalname) ?></td>
-                <td width="50%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_voucher', null, array($record->invoice->name, $bookingdate)) ?></td>
+                <td width="60%" style="text-align: left;"><?php echo htmlspecialchars($record->invoice->company->legalname) ?></td>
+                <td width="40%" style="text-align: right;"><?php echo I18n::__('invoice_internal_text_voucher', null, array($record->invoice->name, $bookingdate)) ?></td>
             </tr>
         </table>
     </htmlpageheader>
@@ -187,7 +187,7 @@
     <div style="height: 25mm;"></div>
     <table width="100%">
         <tr>
-            <td style="width: 85mm; vertical-align: top;">
+            <td style="width: 95mm; vertical-align: top;">
                 <div class="senderline">
                     <?php echo htmlspecialchars($record->invoice->company->getSenderline()) ?>
                     <br /><br />
@@ -201,7 +201,7 @@
                     </p>
                 </div>
             </td>
-            <td style="width: 75mm; vertical-align: top;">
+            <td style="width: 65mm; vertical-align: top;">
                 <table class="info" width="100%">
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_serial') ?></label>
