@@ -566,7 +566,7 @@
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanmfa', 2)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meanweight', 2)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meansprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_sub->decimal('meandprice', 3)) ?></td>
                 <td class="bt bb">&nbsp;</td>
             </tr>
             <tr>
@@ -578,7 +578,7 @@
                 <td class="bt">&nbsp;</td>
                 <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
                 <td class="bt">&nbsp;</td>
-                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnetsprice', 2)) ?></td>
+                <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnet', 2)) ?></td>
             </tr>
         </tfoot>
         <tbody>
