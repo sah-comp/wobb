@@ -337,6 +337,7 @@
                 type="text"
                 name="dialog[lanuvemail]"
                 value="<?php echo htmlspecialchars($record->lanuvemail) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_lanuvemail') ?></p>
         </div>
     </fieldset>
 </div>
