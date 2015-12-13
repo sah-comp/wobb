@@ -367,7 +367,8 @@ SQL;
             person ON person.id = stock.person_id
         WHERE
             stock.buyer = :buyer AND
-            (stock.pubdate >= :startdate AND stock.pubdate <= :enddate)
+            (stock.pubdate >= :startdate AND stock.pubdate <= :enddate) AND
+            stock.csb_id IS NOT NULL
         ORDER BY
             stock.pubdate,
             stock.supplier,
