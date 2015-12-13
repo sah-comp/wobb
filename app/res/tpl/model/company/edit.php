@@ -53,7 +53,8 @@
             'company-communication' => I18n::__('company_communication_tab'),
             'company-id' => I18n::__('company_id_tab'),
             'company-bankaccount' => I18n::__('company_bankaccount_tab'),
-            'company-serial' => I18n::__('company_serial_tab')
+            'company-serial' => I18n::__('company_serial_tab'),
+            'company-lanuv' => I18n::__('company_lanuv_tab')
         ),
         'default_tab' => 'company-address'
     )) ?>
@@ -286,6 +287,56 @@
                 name="dialog[nextbillingnumber]"
                 value="<?php echo htmlspecialchars($record->nextbillingnumber) ?>"
                 required="required" />
+        </div>
+    </fieldset>
+    <fieldset
+        id="company-lanuv"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('company_legend_lanuv_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('vvvo')) ? 'error' : ''; ?>">
+            <label
+                for="company-vvvo">
+                <?php echo I18n::__('company_label_vvvo') ?>
+            </label>
+            <input
+                id="company-vvvo"
+                type="text"
+                name="dialog[vvvo]"
+                value="<?php echo htmlspecialchars($record->vvvo) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('county')) ? 'error' : ''; ?>">
+            <label
+                for="company-county">
+                <?php echo I18n::__('company_label_county') ?>
+            </label>
+            <input
+                id="company-county"
+                type="text"
+                name="dialog[county]"
+                value="<?php echo htmlspecialchars($record->county) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('region')) ? 'error' : ''; ?>">
+            <label
+                for="company-region">
+                <?php echo I18n::__('company_label_region') ?>
+            </label>
+            <input
+                id="company-region"
+                type="text"
+                name="dialog[region]"
+                value="<?php echo htmlspecialchars($record->region) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('lanuvemail')) ? 'error' : ''; ?>">
+            <label
+                for="company-lanuvemail">
+                <?php echo I18n::__('company_label_lanuvemail') ?>
+            </label>
+            <input
+                id="company-lanuvemail"
+                type="text"
+                name="dialog[lanuvemail]"
+                value="<?php echo htmlspecialchars($record->lanuvemail) ?>" />
         </div>
     </fieldset>
 </div>
