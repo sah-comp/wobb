@@ -152,16 +152,6 @@ SQL;
     public function generateReport($lowerMargin = self::LOWER_MARGIN, $upperMargin = self::UPPER_MARGIN)
     {
         $this->bean->ownLanuvitem = array();
-        // reset totals
-        /*
-        $this->bean->totalpiggery = 0;
-        $this->bean->totalweight = 0;
-        $this->bean->totalnet = 0;
-        $this->bean->avgmfa = 0;
-        $this->bean->avgweight = 0;
-        $this->bean->avgprice = 0;
-        $this->bean->avgpricelanuv = 0;
-        */
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {
             $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
@@ -177,11 +167,6 @@ SQL;
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
-            // add up totals
-            //$this->bean->totalpiggery += $summary['piggery'];
-            //$this->bean->totalweight += $summary['sumweight'];
-            //$this->bean->totalnet += $summary['sumtotaldprice'];
-            //$this->bean->totalnetlanuv += $summary['sumtotallanuvprice'];
         }
         // Non-Qualities without weight margins
         foreach ($this->nonQualities as $quality) {
@@ -198,16 +183,7 @@ SQL;
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
-            // add up totals
-            //$this->bean->totalpiggery += $summary['piggery'];
-            //$this->bean->totalweight += $summary['sumweight'];
-            //$this->bean->totalnet += $summary['sumtotaldprice'];
-            //$this->bean->totalnetlanuv += $summary['sumtotallanuvprice'];
         }
-        //calculate averages
-        //$this->bean->avgprice = $this->bean->totalnet / $this->bean->totalweight;
-        //$this->bean->avgpricelanuv = $this->bean->totalnetlanuv / $this->bean->totalweight;
-        
         $this->markAsReportedNoWeight($this->nonQualities);
         $this->markAsReportedWeight($this->qualities, $lowerMargin, $upperMargin);
         return true;
