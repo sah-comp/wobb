@@ -39,5 +39,14 @@ class Model_Lanuvitem extends Model
         $this->addConverter('avgdprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('sumtotaldprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumtotallanuvprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgpricelanuv', array(
+            new Converter_Decimal()
+        ));
     }
 }
