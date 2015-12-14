@@ -119,9 +119,25 @@ class Controller_Statistic extends Controller
     public function csv()
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
-        $this->layout = 'lanuv';
         $this->record->exportAsCsv();
-        $this->render();
+        exit;
+    }
+    
+    /**
+     * Creates a CSV file as required for LANUV and tries to send it to
+     * the company lanuv email address.
+     */
+    public function send()
+    {
+        Permission::check(Flight::get('user'), 'statistic', 'edit');
+        try {
+            $this->record->mail();
+            Flight::get('user')->notify(I18n::__('statistic_lanuv_send_success'));
+        } catch (Exception $e) {            
+            error_log($e);
+            Flight::get('user')->notify(I18n::__('statistic_lanuv_send_error'), 'error');
+        }
+        $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
     }
 
     /**

@@ -152,6 +152,16 @@ SQL;
     public function generateReport($lowerMargin = self::LOWER_MARGIN, $upperMargin = self::UPPER_MARGIN)
     {
         $this->bean->ownLanuvitem = array();
+        // reset totals
+        /*
+        $this->bean->totalpiggery = 0;
+        $this->bean->totalweight = 0;
+        $this->bean->totalnet = 0;
+        $this->bean->avgmfa = 0;
+        $this->bean->avgweight = 0;
+        $this->bean->avgprice = 0;
+        $this->bean->avgpricelanuv = 0;
+        */
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {
             $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
@@ -167,6 +177,11 @@ SQL;
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
+            // add up totals
+            //$this->bean->totalpiggery += $summary['piggery'];
+            //$this->bean->totalweight += $summary['sumweight'];
+            //$this->bean->totalnet += $summary['sumtotaldprice'];
+            //$this->bean->totalnetlanuv += $summary['sumtotallanuvprice'];
         }
         // Non-Qualities without weight margins
         foreach ($this->nonQualities as $quality) {
@@ -183,7 +198,16 @@ SQL;
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
             $this->bean->ownLanuvitem[] = $lanuvitem;
+            // add up totals
+            //$this->bean->totalpiggery += $summary['piggery'];
+            //$this->bean->totalweight += $summary['sumweight'];
+            //$this->bean->totalnet += $summary['sumtotaldprice'];
+            //$this->bean->totalnetlanuv += $summary['sumtotallanuvprice'];
         }
+        //calculate averages
+        //$this->bean->avgprice = $this->bean->totalnet / $this->bean->totalweight;
+        //$this->bean->avgpricelanuv = $this->bean->totalnetlanuv / $this->bean->totalweight;
+        
         $this->markAsReportedNoWeight($this->nonQualities);
         $this->markAsReportedWeight($this->qualities, $lowerMargin, $upperMargin);
         return true;
@@ -325,10 +349,44 @@ SQL;
      */
     public function exportAsCsv()
     {
-        $stocks = $this->getStock();
+        $stocks = $this->bean->getStock();
         require_once '../app/lib/parsecsv.lib.php';
         $csv = new parseCSV();
         $csv->output('lanuv.csv', $stocks, ',');
+    }
+    
+    /**
+     * Generates a CSV file after the specs of LANUV weekly price report.
+     *
+     * @throws Exception if the csv file could not be generated
+     * @return bool wether the file could be created or not
+     */
+    public function exportAsLANUVReport()
+    {
+        foreach ( $this->bean->with(' ORDER BY id ')->ownLanuvitem as $id => $item ) {
+            if ( $item->piggery == 0 ) continue; //skip when no piggies are in da house :-)
+            $class = $item->quality;
+            $total = $item->piggery;
+            $weight = round( $item->sumweight, 0 );
+            $price = round( round( $item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP ), 0 );
+            $mfa = round( round( $item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0 );
+            error_log("{$class};{$total};{$weight};{$price};{$mfa}\n");
+        }
+        return true;
+    }
+    
+    /**
+     * Generate a CSV file after LANUV requirements and try to email it to this
+     * beans company LANUV email address.
+     *
+     * @throws Exception if email could not be send
+     * @return bool wether email was send or not
+     */
+    public function mail()
+    {
+        $this->bean->exportAsLANUVReport();
+        //throw new Exception('Blubb');
+        return true;
     }
     
     /**
