@@ -145,7 +145,7 @@ class Controller_Statistic extends Controller
      */
     public function index()
     {
-        Permission::check(Flight::get('user'), 'purchase', 'index');
+        Permission::check(Flight::get('user'), 'statistic', 'index');
         $this->layout = 'index';
         $this->records = R::findAll('lanuv', ' ORDER BY id DESC');
         if (Flight::request()->method == 'POST') {
