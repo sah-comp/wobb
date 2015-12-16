@@ -121,7 +121,7 @@
                             type="text"
                             class="number"
                             name="dialog[ownLanuvitem][<?php echo $_id ?>][piggery]"
-                            value="<?php echo htmlspecialchars($_lanuvitem->piggery) ?>"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('piggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>

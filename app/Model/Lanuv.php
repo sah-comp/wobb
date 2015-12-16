@@ -14,7 +14,9 @@
  * A lanuv model manages a certain statistic for the german authorities of
  * nature, surroundings and consumers following the FLGDV 1.
  *
- * @see http://www.gesetze-im-internet.de/flgdv_1/ 
+ * @see http://www.gesetze-im-internet.de/flgdv_1/
+ *
+ * @todo Clean up this code according to Model_Analysis
  *
  * @package Cinnebar
  * @subpackage Model
