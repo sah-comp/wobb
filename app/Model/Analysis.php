@@ -20,22 +20,12 @@
 class Model_Analysis extends Model
 {
     /**
-      * Define the lower margin for stock.
-      */
-    const LOWER_MARGIN = 80.0;
-    
-    /**
-      * Define the upper margin for stock.
-      */
-    const UPPER_MARGIN = 110.0;
-
-    /**
      * Holds the qualities (Handelsklasse) of stock to pick up in a summary.
      *
      * @var array
      */
     protected $qualities = array(
-        'S', 'E', 'U', 'R', 'O', 'P'
+        'S', 'E', 'U', 'R', 'O', 'P', 'Z'
     );
     
     /**
@@ -146,54 +136,57 @@ SQL;
      * @param float $upperMargin
      * @return void
      */
-    public function generateReport($lowerMargin = self::LOWER_MARGIN, $upperMargin = self::UPPER_MARGIN)
+    public function generateReport()
     {
         $this->bean->ownAnalysisitem = array();
-        // Qualities with weight margins
-        foreach ($this->qualities as $quality) {
-            $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
+        $summary = $this->getSummaryTotal();
+        $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
+        $qualities = array_merge( $this->qualities, $this->nonQualities );
+        foreach ($qualities as $quality) {
+            $summary = $this->getSummary($quality); // totals and averages of the stock
             $analysisitem = R::dispense('analysisitem');
-            $analysisitem->quality = $quality;
-            $analysisitem->piggery = $summary['piggery'];
-            $analysisitem->sumweight = $summary['sumweight'];
-            $analysisitem->sumtotaldprice = $summary['sumtotaldprice'];
-            $analysisitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
-            $analysisitem->avgmfa = $summary['avgmfa'];
-            $analysisitem->avgprice = $summary['avgprice'];
-            $analysisitem->avgpricelanuv = $summary['avgpricelanuv'];
-            $analysisitem->avgweight = $summary['avgweight'];
-            $analysisitem->avgdprice = $summary['avgdprice'];
+            $this->copyFromSummary($quality, $analysisitem, $summary, $this->bean->piggery);
             $this->bean->ownAnalysisitem[] = $analysisitem;
         }
-        // Non-Qualities without weight margins
-        foreach ($this->nonQualities as $quality) {
-            $summary = $this->getSummaryNonQuality($quality); // totals and averages of the stock
-            $analysisitem = R::dispense('analysisitem');
-            $analysisitem->quality = $quality;
-            $analysisitem->piggery = $summary['piggery'];
-            $analysisitem->sumweight = $summary['sumweight'];
-            $analysisitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
-            $analysisitem->sumtotaldprice = $summary['sumtotaldprice'];
-            $analysisitem->avgmfa = $summary['avgmfa'];
-            $analysisitem->avgprice = $summary['avgprice'];
-            $analysisitem->avgpricelanuv = $summary['avgpricelanuv'];
-            $analysisitem->avgweight = $summary['avgweight'];
-            $analysisitem->avgdprice = $summary['avgdprice'];
-            $this->bean->ownAnalysisitem[] = $analysisitem;
+        $suppliers = $this->getSuppliers();
+        foreach ($suppliers as $id => $supplier) {
+            error_log('Analysis for ' . $supplier['supplier']);
         }
         return true;
     }
     
     /**
+     * Copies values from summary array into the given bean.
+     *
+     * @param string $quality or empty
+     * @param RedBean_OODBBean $bean
+     * @param array $summary
+     * @param int $total
+     * @return void
+     */
+    public function copyFromSummary($quality = '', RedBean_OODBBean $bean, array $summary = array(), $total)
+    {
+        $bean->quality = $quality;
+        $bean->piggery = $summary['piggery'];
+        $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
+        $bean->sumweight = $summary['sumweight'];
+        $bean->sumtotaldprice = $summary['sumtotaldprice'];
+        $bean->sumtotallanuvprice = $summary['sumtotallanuvprice'];
+        $bean->avgmfa = $summary['avgmfa'];
+        $bean->avgprice = $summary['avgprice'];
+        $bean->avgpricelanuv = $summary['avgpricelanuv'];
+        $bean->avgweight = $summary['avgweight'];
+        $bean->avgdprice = $summary['avgdprice'];
+        return true;
+    }
+    
+    /**
      * Returns an array with information about a certain stock quality.
-     * Stock beans with attribute damage1 = '02' are collected.
      *
      * @param string $quality
-     * @param float $margin_lo
-     * @param float $margin_hi
      * @return array
      */
-    public function getSummaryQuality($quality, $margin_lo, $margin_hi)
+    public function getSummary($quality)
     {
 		$sql = <<<SQL
         SELECT 
@@ -211,27 +204,22 @@ SQL;
             buyer = :buyer AND 
             quality = :quality AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            (weight >= :lo AND weight <= :hi) AND 
-            (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
             ':quality' => $quality,
             ':startdate' => $this->bean->startdate,
-            ':enddate' => $this->bean->enddate,
-            ':lo' => $margin_lo,
-            ':hi' => $margin_hi
+            ':enddate' => $this->bean->enddate
         ));
     }
     
     /**
-     * Returns an array with information about a certain stock non-quality.
+     * Returns an array with information about a certain time period.
      *
-     * @param string $quality
      * @return array
      */
-    public function getSummaryNonQuality($quality)
+    public function getSummaryTotal()
     {
 		$sql = <<<SQL
         SELECT 
@@ -246,15 +234,39 @@ SQL;
             avg(dprice) as avgdprice
         FROM stock 
         WHERE 
-            buyer = :buyer AND 
-            quality = :quality AND 
+            buyer = :buyer AND  
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
-            ':quality' => $quality,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Returns an array with all suppliers of the given time period.
+     *
+     * @return array
+     */
+    public function getSuppliers()
+    {
+        $sql = <<<SQL
+        SELECT
+            supplier
+        FROM stock
+        WHERE
+            buyer = :buyer AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
+            csb_id IS NOT NULL
+        GROUP BY
+            supplier
+        ORDER BY
+            supplier
+SQL;
+        return R::getAll($sql, array(
+            ':buyer' => $this->bean->company->buyer,
             ':startdate' => $this->bean->startdate,
             ':enddate' => $this->bean->enddate
         ));
