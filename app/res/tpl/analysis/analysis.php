@@ -72,13 +72,16 @@
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('analysis_label_piggery') ?></label>
                 </div>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></label>
+                </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('analysis_label_sumweight') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('analysis_label_sumtotaldprice') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></label>
                 </div>
                 <div class="span2">
@@ -121,7 +124,16 @@
                             type="text"
                             class="number"
                             name="dialog[ownAnalysisitem][<?php echo $_id ?>][piggery]"
-                            value="<?php echo htmlspecialchars($_analysisitem->piggery) ?>"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('piggery', 0)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][piggerypercentage]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('piggerypercentage', 2)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -143,7 +155,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -165,14 +177,85 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgdprice]"
-                            value="<?php echo htmlspecialchars($_analysisitem->decimal('avgdprice', 3)) ?>"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgprice]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
                 </div>
             </fieldset>
             <?php endforeach ?>
+            <fieldset>
+                <legend class="verbose"><?php echo I18n::__('statistic_analysistotal_legend') ?></legend>
+                <div class="row">
+                    <div class="span1">
+                        &nbsp;
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[piggery]"
+                            value="<?php echo htmlspecialchars($record->decimal('piggery', 0)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[piggerypercentage]"
+                            value="<?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[sumweight]"
+                            value="<?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[sumtotaldprice]"
+                            value="<?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[avgmfa]"
+                            value="<?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[avgweight]"
+                            value="<?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[avgprice]"
+                            value="<?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                </div>
+            </fieldset>
         </fieldset>
         <!-- end of form details -->
         
