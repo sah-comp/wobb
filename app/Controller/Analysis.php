@@ -112,6 +112,30 @@ class Controller_Analysis extends Controller
         }
         $this->render();
     }
+    
+    /**
+     * Generates an PDF using mPDF library and downloads it to the client.
+     *
+     * @return void
+     */
+    public function pdf()
+    {
+        $mpdf = new mPDF('c', 'A4');
+        $mpdf->SetTitle('Auswertung');
+        $mpdf->SetAuthor($this->record->company->legalname);
+        $mpdf->SetDisplayMode('fullpage');
+        ob_start();
+        Flight::render('analysis/print', array(
+            'record' => $this->record,
+            'startdate' => $this->record->localizedDate('startdate'),
+            'enddate' => $this->record->localizedDate('enddate')
+        ));
+        $html = ob_get_contents();
+        ob_end_clean();
+        $mpdf->WriteHTML( $html );
+        $mpdf->Output($filename, 'D');
+        exit;
+    }
 
     /**
      * Choose an already existing day or create a new one.
@@ -120,7 +144,7 @@ class Controller_Analysis extends Controller
     {
         Permission::check(Flight::get('user'), 'analysis', 'index');
         $this->layout = 'index';
-        $this->records = R::findAll('analysis', ' ORDER BY id DESC');
+        $this->records = R::find('analysis', ' analysis_id IS NULL ORDER BY id DESC');
         if (Flight::request()->method == 'POST') {
             //try to create a new csb bean with data from form
             //which imports the csb data to stock
@@ -145,6 +169,7 @@ class Controller_Analysis extends Controller
 		Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('analysis/toolbar', array(
+            'record' => $this->record
         ), 'toolbar');
 		Flight::render('shared/header', array(), 'header');
 		Flight::render('shared/footer', array(), 'footer');

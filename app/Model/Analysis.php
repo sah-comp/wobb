@@ -130,15 +130,16 @@ SQL;
     }
     
     /**
-     * Generate report for this lanuv bean.
+     * Generate report for this analysis bean.
      *
-     * @param float $lowerMargin
-     * @param float $upperMargin
+     * @todo Refactor code to work recursive
+     *
      * @return void
      */
     public function generateReport()
     {
         $this->bean->ownAnalysisitem = array();
+        $this->bean->person = null;
         $summary = $this->getSummaryTotal();
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         $qualities = array_merge( $this->qualities, $this->nonQualities );
@@ -148,9 +149,25 @@ SQL;
             $this->copyFromSummary($quality, $analysisitem, $summary, $this->bean->piggery);
             $this->bean->ownAnalysisitem[] = $analysisitem;
         }
+        // now we go through each supplier in the given time period and do the same
         $suppliers = $this->getSuppliers();
+        $this->bean->ownAnalysis = array();
         foreach ($suppliers as $id => $supplier) {
-            error_log('Analysis for ' . $supplier['supplier']);
+            $person = R::findOne('person', " nickname = :supplier LIMIT 1 ", array(
+                ':supplier' => $supplier['supplier']
+            ));
+            $subAnalysis = R::dispense('analysis');
+            $subAnalysis->person = $person;
+            $summary = $this->getSummaryTotalSupplier($person->nickname);
+            $this->copyFromSummary(null, $subAnalysis, $summary, $summary['piggery']);
+            foreach ($qualities as $quality) {
+                $summary = $this->getSummarySupplier($quality, $person->nickname);
+                $subAnalysisitem = R::dispense('analysisitem');
+                $this->copyFromSummary($quality, $subAnalysisitem, $summary, $subAnalysis->piggery);
+                $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
+            }
+            $this->bean->ownAnalysis[] = $subAnalysis;
+            //error_log('Analysis for ' . $supplier['supplier']);
         }
         return true;
     }
@@ -215,6 +232,43 @@ SQL;
     }
     
     /**
+     * Returns an array with information about a certain stock quality and supplier.
+     *
+     * @param string $quality
+     * @param string $supplier
+     * @return array
+     */
+    public function getSummarySupplier($quality, $supplier)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            supplier = :supplier AND 
+            buyer = :buyer AND 
+            quality = :quality AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':supplier' => $supplier,
+            ':buyer' => $this->bean->company->buyer,
+            ':quality' => $quality,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
      * Returns an array with information about a certain time period.
      *
      * @return array
@@ -239,6 +293,40 @@ SQL;
             csb_id IS NOT NULL
 SQL;
         return R::getRow($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Returns an array with information about a certain time period and a certain supplier.
+     *
+     * @param string $supplier
+     * @return array
+     */
+    public function getSummaryTotalSupplier($supplier)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            supplier = :supplier AND 
+            buyer = :buyer AND  
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':supplier' => $supplier,
             ':buyer' => $this->bean->company->buyer,
             ':startdate' => $this->bean->startdate,
             ':enddate' => $this->bean->enddate
