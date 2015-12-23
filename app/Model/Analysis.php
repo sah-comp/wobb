@@ -148,7 +148,7 @@ SQL;
     public function generateReport()
     {
         $this->bean->ownAnalysisitem = array();
-        $this->bean->person = null;
+        //$this->bean->person = null;
         $summary = $this->getSummaryTotal();
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         $summary = $this->getSummaryDamageTotal();
@@ -193,7 +193,6 @@ SQL;
                 $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
             }
             $this->bean->ownAnalysis[] = $subAnalysis;
-            //error_log('Analysis for ' . $supplier['supplier']);
         }
         return true;
     }
