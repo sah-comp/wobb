@@ -18,6 +18,10 @@
         table {
             border-collapse: collapse;
         }
+        caption {
+            font-weight: bold;
+            padding-bottom: 3mm;
+        }
         th {
             text-align: left;
         }
@@ -74,20 +78,8 @@
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdprice') ?></th>
             </tr>
         </thead>
-        <tfoot>
-            <tr>
-                <td class="bt bb"><?php echo I18n::__('analysis_label_total') ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
-            </tr>
-        </tfoot>
         <tbody>
-        <?php foreach ($record->with(' ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
+        <?php foreach ($record->withCondition(' kind = 0 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <tr>
                 <td><?php echo htmlspecialchars($_analysisitem->quality) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('piggery', 0)) ?></td>
@@ -99,6 +91,38 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?></td>
             </tr>
         <?php endforeach ?>
+            <tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
+            </tr>
+        <?php foreach ($record->withCondition(' kind = 1 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($_analysisitem->damage) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagepiggery', 0)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagepiggerypercentage', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagesumweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagesumtotaldprice', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgmfa', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?></td>
+            </tr>
+        <?php endforeach ?>
+            <tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damagepiggery', 0)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damagepiggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damagesumweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damagesumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgmfa', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgprice', 3)) ?></td>
+            </tr>
         </tbody>
     </table>
     
@@ -122,20 +146,8 @@
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdprice') ?></th>
             </tr>
         </thead>
-        <tfoot>
-            <tr>
-                <td class="bt bb"><?php echo I18n::__('analysis_label_total') ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('piggery', 0)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('piggerypercentage', 2)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('sumtotaldprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgprice', 3)) ?></td>
-            </tr>
-        </tfoot>
         <tbody>
-        <?php foreach ($_analysis->with(' ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
+        <?php foreach ($_analysis->withCondition(' kind = 0 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <tr>
                 <td><?php echo htmlspecialchars($_analysisitem->quality) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('piggery', 0)) ?></td>
@@ -147,6 +159,38 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?></td>
             </tr>
         <?php endforeach ?>
+            <tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('piggery', 0)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('piggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('sumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgprice', 3)) ?></td>
+            </tr>
+        <?php foreach ($_analysis->withCondition(' kind = 1 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($_analysisitem->damage) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagepiggery', 0)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagepiggerypercentage', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagesumweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damagesumtotaldprice', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgmfa', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?></td>
+            </tr>
+        <?php endforeach ?>
+            <tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damagepiggery', 0)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damagepiggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damagesumweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damagesumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgmfa', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgprice', 3)) ?></td>
+            </tr>
         </tbody>
     </table>
         

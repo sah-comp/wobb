@@ -93,11 +93,7 @@
             </div>
             <!-- end of row with labels -->
             
-            <?php foreach ($record->with(' ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
-            <div>
-                <input type="hidden" name="dialog[type]" value="analysis" />
-                <input type="hidden" name="dialog[id]" value="<?php echo $record->getId() ?>" />
-            </div>
+            <?php foreach ($record->withCondition(' kind = 0 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('statistic_analysisitem_legend') ?></legend>
                 <div>
@@ -109,6 +105,10 @@
                         type="hidden"
                         name="dialog[ownAnalysisitem][<?php echo $_id ?>][id]"
                         value="<?php echo $_id ?>" />
+                    <input
+                        type="hidden"
+                        name="dialog[ownAnalysisitem][<?php echo $_id ?>][kind]"
+                        value="<?php echo $_analysisitem->kind ?>" />
                 </div>
                 <div class="row">
                     <div class="span1">
@@ -251,6 +251,169 @@
                             class="number"
                             name="dialog[avgprice]"
                             value="<?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                </div>
+            </fieldset>
+            <?php foreach ($record->withCondition(' kind = 1 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
+            <fieldset>
+                <legend class="verbose"><?php echo I18n::__('statistic_analysisitem_legend') ?></legend>
+                <div>
+                    <input
+                        type="hidden"
+                        name="dialog[ownAnalysisitem][<?php echo $_id ?>][type]"
+                        value="analysisitem" />
+                    <input
+                        type="hidden"
+                        name="dialog[ownAnalysisitem][<?php echo $_id ?>][id]"
+                        value="<?php echo $_id ?>" />
+                    <input
+                        type="hidden"
+                        name="dialog[ownAnalysisitem][<?php echo $_id ?>][kind]"
+                        value="<?php echo $_analysisitem->kind ?>" />
+                </div>
+                <div class="row">
+                    <div class="span1">
+                        <input
+                            type="text"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damage]"
+                            value="<?php echo htmlspecialchars($_analysisitem->damage) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damagepiggery]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damagepiggery', 0)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damagepiggerypercentage]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damagepiggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damagesumweight]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damagesumweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damagesumtotaldprice]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damagesumtotaldprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgmfa]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgmfa', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgweight]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgprice]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                </div>
+            </fieldset>
+            <?php endforeach ?>
+            <fieldset>
+                <legend class="verbose"><?php echo I18n::__('statistic_analysistotal_legend') ?></legend>
+                <div class="row">
+                    <div class="span1">
+                        &nbsp;
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damagepiggery]"
+                            value="<?php echo htmlspecialchars($record->decimal('damagepiggery', 0)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damagepiggerypercentage]"
+                            value="<?php echo htmlspecialchars($record->decimal('damagepiggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damagesumweight]"
+                            value="<?php echo htmlspecialchars($record->decimal('damagesumweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damagesumtotaldprice]"
+                            value="<?php echo htmlspecialchars($record->decimal('damagesumtotaldprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damageavgmfa]"
+                            value="<?php echo htmlspecialchars($record->decimal('damageavgmfa', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span2">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damageavgweight]"
+                            value="<?php echo htmlspecialchars($record->decimal('damageavgweight', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damageavgprice]"
+                            value="<?php echo htmlspecialchars($record->decimal('damageavgprice', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>

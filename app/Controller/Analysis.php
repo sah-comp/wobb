@@ -120,15 +120,19 @@ class Controller_Analysis extends Controller
      */
     public function pdf()
     {
+        $startdate = $this->record->localizedDate('startdate');
+        $enddate = $this->record->localizedDate('enddate');
+        $filename = I18n::__('analysis_filename', null, array($startdate));
+        $title = I18n::__('analysis_docname', null, array($startdate));
         $mpdf = new mPDF('c', 'A4');
-        $mpdf->SetTitle('Auswertung');
+        $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('analysis/print', array(
             'record' => $this->record,
-            'startdate' => $this->record->localizedDate('startdate'),
-            'enddate' => $this->record->localizedDate('enddate')
+            'startdate' => $startdate,
+            'enddate' => $enddate
         ));
         $html = ob_get_contents();
         ob_end_clean();

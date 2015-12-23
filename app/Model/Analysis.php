@@ -36,6 +36,15 @@ class Model_Analysis extends Model
     protected $nonQualities = array(
         'M', 'V'
     );
+    
+    /**
+     * Holds the damage codes (Schadencodes) of stock to pick up in a summary.
+     *
+     * @var array
+     */
+    protected $damages = array(
+        '01', '02', '03', '04', '05', '06', '07', '08', '09'
+    );
 
     /**
      * Returns an array with attributes for lists.
@@ -142,6 +151,8 @@ SQL;
         $this->bean->person = null;
         $summary = $this->getSummaryTotal();
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
+        $summary = $this->getSummaryDamageTotal();
+        $this->copyFromSummaryDamage(null, $this->bean, $summary, $summary['piggery']);
         $qualities = array_merge( $this->qualities, $this->nonQualities );
         foreach ($qualities as $quality) {
             $summary = $this->getSummary($quality); // totals and averages of the stock
@@ -149,6 +160,13 @@ SQL;
             $this->copyFromSummary($quality, $analysisitem, $summary, $this->bean->piggery);
             $this->bean->ownAnalysisitem[] = $analysisitem;
         }
+        foreach ($this->damages as $damage) {
+            $summary = $this->getSummaryDamage($damage); // totals and averages of the stock
+            $analysisitem = R::dispense('analysisitem');
+            $this->copyFromSummaryDamage($damage, $analysisitem, $summary, $this->bean->damagepiggery);
+            $this->bean->ownAnalysisitem[] = $analysisitem;
+        }
+
         // now we go through each supplier in the given time period and do the same
         $suppliers = $this->getSuppliers();
         $this->bean->ownAnalysis = array();
@@ -160,10 +178,18 @@ SQL;
             $subAnalysis->person = $person;
             $summary = $this->getSummaryTotalSupplier($person->nickname);
             $this->copyFromSummary(null, $subAnalysis, $summary, $summary['piggery']);
+            $summary = $this->getSummaryDamageTotalSupplier($person->nickname);
+            $this->copyFromSummaryDamage(null, $subAnalysis, $summary, $summary['piggery']);
             foreach ($qualities as $quality) {
                 $summary = $this->getSummarySupplier($quality, $person->nickname);
                 $subAnalysisitem = R::dispense('analysisitem');
                 $this->copyFromSummary($quality, $subAnalysisitem, $summary, $subAnalysis->piggery);
+                $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
+            }
+            foreach ($this->damages as $damage) {
+                $summary = $this->getSummaryDamageSupplier($damage, $person->nickname);
+                $subAnalysisitem = R::dispense('analysisitem');
+                $this->copyFromSummaryDamage($damage, $subAnalysisitem, $summary, $subAnalysis->damagepiggery);
                 $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
             }
             $this->bean->ownAnalysis[] = $subAnalysis;
@@ -183,6 +209,7 @@ SQL;
      */
     public function copyFromSummary($quality = '', RedBean_OODBBean $bean, array $summary = array(), $total)
     {
+        $bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
         $bean->piggery = $summary['piggery'];
         $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
@@ -194,6 +221,32 @@ SQL;
         $bean->avgpricelanuv = $summary['avgpricelanuv'];
         $bean->avgweight = $summary['avgweight'];
         $bean->avgdprice = $summary['avgdprice'];
+        return true;
+    }
+    
+    /**
+     * Copies values from summary array into the given bean for damages.
+     *
+     * @param string $damage or empty
+     * @param RedBean_OODBBean $bean
+     * @param array $summary
+     * @param int $total
+     * @return void
+     */
+    public function copyFromSummaryDamage($damage = '', RedBean_OODBBean $bean, array $summary = array(), $total)
+    {
+        $bean->kind = 1; //this is a damage entry
+        $bean->damage = $damage;
+        $bean->damagepiggery = $summary['piggery'];
+        $bean->damagepiggerypercentage = $summary['piggery'] * 100 / $total;
+        $bean->damagesumweight = $summary['sumweight'];
+        $bean->damagesumtotaldprice = $summary['sumtotaldprice'];
+        $bean->damagesumtotallanuvprice = $summary['sumtotallanuvprice'];
+        $bean->damageavgmfa = $summary['avgmfa'];
+        $bean->damageavgprice = $summary['avgprice'];
+        $bean->damageavgpricelanuv = $summary['avgpricelanuv'];
+        $bean->damageavgweight = $summary['avgweight'];
+        $bean->damageavgdprice = $summary['avgdprice'];
         return true;
     }
     
@@ -226,6 +279,40 @@ SQL;
         return R::getRow($sql, array(
             ':buyer' => $this->bean->company->buyer,
             ':quality' => $quality,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Returns an array with information about a certain stock damage.
+     *
+     * @param string $damage
+     * @return array
+     */
+    public function getSummaryDamage($damage)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            buyer = :buyer AND 
+            damage1 = :damage AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':damage' => $damage,
             ':startdate' => $this->bean->startdate,
             ':enddate' => $this->bean->enddate
         ));
@@ -269,6 +356,43 @@ SQL;
     }
     
     /**
+     * Returns an array with information about a certain stock damage and supplier.
+     *
+     * @param string $damage
+     * @param string $supplier
+     * @return array
+     */
+    public function getSummaryDamageSupplier($damage, $supplier)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            supplier = :supplier AND 
+            buyer = :buyer AND 
+            damage1 = :damage AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':supplier' => $supplier,
+            ':buyer' => $this->bean->company->buyer,
+            ':damage' => $damage,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
      * Returns an array with information about a certain time period.
      *
      * @return array
@@ -289,6 +413,38 @@ SQL;
         FROM stock 
         WHERE 
             buyer = :buyer AND  
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Returns an array with information about a certain time period.
+     *
+     * @return array
+     */
+    public function getSummaryDamageTotal()
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            buyer = :buyer AND 
+            damage1 != '' AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
             csb_id IS NOT NULL
 SQL;
@@ -322,6 +478,41 @@ SQL;
         WHERE 
             supplier = :supplier AND 
             buyer = :buyer AND  
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':supplier' => $supplier,
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate
+        ));
+    }
+    
+    /**
+     * Returns an array with information about a certain time period and a certain supplier.
+     *
+     * @param string $supplier
+     * @return array
+     */
+    public function getSummaryDamageTotalSupplier($supplier)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            supplier = :supplier AND 
+            buyer = :buyer AND 
+            damage1 != '' AND 
             (pubdate >= :startdate AND pubdate <= :enddate) AND 
             csb_id IS NOT NULL
 SQL;
