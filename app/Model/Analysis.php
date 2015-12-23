@@ -212,7 +212,11 @@ SQL;
         $bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
         $bean->piggery = $summary['piggery'];
-        $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
+        if ( $total != 0) {
+            $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
+        } else {
+            $bean->piggerypercentage = 0;
+        }
         $bean->sumweight = $summary['sumweight'];
         $bean->sumtotaldprice = $summary['sumtotaldprice'];
         $bean->sumtotallanuvprice = $summary['sumtotallanuvprice'];
@@ -238,7 +242,11 @@ SQL;
         $bean->kind = 1; //this is a damage entry
         $bean->damage = $damage;
         $bean->damagepiggery = $summary['piggery'];
-        $bean->damagepiggerypercentage = $summary['piggery'] * 100 / $total;
+        if ( $total != 0 ) {
+            $bean->damagepiggerypercentage = $summary['piggery'] * 100 / $total;
+        } else {
+            $bean->damagepiggerypercentage = 0;
+        }
         $bean->damagesumweight = $summary['sumweight'];
         $bean->damagesumtotaldprice = $summary['sumtotaldprice'];
         $bean->damagesumtotallanuvprice = $summary['sumtotallanuvprice'];
