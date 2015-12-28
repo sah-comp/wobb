@@ -148,7 +148,7 @@ class Controller_Analysis extends Controller
     {
         Permission::check(Flight::get('user'), 'analysis', 'index');
         $this->layout = 'index';
-        $this->records = R::find('analysis', ' analysis_id IS NULL ORDER BY id DESC');
+        $this->records = R::find('analysis', ' company_id IS NOT NULL ORDER BY id DESC');
         if (Flight::request()->method == 'POST') {
             //try to create a new csb bean with data from form
             //which imports the csb data to stock
