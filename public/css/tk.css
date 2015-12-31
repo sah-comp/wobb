@@ -51,7 +51,8 @@ h2.date-slaughter {
     color: gray;
 }
 
-h2.year-purchase {
+h2.year-purchase,
+h2.year-fiscal {
     font-size: 2em;
     color: rgb(0, 128, 212);
     margin-bottom: .5em;
@@ -128,7 +129,8 @@ th {
 
 th.number,
 td.number,
-td.label {
+td.label,
+.number {
     text-align: right;
 }
 
