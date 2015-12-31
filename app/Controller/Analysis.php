@@ -142,7 +142,7 @@ class Controller_Analysis extends Controller
     }
 
     /**
-     * Choose an already existing day or create a new one.
+     * List all analysis beans.
      */
     public function index()
     {
