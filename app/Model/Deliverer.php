@@ -327,6 +327,7 @@ class Model_Deliverer extends Model
         $this->bean->invoice->totalnet = $this->bean->totalnet;
         $bonusnet = 0;
         foreach ($this->bean->person->ownCondition as $id => $condition) {
+            if ( $condition->doesnotaffectinvoice ) continue;//skip condition
             if ( $condition->label == 'stockperitem' ) {
                 $bonusnet += $this->bean->piggery * $condition->value;
             } elseif ( $condition->label == 'stockperweight' ) {

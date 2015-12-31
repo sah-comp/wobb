@@ -76,5 +76,22 @@
         name="dialog[ownCondition][<?php echo $index ?>][value]"
         value="<?php echo htmlspecialchars($_condition->decimal('value', 3)) ?>" />
 </div>
+<div class="row <?php echo ($_condition->hasError('doesnotaffectinvoice')) ? 'error' : ''; ?>">
+    <input
+        type="hidden"
+        name="dialog[ownCondition][<?php echo $index ?>][doesnotaffectinvoice]"
+        value="0" />
+    <input
+        id="person-<?php echo $record->getId() ?>-condition-<?php echo $index ?>-doesnotaffectinvoice"
+        type="checkbox"
+        name="dialog[ownCondition][<?php echo $index ?>][doesnotaffectinvoice]"
+        <?php echo ($_condition->doesnotaffectinvoice) ? 'checked="checked"' : '' ?>
+        value="1" />
+    <label
+        for="person-<?php echo $record->getId() ?>-condition-<?php echo $index ?>-doesnotaffectinvoice"
+        class="cb">
+        <?php echo I18n::__('var_label_doesnotaffectinvoice') ?>
+    </label>
+</div>
 </fieldset>
 <!-- /condition edit subform -->

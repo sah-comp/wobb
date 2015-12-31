@@ -152,7 +152,7 @@ class Controller_Deliverer extends Controller
         Flight::render('deliverer/' . $this->layout, array(
             'record' => $this->record,
             'records' => $this->records,
-            'conditions' => $this->record->person->ownCondition,
+            'conditions' => $this->record->person->withCondition(" ( doesnotaffectinvoice IS NULL OR doesnotaffectinvoice = 0 ) ")->ownCondition,
             'costs' => $this->record->person->ownCost, 
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => false,
