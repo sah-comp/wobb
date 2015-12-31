@@ -509,7 +509,6 @@ SQL;
             $deliverer->subtotalnet = 0;
             $deliverer->vatvalue = 0;
             $deliverer->totalgros = 0;
-            $deliverer->totalcost = 0;
             $deliverer->totalnetlanuv = 0;
             $deliverer->totalweight = 0;
             $deliverer->totalmfa = 0;
