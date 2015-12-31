@@ -16,7 +16,19 @@
  * @version $Id$
  */
 class Model_Invoice extends Model
-{    
+{
+    /**
+     * Holds the invoice kinds.
+     *
+     * 0 means a voucher, 1 is a delayed voucher.
+     *
+     * @var array
+     */
+    public $kinds = array(
+        0,
+        1
+    );
+
     /**
      * Constructor.
      *
@@ -25,6 +37,16 @@ class Model_Invoice extends Model
     public function __construct()
     {
         $this->setAction('index', array('idle', 'togglePaid'));
+    }
+    
+    /**
+     * Returns the invoice kinds.
+     *
+     * @return array
+     */
+    public function getKinds()
+    {
+        return $this->kinds;
     }
     
     /**
@@ -75,7 +97,7 @@ class Model_Invoice extends Model
                     'name' => 'invoice.name'
                 ),
                 'filter' => array(
-                    'tag' => 'text'
+                    'tag' => 'number'
                 )
             ),
             array(
@@ -211,6 +233,33 @@ class Model_Invoice extends Model
      */
     public function dispense()
     {
+        $this->addConverter('bookingdate', array(
+            new Converter_MysqlDate()
+        ));
+        $this->addConverter('dateofslaughter', array(
+            new Converter_MysqlDate()
+        ));
+        $this->addConverter('duedate', array(
+            new Converter_MysqlDate()
+        ));
+        $this->addConverter('totalnet', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('subtotalnet', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('vatvalue', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalgros', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('bonusnet', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('costnet', array(
+            new Converter_Decimal()
+        ));
     }
     
     /**
@@ -218,6 +267,21 @@ class Model_Invoice extends Model
      */
     public function update()
     {
+        if ($this->bean->company_id) {
+            $this->bean->company = R::load('company', $this->bean->company_id);
+        } else {
+            unset($this->bean->company);
+        }
+        if ($this->bean->person_id) {
+            $this->bean->person = R::load('person', $this->bean->person_id);
+        } else {
+            unset($this->bean->person);
+        }
+        if ($this->bean->vat_id) {
+            $this->bean->vat = R::load('vat', $this->bean->vat_id);
+        } else {
+            unset($this->bean->vat);
+        }
         parent::update();
     }
     

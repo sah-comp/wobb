@@ -11,14 +11,14 @@
 <ul class="panel-navigation">
 	<li>
 		<a
-			href="<?php echo Url::build("/billing/index") ?>"
+			href="<?php echo Url::build("/invoice/index") ?>"
 			accesskey="i">
 			<?php echo I18n::__('action_list_nav') ?>
 		</a>
 	</li>
 	<li>
 		<a
-			href="<?php echo Url::build("/billing/add") ?>"
+			href="<?php echo Url::build("/invoice/add") ?>"
 			accesskey="+">
 			<?php echo I18n::__('action_add_nav') ?>
 		</a>
