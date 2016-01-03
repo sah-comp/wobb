@@ -6,11 +6,58 @@
         </nav>
     </header>
     <form
-        id="form-purchase"
+        id="form-invoice-selector"
         class="panel"
         method="POST"
         accept-charset="utf-8"
         enctype="multipart/form-data">
+        
+        <fieldset>
+            <legend><?php echo I18n::__('invoice_legend_filter') ?></legend>
+            <div class="row">
+                <label
+                    for="invoice-fy">
+                    <?php echo I18n::__('invoice_label_sel_fy') ?>
+                </label>
+                <input
+                    id="invoice-fy"
+                    type="text"
+                    name="dialog[fy]"
+                    value="<?php echo htmlspecialchars($_SESSION['invoice']['fy']) ?>"
+                    required="required" />
+            </div>
+            <div class="row">
+                <label
+                    for="invoice-lo">
+                    <?php echo I18n::__('invoice_label_sel_lo') ?>
+                </label>
+                <input
+                    id="invoice-lo"
+                    type="text"
+                    name="dialog[lo]"
+                    value="<?php echo htmlspecialchars($_SESSION['invoice']['lo']) ?>"
+                    required="required" />
+            </div>
+            <div class="row">
+                <label
+                    for="invoice-hi">
+                    <?php echo I18n::__('invoice_label_sel_hi') ?>
+                </label>
+                <input
+                    id="invoice-hi"
+                    type="text"
+                    name="dialog[hi]"
+                    value="<?php echo htmlspecialchars($_SESSION['invoice']['hi']) ?>"
+                    required="required" />
+            </div>
+            <div class="buttons">
+                <input
+                    type="submit"
+                    name="submit"
+                    accesskey="s"
+                    value="<?php echo I18n::__('invoice_sel_submit') ?>" />
+            </div>
+        </fielset>
         
         <!-- form details -->
         <fieldset
@@ -47,7 +94,7 @@
                     <label class="number"><?php echo I18n::__('invoice_label_totalgros') ?></label>
                 </div>
                 <div class="span2">
-                    <label><?php echo I18n::__('invoice_label_paid') ?></label>
+                    &nbsp;
                 </div>
             </div>
                 <?php endif ?>
@@ -55,7 +102,7 @@
                 <legend class="verbose"><?php echo I18n::__('invoice_history_item_legend') ?></legend>
                     <div
                         id="invoice-<?php echo $_record->getId() ?>"
-                        class="row">
+                        class="row invoice-kind-<?php echo $_record->kind ?>">
                         <div class="span1">
                             <?php echo htmlspecialchars($_record->name) ?>
                         </div>
@@ -74,23 +121,17 @@
                         <div class="span2 number">
                             <?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?>
                         </div>
-                        <div class="span2">
-                            <button class="btn" type="button"><?php echo I18n::__('invoice_label_paid_' . $_record->paid) ?></button>
+                        <div class="span1">
+                            <button 
+                                class="btn silent" 
+                                type="button"
+                                data-container="invoice-<?php echo $_record->getId() ?>"
+                                data-href="<?php echo Url::build(sprintf('/invoice/payment/%d', $_record->getId())) ?>"><?php echo I18n::__('invoice_label_paid_' . $_record->paid) ?></button>
                         </div>
                     </div>
             </fieldset>
             <?php endforeach ?>
         </fieldset>
         <!-- end of form details -->
-        
-        <!-- Invoice buttons -->
-        <div class="buttons">
-            <input
-                type="submit"
-                name="submit"
-                accesskey="s"
-                value="<?php echo I18n::__('invoice_submit') ?>" />
-        </div>
-        <!-- End of Invoice buttons -->
     </form>
 </article>
