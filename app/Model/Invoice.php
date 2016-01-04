@@ -267,21 +267,6 @@ class Model_Invoice extends Model
      */
     public function update()
     {
-        if ($this->bean->company_id) {
-            $this->bean->company = R::load('company', $this->bean->company_id);
-        } else {
-            unset($this->bean->company);
-        }
-        if ($this->bean->person_id) {
-            $this->bean->person = R::load('person', $this->bean->person_id);
-        } else {
-            unset($this->bean->person);
-        }
-        if ($this->bean->vat_id) {
-            $this->bean->vat = R::load('vat', $this->bean->vat_id);
-        } else {
-            unset($this->bean->vat);
-        }
         parent::update();
     }
     

@@ -307,7 +307,7 @@ class Model_Deliverer extends Model
      * @throws Exception if no billing number can be generated
      * @return void
      */
-    public function billing($csb)
+    public function billing(RedBean_OODBBean $csb)
     {
         if ( ! $this->bean->invoice()->name ) {
             if ( ! $nextbillingnumber = $csb->company->nextBillingnumber() ) {
