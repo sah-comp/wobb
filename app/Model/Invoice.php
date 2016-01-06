@@ -221,10 +221,14 @@ class Model_Invoice extends Model
     /**
      * Returns the name of this beans person aka deliverer.
      *
+     * @param int $maxlength
      * @return string
      */
-    public function getPersonName()
+    public function getPersonName($maxlength = null)
     {
+        if ( $maxlength && mb_strlen($this->bean->person->name) > $maxlenght ) {
+            return mb_substr($this->bean->person->name, 0, $maxlength).'...';
+        }
         return $this->bean->person->name;
     }
     

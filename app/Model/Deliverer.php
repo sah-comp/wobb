@@ -316,7 +316,9 @@ class Model_Deliverer extends Model
             $this->bean->invoice->name = $nextbillingnumber;
             $this->bean->invoice->fy = Flight::setting()->fiscalyear;
             $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
-            $this->bean->invoice->paid = false;
+            $this->bean->invoice->instructed = false;//instructed to pay
+            $this->bean->invoice->paid = false;//not yet paid
+            $this->bean->invoice->canceled = false;//storno
             $this->bean->invoice->duedate = date('Y-m-d', strtotime(
                 $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
             ));
@@ -349,6 +351,12 @@ class Model_Deliverer extends Model
         $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet;
         $this->bean->invoice->subtotalnet += $this->bean->invoice->bonusnet;
         $this->bean->invoice->subtotalnet -= $this->bean->invoice->costnet;
+        // set special net value attributes according to vat setting
+        if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
+            $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
+        } else {
+            $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
+        }
         $this->bean->invoice->vatvalue = 
                                 $this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100;
         $this->bean->invoice->totalgros = 

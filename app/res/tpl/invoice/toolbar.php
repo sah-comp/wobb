@@ -18,13 +18,6 @@
 	</li>
 	<li>
 		<a
-			href="<?php echo Url::build("/invoice/add") ?>"
-			accesskey="+">
-			<?php echo I18n::__('action_add_nav') ?>
-		</a>
-	</li>
-	<li>
-		<a
 			href="<?php echo Url::build("/invoice/pdf") ?>"
 			accesskey="+">
 			<?php echo I18n::__('invoice_action_pdf') ?>

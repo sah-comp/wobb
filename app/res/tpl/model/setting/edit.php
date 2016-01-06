@@ -9,7 +9,10 @@
  */
 ?>
 <!-- setting form -->
-<?php $domains = R::findAll('domain') ?>
+<?php
+$domains = R::findAll('domain');
+$vats = R::findAll('vat');
+?>
 <div>
     <input type="hidden" name="dialog[type]" value="<?php echo $record->getMeta('type') ?>" />
     <input type="hidden" name="dialog[id]" value="<?php echo $record->getId() ?>" />
@@ -36,11 +39,48 @@
     <?php Flight::render('shared/navigation/tabs', array(
         'tab_id' => 'setting-tabs',
         'tabs' => array(
+            'setting-vat' => I18n::__('setting_vat_tab'),
             'setting-folder' => I18n::__('setting_folder_tab'),
             'setting-currency' => I18n::__('setting_currency_tab')
         ),
-        'default_tab' => 'setting-folder'
+        'default_tab' => 'setting-vat'
     )) ?>
+    <fieldset
+        id="setting-vat"
+        class="tab">
+        <legend class="verbose"><?php echo I18n::__('setting_legend_vat') ?></legend>
+        <div class="row">
+            <label
+                for="setting-vatfarmer"
+                class="<?php echo ($record->hasError('vatfarmer')) ? 'error' : ''; ?>">
+                <?php echo I18n::__('setting_label_vatfarmer') ?>
+            </label>
+            <select
+                id="setting-vatfarmer"
+                name="dialog[vatfarmer]">
+                <?php foreach ($vats as $_id => $_vat): ?>
+                <option
+                    value="<?php echo $_vat->getId() ?>"
+                    <?php echo ($record->vatfarmer == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div class="row <?php echo ($record->hasError('vatnormal')) ? 'error' : ''; ?>">
+            <label
+                for="setting-sitesfolder">
+                <?php echo I18n::__('setting_label_vatnormal') ?>
+            </label>
+            <select
+                id="setting-vatnormal"
+                name="dialog[vatnormal]">
+                <?php foreach ($vats as $_id => $_vat): ?>
+                <option
+                    value="<?php echo $_vat->getId() ?>"
+                    <?php echo ($record->vatnormal == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+                <?php endforeach ?>
+            </select>
+        </div>
+    </fieldset>
     <fieldset
         id="setting-folder"
         class="tab">

@@ -86,15 +86,16 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
         <thead>
             <tr>
                 <th width="5%"><?php echo I18n::__('invoice_label_name') ?></th>
-                <th width="5%"><?php echo I18n::__('invoice_label_bookingdate') ?></th>
+                <th width="5%"><?php echo I18n::__('invoice_label_bookingdate_list') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_person_account') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_label_person_name') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
+                <th width="15%"><?php echo I18n::__('invoice_label_person_name') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_bonusnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_costnet') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('invoice_label_subtotalnet') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnetnormal') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnetfarmer') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_vatvalue') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -103,11 +104,12 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
                 <td><?php echo htmlspecialchars($_record->name) ?></td>
                 <td><?php echo htmlspecialchars($_record->localizedDate('bookingdate')) ?></td>
                 <td><?php echo htmlspecialchars($_record->getPersonAccount()) ?></td>
-                <td><?php echo htmlspecialchars($_record->getPersonName()) ?></td>
+                <td><?php echo htmlspecialchars($_record->getPersonName(15)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('bonusnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('costnet', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_record->decimal('subtotalnet', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetnormal', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetfarmer', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('vatvalue', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?></td>
             </tr>
@@ -120,7 +122,8 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnet'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['bonusnet'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['costnet'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['subtotalnet'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnetnormal'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnetfarmer'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['vatvalue'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalgros'])) ?></td>
             </tr>
