@@ -255,6 +255,16 @@ Flight::route('(/[a-z]{2})/invoice(/@method:[a-z]+(/@id:[0-9]+))', function($met
 });
 
 /**
+ * Route to the booking controller.
+ */
+Flight::route('(/[a-z]{2})/booking(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
+    if ( $method === null) $method = 'index';
+    if ( $id === null) $id = 0;
+	$controller = new Controller_Booking($id);
+	$controller->$method();
+});
+
+/**
  * Route to the statistic controller.
  */
 Flight::route('(/[a-z]{2})/statistic(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
