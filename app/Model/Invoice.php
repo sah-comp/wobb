@@ -142,7 +142,7 @@ class Model_Invoice extends Model
                     'name' => 'person.name'
                 ),
                 'callback' => array(
-                    'name' => 'getPersonName'
+                    'name' => 'getPersonNameWeird'
                 ),
                 'filter' => array(
                     'tag' => 'text'
@@ -224,11 +224,22 @@ class Model_Invoice extends Model
      * @param int $maxlength
      * @return string
      */
-    public function getPersonName($maxlength = null)
+    public function getPersonName($maxlength = NULL)
     {
         if ( $maxlength && mb_strlen($this->bean->person->name) > $maxlength ) {
             return mb_substr($this->bean->person->name, 0, $maxlength).'...';
         }
+        return $this->bean->person->name;
+    }
+    
+    /**
+     * Returns the name of this beans person, aka deliverer.
+     *
+     * @todo Find out why getPersonName() above gives an error on 5.3.29
+     * @return string
+     */
+    public function getPersonNameWeird()
+    {
         return $this->bean->person->name;
     }
     
