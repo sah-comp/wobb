@@ -437,7 +437,6 @@ SQL;
                 ':earmark' => $alias->earmark,
                 ':csb_id' => $this->bean->getId()
             ));
-            error_log('Transffered ' . $alias->earmark . ' to ' . $new_earmark);
         }
         return true;
     }
