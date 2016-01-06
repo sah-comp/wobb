@@ -226,7 +226,7 @@ class Model_Invoice extends Model
      */
     public function getPersonName($maxlength = null)
     {
-        if ( $maxlength && mb_strlen($this->bean->person->name) > $maxlenght ) {
+        if ( $maxlength && mb_strlen($this->bean->person->name) > $maxlength ) {
             return mb_substr($this->bean->person->name, 0, $maxlength).'...';
         }
         return $this->bean->person->name;
