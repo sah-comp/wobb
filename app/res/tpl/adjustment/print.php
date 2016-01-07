@@ -76,7 +76,7 @@
             <tr>
                 <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->name) ?></td>
                 <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->localizedDate('bookingdate')) ?></td>
-                <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->getPersonName(15)) ?></td>
+                <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->getPersonName(20)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('gros', 2)) ?></td>
@@ -86,9 +86,9 @@
                 <td class="bt bb emphasize"><?php echo I18n::__('adjustment_label_total') ?></td>
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('net', 2)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('vatvalue', 2)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('gros', 2)) ?></td>
+                <td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('net', 2)) ?></td>
+                <td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('vatvalue', 2)) ?></td>
+                <td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('gros', 2)) ?></td>
             </tr>
         </tbody>
     </table>    
