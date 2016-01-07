@@ -83,8 +83,6 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
     <sethtmlpagefooter name="tkfooter" value="on" />
     mpdf-->
     
-    <div style="height: 5mm;"></div>
-    
     <table class="invoice" width="100%">
         <thead>
             <tr>
