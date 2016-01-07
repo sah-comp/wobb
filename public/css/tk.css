@@ -108,7 +108,7 @@ a.logo-old-style-but-nicer {
 a.logo {
     display: block;
     width: auto;
-    line-height: 2em;
+    height: 2em;
     padding-left: 1em;
     background-image: none;
     background-repeat: no-repeat;
