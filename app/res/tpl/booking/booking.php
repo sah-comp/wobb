@@ -83,14 +83,14 @@
         <thead>
             <tr>
                 <th width="30%"><?php echo I18n::__('invoice_label_name') ?></th>
-                <th width="35%"><?php echo I18n::__('invoice_label_bookingdate') ?></th>
+                <th width="35%"><?php echo I18n::__('invoice_label_dateofslaughter') ?></th>
                 <th class="number" width="35%"><?php echo I18n::__('invoice_label_totalgros') ?></th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><?php echo htmlspecialchars($_record->name) ?></td>
-                <td><?php echo htmlspecialchars($_record->localizedDate('bookingdate')) ?></td>
+                <td><?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?></td>
                 <td class="number emphasize"><?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?></td>
             </tr>
         </tbody>

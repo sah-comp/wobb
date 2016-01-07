@@ -38,6 +38,9 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
             font-weight: bold;
             padding-bottom: 3mm;
         }
+        tr.invoice-kind-1 td {
+            color: #666;
+        }
         td {
             vertical-align: top;
             white-space: nowrap;
@@ -100,7 +103,7 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
         </thead>
         <tbody>
         <?php foreach ($records as $_id => $_record): ?>
-            <tr>
+            <tr class="invoice-kind-<?php echo $_record->kind ?>">
                 <td><?php echo htmlspecialchars($_record->name) ?></td>
                 <td><?php echo htmlspecialchars($_record->localizedDate('bookingdate')) ?></td>
                 <td><?php echo htmlspecialchars($_record->getPersonAccount()) ?></td>
