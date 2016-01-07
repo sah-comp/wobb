@@ -76,7 +76,7 @@
             <tr>
                 <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->name) ?></td>
                 <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->localizedDate('bookingdate')) ?></td>
-                <td><?php echo htmlspecialchars($_adjustmentitem->person->name) ?></td>
+                <td><?php echo htmlspecialchars($_adjustmentitem->invoice()->getPersonName(15)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('gros', 2)) ?></td>
