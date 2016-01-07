@@ -68,7 +68,7 @@
         </caption>
         <thead>
             <tr>
-                <th width="10%"><?php echo I18n::__(analysis_label_quality) ?></th>
+                <th width="10%"><?php echo I18n::__('analysis_label_quality') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
@@ -136,7 +136,7 @@
         </caption>
         <thead>
             <tr>
-                <th width="10%"><?php echo I18n::__(analysis_label_quality) ?></th>
+                <th width="10%"><?php echo I18n::__('analysis_label_quality') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
