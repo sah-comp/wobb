@@ -544,7 +544,8 @@ a.logo-old-style-but-nicer {
 a.logo {
     display: block;
     width: auto;
-    height: 2em;
+    height: 1.5em;
+    padding-top: 0.5em;
     padding-left: 1em;
     background-image: none;
     background-repeat: no-repeat;
