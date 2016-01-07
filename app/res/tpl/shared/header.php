@@ -11,7 +11,7 @@
 <header id="header-top" class="fixable">
 	<h1>
 		<a
-		    class="ir logo"
+		    class="logo"
 			href="<?php echo Url::build('/') ?>"
 			title="<?php echo I18n::__('app_name') ?> <?php echo I18n::__('app_claim') ?>">
 			<?php echo I18n::__('app_name') ?>

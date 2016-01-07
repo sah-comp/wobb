@@ -41,7 +41,8 @@ $vats = R::findAll('vat');
         'tabs' => array(
             'setting-vat' => I18n::__('setting_vat_tab'),
             'setting-folder' => I18n::__('setting_folder_tab'),
-            'setting-currency' => I18n::__('setting_currency_tab')
+            'setting-currency' => I18n::__('setting_currency_tab'),
+            'setting-logo' => I18n::__('setting_logo_tab')
         ),
         'default_tab' => 'setting-vat'
     )) ?>
@@ -177,6 +178,48 @@ $vats = R::findAll('vat');
                 <option value="0"><?php echo I18n::__('setting_loadexchangerates_no', null, array($record->exchangeratelastupd)) ?></value>
                 <option value="1"><?php echo I18n::__('setting_loadexchangerates_yes') ?></value>
             </select>
+        </div>
+    </fieldset>
+    <fieldset
+        id="setting-logo"
+        class="tab">
+        <legend class="verbose"><?php echo I18n::__('setting_legend_logo') ?></legend>
+        <div class="row">
+            <label
+                for="setting-logo"
+                class="<?php echo ($record->hasError('logo')) ? 'error' : ''; ?>">
+                <?php echo I18n::__('setting_label_logo') ?>
+            </label>
+            <input
+                id="setting-logo"
+                type="text"
+                name="dialog[logo]"
+                value="<?php echo htmlspecialchars($record->logo) ?>"
+                required="required" />
+        </div>
+        <div class="row <?php echo ($record->hasError('logowidth')) ? 'error' : ''; ?>">
+            <label
+                for="setting-logowidth">
+                <?php echo I18n::__('setting_label_logowidth') ?>
+            </label>
+            <input
+                id="setting-logowidth"
+                type="text"
+                name="dialog[logowidth]"
+                value="<?php echo htmlspecialchars($record->logowidth) ?>"
+                required="required" />
+        </div>
+        <div class="row <?php echo ($record->hasError('logoheight')) ? 'error' : ''; ?>">
+            <label
+                for="setting-logoheight">
+                <?php echo I18n::__('setting_label_logoheight') ?>
+            </label>
+            <input
+                id="setting-logoheight"
+                type="text"
+                name="dialog[logoheight]"
+                value="<?php echo htmlspecialchars($record->logoheight) ?>"
+                required="required" />
         </div>
     </fieldset>
 </div>

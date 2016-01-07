@@ -95,7 +95,7 @@ textarea[disabled=disabled] {
     color: gray;
 }
 
-a.logo {
+a.logo-old-style-but-nicer {
     display: block;
     width: 98px;
     height: 2em;
@@ -103,6 +103,18 @@ a.logo {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 48px 18px;
+}
+
+a.logo {
+    display: block;
+    width: auto;
+    line-height: 2em;
+    padding-left: 1em;
+    background-image: none;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 48px 18px;
+    text-decoration: none;
 }
 
 input[type=submit][disabled=disabled].processing {
