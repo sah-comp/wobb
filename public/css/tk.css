@@ -37,6 +37,10 @@ a.toggle.open {
     padding-left: 1.2em;
 }
 
+.invoice-kind-1 {
+    color: #666;
+}
+
 .subdeliverer-container .subdeliverer-earmark {
 }
 

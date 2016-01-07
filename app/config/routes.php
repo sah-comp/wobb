@@ -245,6 +245,16 @@ Flight::route('(/[a-z]{2})/purchase(/@method:[a-z]+(/@id:[0-9]+))', function($me
 });
 
 /**
+ * Route to the adjustment controller.
+ */
+Flight::route('(/[a-z]{2})/adjustment(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
+    if ( $method === null) $method = 'index';
+    if ( $id === null) $id = 0;
+	$controller = new Controller_Adjustment($id);
+	$controller->$method();
+});
+
+/**
  * Route to the invoice controller.
  */
 Flight::route('(/[a-z]{2})/invoice(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
