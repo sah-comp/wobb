@@ -65,7 +65,7 @@
             </label>
         </div>
         <div class="span2">
-            <label>
+            <label class="number">
                 <?php echo I18n::__('adjustmentitem_label_gros') ?>
             </label>
         </div>

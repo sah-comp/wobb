@@ -79,7 +79,7 @@
                 <td><?php echo htmlspecialchars($_adjustmentitem->person->name) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('gros', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_adjustmentitem->decimal('gros', 2)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>

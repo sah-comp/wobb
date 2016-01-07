@@ -139,7 +139,7 @@ class Controller_Adjustment extends Controller
      */
     public function pdf()
     {
-        $pubdate = $this->record->localizedDate('startdate');
+        $pubdate = $this->record->localizedDate('pubdate');
         $filename = I18n::__('adjustment_filename', null, array($pubdate));
         $title = I18n::__('adjustment_docname', null, array($pubdate));
         $mpdf = new mPDF('c', 'A4');
