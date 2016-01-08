@@ -323,6 +323,8 @@ class Model_Deliverer extends Model
                 $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
             ));
         }
+        $this->bean->invoice->paid = false;//not yet paid
+        $this->bean->invoice->instructed = false;//instructed to pay
         $this->bean->invoice->company = $csb->company;
         $this->bean->invoice->person = $this->bean->person;
         $this->bean->invoice->vat = $this->bean->person->vat;
