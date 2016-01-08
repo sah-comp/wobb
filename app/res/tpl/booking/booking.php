@@ -96,7 +96,7 @@
         </tbody>
     </table>
 <?php
-        if ( $_item == 2 ):
+        if ( $_item == 3 ):
             $_item = 0;
             ?>
             <!--mpdf
@@ -105,9 +105,9 @@
             <?php
         else:
             ?>
-            <div style="height: 30mm;"></div>
+            <div style="height: 15mm;"></div>
             <div style="border-top: 0.1mm dashed #000000;"></div>
-            <div style="height: 30mm;"></div>
+            <div style="height: 15mm;"></div>
             <?php
         endif;
     endforeach;
