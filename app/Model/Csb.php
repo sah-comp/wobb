@@ -401,6 +401,10 @@ SQL;
             $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
             
+            if ( $stock->pubdate != $this->bean->pubdate ) {
+                throw new Exception_Csbfiledatemismatch('Date in CSB file does not match your csb date');
+            }
+            
             $stock->lanuvreported = 0;
             $stock->billnumber = 0;
             $stock->person = $stock->getPersonBySupplier();

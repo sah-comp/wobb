@@ -114,6 +114,10 @@ class Controller_Purchase extends Controller
         $this->layout = 'add';
         if (Flight::request()->method == 'POST') {
             $this->record = R::graph(Flight::request()->data->dialog, true);
+            if ( $twin = R::findOne('csb', " pubdate = ? LIMIT 1 ", array($this->record->pubdate)) ) {
+                Flight::get('user')->notify(I18n::__('purchase_day_already_stored'), 'warning');
+                $this->redirect(sprintf('/purchase/calculation/%d', $twin->getId()));                
+            }
             R::begin();
             try {
                 R::store($this->record);
@@ -125,6 +129,12 @@ class Controller_Purchase extends Controller
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_day_add_success'));
                 $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
+            }
+            catch (Exception_Csbfiledatemismatch $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_day_csbdate_mismatch'), 'error');
+                $this->redirect('/purchase/add');
             }
             catch (Exception $e) {
                 error_log($e);
