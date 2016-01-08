@@ -41,6 +41,14 @@ a.toggle.open {
     color: #666;
 }
 
+a.delete {
+    width: 26px;
+    height: 26px;/*1em font-size + 2 x 0.222em padding in input fields*/
+    padding: 0;
+    margin: 0;
+    background-image: url(/img/glyphicons/glyphicons_191_circle_minus.png);
+}
+
 .subdeliverer-container .subdeliverer-earmark {
 }
 

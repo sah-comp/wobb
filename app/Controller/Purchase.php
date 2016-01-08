@@ -81,6 +81,31 @@ class Controller_Purchase extends Controller
     }
     
     /**
+     * Deletes the csb bean and all related data like deliverer beans, stock beans and so on
+     * if the csb is not yet calculated. Otherwise it will show an error.
+     */
+    public function drop()
+    {
+        Permission::check(Flight::get('user'), 'purchase', 'expunge');
+        if ( $this->record->wasCalculated()) {
+            Flight::get('user')->notify(I18n::__('purchase_day_drop_denied_already_billed'), 'error');
+            $this->redirect('/purchase/index');
+        }
+        R::begin();
+        try {
+            R::trash($this->record);
+            R::commit();
+            Flight::get('user')->notify(I18n::__('purchase_day_drop_success'));
+            $this->redirect('/purchase/index');
+        } catch (Exception $e) {    
+            error_log($e);
+            //R::rollback();
+            Flight::get('user')->notify(I18n::__('purchase_day_drop_error'), 'error');
+            $this->redirect('/purchase/index');
+        }
+    }
+    
+    /**
      * A new slaughter charge.
      */
     public function add()
