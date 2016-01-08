@@ -85,8 +85,10 @@ class Model_Adjustmentitem extends Model
         // set special net value attributes according to vat setting
         if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetnormal = 0;
         } else {
             $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetfarmer = 0;
         }
         $this->bean->invoice->vatvalue = $this->bean->vatvalue;
         $this->bean->invoice->totalgros = $this->bean->gros;
