@@ -13,7 +13,7 @@
     id="person-<?php echo $record->getId() ?>-owncondition-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('person_legend_condition') ?></legend>
     <a
-    	href="<?php echo Url::build(sprintf('/admin/person/detach/condition/%d', $index)) ?>"
+    	href="<?php echo Url::build(sprintf('/admin/person/detach/condition/%d', $_condition->getId())) ?>"
     	class="ir detach"
     	title="<?php echo I18n::__('scaffold_detach') ?>"
     	data-target="person-<?php echo $record->getId() ?>-owncondition-<?php echo $index ?>">

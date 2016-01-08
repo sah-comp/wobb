@@ -13,7 +13,7 @@
     id="var-<?php echo $record->getId() ?>-owncost-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('var_legend_cost') ?></legend>
     <a
-    	href="<?php echo Url::build(sprintf('/admin/var/detach/cost/%d', $index)) ?>"
+    	href="<?php echo Url::build(sprintf('/admin/var/detach/cost/%d', $_cost->getId())) ?>"
     	class="ir detach"
     	title="<?php echo I18n::__('scaffold_detach') ?>"
     	data-target="var-<?php echo $record->getId() ?>-owncost-<?php echo $index ?>">
