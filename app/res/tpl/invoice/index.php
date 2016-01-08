@@ -79,7 +79,7 @@
                     <label><?php echo I18n::__('invoice_label_name') ?></label>
                 </div>
                 <div class="span2">
-                    <label><?php echo I18n::__('invoice_label_bookingdate') ?></label>
+                    <label><?php echo I18n::__('invoice_label_dateofslaughter') ?></label>
                 </div>
                 <div class="span1">
                     <label><?php echo I18n::__('invoice_label_person_account') ?></label>
@@ -107,7 +107,7 @@
                             <?php echo htmlspecialchars($_record->name) ?>
                         </div>
                         <div class="span2">
-                            <?php echo htmlspecialchars($_record->localizedDate('bookingdate')) ?>
+                            <?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?>
                         </div>
                         <div class="span1">
                             <?php echo htmlspecialchars($_record->person->account) ?>

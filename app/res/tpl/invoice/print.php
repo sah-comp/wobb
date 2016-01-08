@@ -87,7 +87,7 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
         <thead>
             <tr>
                 <th width="5%"><?php echo I18n::__('invoice_label_name') ?></th>
-                <th width="5%"><?php echo I18n::__('invoice_label_bookingdate_list') ?></th>
+                <th width="5%"><?php echo I18n::__('invoice_label_dateofslaughter_list') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_person_account') ?></th>
                 <th width="15%"><?php echo I18n::__('invoice_label_person_name') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
@@ -103,7 +103,7 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
         <?php foreach ($records as $_id => $_record): ?>
             <tr class="invoice-kind-<?php echo $_record->kind ?>">
                 <td><?php echo htmlspecialchars($_record->name) ?></td>
-                <td><?php echo htmlspecialchars($_record->localizedDate('bookingdate')) ?></td>
+                <td><?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?></td>
                 <td><?php echo htmlspecialchars($_record->getPersonAccount()) ?></td>
                 <td><?php echo htmlspecialchars($_record->getPersonName(15)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnet', 2)) ?></td>
