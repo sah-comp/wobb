@@ -35,20 +35,23 @@
                 <div class="span1">
                     <label><?php echo I18n::__('purchase_label_week') ?></label>
                 </div>
-                <div class="span3">
+                <div class="span2">
                     <label><?php echo I18n::__('purchase_label_date') ?></label>
                 </div>
-                <div class="span1 number">
-                    <label><?php echo I18n::__('purchase_label_piggery') ?></label>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('purchase_label_piggery') ?></label>
                 </div>
-                <div class="span2 number">
-                    <label><?php echo I18n::__('purchase_label_baseprice') ?></label>
+                <div class="span2">
+                    <label class="number"><?php echo I18n::__('purchase_label_baseprice') ?></label>
                 </div>
                 <div class="span3">
                     <label><?php echo I18n::__('purchase_label_calcdate') ?></label>
                 </div>
                 <div class="span2">
                     <label><?php echo I18n::__('purchase_label_attention') ?></label>
+                </div>
+                <div class="span1">
+                    &nbsp;
                 </div>
             </div>
                 <?php endif ?>
@@ -60,20 +63,30 @@
                         <div class="span1">
                             <?php echo strftime( "%V", $ts) ?>
                         </div>
-                        <div class="span3">
+                        <div class="span2">
                             <?php echo strftime( "%a, %e. %b", $ts) ?>
                         </div>
-                        <div class="span1">
-                            <span class="number"><?php echo $_record->piggery ?></span>
+                        <div class="span1 number">
+                            <?php echo $_record->piggery ?>
                         </div>
-                        <div class="span2">
-                            <span class="number"><?php echo $_record->decimal('baseprice', 3) ?></span>
+                        <div class="span2 number">
+                            <?php echo $_record->decimal('baseprice', 3) ?>
                         </div>
                         <div class="span3">
                             <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
                         </div>
                         <div class="span2">
-                            <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, array(htmlspecialchars($_record->hasStockThatNeedsAttention()))) : I18n::__('purchase_needs_no_attention') ?>
+                            <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, array(htmlspecialchars($_record->hasStockThatNeedsAttention()))) : "&nbsp;" ?>
+                        </div>
+                        <div class="span1 number">
+                            <?php if ( $_record->wasCalculated() ): ?>
+                                &nbsp;
+                            <?php else: ?>
+                                <a
+                                    href="<?php echo Url::build(sprintf('/purchase/drop/%d', $_record->getId())) ?>"
+                                    class="ir delete"
+                                    title="<?php echo I18n::__('purchase_title_delete_csb') ?>"><?php echo I18n::__('purchase_link_delete_csb') ?></a>
+                            <?php endif ?>
                         </div>
                     </div>
                 </a>

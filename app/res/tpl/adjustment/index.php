@@ -35,16 +35,16 @@
                 <div class="span1">
                     <label><?php echo I18n::__('adjustment_label_week') ?></label>
                 </div>
-                <div class="span3">
+                <div class="span2">
                     <label><?php echo I18n::__('adjustment_label_date') ?></label>
                 </div>
-                <div class="span1 number">
-                    <label><?php echo I18n::__('adjustment_label_count') ?></label>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('adjustment_label_count') ?></label>
                 </div>
-                <div class="span2 number">
-                    <label><?php echo I18n::__('adjustment_label_net') ?></label>
+                <div class="span2">
+                    <label class="number"><?php echo I18n::__('adjustment_label_net') ?></label>
                 </div>
-                <div class="span4">
+                <div class="span5">
                     <label><?php echo I18n::__('adjustment_label_calcdate') ?></label>
                 </div>
                 <div class="span1">
@@ -60,16 +60,16 @@
                         <div class="span1">
                             <?php echo strftime( "%V", $ts) ?>
                         </div>
-                        <div class="span3">
+                        <div class="span2">
                             <?php echo strftime( "%a, %e. %b", $ts) ?>
                         </div>
-                        <div class="span1">
-                            <span class="number"><?php echo count($_record->ownAdjustmentitem) ?></span>
+                        <div class="span1 number">
+                            <?php echo count($_record->ownAdjustmentitem) ?>
                         </div>
-                        <div class="span2">
-                            <span class="number"><?php echo ( $_record->net ) ? $_record->decimal('net', 2) : I18n::__('adjustment_not_yet_calculated') ?></span>
+                        <div class="span2 number">
+                            <?php echo ( $_record->net ) ? $_record->decimal('net', 2) : I18n::__('adjustment_not_yet_calculated') ?>
                         </div>
-                        <div class="span4">
+                        <div class="span5">
                             <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('adjustment_not_yet_calculated') ?>
                         </div>
                         <div class="span1">
