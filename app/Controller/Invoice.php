@@ -81,6 +81,16 @@ class Controller_Invoice extends Controller
     }
     
     /**
+     * Clear the filter and start over.
+     */
+    public function clearfilter()
+    {
+        Permission::check(Flight::get('user'), 'invoice', 'index');
+        unset($_SESSION['invoice']);
+        $this->redirect('/invoice/index');
+    }
+    
+    /**
      * Returns the lowest invoice number of the current fiscal year.
      *
      * @return int
@@ -103,32 +113,31 @@ class Controller_Invoice extends Controller
             Flight::setting()->fiscalyear
         ));
     }
-
+    
     /**
-     * A new lanuv statistic.
+     * Cancel of this invoice.
+     *
+     * A new invoice will be created, identically to this invoice only all monetrary
+     * values will be negated. Also the current filter will reset so that the new cancelation
+     * invoice will appear in the users list view.
+     *
      */
-    public function add()
+    public function cancel()
     {
-        Permission::check(Flight::get('user'), 'invoice', 'add');
-        $this->layout = 'add';
-        if (Flight::request()->method == 'POST') {
-            $this->record = R::graph(Flight::request()->data->dialog, true);
-            R::begin();
-            try {
-                R::store($this->record);
-                $this->record->generateReport();
-                R::store($this->record);
-                R::commit();
-                Flight::get('user')->notify(I18n::__('statistic_lanuv_add_success'));
-                $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
-                error_log($e);
-                R::rollback();
-                Flight::get('user')->notify(I18n::__('statistic_lanuv_add_error'), 'error');
-            }
+        Permission::check(Flight::get('user'), 'invoice', 'expunge');
+        R::begin();
+        try {
+            $this->record->cancelation();
+            R::commit();
+            Flight::get('user')->notify(I18n::__('invoice_cancel_success'));
+            unset($_SESSION['invoice']);
+            $this->redirect('/invoice/index');
+        } catch (Exception $e) {
+            error_log($e);
+            R::rollback();
+            Flight::get('user')->notify(I18n::__('invoice_cancel_failure'), 'error');
+            $this->redirect('/invoice/index');
         }
-        $this->render();
     }
 
     /**

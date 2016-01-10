@@ -81,6 +81,16 @@ class Controller_Booking extends Controller
     }
     
     /**
+     * Clear the filter and start over.
+     */
+    public function clearfilter()
+    {
+        Permission::check(Flight::get('user'), 'invoice', 'index');
+        unset($_SESSION['booking']);
+        $this->redirect('/booking/index');
+    }
+    
+    /**
      * Returns the lowest invoice number of the current fiscal year.
      *
      * @return int
