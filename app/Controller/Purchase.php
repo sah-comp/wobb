@@ -234,6 +234,9 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 $this->record->billing();
                 R::store($this->record);
+                // check for lanuv and analysis bean which now have to be considered dirty
+                $this->record->markInvolvedLanuvAsDirty()
+                             ->markInvolvedAnalysisAsDirty();
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_calculation_edit_success'));
                 $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));

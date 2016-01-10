@@ -432,6 +432,7 @@ SQL;
      */
     public function dispense()
     {
+        $this->bean->dirty = false;
         $this->addConverter('startdate', array(
             new Converter_MysqlDate()
         ));

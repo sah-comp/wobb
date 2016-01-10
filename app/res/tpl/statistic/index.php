@@ -30,6 +30,9 @@
                 <div class="span2">
                     <label><?php echo I18n::__('lanuv_label_weekofyear') ?></label>
                 </div>
+                <div class="span3">
+                    &nbsp;
+                </div>
             </div>
             
             <?php foreach ($records as $_id => $_record): ?>
@@ -49,6 +52,9 @@
                         </div>
                         <div class="span2">
                             <?php echo htmlspecialchars($_record->weekOfYear()) ?>
+                        </div>
+                        <div class="span3">
+                            <?php echo ( $_record->dirty ) ? I18n::__('lanuv_isdirty') : "&nbsp;"  ?>
                         </div>
                     </div>
                 </a>

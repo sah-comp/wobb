@@ -58,6 +58,28 @@ class Model_Csb extends Model
     }
     
     /**
+     * Mark all lanuv beans as dirty which are effected by this csb bean.
+     *
+     * @return RedBean_OODBBean for chaining
+     */
+    public function markInvolvedLanuvAsDirty()
+    {
+        R::exec(" UPDATE analysis SET dirty = 1 WHERE (startdate <= :pubdate AND enddate >= :pubdate ) AND analysis_id IS NULL and person_id IS NULL ", array(':pubdate' => $this->bean->pubdate));
+        return $this->bean;
+    }
+    
+    /**
+     * Mark all analysis beans as dirty which are effected by this csb bean.
+     *
+     * @return RedBean_OODBBean for chaining
+     */
+    public function markInvolvedAnalysisAsDirty()
+    {
+        R::exec(" UPDATE lanuv SET dirty = 1 WHERE (startdate <= :pubdate AND enddate >= :pubdate ) ", array(':pubdate' => $this->bean->pubdate));
+        return $this->bean;
+    }
+    
+    /**
      * Returns a string with nicely formatted date of slaughter.
      *
      * It's a happy date, isn't it? Not for the poor piggy, my dear.
