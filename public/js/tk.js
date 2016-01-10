@@ -24,9 +24,20 @@ $(document).ready(function() {
         var btn = $('input[type=submit][clicked=true]');
         btn.addClass('processing');
         btn.attr('disabled', 'disabled');
+        $('.notification').hide();
         //alert( 'Val ' + btn.val() );
         return true;
 	});
+	
+	/**
+     * Anchors with .ask class will call their URL only if confirmation is given.
+     */
+    $(document).on("click", 'a.ask', function(event) {
+        if ( ! confirm($(this).attr('data-question'))) {
+            return false;
+        }
+        return true;
+    });
 
     /**
      * Elements with .silent class will call an URL and load the content

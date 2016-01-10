@@ -84,7 +84,8 @@
                             <?php else: ?>
                                 <a
                                     href="<?php echo Url::build(sprintf('/purchase/drop/%d', $_record->getId())) ?>"
-                                    class="ir delete"
+                                    class="ir delete ask"
+                                    data-question="<?php echo I18n::__('purchase_confirm_delete') ?>"
                                     title="<?php echo I18n::__('purchase_title_delete_csb') ?>"><?php echo I18n::__('purchase_link_delete_csb') ?></a>
                             <?php endif ?>
                         </div>

@@ -51,6 +51,11 @@
                     required="required" />
             </div>
             <div class="buttons">
+                <a
+                    href="<?php echo Url::build("/booking/clearfilter") ?>"
+                    class="btn">
+                    <?php echo I18n::__('booking_clearfilter') ?>
+                </a>
                 <input
                     type="submit"
                     name="submit"
