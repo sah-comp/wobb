@@ -187,6 +187,32 @@ class Model_Invoice extends Model
             )
         );
     }
+    
+    /**
+     * Cancel the invoice.
+     *
+     * @throws Exception if no billing number can be generated
+     * @return void
+     */
+    public function cancelation()
+    {
+        $canceled = R::dup($this->bean);
+        $canceled->totalnet = $canceled->totalnet * -1;
+        $canceled->subtotalnet = $canceled->subtotalnet * -1;
+        $canceled->vatvalue = $canceled->vatvalue * -1;
+        $canceled->totalgros = $canceled->totalgros * -1;
+        $canceled->bonusnet = $canceled->bonusnet * -1;
+        $canceled->costnet = $canceled->costnet * -1;
+        $canceled->totalnetnormal = $canceled->totalnetnormal * -1;
+        $canceled->totalnetfarmer = $canceled->totalnetfarmer * -1;
+        $canceled->canceled = true;
+        if ( ! $nextbillingnumber = $canceled->company->nextBillingnumber() ) {
+            throw new Exception();
+        }
+        $canceled->name = $nextbillingnumber;
+        R::store($canceled);
+        return true;
+    }
 
     /**
      * Returns the totalgros of this bean nicely formatted.

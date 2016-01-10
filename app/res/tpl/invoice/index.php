@@ -51,6 +51,11 @@
                     required="required" />
             </div>
             <div class="buttons">
+                <a
+                    href="<?php echo Url::build("/invoice/clearfilter") ?>"
+                    class="btn">
+                    <?php echo I18n::__('invoice_clearfilter') ?>
+                </a>
                 <input
                     type="submit"
                     name="submit"
@@ -93,7 +98,10 @@
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('invoice_label_totalgros') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
+                    &nbsp;
+                </div>
+                <div class="span1">
                     &nbsp;
                 </div>
             </div>
@@ -102,7 +110,7 @@
                 <legend class="verbose"><?php echo I18n::__('invoice_history_item_legend') ?></legend>
                     <div
                         id="invoice-<?php echo $_record->getId() ?>"
-                        class="row invoice-kind-<?php echo $_record->kind ?>">
+                        class="row invoice-kind-<?php echo $_record->kind ?> invoice-cancel-<?php echo $_record->canceled ?>">
                         <div class="span1">
                             <?php echo htmlspecialchars($_record->name) ?>
                         </div>
@@ -127,6 +135,14 @@
                                 type="button"
                                 data-container="invoice-<?php echo $_record->getId() ?>"
                                 data-href="<?php echo Url::build(sprintf('/invoice/payment/%d', $_record->getId())) ?>"><?php echo I18n::__('invoice_label_paid_' . $_record->paid) ?></button>
+                        </div>
+                        <div class="span1 number">
+                            <a
+                                href="<?php echo Url::build(sprintf('/invoice/cancel/%d', $_record->getId())) ?>"
+                                class="ir delete ask"
+                                data-question="<?php echo I18n::__('invoice_confirm_cancel', null, array($_record->name)) ?>"
+                                title="<?php echo I18n::__('invoice_title_cancel') ?>"><?php echo I18n::__('invoice_link_cancel') ?></a>
+                        
                         </div>
                     </div>
             </fieldset>
