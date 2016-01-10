@@ -41,6 +41,10 @@ a.toggle.open {
     color: #666;
 }
 
+.invoice-cancel-1 {
+    color: red;
+}
+
 a.delete {
     width: 26px;
     height: 26px;/*1em font-size + 2 x 0.222em padding in input fields*/
