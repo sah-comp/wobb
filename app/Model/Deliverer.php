@@ -60,7 +60,8 @@ class Model_Deliverer extends Model
     {
         if ( ! $this->bean->person->pricing ) return I18n::__('deliverer_person_pricemask_not_set');
         return I18n::__('deliverer_information_mask', null, array(
-            '',
+            $this->bean->person->account,
+            $this->bean->person->nickname,
             $this->bean->person->pricing->name
         ));
     }
