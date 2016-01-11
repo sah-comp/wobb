@@ -127,9 +127,9 @@ class Controller_Invoice extends Controller
         Permission::check(Flight::get('user'), 'invoice', 'expunge');
         R::begin();
         try {
-            $this->record->cancelation();
+            $canceled = $this->record->cancelation();
             R::commit();
-            Flight::get('user')->notify(I18n::__('invoice_cancel_success'));
+            Flight::get('user')->notify(I18n::__('invoice_cancel_success', null, array($this->record->name, $canceled->name)));
             unset($_SESSION['invoice']);
             $this->redirect('/invoice/index');
         } catch (Exception $e) {

@@ -192,7 +192,7 @@ class Model_Invoice extends Model
      * Cancel the invoice.
      *
      * @throws Exception if no billing number can be generated
-     * @return void
+     * @return RedBean_OODBean the new bean that now holds the canceled one
      */
     public function cancelation()
     {
@@ -211,7 +211,7 @@ class Model_Invoice extends Model
         }
         $canceled->name = $nextbillingnumber;
         R::store($canceled);
-        return true;
+        return $canceled;
     }
 
     /**
