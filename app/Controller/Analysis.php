@@ -97,6 +97,7 @@ class Controller_Analysis extends Controller
             $this->record = R::graph(Flight::request()->data->dialog, true);
             R::begin();
             try {
+                $this->record->dirty = false;
                 R::store($this->record);
                 $this->record->generateReport();
                 R::store($this->record);
