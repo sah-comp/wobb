@@ -38,7 +38,7 @@
                 <?php foreach (R::find('person', " enabled = 1 ORDER BY name") as $_person_id => $_person): ?>
                 <option
                     value="<?php echo $_person->getId() ?>"
-                    <?php echo ($_adjustmentitem->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->name) ?></option>   
+                    <?php echo ($_adjustmentitem->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' – ' . $_person->name) ?></option>   
                 <?php endforeach ?>
             </select>
         </div>
