@@ -38,6 +38,14 @@ $(document).ready(function() {
         }
         return true;
     });
+    
+	/**
+     * Elements with class .anchor-substitue will act as normal a anchor elements.
+     */
+    $(document).on("click", '.anchor-substitute', function(event) {
+        window.location.href = $(this).attr('data-href');
+        return false;
+    });
 
     /**
      * Elements with .silent class will call an URL and load the content

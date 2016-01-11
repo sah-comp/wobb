@@ -45,6 +45,10 @@ a.toggle.open {
     color: red;
 }
 
+.anchor-substitute {
+    cursor: pointer;
+}
+
 a.delete {
     width: 26px;
     height: 26px;/*1em font-size + 2 x 0.222em padding in input fields*/
@@ -186,15 +190,15 @@ ul.action li:last-child a {
     padding-right: 0;
 }
 
-a.voucher-dealer,
-a.voucher-internal {
+.voucher-dealer,
+.voucher-internal {
     width: 24px;
     height: 26px;
 }
-a.voucher-dealer {
+.voucher-dealer {
     background-image: url(/img/glyphicons/glyphicons_135_inbox_out.png);
 }
-a.voucher-internal {
+.voucher-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
 }
 

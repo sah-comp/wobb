@@ -76,10 +76,10 @@
                             <?php if ( $_record->wasBilled() ): ?>
                             <ul class="action">
                                 <li>
-                                    <a
-                                        class="ir voucher-internal"
+                                    <sapn
+                                        class="ir voucher-internal anchor-substitute"
                                         title="<?php echo I18n::__('adjustment_link_internal_title') ?>"
-                                        href="<?php echo Url::build('/adjustment/pdf/' . $_record->getId()) ?>"><?php echo I18n::__('adjustment_link_internal') ?></a>
+                                        data-href="<?php echo Url::build('/adjustment/pdf/' . $_record->getId()) ?>"><?php echo I18n::__('adjustment_link_internal') ?></span>
                                 </li>
                             </ul>
                             <?php else: ?>
