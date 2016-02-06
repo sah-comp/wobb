@@ -157,6 +157,76 @@
                 name="dialog[website]"
                 value="<?php echo htmlspecialchars($record->website) ?>" />
         </div>
+        <!-- Noreply email address and its smtp Server -->
+        <hr />
+        <div class="row <?php echo ($record->hasError('emailnoreply')) ? 'error' : ''; ?>">
+            <label
+                for="company-emailnoreply">
+                <?php echo I18n::__('company_label_emailnoreply') ?>
+            </label>
+            <input
+                id="company-emailnoreply"
+                type="email"
+                name="dialog[emailnoreply]"
+                value="<?php echo htmlspecialchars($record->emailnoreply) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_emailnoreply') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('smtphost')) ? 'error' : ''; ?>">
+            <label
+                for="company-smtphost">
+                <?php echo I18n::__('company_label_smtphost') ?>
+            </label>
+            <input
+                id="company-smtphost"
+                type="text"
+                name="dialog[smtphost]"
+                value="<?php echo htmlspecialchars($record->smtphost) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('smtpport')) ? 'error' : ''; ?>">
+            <label
+                for="company-smtpport">
+                <?php echo I18n::__('company_label_smtpport') ?>
+            </label>
+            <input
+                id="company-smtpport"
+                type="text"
+                name="dialog[smtpport]"
+                value="<?php echo htmlspecialchars($record->smtpport) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('smtpauth')) ? 'error' : ''; ?>">
+            <label
+                for="company-smtpauth">
+                <?php echo I18n::__('company_label_smtpauth') ?>
+            </label>
+            <input
+                id="company-smtpauth"
+                type="text"
+                name="dialog[smtpauth]"
+                value="<?php echo htmlspecialchars($record->smtpauth) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('smtpuser')) ? 'error' : ''; ?>">
+            <label
+                for="company-smtpuser">
+                <?php echo I18n::__('company_label_smtpuser') ?>
+            </label>
+            <input
+                id="company-smtpuser"
+                type="text"
+                name="dialog[smtpuser]"
+                value="<?php echo htmlspecialchars($record->smtpuser) ?>" />
+        </div>
+        <div class="row <?php echo ($record->hasError('smtppwd')) ? 'error' : ''; ?>">
+            <label
+                for="company-smtppwd">
+                <?php echo I18n::__('company_label_smtppwd') ?>
+            </label>
+            <input
+                id="company-smtppwd"
+                type="password"
+                name="dialog[smtppwd]"
+                value="<?php echo htmlspecialchars($record->smtppwd) ?>" />
+        </div>
+        <!-- /Noreply email address and its smtp Server -->
     </fieldset>
     <fieldset
         id="company-id"

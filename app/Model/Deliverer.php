@@ -40,6 +40,17 @@ class Model_Deliverer extends Model
             new Converter_MysqlDatetime()
         ));
     }
+    
+    /**
+     * Returns true when this beans person has either billingtransport set to email or both.
+     *
+     * @return bool
+     */
+    public function wantsInvoiceAsEmail()
+    {
+        if ( $this->bean->person->billingtransport == 'mail' || $this->bean->person->billingtransport == 'both' ) return true;
+        return false;
+    }
 
     /**
      * Returns wether the deliverer needs a service calculation or billing.

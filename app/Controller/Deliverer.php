@@ -136,6 +136,58 @@ class Controller_Deliverer extends Controller
     }
     
     /**
+     * Sends an email to this beans person email address with the dealer invoice pdf attached.
+     *
+     * @param string $filename
+     * @param string $docname
+     * @param mPDF $mpdf
+     */
+    public function sendMail( $filename, $docname, $mpdf )
+    {
+        $mail = new PHPMailer();
+        
+        if ( $smtp = $this->record->invoice->company->smtp() ) {
+            $mail->SMTPDebug = 1;                                 // Set debug mode, 1 = err/msg, 2 = msg
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = $smtp['host'];                          // Specify main and backup server
+            if ( $smtp['auth'] ) {
+                $mail->SMTPAuth = true;                           // Enable SMTP authentication
+            } else {
+                $mail->SMTPAuth = false;                          // Disable SMTP authentication
+            }
+            $mail->Username = $smtp['user'];                      // SMTP username
+            $mail->Password = $smtp['password'];                  // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+        }
+        
+        $mail->CharSet = 'UTF-8';
+        $mail->From = $this->record->invoice->company->emailnoreply;
+        $mail->FromName = $this->record->invoice->company->legalname;
+        $mail->addAddress( $this->record->person->email, $this->record->person->name );
+        $mail->WordWarp = 50;
+        $mail->isHTML( true );
+        $mail->Subject = $docname;
+        
+        ob_start();
+        Flight::render('deliverer/mail/html', array(
+            'record' => $this->record
+        ));
+        $html = ob_get_clean();
+        ob_start();
+        Flight::render('deliverer/mail/text', array(
+            'record' => $this->record
+        ));
+        $text = ob_get_clean();
+        $mail->Body = $html;
+        $mail->AltBody = $text;
+        $attachment = $mpdf->Output('', 'S');
+        
+        $mail->addStringAttachment( $attachment, $filename );
+        
+        return $mail->send();
+    }
+    
+    /**
      * Generates an PDF using mPDF library and downloads it to the client.
      *
      * @param string $filename defaults to 'invoice'
@@ -166,6 +218,11 @@ class Controller_Deliverer extends Controller
         $html = ob_get_contents();
         ob_end_clean();
         $mpdf->WriteHTML( $html );
+        // do we need to send this invoice as email as well?
+        if ( $this->record->wantsInvoiceAsEmail() ) {
+            // yes, do it
+            $this->sendMail( $filename, $docname, $mpdf );
+        }
         $mpdf->Output($filename, 'D');
         exit;
     }

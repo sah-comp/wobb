@@ -39,6 +39,24 @@ class Model_Company extends Model
     }
     
     /**
+     * Checks if this company is capeable of using an smtp server and returns
+     * false if not or an array with the smtp data for further usage.
+     *
+     * @return mixed bool or array
+     */
+    public function smtp($value='')
+    {
+        if ( $this->bean->smtphost ) return array(
+            'host' => $this->bean->smtphost,
+            'port' => $this->bean->smtpport,
+            'auth' => $this->bean->smtpauth,
+            'user' => $this->bean->smtpuser,
+            'password' => $this->bean->smtppwd
+        );
+        return false;
+    }
+    
+    /**
      * Returns a string that works as a postal senderline.
      *
      * The returned string is a combination of the company legalname and address attributes.
