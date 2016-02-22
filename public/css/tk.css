@@ -191,12 +191,16 @@ ul.action li:last-child a {
 }
 
 .voucher-dealer,
+.voucher-dealer-mail,
 .voucher-internal {
     width: 24px;
     height: 26px;
 }
 .voucher-dealer {
     background-image: url(/img/glyphicons/glyphicons_135_inbox_out.png);
+}
+.voucher-dealer-mail {
+    background-image: url(/img/glyphicons/glyphicons_062_paperclip.png);
 }
 .voucher-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);

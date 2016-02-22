@@ -48,7 +48,18 @@ class Model_Deliverer extends Model
      */
     public function wantsInvoiceAsEmail()
     {
-        if ( $this->bean->person->billingtransport == 'mail' || $this->bean->person->billingtransport == 'both' ) return true;
+        if ( $this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both' ) return true;
+        return false;
+    }
+    
+    /**
+     * Returns true when this beans person billingtransport is mail only.
+     *
+     * @return bool
+     */
+    public function wantsEmail()
+    {
+        if ( $this->bean->person->billingtransport == 'email' ) return true;
         return false;
     }
 

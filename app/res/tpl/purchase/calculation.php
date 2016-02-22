@@ -153,10 +153,17 @@
                                     href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_internal') ?></a>
                             </li>
                             <li>
-                                <a
-                                    class="ir voucher-dealer"
-                                    title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
-                                    href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
+                                <?php if ( $_deliverer->wantsEmail() ): ?>
+                                    <a
+                                        class="ir voucher-dealer-mail"
+                                        title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
+                                        href="<?php echo Url::build('/deliverer/mail/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
+                                <?php else: ?>
+                                    <a
+                                        class="ir voucher-dealer"
+                                        title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
+                                        href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
+                                <?php endif ?>
                             </li>
                         </ul>
                         <?php else: ?>

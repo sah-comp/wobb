@@ -88,7 +88,42 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $this->generatePDF($filename, $docname);
+        $mpdf = $this->generatePDF($filename, $docname);
+        // do we need to send this invoice as email as well?
+        if ( $this->record->wantsInvoiceAsEmail() ) {
+            // yes, do it
+            $this->sendMail( $filename, $docname, $mpdf );
+        }
+        $mpdf->Output($filename, 'D');
+        exit;
+    }
+    
+    /**
+     * Generates the invoice PDF for dealer audience and mails it.
+     *
+     * @uses generatePDF()
+     * @return void
+     */
+    public function mail()
+    {
+        $this->layout = 'dealer';
+        $filename = I18n::__('deliverer_dealer_invoice_filename', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $docname = I18n::__('deliverer_dealer_invoice_docname', null, 
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $mpdf = $this->generatePDF($filename, $docname);
+        if ( $this->sendMail( $filename, $docname, $mpdf ) ) {
+            Flight::get('user')->notify(I18n::__('deliverer_send_mail_success'));            
+        } else {
+            Flight::get('user')->notify(I18n::__('deliverer_send_mail_failed'), 'warning');
+        }
+        $this->redirect(sprintf('/purchase/calculation/%d', $this->record->csb->getId()));
     }
     
     /**
@@ -111,6 +146,8 @@ class Controller_Deliverer extends Controller
             )
         );
         $this->generatePDF($filename, $docname);
+        $mpdf->Output($filename, 'D');
+        exit;
     }
 
     /**
@@ -132,7 +169,9 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $this->generatePDF($filename, $docname);
+        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf->Output($filename, 'D');
+        exit;
     }
     
     /**
@@ -188,13 +227,12 @@ class Controller_Deliverer extends Controller
     }
     
     /**
-     * Generates an PDF using mPDF library and downloads it to the client.
+     * Generates an PDF using mPDF library and return the mPDF object.
      *
-     * @param string $filename defaults to 'invoice'
      * @param string $docname defaults to 'invoice'
-     * @return void
+     * @return mPDF $mpdf
      */
-    private function generatePDF($filename = 'invoice', $docname = 'invoice')
+    private function generatePDF($docname = 'invoice')
     {
         $mpdf = new mPDF('c', 'A4');
         $mpdf->SetTitle($docname);
@@ -218,13 +256,7 @@ class Controller_Deliverer extends Controller
         $html = ob_get_contents();
         ob_end_clean();
         $mpdf->WriteHTML( $html );
-        // do we need to send this invoice as email as well?
-        if ( $this->record->wantsInvoiceAsEmail() ) {
-            // yes, do it
-            $this->sendMail( $filename, $docname, $mpdf );
-        }
-        $mpdf->Output($filename, 'D');
-        exit;
+        return $mpdf;
     }
     
     /**
