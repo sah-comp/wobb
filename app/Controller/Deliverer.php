@@ -89,11 +89,6 @@ class Controller_Deliverer extends Controller
             )
         );
         $mpdf = $this->generatePDF($filename, $docname);
-        // do we need to send this invoice as email as well?
-        if ( $this->record->wantsInvoiceAsEmail() ) {
-            // yes, do it
-            $this->sendMail( $filename, $docname, $mpdf );
-        }
         $mpdf->Output($filename, 'D');
         exit;
     }

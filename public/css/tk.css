@@ -71,6 +71,10 @@ h2.date-slaughter {
     color: gray;
 }
 
+h2.date-slaughter span.week {
+    padding-left: 0.5em;
+}
+
 h2.year-purchase,
 h2.year-fiscal {
     font-size: 2em;
@@ -204,6 +208,10 @@ ul.action li:last-child a {
 }
 .voucher-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
+}
+
+.voucher-dealer.email {
+    opacity: 0.3;
 }
 
 @media print {

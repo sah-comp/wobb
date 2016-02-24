@@ -26,9 +26,6 @@
                     <label><?php echo I18n::__('deliverer_label_name') ?></label>
                 </div>
                 <div class="span1">
-                    <label><?php echo I18n::__('deliverer_label_enabled') ?></label>
-                </div>
-                <div class="span1">
                     <label class="number"><?php echo I18n::__('deliverer_label_piggery') ?></label>
                 </div>
                 <div class="span1">
@@ -43,7 +40,7 @@
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('deliverer_label_invoice') ?></label>
                 </div>
-                <div class="span1">
+                <div class="span2">
                     <label><?php echo I18n::__('deliverer_label_pdf') ?></label>
                 </div>
             </div>
@@ -67,6 +64,10 @@
                         type="hidden"
                         name="dialog[ownDeliverer][<?php echo $_id ?>][id]"
                         value="<?php echo $_id ?>" />
+                    <input
+                        type="hidden"
+                        name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
+                        value="1" />
                 </div>
                 <div class="row">
                     <div class="span3">
@@ -80,17 +81,6 @@
                         <div class="deliverer-info">
                             <?php echo $_deliverer->getInformation() ?>
                         </div>
-                    </div>
-                    <div class="span1">
-                        <input
-                            type="hidden"
-                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
-                            value="0" />
-                        <input
-                            type="checkbox"
-                            name="dialog[ownDeliverer][<?php echo $_id ?>][enabled]"
-                            <?php echo ($_deliverer->enabled) ? 'checked="checked"' : '' ?>
-                            value="1" />
                     </div>
                     <div class="span1">
                         <input
@@ -143,7 +133,7 @@
                         />
                         
                     </div>
-                    <div class="span1">
+                    <div class="span2">
                         <?php if ( $_deliverer->wasBilled() ): ?>
                         <ul class="action">
                             <li>
@@ -153,18 +143,19 @@
                                     href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_internal') ?></a>
                             </li>
                             <li>
-                                <?php if ( $_deliverer->wantsEmail() ): ?>
-                                    <a
-                                        class="ir voucher-dealer-mail"
-                                        title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
-                                        href="<?php echo Url::build('/deliverer/mail/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
-                                <?php else: ?>
-                                    <a
-                                        class="ir voucher-dealer"
-                                        title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
-                                        href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
-                                <?php endif ?>
+                                <a
+                                    class="ir voucher-dealer <?php echo $_deliverer->person->billingtransport ?>"
+                                    title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
+                                    href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
                             </li>
+                            <?php if ( $_deliverer->wantsInvoiceAsEmail() ): ?>
+                            <li>
+                                <a
+                                    class="ir voucher-dealer-mail"
+                                    title="<?php echo I18n::__('invoice_link_mail_title') ?>"
+                                    href="<?php echo Url::build('/deliverer/mail/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_mail') ?></a>
+                            </li>
+                            <?php endif ?>
                         </ul>
                         <?php else: ?>
                             &nbsp;
@@ -188,7 +179,7 @@
                 </div>
                 
                 <div class="row">
-                    <div class="span4">
+                    <div class="span3">
                         <span class="subdeliverer-earmark">
                             <?php echo htmlspecialchars($_sub->earmark) ?>
                         </span>
@@ -272,7 +263,7 @@
                     </div>
                         
                     <div class="row">
-                        <div class="span4">
+                        <div class="span3">
                             <small><?php echo htmlspecialchars($_sprice->note) ?></small>
                         </div>
                         <div class="span1">
