@@ -89,7 +89,7 @@ class Model_Csb extends Model
     public function getDateOfSlaughter()
     {
         Flight::setlocale();
-        return strftime( "%A, %e. %B %Y Woche %V", strtotime( $this->bean->pubdate ) );
+        return strftime( "%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime( $this->bean->pubdate ) );
     }
     
     /**
