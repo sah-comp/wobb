@@ -60,9 +60,14 @@
         <!-- grid based header -->
         <div class="row">
             <div class="span1">&nbsp;</div>
-            <div class="span3">
+            <div class="span2">
                 <label>
                     <?php echo I18n::__('adjustmentitem_label_person') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label>
+                    <?php echo I18n::__('adjustmentitem_label_vat') ?>
                 </label>
             </div>
             <div class="span2">

@@ -37,7 +37,9 @@ class Model_Adjustmentitem extends Model
      */
     public function calculation(RedBean_OODBBean $adjustment)
     {
-        $this->bean->vat = $this->bean->person->vat;
+        if ( ! $this->bean->vat->getId() ) {
+            $this->bean->vat = $this->bean->person->vat;
+        }
         $this->bean->vatvalue = $this->bean->net * $this->bean->vat->value / 100;
         $this->bean->gros = $this->bean->net + $this->bean->vatvalue;
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated this bean
@@ -134,6 +136,11 @@ class Model_Adjustmentitem extends Model
             $this->bean->person = R::load('person', $this->bean->person_id);
         } else {
             unset($this->bean->person);
+        }
+        if ($this->bean->vat_id) {
+            $this->bean->vat = R::load('vat', $this->bean->vat_id);
+        } else {
+            unset($this->bean->vat);
         }
         parent::update();
     }

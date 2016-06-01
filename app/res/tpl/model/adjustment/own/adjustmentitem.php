@@ -28,7 +28,7 @@
     </a>
     <div class="row">
         <div class="span1">&nbsp;</div>
-        <div class="span3">
+        <div class="span2">
             <input type="hidden" name="dialog[ownAdjustmentitem][<?php echo $index ?>][type]" value="<?php echo $_adjustmentitem->getMeta('type') ?>" />
             <input type="hidden" name="dialog[ownAdjustmentitem][<?php echo $index ?>][id]" value="<?php echo $_adjustmentitem->getId() ?>" />
             <select
@@ -39,6 +39,18 @@
                 <option
                     value="<?php echo $_person->getId() ?>"
                     <?php echo ($_adjustmentitem->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' – ' . $_person->name) ?></option>   
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div class="span1">
+            <select
+                id="adjustment-adjustmentitem-<?php echo $index ?>-vat"
+                name="dialog[ownAdjustmentitem][<?php echo $index ?>][vat_id]">
+                <option value=""><?php echo I18n::__('adjustmentitem_label_vat_select') ?></option>
+                <?php foreach (R::find('vat', " ORDER BY name") as $_vat_id => $_vat): ?>
+                <option
+                    value="<?php echo $_vat->getId() ?>"
+                    <?php echo ($_adjustmentitem->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
                 <?php endforeach ?>
             </select>
         </div>
