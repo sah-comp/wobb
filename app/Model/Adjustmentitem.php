@@ -37,7 +37,7 @@ class Model_Adjustmentitem extends Model
      */
     public function calculation(RedBean_OODBBean $adjustment)
     {
-        if ( ! $this->bean->vat->getId() ) {
+        if ( ! $this->bean->vat || ! $this->bean->vat->getId() ) {
             $this->bean->vat = $this->bean->person->vat;
         }
         $this->bean->vatvalue = $this->bean->net * $this->bean->vat->value / 100;
