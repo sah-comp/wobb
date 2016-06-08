@@ -380,9 +380,15 @@ class Model_Deliverer extends Model
         if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetnormal = 0;
-        } else {
+            $this->bean->invoice->totalnetother = 0;
+        } elseif ( $this->bean->invoice->vat->getId() == Flight::setting()->vatnormal ) {
             $this->bean->invoice->totalnetfarmer = 0;
             $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetother = 0;
+        } else {
+            $this->bean->invoice->totalnetfarmer = 0;
+            $this->bean->invoice->totalnetnormal = 0;
+            $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
         }
         $this->bean->invoice->vatvalue = 
                                 $this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100;

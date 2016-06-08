@@ -205,6 +205,7 @@ class Model_Invoice extends Model
         $canceled->costnet = $canceled->costnet * -1;
         $canceled->totalnetnormal = $canceled->totalnetnormal * -1;
         $canceled->totalnetfarmer = $canceled->totalnetfarmer * -1;
+        $canceled->totalnetother = $canceled->totalnetother * -1;
         $canceled->canceled = true;
         if ( ! $nextbillingnumber = $canceled->company->nextBillingnumber() ) {
             throw new Exception();

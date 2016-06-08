@@ -68,7 +68,7 @@ $vats = R::findAll('vat');
         </div>
         <div class="row <?php echo ($record->hasError('vatnormal')) ? 'error' : ''; ?>">
             <label
-                for="setting-sitesfolder">
+                for="setting-vatnormal">
                 <?php echo I18n::__('setting_label_vatnormal') ?>
             </label>
             <select
@@ -78,6 +78,21 @@ $vats = R::findAll('vat');
                 <option
                     value="<?php echo $_vat->getId() ?>"
                     <?php echo ($record->vatnormal == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div class="row <?php echo ($record->hasError('vatother')) ? 'error' : ''; ?>">
+            <label
+                for="setting-vatother">
+                <?php echo I18n::__('setting_label_vatother') ?>
+            </label>
+            <select
+                id="setting-vatother"
+                name="dialog[vatother]">
+                <?php foreach ($vats as $_id => $_vat): ?>
+                <option
+                    value="<?php echo $_vat->getId() ?>"
+                    <?php echo ($record->vatother == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
                 <?php endforeach ?>
             </select>
         </div>

@@ -79,7 +79,7 @@ class Model_Adjustmentitem extends Model
         }
         $this->bean->invoice->company = $adjustment->company;
         $this->bean->invoice->person = $this->bean->person;
-        $this->bean->invoice->vat = $this->bean->person->vat;
+        $this->bean->invoice->vat = $this->bean->vat;
         $this->bean->invoice->totalnet = $this->bean->net;
         $this->bean->invoice->bonusnet = 0;
         $this->bean->invoice->costnet = 0;
@@ -88,9 +88,15 @@ class Model_Adjustmentitem extends Model
         if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetnormal = 0;
-        } else {
-            $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetother = 0;
+        } elseif ( $this->bean->invoice->vat->getId() == Flight::setting()->vatnormal ) {
             $this->bean->invoice->totalnetfarmer = 0;
+            $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetother = 0;
+        } else {
+            $this->bean->invoice->totalnetfarmer = 0;
+            $this->bean->invoice->totalnetnormal = 0;
+            $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
         }
         $this->bean->invoice->vatvalue = $this->bean->vatvalue;
         $this->bean->invoice->totalgros = $this->bean->gros;
