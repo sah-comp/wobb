@@ -146,7 +146,7 @@ class Model_Adjustmentitem extends Model
         if ($this->bean->vat_id) {
             $this->bean->vat = R::load('vat', $this->bean->vat_id);
         } else {
-            unset($this->bean->vat);
+            $this->bean->vat = $this->bean->person->vat;
         }
         parent::update();
     }
