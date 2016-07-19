@@ -210,7 +210,8 @@ ul.action li:last-child a {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
 }
 
-.voucher-dealer.email {
+.voucher-dealer.email,
+.voucher-dealer-mail.mailed {
     opacity: 0.3;
 }
 

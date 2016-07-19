@@ -40,6 +40,17 @@ class Model_Deliverer extends Model
             new Converter_MysqlDatetime()
         ));
     }
+
+    /**
+     * Returns 'mailed' when sent flag is true, otherwise an empty string is returned.
+     *
+     * @return string
+     */
+    public function wasSent()
+    {
+        if ( $this->bean->sent ) return 'mailed';
+        return '';
+    }
     
     /**
      * Returns true when this beans person has either billingtransport set to email or both.

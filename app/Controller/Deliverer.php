@@ -114,10 +114,13 @@ class Controller_Deliverer extends Controller
         );
         $mpdf = $this->generatePDF($filename, $docname);
         if ( $this->sendMail( $filename, $docname, $mpdf ) ) {
+            $this->record->sent = true;
             Flight::get('user')->notify(I18n::__('deliverer_send_mail_success'));            
         } else {
+            $this->record->sent = false;
             Flight::get('user')->notify(I18n::__('deliverer_send_mail_failed'), 'warning');
         }
+        R::store($this->record);
         $this->redirect(sprintf('/purchase/calculation/%d', $this->record->csb->getId()));
     }
     

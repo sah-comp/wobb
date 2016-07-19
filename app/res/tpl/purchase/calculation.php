@@ -151,7 +151,7 @@
                             <?php if ( $_deliverer->wantsInvoiceAsEmail() ): ?>
                             <li>
                                 <a
-                                    class="ir voucher-dealer-mail"
+                                    class="ir voucher-dealer-mail <?php echo $_deliverer->wasSent() ?>"
                                     title="<?php echo I18n::__('invoice_link_mail_title') ?>"
                                     href="<?php echo Url::build('/deliverer/mail/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_mail') ?></a>
                             </li>
