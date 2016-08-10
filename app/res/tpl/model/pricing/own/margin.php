@@ -13,7 +13,7 @@
     id="pricing-<?php echo $record->getId() ?>-ownmargin-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('pricing_legend_margin') ?></legend>
     <a
-    	href="<?php echo Url::build(sprintf('/admin/pricing/detach/margin/%d', $index)) ?>"
+    	href="<?php echo Url::build(sprintf('/admin/pricing/detach/margin/%d', $_margin->getId())) ?>"
     	class="ir detach"
     	title="<?php echo I18n::__('scaffold_detach') ?>"
     	data-target="pricing-<?php echo $record->getId() ?>-ownmargin-<?php echo $index ?>">

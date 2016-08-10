@@ -10,13 +10,13 @@
 ?>
 <!-- adjustmentitem edit subform -->
 <fieldset
-    id="adjustment-<?php echo $record->getId() ?>-ownadjustmentitem-<?php echo $_adjustmentitem->getId() ?>">
+    id="adjustment-<?php echo $record->getId() ?>-ownadjustmentitem-<?php echo $index ?>">
     <legend class="verbose"><?php echo I18n::__('adjustment_legend_adjustmentitem') ?></legend>
     <a
     	href="<?php echo Url::build(sprintf('/admin/adjustment/detach/adjustmentitem/%d', $_adjustmentitem->getId())) ?>"
     	class="ir detach"
     	title="<?php echo I18n::__('scaffold_detach') ?>"
-    	data-target="adjustment-<?php echo $record->getId() ?>-ownadjustmentitem-<?php echo $_adjustmentitem->getId() ?>">
+    	data-target="adjustment-<?php echo $record->getId() ?>-ownadjustmentitem-<?php echo $index ?>">
     		<?php echo I18n::__('scaffold_detach') ?>
     </a>
     <a
