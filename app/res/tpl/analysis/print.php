@@ -126,7 +126,17 @@
         </tbody>
     </table>
     
-    <?php foreach ($record->with(' ORDER BY id')->ownAnalysis as $_analysis_id => $_analysis): ?>
+    <!--mpdf
+    <pagebreak />
+    mpdf-->
+    
+    <?php
+    $_suppliers = $record->with(' ORDER BY id')->ownAnalysis;
+    $_lastKey = array_pop( array_keys( $_suppliers ) );
+    $_item = 0;
+    foreach ($_suppliers as $_analysis_id => $_analysis):
+        $_item++;
+    ?>
 
     <div style="height: 10mm;"></div>
 
@@ -193,6 +203,17 @@
             </tr>
         </tbody>
     </table>
+    
+    <?php
+    if ( $_item == 2 && ( $_analysis_id != $_lastKey ) ):
+        $_item = 0;
+        ?>
+        <!--mpdf
+        <pagebreak />
+        mpdf-->
+        <?php
+    endif;
+    ?>
         
     <?php endforeach ?>
     
