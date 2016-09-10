@@ -122,4 +122,20 @@ class Model_Company extends Model
             new Validator_HasValue()
         ));
     }
+
+    /**
+     * update.
+     *
+     * When the buyer code has changed, all stock beans will be updated as well to reflect.
+     */
+    public function update()
+    {
+        if ( $this->bean->buyer !== $this->bean->old('buyer') ) {
+            R::exec( 'UPDATE stock SET buyer = :buyer WHERE buyer = :oldbuyer', array(
+                ':buyer' => $this->bean->buyer,
+                ':oldbuyer' => $this->bean->old('buyer')
+            ) );
+        }
+        parent::update();
+    }
 }
