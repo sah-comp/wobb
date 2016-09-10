@@ -64,11 +64,11 @@ class Model_Csbformat extends Model
     public function exportFromCSB(RedBean_OODBBean $company, $line = '')
     {
         return array(
-            'buyer' => substr($line, 20, 2),
+            'buyer' => $this->getBuyerFromCSB( $line ),
             'pubdate' => $this->makeDateFromCSBDate(substr($line, 3, 8)),
             'name' => (int)trim(substr($line, 12, 7)),
-            'supplier' => trim(substr($line, 22, 2)),
-            'earmark' => trim(substr($line, 22, 6)),
+            'supplier' => trim(substr($line, 23, 2)),
+            'earmark' => trim(substr($line, 23, 6)),
             'quality' => trim(substr($line, 33, 1)),
             'weight' => trim($this->makeFloatFromCSBFloat(substr($line, 55, 6))),
             'mfa' => trim($this->makeFloatFromCSBFloat(substr($line, 40, 4))),
@@ -89,7 +89,7 @@ class Model_Csbformat extends Model
      */
     public function getBuyerFromCSB($line = '')
     {
-        return substr($line, 20, 2);
+        return trim( substr( $line, 22, 1 ) );
     }
     
     /**
