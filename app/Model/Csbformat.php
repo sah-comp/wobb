@@ -89,7 +89,7 @@ class Model_Csbformat extends Model
      */
     public function getBuyerFromCSB($line = '')
     {
-        return trim( substr( $line, 22, 1 ) );
+        return trim( substr( $line, 20, 3 ) );
     }
     
     /**
