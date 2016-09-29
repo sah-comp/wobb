@@ -154,10 +154,14 @@ SQL;
     public function generateReport($lowerMargin = self::LOWER_MARGIN, $upperMargin = self::UPPER_MARGIN)
     {
         $this->bean->ownLanuvitem = array();
+        $summary = $this->getSummaryTotal($lowerMargin, $upperMargin);
+        $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {
             $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
+            $this->copyFromSummary($quality, $lanuvitem, $summary, $this->bean->piggery);
+            /*
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
@@ -168,12 +172,15 @@ SQL;
             $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
+            */
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
         // Non-Qualities without weight margins
         foreach ($this->nonQualities as $quality) {
             $summary = $this->getSummaryNonQuality($quality); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
+            $this->copyFromSummary($quality, $lanuvitem, $summary, $this->bean->piggery);
+            /*
             $lanuvitem->quality = $quality;
             $lanuvitem->piggery = $summary['piggery'];
             $lanuvitem->sumweight = $summary['sumweight'];
@@ -184,11 +191,80 @@ SQL;
             $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
             $lanuvitem->avgweight = $summary['avgweight'];
             $lanuvitem->avgdprice = $summary['avgdprice'];
+            */
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
         $this->markAsReportedNoWeight($this->nonQualities);
         $this->markAsReportedWeight($this->qualities, $lowerMargin, $upperMargin);
         return true;
+    }
+    
+    /**
+     * Copies values from summary array into the given bean.
+     *
+     * @param string $quality or empty
+     * @param RedBean_OODBBean $bean
+     * @param array $summary
+     * @param int $total
+     * @return void
+     */
+    public function copyFromSummary($quality = '', RedBean_OODBBean $bean, array $summary = array(), $total)
+    {
+        //$bean->kind = 0; //this is a quality entry
+        $bean->quality = $quality;
+        $bean->piggery = $summary['piggery'];
+        if ( $total != 0) {
+            $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
+        } else {
+            $bean->piggerypercentage = 0;
+        }
+        $bean->sumweight = $summary['sumweight'];
+        $bean->sumtotaldprice = $summary['sumtotaldprice'];
+        $bean->sumtotallanuvprice = $summary['sumtotallanuvprice'];
+        $bean->avgmfa = $summary['avgmfa'];
+        $bean->avgprice = $summary['avgprice'];
+        $bean->avgpricelanuv = $summary['avgpricelanuv'];
+        $bean->avgweight = $summary['avgweight'];
+        $bean->avgdprice = $summary['avgdprice'];
+        return true;
+    }
+    
+    /**
+     * Returns an array with information about totals.
+     * Stock beans with attribute damage1 = '02' are collected.
+     *
+     * @param float $margin_lo
+     * @param float $margin_hi
+     * @return array
+     */
+    public function getSummaryTotal($margin_lo, $margin_hi)
+    {
+		$sql = <<<SQL
+        SELECT 
+            count(id) as piggery, 
+            sum(weight) as sumweight,
+            avg(mfa) as avgmfa,
+            sum(totaldprice) as sumtotaldprice,
+            sum(totallanuvprice) as sumtotallanuvprice,
+            (sum(totaldprice) / sum(weight)) as avgprice,
+            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
+            avg(weight) as avgweight,
+            avg(dprice) as avgdprice
+        FROM stock 
+        WHERE 
+            buyer = :buyer AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            ( (weight >= :lo AND weight <= :hi AND quality IN ('S', 'E', 'U', 'R', 'O', 'P') ) OR quality IN ('M', 'V') ) AND 
+            (damage1 = '' OR damage1 = '02') AND
+            csb_id IS NOT NULL
+SQL;
+        return R::getRow($sql, array(
+            ':buyer' => $this->bean->company->buyer,
+            ':startdate' => $this->bean->startdate,
+            ':enddate' => $this->bean->enddate,
+            ':lo' => $margin_lo,
+            ':hi' => $margin_hi
+        ));
     }
     
     /**

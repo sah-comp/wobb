@@ -72,13 +72,16 @@
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_piggery') ?></label>
                 </div>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('lanuv_label_piggerypercentage') ?></label>
+                </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_sumweight') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('lanuv_label_sumtotallanuvprice') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('lanuv_label_avgmfa') ?></label>
                 </div>
                 <div class="span2">
@@ -125,6 +128,15 @@
                             readonly="readonly"
                         />
                     </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownLanuvitem][<?php echo $_id ?>][piggerypercentage]"
+                            value="<?php echo htmlspecialchars($_lanuvitem->decimal('piggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
                     <div class="span2">
                         <input
                             type="text"
@@ -143,7 +155,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -173,6 +185,77 @@
                 </div>
             </fieldset>
             <?php endforeach ?>
+            <fieldset>
+                 <legend class="verbose"><?php echo I18n::__('statistic_lanuvtotal_legend') ?></legend>
+                 <div class="row">
+                     <div class="span1">
+                         &nbsp;
+                     </div>
+                     <div class="span2">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[piggery]"
+                             value="<?php echo htmlspecialchars($record->decimal('piggery', 0)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span1">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[piggerypercentage]"
+                             value="<?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span2">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[sumweight]"
+                             value="<?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span2">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[sumtotallanuvprice]"
+                             value="<?php echo htmlspecialchars($record->decimal('sumtotallanuvprice', 3)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span1">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[avgmfa]"
+                             value="<?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span2">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[avgweight]"
+                             value="<?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                     <div class="span1">
+                         <input
+                             type="text"
+                             class="number"
+                             name="dialog[avgpricelanuv]"
+                             value="<?php echo htmlspecialchars($record->decimal('avgpricelanuv', 3)) ?>"
+                             readonly="readonly"
+                         />
+                     </div>
+                 </div>
+             </fieldset>
         </fieldset>
         <!-- end of form details -->
         

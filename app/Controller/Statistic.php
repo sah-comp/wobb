@@ -85,6 +85,34 @@ class Controller_Statistic extends Controller
         }
         $this->render();
     }
+
+    /**
+     * Generates an PDF using mPDF library and downloads it to the client.
+     *
+     * @return void
+     */
+    public function pdf()
+    {
+        $startdate = $this->record->localizedDate('startdate');
+        $enddate = $this->record->localizedDate('enddate');
+        $filename = I18n::__('lanuv_filename', null, array($startdate));
+        $title = I18n::__('lanuv_docname', null, array($startdate));
+        $mpdf = new mPDF('c', 'A4');
+        $mpdf->SetTitle($title);
+        $mpdf->SetAuthor($this->record->company->legalname);
+        $mpdf->SetDisplayMode('fullpage');
+        ob_start();
+        Flight::render('statistic/print', array(
+            'record' => $this->record,
+            'startdate' => $startdate,
+            'enddate' => $enddate
+        ));
+        $html = ob_get_contents();
+        ob_end_clean();
+        $mpdf->WriteHTML( $html );
+        $mpdf->Output($filename, 'D');
+        exit;
+    }
     
     /**
      * A certain lanuv summary.
@@ -173,6 +201,7 @@ class Controller_Statistic extends Controller
 		Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('statistic/toolbar', array(
+            'record' => $this->record
         ), 'toolbar');
 		Flight::render('shared/header', array(), 'header');
 		Flight::render('shared/footer', array(), 'footer');
