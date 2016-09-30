@@ -147,6 +147,8 @@ SQL;
     /**
      * Generate report for this lanuv bean.
      *
+     * If the grand total of stock beans is zero an Exception is thrown.
+     *
      * @param float $lowerMargin
      * @param float $upperMargin
      * @return void
@@ -155,6 +157,9 @@ SQL;
     {
         $this->bean->ownLanuvitem = array();
         $summary = $this->getSummaryTotal($lowerMargin, $upperMargin);
+        if ( $summary['piggery'] == 0 ) {
+            throw new Exception('Grand total piggery is zero.');
+        }
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         // Qualities with weight margins
         foreach ($this->qualities as $quality) {

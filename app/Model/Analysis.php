@@ -141,6 +141,8 @@ SQL;
     /**
      * Generate report for this analysis bean.
      *
+     * If the grand total of stock beans is zero an Exception is thrown.
+     *
      * @todo Refactor code to work recursive
      *
      * @return void
@@ -150,6 +152,9 @@ SQL;
         $this->bean->ownAnalysisitem = array();
         //$this->bean->person = null;
         $summary = $this->getSummaryTotal();
+        if ( $summary['piggery'] == 0 ) {
+            throw new Exception('Grand total piggery is zero.');
+        }
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         $summary = $this->getSummaryDamageTotal();
         $this->copyFromSummaryDamage(null, $this->bean, $summary, $summary['piggery']);
@@ -176,7 +181,7 @@ SQL;
             ));
             $subAnalysis = R::dispense('analysis');
             $subAnalysis->person = $person;
-            $summary = $this->getSummaryTotalSupplier($person->nickname);
+            $supplierSummary = $summary = $this->getSummaryTotalSupplier($person->nickname);
             $this->copyFromSummary(null, $subAnalysis, $summary, $summary['piggery']);
             $summary = $this->getSummaryDamageTotalSupplier($person->nickname);
             $this->copyFromSummaryDamage(null, $subAnalysis, $summary, $summary['piggery']);
@@ -192,6 +197,32 @@ SQL;
                 $this->copyFromSummaryDamage($damage, $subAnalysisitem, $summary, $subAnalysis->damagepiggery);
                 $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
             }
+            // if supplier has conditions that apply to invoices we add them here
+            $conditions = $person->withCondition(' doesnotaffectinvoice = 0 ')->ownCondition;
+            foreach ( $conditions as $id => $condition) {
+                $subAnalysisitem = R::dispense('analysisitem');
+                $subAnalysisitem->kind = 2;
+                $subAnalysisitem->quality = $condition->content . ' ' . I18n::__( 'condition_label_' . $condition->label );
+                switch ( $condition->label ) {
+                    case 'stockperitem':
+                        $subAnalysisitem->piggery = $supplierSummary['piggery'];
+                        $subAnalysisitem->sumtotaldprice = $subAnalysisitem->piggery * $condition->value;
+                        $subAnalysisitem->avgprice = $condition->value;
+                        break;
+
+                    case 'stockperweight':
+                        $subAnalysisitem->sumweight = $supplierSummary['sumweight'];
+                        $subAnalysisitem->sumtotaldprice = $subAnalysisitem->sumweight * $condition->value;
+                        $subAnalysisitem->avgprice = $condition->value;
+                        break;
+
+                    default:
+                        // dunno?! nothing.
+                        break;
+                }
+                $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
+            }
+            
             $this->bean->ownAnalysis[] = $subAnalysis;
         }
         return true;
