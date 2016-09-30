@@ -126,13 +126,61 @@
         </tbody>
     </table>
     
+    <?php
+    $_suppliers = $record->with(' ORDER BY id')->ownAnalysis;
+    $_lastKey = array_pop( array_keys( $_suppliers ) );
+    ?>
+    
+    <!-- Totals of each supplier -->
+    <div style="height: 10mm;"></div>
+
+    <table class="analysis" width="100%">
+        <caption>
+            <?php echo I18n::__('analysis_caption_suppliers') ?>
+        </caption>
+        <thead>
+            <tr>
+                <th width="10%"><?php echo I18n::__('analysis_label_supplier') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotaldprice') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdprice') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($_suppliers as $_analysis_id => $_analysis): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($_analysis->person->nickname) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('piggery', 0)) ?></td>
+                <td class="number"><?php echo htmlspecialchars(number_format($_analysis->piggery * 100 / $record->piggery, 2, ',', '.')) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumtotaldprice', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgprice', 3)) ?></td>
+            </tr>
+        <?php endforeach ?>
+            <tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
+            </tr>
+        </tbody>
+    </table>
+    
     <!--mpdf
     <pagebreak />
     mpdf-->
     
     <?php
-    $_suppliers = $record->with(' ORDER BY id')->ownAnalysis;
-    $_lastKey = array_pop( array_keys( $_suppliers ) );
     $_item = 0;
     foreach ($_suppliers as $_analysis_id => $_analysis):
         $_item++;
@@ -142,7 +190,7 @@
 
     <table class="analysis" width="100%">
         <caption>
-            <?php echo $_analysis->person->name ?>
+            <?php echo $_analysis->person->nickname . ' - ' . $_analysis->person->name ?>
         </caption>
         <thead>
             <tr>
