@@ -1,8 +1,8 @@
 {
-	"name": "sah-comp/bienlein",
-	"description": "Starting point for rapid application development with flight and RedBeanPHP",
+	"name": "sah-comp/wobb",
+	"description": "A web-based solution for EU slaughterhouses",
 	"version": "0.0.0",
-	"keywords": ["sah-comp", "bienlein", "PHP", "RedBeanPHP", "Flight"],
+	"keywords": ["sah-comp", "wobb", "PHP", "RedBeanPHP", "Flight"],
 	"authors": [
 		{
 			"name": "Stephan A. Hombergs",
