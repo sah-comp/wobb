@@ -1298,6 +1298,10 @@ img.media-preview-icon {
     z-index: 1;
 }
 
+select {
+    font-size: small;
+}
+
 /* Rounded gravatar: A background-image tag in html */
 .circular {
 	width: 72px;
