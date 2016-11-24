@@ -104,10 +104,11 @@
                     <div class="span1">
                         <input
                             type="text"
-                            class="number"
+                            class="number <?php echo ( $_deliverer->getInfoAboutDealerPrice() ) ? 'alarm' : '' ?>"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][dprice]"
                             value="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
                             required="required"
+                            title="<?php echo htmlspecialchars( $_deliverer->getInfoAboutDealerPrice() ) ?>"
                             placeholder="<?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?>"
                         />
                     </div>

@@ -21,6 +21,14 @@ body {
     height: 48px;
 }
 
+.panel input.alarm {
+    background-color: #d9edf7;
+}
+
+.panel input.alarm:focus {
+    background-color: #feffbc;
+}
+
 .deliverer-info {
     /*padding-left: 1.8em;*/
     font-size: small;

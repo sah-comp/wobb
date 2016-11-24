@@ -487,6 +487,18 @@
                 value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
             <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
         </div>
+        <div class="row <?php echo ($record->hasError('noterelprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-noterelprice">
+                <?php echo I18n::__('person_label_noterelprice') ?>
+            </label>
+            <textarea
+                id="person-noterelprice"
+                name="dialog[noterelprice]"
+                rows="3"
+                cols="60"><?php echo htmlspecialchars($record->noterelprice) ?></textarea>
+            <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
+        </div>
     </fieldset>
     <fieldset
         id="person-bankaccount"

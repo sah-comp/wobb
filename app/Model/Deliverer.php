@@ -83,6 +83,16 @@ class Model_Deliverer extends Model
     {
         return $this->bean->person->hasservice;
     }
+    
+    /**
+     * Returns notes about the determination of the base price.
+     *
+     * @return bool
+     */
+    public function getInfoAboutDealerPrice()
+    {
+        return $this->bean->person->noterelprice;
+    }
 
     /**
      * Returns information about this deliverer.
