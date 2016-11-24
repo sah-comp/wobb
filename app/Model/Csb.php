@@ -584,6 +584,33 @@ SQL;
             $deliverer->calcVat();
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
+        $this->calcAverages();
+        return null;
+    }
+    
+    /**
+     * Sets the average prices for this slaughter day.
+     *
+     * @uses Model_Analysis::getTotalSummary() to calculate this companies average dealer price
+     * @uses Model_Lanuv::getTotalSummary() to calculate this days LANUV average price
+     * @return void
+     */
+    public function calcAverages()
+    {
+        // get the average of the dealer price
+        $analysis = R::dispense('analysis');
+        $analysis->company = $this->bean->company;
+        $analysis->startdate = $this->bean->pubdate;
+        $analysis->enddate = $this->bean->pubdate;
+        $summary = $analysis->getSummaryTotal();
+        $this->bean->companyprice = $summary['avgprice'];
+        // do the same for average lanuv price
+        $analysis = R::dispense('lanuv');
+        $analysis->company = $this->bean->company;
+        $analysis->startdate = $this->bean->pubdate;
+        $analysis->enddate = $this->bean->pubdate;
+        $summary = $analysis->getSummaryTotal(Model_Lanuv::LOWER_MARGIN, Model_Lanuv::UPPER_MARGIN);
+        $this->bean->lanuvprice = $summary['avgpricelanuv'];
         return null;
     }
     

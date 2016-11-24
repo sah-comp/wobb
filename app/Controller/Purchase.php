@@ -23,6 +23,7 @@ class Controller_Purchase extends Controller
       * @var array
       */
     public $javascripts = array(
+        '/js/jquery.peity.min',
         '/js/tk'
     );
     
@@ -48,6 +49,14 @@ class Controller_Purchase extends Controller
     public $records;
     
     /**
+     * Container for chart data.
+     *
+     * @var string
+     */
+    public $chartdata;
+
+    
+    /**
      * Constructs a new Purchase controller.
      *
      * @param int (optional) id of a bean
@@ -58,6 +67,18 @@ class Controller_Purchase extends Controller
         Auth::check();
         $this->record = R::load('csb', $id);
     }
+    
+    /**
+     * Update all csb beans averages.
+     */
+    public function avgAfterburner()
+    {
+        $days = R::findAll('csb');
+        foreach ($days as $id => $day) {
+            $day->calcAverages();
+        }
+        R::storeAll($days);
+    }
 
     /**
      * Choose an already existing day or create a new one.
@@ -67,6 +88,9 @@ class Controller_Purchase extends Controller
         Permission::check(Flight::get('user'), 'purchase', 'index');
         $this->layout = 'index';
         $this->records = R::findAll('csb', ' ORDER BY pubdate DESC');
+        $this->chartdata = implode(',', array_values( 
+            R::getCol("SELECT ROUND(companyprice, 3) FROM csb ORDER BY pubdate ASC") ) 
+        );
         if (Flight::request()->method == 'POST') {
             //try to create a new csb bean with data from form
             //which imports the csb data to stock
@@ -271,7 +295,8 @@ class Controller_Purchase extends Controller
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('purchase/'.$this->layout, array(
             'record' => $this->record,
-            'records' => $this->records
+            'records' => $this->records,
+            'chartdata' => $this->chartdata
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("purchase_head_title"),

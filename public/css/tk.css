@@ -16,6 +16,11 @@ body {
 
 .not-yet-implemented h1 { display: none; }
 
+.chart-line {
+    visibility: hidden;
+    height: 48px;
+}
+
 .deliverer-info {
     /*padding-left: 1.8em;*/
     font-size: small;

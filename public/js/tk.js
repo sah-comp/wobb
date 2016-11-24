@@ -30,6 +30,19 @@ $(document).ready(function() {
 	});
 	
 	/**
+	 * Use peity.js to draw nice line charts.
+	 *
+	 * This is used on purchase/index beneath each year headline.
+	 * @see app/tpl/purchase/index and purchase controller.
+	 */
+	if ( $('.chart-line').length ) {
+	    $('.chart-line').peity('line', {
+	        width: '100%',
+	        height: '48px'
+	    });
+	}
+	
+	/**
      * Anchors with .ask class will call their URL only if confirmation is given.
      */
     $(document).on("click", 'a.ask', function(event) {

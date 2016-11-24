@@ -30,6 +30,7 @@
                 <?php if ( $_lastYear != $_year): 
                         $_lastYear = $_year;
                 ?>
+            <div class="chart-line companyprice"><?php echo $chartdata ?></div>
             <h2 class="year-purchase"><?php echo $_year ?></h2>
             <div class="row">
                 <div class="span1">
