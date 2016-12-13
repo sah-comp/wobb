@@ -160,5 +160,21 @@
             </td>
         </tr>
     </table>
+    <div style="height: 25mm;"></div>
+    <table width="100%">
+        <thead>
+            <tr>
+                <th colspan="2" class="centered"><?php echo I18n::__('pricing_used_by_persons') ?></th>
+            <tr>
+        </thead>
+        <tbody>
+        <?php foreach ($record->withCondition(" enabled = 1 ORDER BY nickname")->ownPerson as $_id => $_person): ?>
+            <tr>
+                <td><?php echo $_person->nickname ?></td>
+                <td><?php echo $_person->name ?></td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
 </body>
 </html>
