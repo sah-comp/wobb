@@ -13,6 +13,8 @@
  *
  * A stock is any slaughtered animal body, foremost a pig.
  *
+ * @todo refactor calculate* and calculate*Lab functions
+ *
  * @package Cinnebar
  * @subpackage Model
  * @version $Id$
@@ -205,6 +207,26 @@ class Model_Stock extends Model
     }
     
     /**
+     * Calculates the price of this stock bean according to given parameters by the deliverer bean.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @param RedBean_OODBBean $pricing
+     * @return void
+     */
+    public function calculationLab(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing)
+    {
+        $this->bean->agio = 0;
+        $this->bean->disagio = 0;
+        $lanuv_tax = $deliverer->calculate($this->bean);
+        if ( ! $this->calculateFixedPriceLab($deliverer, $lanuv_tax)) {
+            $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
+        }
+        $this->calculateDamage1PriceLab($deliverer, $lanuv_tax);
+        $this->calculateDamage2PriceLab($deliverer, $lanuv_tax);
+        return null;
+    }
+    
+    /**
      * Calculate the stock beans prices according to deliverer bean settings.
      *
      * @param RedBean_OODBBean $deliverer
@@ -260,6 +282,38 @@ class Model_Stock extends Model
     }
     
     /**
+     * Checks for fixed price for lab.
+     *
+     * If stock has a quality with a fixed price, that one is used. Fixed prices are var beans.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @param float $tax
+     * @return bool wether a fixed price was used or not
+     */
+    public function calculateFixedPriceLab(RedBean_OODBBean $deliverer, $tax)
+    {
+        if ( ! $fixedPrice = R::findOne('var', " ( name = :quality ) AND kind = 'quality' LIMIT 1 ", array(
+            ':quality' => $this->bean->quality
+        ))) {
+            return false;
+        }
+        
+        $this->bean->agio = 0;
+        $this->bean->disagio = 0;
+        //$this->bean->bonus = 0;
+        $this->bean->sprice = $fixedPrice->sprice;
+        $this->bean->dprice = $fixedPrice->dprice;
+        
+        $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+        $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        
+        $this->calculateFixedpriceCostLab($fixedPrice);
+        
+        $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
+        return true;
+    }
+    
+    /**
      * Checks for damage1 code.
      *
      * If stock has a code in damage1 a fixed price or agio or disagio apply.
@@ -299,6 +353,53 @@ class Model_Stock extends Model
         }
         
         $this->calculateFixedpriceCost($fixedPrice);
+        
+        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Checks for damage1 code for lab.
+     *
+     * If stock has a code in damage1 a fixed price or agio or disagio apply.
+     * If the fixedPrice condition is not either of type 'fixed', 'agio' or 'disagio'
+     * nothing will happen and the stock is left with the already calculated price.
+     * This applies e.g. for 'Binneneber', damage code '02'.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @param float $tax
+     * @return bool wether a fixed price was used or not
+     */
+    public function calculateDamage1PriceLab(RedBean_OODBBean $deliverer, $tax)
+    {
+        if ( empty($this->bean->damage1) ) return false;
+        
+        if ( ! $fixedPrice = R::findOne('var', " ( name = :damage1 ) AND kind = 'damage1' LIMIT 1 ", array(
+            ':damage1' => $this->bean->damage1
+        ))) {
+            return false;
+        }
+        
+        if ( $fixedPrice->condition == 'fixed' ) {
+            $this->bean->agio = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->sprice = $fixedPrice->sprice;
+            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } elseif ( $fixedPrice->condition == 'disagio') {
+            $this->bean->totalsprice -= $fixedPrice->sprice;
+            $this->bean->totaldprice -= $fixedPrice->dprice;
+        } elseif ( $fixedPrice->condition == 'agio') {
+            $this->bean->totalsprice += $fixedPrice->sprice;
+            $this->bean->totaldprice += $fixedPrice->dprice;
+        }
+        
+        $this->calculateFixedpriceCostLab($fixedPrice);
         
         if ( ! $fixedPrice->doesnotaffectlanuv ) {
             $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
@@ -353,6 +454,50 @@ class Model_Stock extends Model
     }
     
     /**
+     * Checks for damage2 code for lab.
+     *
+     * If stock has a code in damage2 a fixed price or agio or disagio apply.
+     *
+     * @param RedBean_OODBBean $deliverer
+     * @param float §tax
+     * @return bool wether a fixed price was used or not
+     */
+    public function calculateDamage2PriceLab(RedBean_OODBBean $deliverer, $tax)
+    {
+        if ( empty($this->bean->damage2) ) return false;
+        
+        if ( ! $fixedPrice = R::findOne('var', " ( name = :damage2 ) AND kind = 'damage2' LIMIT 1 ", array(
+            ':damage2' => $this->bean->damage2
+        ))) {
+            return false;
+        }
+        
+        if ( $fixedPrice->condition == 'fixed' ) {
+            $this->bean->agio = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->sprice = $fixedPrice->sprice;
+            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } elseif ( $fixedPrice->condition == 'disagio') {
+            $this->bean->totalsprice -= $fixedPrice->sprice;
+            $this->bean->totaldprice -= $fixedPrice->dprice;
+        } elseif ( $fixedPrice->condition == 'agio') {
+            $this->bean->totalsprice += $fixedPrice->sprice;
+            $this->bean->totaldprice += $fixedPrice->dprice;
+        }
+        
+        $this->calculateFixedpriceCostLab($fixedPrice);
+        
+        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
+        }
+        
+        return true;
+    }
+    
+    /**
      * The given fixedprice eventually has additional costs to be applied.
      *
      * @param RedBean_OODBBean $fixedprice
@@ -363,6 +508,29 @@ class Model_Stock extends Model
         if ( ! $fixedprice->ownScost ) return false;
         $sum = 0;
         foreach ($fixedprice->ownScost as $id => $cost) {
+            if ( $cost->label == 'flat' ) {
+                $sum += $cost->value;
+            } elseif ( $cost->label == 'stockperitem' ) {
+                $sum += $cost->value;
+            } elseif ( $cost->label == 'stockperweight' ) {
+                $sum += $cost->value * $this->bean->weight;
+            }
+        }        
+        $this->bean->totalsprice -= $sum;
+        $this->bean->totaldprice -= $sum;
+    }
+    
+    /**
+     * The given fixedprice eventually has additional costs to be applied for lab.
+     *
+     * @param RedBean_OODBBean $fixedprice
+     * @return void
+     */
+    public function calculateFixedpriceCostLab(RedBean_OODBBean $fixedprice)
+    {
+        if ( ! $fixedprice->ownCost ) return false;
+        $sum = 0;
+        foreach ($fixedprice->ownCost as $id => $cost) {
             if ( $cost->label == 'flat' ) {
                 $sum += $cost->value;
             } elseif ( $cost->label == 'stockperitem' ) {
