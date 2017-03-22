@@ -232,6 +232,7 @@ Flight::route('(/[a-z]{2})/forbidden', function() {
         'language' => Flight::get('language'),
         'title' => I18n::__('forbidden_head_title')
     ));
+    Flight::stop(403);
 });
 
 /**
@@ -343,5 +344,6 @@ Flight::map('notFound', function() {
             'language' => Flight::get('language'),
             'title' => I18n::__('notfound_head_title')
         ));
+        Flight::stop(404);
     }
 });
