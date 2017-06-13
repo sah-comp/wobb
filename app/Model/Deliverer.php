@@ -258,7 +258,7 @@ class Model_Deliverer extends Model
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
                 
-                if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' LIMIT 1 ", array(
+                if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage1' => $stock['damage1'],
                     ':supplier' => $this->bean->supplier
                 ))) {
@@ -286,7 +286,7 @@ class Model_Deliverer extends Model
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
                 
-                if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' LIMIT 1 ", array(
+                if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage2' => $stock['damage2'],
                     ':supplier' => $this->bean->supplier
                 ))) {
@@ -316,7 +316,7 @@ class Model_Deliverer extends Model
                 $stocks = R::getAll("SELECT COUNT(id) AS total, quality FROM stock WHERE csb_id = ? AND supplier = ? AND quality = ? GROUP BY quality ORDER BY quality ", array($this->bean->csb->getId(), $this->bean->supplier, $quality->name));
                 foreach ($stocks as $id => $stock) {
 
-                    if ( ! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' LIMIT 1 ", array(
+                    if ( ! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' ORDER BY supplier DESC LIMIT 1 ", array(
                         ':quality' => $stock['quality'],
                         ':supplier' => $this->bean->supplier
                     ))) {
@@ -412,7 +412,7 @@ class Model_Deliverer extends Model
             $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
         }
         $this->bean->invoice->vatvalue = 
-                                $this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100;
+                round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
         $this->bean->invoice->totalgros = 
                                 $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue;
         
