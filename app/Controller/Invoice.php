@@ -176,7 +176,7 @@ class Controller_Invoice extends Controller
             ':lo' => $_SESSION['invoice']['lo'],
             ':hi' => $_SESSION['invoice']['hi']
         ));
-        $this->totals = R::getRow(" SELECT count(id) AS count, SUM(totalnet) AS totalnet, SUM(subtotalnet) AS subtotalnet, SUM(totalnetnormal) as totalnetnormal, SUM(totalnetfarmer) as totalnetfarmer, SUM(totalnetother) as totalnetother, SUM(vatvalue) AS vatvalue, SUM(totalgros) AS totalgros, SUM(bonusnet) AS bonusnet, SUM(costnet) AS costnet FROM invoice WHERE fy = :fy AND ( name >= :lo AND name <= :hi ) ", array(
+        $this->totals = R::getRow(" SELECT count(id) AS count, SUM(ROUND(totalnet, 2)) AS totalnet, SUM(ROUND(subtotalnet, 2)) AS subtotalnet, SUM(ROUND(totalnetnormal, 2)) as totalnetnormal, SUM(ROUND(totalnetfarmer, 2)) as totalnetfarmer, SUM(ROUND(totalnetother, 2) ) as totalnetother, SUM(ROUND(vatvalue, 2)) AS vatvalue, SUM(ROUND(totalgros, 2)) AS totalgros, SUM(ROUND(bonusnet, 2)) AS bonusnet, SUM(ROUND(costnet, 2)) AS costnet FROM invoice WHERE fy = :fy AND ( name >= :lo AND name <= :hi ) ", array(
             ':fy' => $_SESSION['invoice']['fy'],
             ':lo' => $_SESSION['invoice']['lo'],
             ':hi' => $_SESSION['invoice']['hi']

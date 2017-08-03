@@ -276,6 +276,16 @@ Flight::route('(/[a-z]{2})/booking(/@method:[a-z]+(/@id:[0-9]+))', function($met
 });
 
 /**
+ * Route to the openitem controller.
+ */
+Flight::route('(/[a-z]{2})/openitem(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
+    if ( $method === null) $method = 'index';
+    if ( $id === null) $id = 0;
+	$controller = new Controller_Openitem($id);
+	$controller->$method();
+});
+
+/**
  * Route to the statistic controller.
  */
 Flight::route('(/[a-z]{2})/statistic(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
