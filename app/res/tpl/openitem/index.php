@@ -31,12 +31,16 @@
                     for="openitem-nickname">
                     <?php echo I18n::__('openitem_label_sel_nickname') ?>
                 </label>
-                <input
+                <select
                     id="openitem-nickname"
-                    type="text"
-                    name="dialog[nickname]"
-                    value="<?php echo htmlspecialchars($_SESSION['openitem']['nickname']) ?>"
-                    required="required" />
+                    name="dialog[nickname]">
+                    <option value=""><?php echo I18n::__( 'openitem_all_deliverers' ) ?></option>
+                    <?php foreach ( R::findAll( 'person', " ORDER BY name ") as $_id => $_person): ?>
+                    <option 
+                        value="<?php echo htmlspecialchars($_person->nickname) ?>"
+                        <?php echo ( $_SESSION['openitem']['nickname'] == $_person->nickname ) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' - ' . $_person->name ) ?></option>
+                    <?php endforeach ?>
+                </select>
             </div>
             <div class="buttons">
                 <a
@@ -80,11 +84,14 @@
                 <div class="span1">
                     <label><?php echo I18n::__('openitem_label_person_nickname') ?></label>
                 </div>
-                <div class="span5">
+                <div class="span3">
                     <label><?php echo I18n::__('openitem_label_person_id') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('openitem_label_totalgros') ?></label>
+                </div>
+                <div class="span1">
+                    &nbsp;
                 </div>
             </div>
                 <?php endif ?>
@@ -105,11 +112,21 @@
                         <div class="span1">
                             <?php echo htmlspecialchars($_record->person->nickname) ?>
                         </div>
-                        <div class="span5">
+                        <div class="span3">
                             <?php echo htmlspecialchars($_record->person->name) ?>
                         </div>
                         <div class="span2 number">
                             <?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?>
+                        </div>
+                        <div class="span1">
+                            <button 
+                                class="btn silent" 
+                                type="button"
+                                data-container="openitem-<?php echo $_record->getId() ?>"
+                                data-href="<?php echo Url::build(sprintf('/openitem/payment/%d', $_record->getId())) ?>"><?php echo I18n::__('openitem_label_paid_' . $_record->paid) ?></button>
+                        </div>
+                        <div class="span1 number">
+                            &nbsp;
                         </div>
                     </div>
             </fieldset>

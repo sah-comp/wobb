@@ -2,7 +2,7 @@
     <?php echo htmlspecialchars($record->name) ?>
 </div>
 <div class="span2">
-    <?php echo htmlspecialchars($record->localizedDate('bookingdate')) ?>
+    <?php echo htmlspecialchars($record->localizedDate('dateofslaughter')) ?>
 </div>
 <div class="span1">
     <?php echo htmlspecialchars($record->person->account) ?>
