@@ -53,6 +53,13 @@ class Controller_Openitem extends Controller
     public $records = array();
     
     /**
+     * Container for person beans.
+     *
+     * @var array
+     */
+    public $persons = array();
+    
+    /**
      * Container for the totals of the current selection.
      *
      * @var array
@@ -104,6 +111,7 @@ class Controller_Openitem extends Controller
             Flight::get('user')->notify(I18n::__('openitem_select_success'));
             $this->redirect($this->base_url);
         }
+        $this->persons = R::findAll( 'person', " ORDER BY name ");
         $this->getCollection();
         $this->render();
     }
@@ -118,21 +126,46 @@ class Controller_Openitem extends Controller
      */
     public function getCollection($order_dir = 'DESC')
     {
-        if ( ! $person = R::findOne( 'person', " nickname = :nickname ", 
-            array( ':nickname' => $_SESSION['openitem']['nickname'] ) 
-        )) {
-            $persons = R::findAll( 'person' );
-            $person = array_shift($persons);
+        if ( $_SESSION['openitem']['nickname'] == '' ) {
+            $this->records = R::find('invoice', " fy = :fy AND paid = 0 ORDER BY name " . $order_dir, array(
+                ':fy' => $_SESSION['openitem']['fy']
+            ));
+            $this->totals = R::getRow(" SELECT count(id) AS count, SUM(ROUND(totalnet, 2)) AS totalnet, SUM(ROUND(subtotalnet, 2)) AS subtotalnet, SUM(ROUND(totalnetnormal, 2)) as totalnetnormal, SUM(ROUND(totalnetfarmer, 2)) as totalnetfarmer, SUM(ROUND(totalnetother, 2) ) as totalnetother, SUM(ROUND(vatvalue, 2)) AS vatvalue, SUM(ROUND(totalgros, 2)) AS totalgros, SUM(ROUND(bonusnet, 2)) AS bonusnet, SUM(ROUND(costnet, 2)) AS costnet FROM invoice WHERE fy = :fy AND paid = 0", array(
+                ':fy' => $_SESSION['openitem']['fy']
+            ));
+        } else {
+            if ( ! $person = R::findOne( 'person', " nickname = :nickname ", 
+                array( ':nickname' => $_SESSION['openitem']['nickname'] ) 
+            )) {
+                $persons = R::findAll( 'person' );
+                $person = array_shift($persons);
+            }
+            $this->records = R::find('invoice', " fy = :fy AND person_id = :person_id AND paid = 0 ORDER BY name " . $order_dir, array(
+                ':fy' => $_SESSION['openitem']['fy'],
+                ':person_id' => $person->getId()
+            ));
+            $this->totals = R::getRow(" SELECT count(id) AS count, SUM(ROUND(totalnet, 2)) AS totalnet, SUM(ROUND(subtotalnet, 2)) AS subtotalnet, SUM(ROUND(totalnetnormal, 2)) as totalnetnormal, SUM(ROUND(totalnetfarmer, 2)) as totalnetfarmer, SUM(ROUND(totalnetother, 2) ) as totalnetother, SUM(ROUND(vatvalue, 2)) AS vatvalue, SUM(ROUND(totalgros, 2)) AS totalgros, SUM(ROUND(bonusnet, 2)) AS bonusnet, SUM(ROUND(costnet, 2)) AS costnet FROM invoice WHERE fy = :fy AND person_id = :person_id AND paid = 0", array(
+                ':fy' => $_SESSION['openitem']['fy'],
+                ':person_id' => $person->getId()
+            ));
         }
-        $this->records = R::find('invoice', " fy = :fy AND person_id = :person_id AND paid = 0 ORDER BY name " . $order_dir, array(
-            ':fy' => $_SESSION['openitem']['fy'],
-            ':person_id' => $person->getId()
-        ));
-        $this->totals = R::getRow(" SELECT count(id) AS count, SUM(ROUND(totalnet, 2)) AS totalnet, SUM(ROUND(subtotalnet, 2)) AS subtotalnet, SUM(ROUND(totalnetnormal, 2)) as totalnetnormal, SUM(ROUND(totalnetfarmer, 2)) as totalnetfarmer, SUM(ROUND(totalnetother, 2) ) as totalnetother, SUM(ROUND(vatvalue, 2)) AS vatvalue, SUM(ROUND(totalgros, 2)) AS totalgros, SUM(ROUND(bonusnet, 2)) AS bonusnet, SUM(ROUND(costnet, 2)) AS costnet FROM invoice WHERE fy = :fy AND person_id = :person_id AND paid = 0", array(
-            ':fy' => $_SESSION['openitem']['fy'],
-            ':person_id' => $person->getId()
-        ));
         return null;
+    }
+    
+    /**
+     * Toggle paid attribute.
+     */
+    public function payment()
+    {
+        if ( $this->record->paid ) {
+            $this->record->paid = 0;
+        } else {
+            $this->record->paid = 1;
+        }
+        R::store($this->record);
+        Flight::render('openitem/single', array(
+            'record' => $this->record
+        ));
     }
     
     /**
@@ -187,7 +220,8 @@ class Controller_Openitem extends Controller
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('openitem/'.$this->layout, array(
             'record' => $this->record,
-            'records' => $this->records
+            'records' => $this->records,
+            'persons' => $this->persons
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("openitem_head_title"),
