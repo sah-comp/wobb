@@ -18,12 +18,15 @@
  * @version $Id$
  */
 class Model_Lanuvitem extends Model
-{   
+{
     /**
      * Dispense.
      */
     public function dispense()
     {
+        $this->addConverter('piggery', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('sumweight', array(
             new Converter_Decimal()
         ));
@@ -46,6 +49,9 @@ class Model_Lanuvitem extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('avgpricelanuv', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('piggerypercentage', array(
             new Converter_Decimal()
         ));
     }

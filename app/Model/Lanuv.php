@@ -28,7 +28,7 @@ class Model_Lanuv extends Model
       * Define the lower margin for stock.
       */
     const LOWER_MARGIN = 80.0;
-    
+
     /**
       * Define the upper margin for stock.
       */
@@ -42,7 +42,7 @@ class Model_Lanuv extends Model
     protected $qualities = array(
         'S', 'E', 'U', 'R', 'O', 'P'
     );
-    
+
     /**
      * Holds the non-qualities (Handelsklasse) of stock to pick up in a summary.
      *
@@ -99,7 +99,7 @@ class Model_Lanuv extends Model
             )
         );
     }
-    
+
     /**
      * Returns SQL string.
      *
@@ -131,7 +131,7 @@ SQL;
         }
         return $sql;
     }
-    
+
     /**
      * Returns the week of year from a given attribute.
      *
@@ -143,7 +143,7 @@ SQL;
         $date = new DateTime($this->bean->$attr);
         return $date->format("W");
     }
-    
+
     /**
      * Generate report for this lanuv bean.
      *
@@ -203,7 +203,7 @@ SQL;
         $this->markAsReportedWeight($this->qualities, $lowerMargin, $upperMargin);
         return true;
     }
-    
+
     /**
      * Copies values from summary array into the given bean.
      *
@@ -233,7 +233,7 @@ SQL;
         $bean->avgdprice = $summary['avgdprice'];
         return true;
     }
-    
+
     /**
      * Returns an array with information about totals.
      * Stock beans with attribute damage1 = '02' are collected.
@@ -245,8 +245,8 @@ SQL;
     public function getSummaryTotal($margin_lo, $margin_hi)
     {
 		$sql = <<<SQL
-        SELECT 
-            count(id) as piggery, 
+        SELECT
+            count(id) as piggery,
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
             sum(totaldprice) as sumtotaldprice,
@@ -255,11 +255,11 @@ SQL;
             (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
-        FROM stock 
-        WHERE 
-            buyer = :buyer AND 
-            (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            ( (weight >= :lo AND weight <= :hi AND quality IN ('S', 'E', 'U', 'R', 'O', 'P') ) OR quality IN ('M', 'V') ) AND 
+        FROM stock
+        WHERE
+            buyer = :buyer AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
+            ( (weight >= :lo AND weight <= :hi AND quality IN ('S', 'E', 'U', 'R', 'O', 'P') ) OR quality IN ('M', 'V') ) AND
             (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
@@ -271,7 +271,7 @@ SQL;
             ':hi' => $margin_hi
         ));
     }
-    
+
     /**
      * Returns an array with information about a certain stock quality.
      * Stock beans with attribute damage1 = '02' are collected.
@@ -284,8 +284,8 @@ SQL;
     public function getSummaryQuality($quality, $margin_lo, $margin_hi)
     {
 		$sql = <<<SQL
-        SELECT 
-            count(id) as piggery, 
+        SELECT
+            count(id) as piggery,
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
             sum(totaldprice) as sumtotaldprice,
@@ -294,12 +294,12 @@ SQL;
             (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
-        FROM stock 
-        WHERE 
-            buyer = :buyer AND 
-            quality = :quality AND 
-            (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            (weight >= :lo AND weight <= :hi) AND 
+        FROM stock
+        WHERE
+            buyer = :buyer AND
+            quality = :quality AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
+            (weight >= :lo AND weight <= :hi) AND
             (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
@@ -312,7 +312,7 @@ SQL;
             ':hi' => $margin_hi
         ));
     }
-    
+
     /**
      * Returns an array with information about a certain stock non-quality.
      *
@@ -322,8 +322,8 @@ SQL;
     public function getSummaryNonQuality($quality)
     {
 		$sql = <<<SQL
-        SELECT 
-            count(id) as piggery, 
+        SELECT
+            count(id) as piggery,
             sum(weight) as sumweight,
             avg(mfa) as avgmfa,
             sum(totaldprice) as sumtotaldprice,
@@ -332,11 +332,11 @@ SQL;
             (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
             avg(weight) as avgweight,
             avg(dprice) as avgdprice
-        FROM stock 
-        WHERE 
-            buyer = :buyer AND 
-            quality = :quality AND 
-            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+        FROM stock
+        WHERE
+            buyer = :buyer AND
+            quality = :quality AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
             (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
@@ -347,7 +347,7 @@ SQL;
             ':enddate' => $this->bean->enddate
         ));
     }
-    
+
     /**
      * Marks stock as reported to LANUV that have a certain quality.
      *
@@ -359,10 +359,10 @@ SQL;
 		$sql = <<<SQL
         UPDATE stock
         SET lanuvreported = 1
-        WHERE 
-            buyer = :buyer AND 
+        WHERE
+            buyer = :buyer AND
             quality IN ('M', 'V') AND
-            (pubdate >= :startdate AND pubdate <= :enddate) AND 
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
             (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
@@ -385,12 +385,12 @@ SQL;
     {
 		$sql = <<<SQL
         UPDATE stock
-        SET lanuvreported = 1 
-        WHERE 
-            buyer = :buyer AND 
-            quality IN ('S', 'E', 'U', 'R', 'O', 'P') AND 
-            (pubdate >= :startdate AND pubdate <= :enddate) AND 
-            (weight >= :lo AND weight <= :hi) AND 
+        SET lanuvreported = 1
+        WHERE
+            buyer = :buyer AND
+            quality IN ('S', 'E', 'U', 'R', 'O', 'P') AND
+            (pubdate >= :startdate AND pubdate <= :enddate) AND
+            (weight >= :lo AND weight <= :hi) AND
             (damage1 = '' OR damage1 = '02') AND
             csb_id IS NOT NULL
 SQL;
@@ -402,7 +402,7 @@ SQL;
             ':hi' => $margin_hi
         ));
     }
-    
+
     /**
      * Export the lanuv bean as csv.
      */
@@ -413,7 +413,7 @@ SQL;
         $csv = new parseCSV();
         $csv->output('lanuv.csv', $stocks, ',');
     }
-    
+
     /**
      * Generates a CSV file after the specs of LANUV weekly price report.
      *
@@ -433,7 +433,7 @@ SQL;
         }
         return true;
     }
-    
+
     /**
      * Generate a CSV file after LANUV requirements and try to email it to this
      * beans company LANUV email address.
@@ -447,7 +447,7 @@ SQL;
         //throw new Exception('Blubb');
         return true;
     }
-    
+
     /**
      * Returns an array of all stock within the lanuv time periode.
      *
@@ -497,7 +497,7 @@ SQL;
             ':enddate' => $this->bean->enddate
         ));
     }
-    
+
     /**
      * Returns the name of this beans company.
      *
@@ -507,7 +507,7 @@ SQL;
     {
         return $this->bean->company->name;
     }
-    
+
     /**
      * Dispense.
      */
@@ -520,9 +520,39 @@ SQL;
         $this->addConverter('enddate', array(
             new Converter_MysqlDate()
         ));
+        $this->addConverter('piggery', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('piggerypercentage', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumtotallanuvprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgmfa', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgpricelanuv', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumtotaldprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgdprice', array(
+            new Converter_Decimal()
+        ));
     }
-    
-    
+
+
     /**
      * update.
      *
