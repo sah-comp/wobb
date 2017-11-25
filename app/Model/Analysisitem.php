@@ -18,12 +18,18 @@
  * @version $Id$
  */
 class Model_Analysisitem extends Model
-{   
+{
     /**
      * Dispense.
      */
     public function dispense()
     {
+        $this->addConverter('piggery', array(
+          new Converter_Decimal()
+        ));
+        $this->addConverter('piggerypercentage', array(
+          new Converter_Decimal()
+        ));
         $this->addConverter('sumweight', array(
             new Converter_Decimal()
         ));
@@ -39,6 +45,9 @@ class Model_Analysisitem extends Model
         $this->addConverter('avgdprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('avgdpricelanuv', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('sumtotaldprice', array(
             new Converter_Decimal()
         ));
@@ -46,6 +55,39 @@ class Model_Analysisitem extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('avgpricelanuv', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damage', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagepiggery', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagepiggerypercentage', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagesumweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagesumtotaldprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagesumtotallanuvprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgmfa', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgpricelanuv', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgdprice', array(
             new Converter_Decimal()
         ));
     }

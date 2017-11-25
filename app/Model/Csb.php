@@ -26,7 +26,7 @@ class Model_Csb extends Model
     protected $extensions = array(
         'txt' => 'text/plain'
     );
-    
+
     /**
      * Returns the media file name.
      *
@@ -36,7 +36,7 @@ class Model_Csb extends Model
     {
         return $this->bean->sanename;
     }
-    
+
     /**
      * Returns wether the csb was already calculated or not.
      *
@@ -44,9 +44,10 @@ class Model_Csb extends Model
      */
     public function wasCalculated()
     {
-        return ( $this->bean->calcdate != '0000-00-00 00:00:00');
+      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Returns wether the csb was already billed or not.
      *
@@ -54,9 +55,10 @@ class Model_Csb extends Model
      */
     public function wasBilled()
     {
-        return ( $this->bean->billingdate != '0000-00-00 00:00:00');
+      if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Mark all lanuv beans as dirty which are effected by this csb bean.
      *
@@ -67,7 +69,7 @@ class Model_Csb extends Model
         R::exec(" UPDATE analysis SET dirty = 1 WHERE (startdate <= :pubdate AND enddate >= :pubdate ) AND analysis_id IS NULL and person_id IS NULL ", array(':pubdate' => $this->bean->pubdate));
         return $this->bean;
     }
-    
+
     /**
      * Mark all analysis beans as dirty which are effected by this csb bean.
      *
@@ -78,7 +80,7 @@ class Model_Csb extends Model
         R::exec(" UPDATE lanuv SET dirty = 1 WHERE (startdate <= :pubdate AND enddate >= :pubdate ) ", array(':pubdate' => $this->bean->pubdate));
         return $this->bean;
     }
-    
+
     /**
      * Returns a string with nicely formatted date of slaughter.
      *
@@ -91,7 +93,7 @@ class Model_Csb extends Model
         Flight::setlocale();
         return strftime( "%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime( $this->bean->pubdate ) );
     }
-    
+
     /**
      * Returns the count of a certain damage code within this days stock.
      *
@@ -120,7 +122,7 @@ class Model_Csb extends Model
                     ))
                     ->countOwn('stock');
     }
-    
+
     /**
      * Returns an array with stock that needs manual work.
      *
@@ -133,7 +135,7 @@ class Model_Csb extends Model
     {
         return R::find('stock', " csb_id = ? AND damage1 IN (?) ORDER BY supplier, name", array($this->bean->getId(), "06"));
     }
-    
+
     /**
      * Returns the stock beans which have a certain code.
      *
@@ -149,7 +151,7 @@ class Model_Csb extends Model
                     ))
                     ->ownStock;
     }
-    
+
     /**
      * Returns the latest csb bean.
      *
@@ -162,7 +164,7 @@ class Model_Csb extends Model
         }
         return $latest;
     }
-    
+
     /**
      * Returns a string to be used as a headline.
      *
@@ -173,7 +175,7 @@ class Model_Csb extends Model
     {
         return I18n::__('purchase_h1_' . $label);
         /*
-        return I18n::__('purchase_h1_mask', null, 
+        return I18n::__('purchase_h1_mask', null,
             array(
                 $this->localizedDate('pubdate'),
                 $this->bean->company->name,
@@ -262,7 +264,7 @@ class Model_Csb extends Model
             )
         );
     }
-    
+
     /**
      * Returns SQL string.
      *
@@ -280,7 +282,7 @@ class Model_Csb extends Model
 		    {$fields}
 		FROM
 		    {$this->bean->getMeta('type')}
-		LEFT JOIN company ON company.id = csb.company_id    
+		LEFT JOIN company ON company.id = csb.company_id
 		LEFT JOIN csbformat ON csbformat.id = csb.csbformat_id
 		WHERE
 		    {$where}
@@ -295,7 +297,7 @@ SQL;
         }
         return $sql;
     }
-    
+
     /**
      * Returns the name of this beans company.
      *
@@ -305,7 +307,7 @@ SQL;
     {
         return $this->bean->company->name;
     }
-    
+
     /**
      * Returns the name of this beans csbformat.
      *
@@ -315,7 +317,7 @@ SQL;
     {
         return $this->bean->csbformat->name;
     }
-    
+
     /**
      * Returns a the given string safely to use as filename or url.
      *
@@ -334,7 +336,7 @@ SQL;
         $string = preg_replace('/[^\w\-'. ($is_filename ? '~_\.' : ''). ']+/u', '-', $string);
         return mb_strtolower(preg_replace('/--+/u', '-', $string));
     }
-    
+
     /**
      * dispense a new csb bean.
      */
@@ -362,7 +364,7 @@ SQL;
             new Validator_HasValue()
         ));
     }
-        
+
     /**
      * update.
      *
@@ -404,7 +406,7 @@ SQL;
         }
         parent::update();
     }
-    
+
     /**
      * Reads the file and tries to import stock from the given file.
      *
@@ -422,15 +424,15 @@ SQL;
             $stock = R::dispense('stock');
             $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
-            
+
             if ( $stock->pubdate != $this->bean->pubdate ) {
                 throw new Exception_Csbfiledatemismatch('Date in CSB file does not match your csb date');
             }
-            
+
             $stock->lanuvreported = 0;
             $stock->billnumber = 0;
             $stock->person = $stock->getPersonBySupplier();
-            
+
             $this->bean->ownStock[] = $stock;
             $this->bean->piggery++;
         }
@@ -438,7 +440,7 @@ SQL;
         Flight::get('user')->notify(I18n::__('csb_already_imported', null, array($this->bean->piggery)));
         return true;
     }
-    
+
     /**
      * Looks up possible aliasses for stock beans and transfers them to their new owner.
      *
@@ -466,7 +468,7 @@ SQL;
         }
         return true;
     }
-    
+
     /**
      * Create deliverer and their subdeliverer beans.
      *
@@ -571,9 +573,9 @@ SQL;
                 $deliverer->hasmfacount += $summary['hasmfacount'];
             }
             // calculate means
-            if ( $deliverer->piggery != 0 ) 
+            if ( $deliverer->piggery != 0 )
                 $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
-            if ( $deliverer->hasmfacount != 0 ) 
+            if ( $deliverer->hasmfacount != 0 )
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
             if ( $deliverer->totalweight != 0 ) {
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
@@ -587,7 +589,7 @@ SQL;
         $this->calcAverages();
         return null;
     }
-    
+
     /**
      * Sets the average prices for this slaughter day.
      *
@@ -613,7 +615,7 @@ SQL;
         $this->bean->lanuvprice = $summary['avgpricelanuv'];
         return null;
     }
-    
+
     /**
      * Generates bills for all enabled supplier beans of this csb bean.
      *
@@ -629,7 +631,7 @@ SQL;
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
         return null;
     }
-    
+
     /**
      * after_delete.
      *

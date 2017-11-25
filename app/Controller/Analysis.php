@@ -25,28 +25,28 @@ class Controller_Analysis extends Controller
     public $javascripts = array(
         '/js/tk'
     );
-    
+
     /**
      * Holds the layout to render.
      *
      * @var string
      */
     public $layout = 'index';
-    
+
     /**
      * Container for the current csb bean.
      *
      * @var Model_Csb
      */
     public $record;
-    
+
     /**
      * Container for the current collection of csb beans.
      *
      * @var array
      */
     public $records;
-    
+
     /**
      * Constructs a new Purchase controller.
      *
@@ -85,7 +85,7 @@ class Controller_Analysis extends Controller
         }
         $this->render();
     }
-    
+
     /**
      * A certain analysis summary.
      */
@@ -113,7 +113,7 @@ class Controller_Analysis extends Controller
         }
         $this->render();
     }
-    
+
     /**
      * Generates an PDF using mPDF library and downloads it to the client.
      *
@@ -162,7 +162,7 @@ class Controller_Analysis extends Controller
         }
         $this->render();
     }
-    
+
     /**
      * Renders the current layout.
      */

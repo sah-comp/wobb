@@ -28,7 +28,7 @@ class Model_Adjustmentitem extends Model
         return array(
         );
     }
-    
+
     /**
      * Calculation of this bean.
      *
@@ -44,7 +44,7 @@ class Model_Adjustmentitem extends Model
         $this->bean->gros = $this->bean->net + $this->bean->vatvalue;
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated this bean
     }
-    
+
     /**
      * Returns wether the adjustmentitem was already calculated or not.
      *
@@ -52,9 +52,10 @@ class Model_Adjustmentitem extends Model
      */
     public function wasCalculated()
     {
-        return ( $this->bean->calcdate != '0000-00-00 00:00:00');
+      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Billing of this bean.
      *
@@ -109,7 +110,7 @@ class Model_Adjustmentitem extends Model
             'gros' => $this->bean->invoice->totalgros
         );
     }
-    
+
     /**
      * Returns wether the adjustmentitem was already billed or not.
      *
@@ -117,9 +118,10 @@ class Model_Adjustmentitem extends Model
      */
     public function wasBilled()
     {
-        return ( $this->bean->billingdate != '0000-00-00 00:00:00');
+      if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Returns the invoice bean of this bean.
      *
@@ -132,7 +134,7 @@ class Model_Adjustmentitem extends Model
         }
         return $this->bean->invoice;
     }
-    
+
     /**
      * Update.
      */
@@ -150,14 +152,20 @@ class Model_Adjustmentitem extends Model
         }
         parent::update();
     }
-    
+
     /**
      * Dispense.
      */
     public function dispense()
     {
-        $this->bean->billingdate = '0000-00-00 00:00:00';
-        $this->bean->calcdate = '0000-00-00 00:00:00';
+        $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
+        $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
+        $this->addConverter('billingdate',
+            new Converter_Mysqldate()
+        );
+        $this->addConverter('calcdate',
+            new Converter_Mysqldate()
+        );
         $this->addConverter('net', array(
             new Converter_Decimal()
         ));

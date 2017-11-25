@@ -17,7 +17,7 @@
  * @version $Id$
  */
 class Model_Adjustment extends Model
-{   
+{
     /**
      * Returns wether the adjustment was already calculated or not.
      *
@@ -25,9 +25,10 @@ class Model_Adjustment extends Model
      */
     public function wasCalculated()
     {
-        return ( $this->bean->calcdate != '0000-00-00 00:00:00');
+        if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
+        return TRUE;
     }
-    
+
     /**
      * Returns wether the adjustment was already billed or not.
      *
@@ -35,9 +36,10 @@ class Model_Adjustment extends Model
      */
     public function wasBilled()
     {
-        return ( $this->bean->billingdate != '0000-00-00 00:00:00');
+      if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Returns an array with attributes for lists.
      *
@@ -73,7 +75,7 @@ class Model_Adjustment extends Model
             )
         );
     }
-    
+
     /**
      * Returns SQL string.
      *
@@ -105,7 +107,7 @@ SQL;
         }
         return $sql;
     }
-    
+
     /**
      * Returns the name of this beans company.
      *
@@ -115,15 +117,21 @@ SQL;
     {
         return $this->bean->company->name;
     }
-    
+
     /**
      * dispense a new adjustment bean.
      */
     public function dispense()
     {
-        $this->bean->billingdate = '00000-00-00 00:00:00';
-        $this->bean->calcdate = '00000-00-00 00:00:00';
+        $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
+        $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
         $this->bean->pubdate = date('Y-m-d');
+        $this->addConverter('billingdate',
+            new Converter_Mysqldate()
+        );
+        $this->addConverter('calcdate',
+            new Converter_Mysqldate()
+        );
         $this->addConverter('pubdate',
             new Converter_Mysqldate()
         );
@@ -134,7 +142,7 @@ SQL;
             new Validator_HasValue()
         ));
     }
-        
+
     /**
      * update.
      *
@@ -164,7 +172,7 @@ SQL;
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the adjustment bean
         return null;
     }
-    
+
     /**
      * Generates bills for all adjustmentitem beans of this adjustment bean.
      *

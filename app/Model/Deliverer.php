@@ -19,7 +19,7 @@
  * @version $Id$
  */
 class Model_Deliverer extends Model
-{    
+{
     /**
      * Dispense.
      */
@@ -35,7 +35,7 @@ class Model_Deliverer extends Model
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
-        
+
         $this->addConverter('calcdate', array(
             new Converter_MysqlDatetime()
         ));
@@ -51,7 +51,7 @@ class Model_Deliverer extends Model
         if ( $this->bean->sent ) return 'mailed';
         return '';
     }
-    
+
     /**
      * Returns true when this beans person has either billingtransport set to email or both.
      *
@@ -62,7 +62,7 @@ class Model_Deliverer extends Model
         if ( $this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both' ) return true;
         return false;
     }
-    
+
     /**
      * Returns true when this beans person billingtransport is mail only.
      *
@@ -83,7 +83,7 @@ class Model_Deliverer extends Model
     {
         return $this->bean->person->hasservice;
     }
-    
+
     /**
      * Returns notes about the determination of the base price.
      *
@@ -108,7 +108,7 @@ class Model_Deliverer extends Model
             $this->bean->person->pricing->name
         ));
     }
-    
+
     /**
      * Returns wether the deliverer was already billed or not.
      *
@@ -121,7 +121,7 @@ class Model_Deliverer extends Model
         if ( ! $this->bean->invoice()->getId()) return false;
         return true;
     }
-    
+
     /**
      * Returns the an invoice bean.
      *
@@ -142,9 +142,10 @@ class Model_Deliverer extends Model
      */
     public function wasCalculated()
     {
-        return ( $this->bean->calcdate != '0000-00-00 00:00:00');
+      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
+      return TRUE;
     }
-    
+
     /**
      * Calculates the vat values of this bean.
      *
@@ -156,7 +157,7 @@ class Model_Deliverer extends Model
         $this->bean->totalgros = $this->bean->subtotalnet + $this->bean->vatvalue;
         return true;
     }
-    
+
     /**
      * Calculates conditions and costs of this deliverer with given stock bean and returns total mix.
      *
@@ -171,7 +172,7 @@ class Model_Deliverer extends Model
         $mix += $this->calculateCost($stock);
         return (float)$mix;
     }
-    
+
     /**
      * Calculates conditions of this deliverer with given stock bean and returns the total bonus.
      *
@@ -191,12 +192,12 @@ class Model_Deliverer extends Model
                     $bonus += $condition->value;
                     $stock->bonusitem += $condition->value;
                     break;
-                
+
                 case 'stockperweight':
                     $bonus += $stock->weight * $condition->value;
                     $stock->bonusweight += $condition->value;
                     break;
-            
+
                 default:
                     // dunno?! nothing.
                     break;
@@ -205,7 +206,7 @@ class Model_Deliverer extends Model
         $stock->bonus = $bonus;
         return (float)$bonus;
     }
-    
+
     /**
      * Calculates cost of this deliverer with given stock bean and returns the total cost.
      *
@@ -225,12 +226,12 @@ class Model_Deliverer extends Model
                     $cost_sum += $cost->value;
                     $stock->costitem += $cost->value;
                     break;
-                
+
                 case 'stockperweight':
                     $cost_sum += $stock->weight * $cost->value;
                     $stock->costweight += $cost->value;
                     break;
-            
+
                 default:
                     // dunno?! nothing.
                     break;
@@ -239,7 +240,7 @@ class Model_Deliverer extends Model
         $stock->cost = $cost_sum;
         return (float)$cost_sum;
     }
-    
+
     /**
      * Returns an array with special prices for damaged stock.
      *
@@ -257,14 +258,14 @@ class Model_Deliverer extends Model
             // damage1
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
-                
+
                 if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage1' => $stock['damage1'],
                     ':supplier' => $this->bean->supplier
                 ))) {
                     $var = R::dispense('var');
                 }
-                
+
                 $price = R::dispense('specialprice');
                 $price->piggery = $stock['total'];
                 $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
@@ -281,18 +282,18 @@ class Model_Deliverer extends Model
                 }
                 $this->bean->ownSpecialprice[] = $price;
             }
-            
+
             // damage2
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
-                
+
                 if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage2' => $stock['damage2'],
                     ':supplier' => $this->bean->supplier
                 ))) {
                     $var = R::dispense('var');
                 }
-                
+
                 $price = R::dispense('specialprice');
                 $price->piggery = $stock['total'];
                 $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
@@ -309,7 +310,7 @@ class Model_Deliverer extends Model
                 }
                 $this->bean->ownSpecialprice[] = $price;
             }
-            
+
             $qualities = R::find('var', " kind='quality' AND supplier = ''");
             foreach ($qualities as $id => $quality) {
                 // quality
@@ -411,18 +412,18 @@ class Model_Deliverer extends Model
             $this->bean->invoice->totalnetnormal = 0;
             $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
         }
-        $this->bean->invoice->vatvalue = 
+        $this->bean->invoice->vatvalue =
                 round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
-        $this->bean->invoice->totalgros = 
+        $this->bean->invoice->totalgros =
                                 $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue;
-        
+
         $this->bean->invoice->kind = 0;//depends on the kind of invoice. 0 = Slaughter, 1 = other
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
         // end of establishing a new invoice
         $this->dispatchBillingNumberToStock($csb);
         return null;
     }
-    
+
     /**
      * Dispatches the billingnumber (invoice->name) of this deliverer of the given csb to its stock.
      *
@@ -439,7 +440,7 @@ class Model_Deliverer extends Model
         ));
         return null;
     }
-    
+
     /**
      * Calculates the prices of all stock that belongs to this deliverer of the given csb bean and
      * returns an array with a summery of the calculation.
