@@ -37,25 +37,27 @@ class Model_Company extends Model
             return null;
         }
     }
-    
+
     /**
      * Checks if this company is capeable of using an smtp server and returns
      * false if not or an array with the smtp data for further usage.
      *
      * @return mixed bool or array
      */
-    public function smtp($value='')
+    public function smtp()
     {
-        if ( $this->bean->smtphost ) return array(
+        if ($this->bean->smtphost) {
+            return array(
             'host' => $this->bean->smtphost,
             'port' => $this->bean->smtpport,
             'auth' => $this->bean->smtpauth,
             'user' => $this->bean->smtpuser,
             'password' => $this->bean->smtppwd
         );
+        }
         return false;
     }
-    
+
     /**
      * Returns a string that works as a postal senderline.
      *
@@ -112,7 +114,7 @@ class Model_Company extends Model
             )
         );
     }
-    
+
     /**
      * Dispense.
      */
@@ -130,11 +132,12 @@ class Model_Company extends Model
      */
     public function update()
     {
-        if ( $this->bean->buyer !== $this->bean->old('buyer') ) {
-            R::exec( 'UPDATE stock SET buyer = :buyer WHERE buyer = :oldbuyer', array(
+        $this->bean->smtpport = (int)$this->bean->smtpport;
+        if ($this->bean->buyer !== $this->bean->old('buyer')) {
+            R::exec('UPDATE stock SET buyer = :buyer WHERE buyer = :oldbuyer', array(
                 ':buyer' => $this->bean->buyer,
                 ':oldbuyer' => $this->bean->old('buyer')
-            ) );
+            ));
         }
         parent::update();
     }

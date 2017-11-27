@@ -25,28 +25,28 @@ class Controller_Deliverer extends Controller
     public $javascripts = array(
         '/js/tk'
     );
-    
+
     /**
      * Holds the layout to render.
      *
      * @var string
      */
     public $layout = 'index';
-    
+
     /**
      * Container for the current csb bean.
      *
      * @var Model_Csb
      */
     public $record;
-    
+
     /**
      * Container for the current collection of csb beans.
      *
      * @var array
      */
     public $records;
-    
+
     /**
      * Constructs a new Purchase controller.
      *
@@ -68,7 +68,7 @@ class Controller_Deliverer extends Controller
         $this->layout = 'index';
         $this->render();
     }
-    
+
     /**
      * Generates the invoice PDF for dealer audience.
      *
@@ -78,12 +78,16 @@ class Controller_Deliverer extends Controller
     public function dealer()
     {
         $this->layout = 'dealer';
-        $filename = I18n::__('deliverer_dealer_invoice_filename', null, 
+        $filename = I18n::__(
+            'deliverer_dealer_invoice_filename',
+            null,
             array(
                 $this->record->invoice->name
             )
         );
-        $docname = I18n::__('deliverer_dealer_invoice_docname', null, 
+        $docname = I18n::__(
+            'deliverer_dealer_invoice_docname',
+            null,
             array(
                 $this->record->invoice->name
             )
@@ -92,7 +96,7 @@ class Controller_Deliverer extends Controller
         $mpdf->Output($filename, 'D');
         exit;
     }
-    
+
     /**
      * Generates the invoice PDF for dealer audience and mails it.
      *
@@ -102,20 +106,24 @@ class Controller_Deliverer extends Controller
     public function mail()
     {
         $this->layout = 'dealer';
-        $filename = I18n::__('deliverer_dealer_invoice_filename', null, 
+        $filename = I18n::__(
+            'deliverer_dealer_invoice_filename',
+            null,
             array(
                 $this->record->invoice->name
             )
         );
-        $docname = I18n::__('deliverer_dealer_invoice_docname', null, 
+        $docname = I18n::__(
+            'deliverer_dealer_invoice_docname',
+            null,
             array(
                 $this->record->invoice->name
             )
         );
         $mpdf = $this->generatePDF($filename, $docname);
-        if ( $this->sendMail( $filename, $docname, $mpdf ) ) {
+        if ($this->sendMail($filename, $docname, $mpdf)) {
             $this->record->sent = true;
-            Flight::get('user')->notify(I18n::__('deliverer_send_mail_success'));            
+            Flight::get('user')->notify(I18n::__('deliverer_send_mail_success'));
         } else {
             $this->record->sent = false;
             Flight::get('user')->notify(I18n::__('deliverer_send_mail_failed'), 'warning');
@@ -123,7 +131,7 @@ class Controller_Deliverer extends Controller
         R::store($this->record);
         $this->redirect(sprintf('/purchase/calculation/%d', $this->record->csb->getId()));
     }
-    
+
     /**
      * Generates the service PDF for dealer audience.
      *
@@ -133,12 +141,16 @@ class Controller_Deliverer extends Controller
     public function service()
     {
         $this->layout = 'service';
-        $filename = I18n::__('deliverer_dealer_service_filename', null, 
+        $filename = I18n::__(
+            'deliverer_dealer_service_filename',
+            null,
             array(
                 $this->record->invoice->name
             )
         );
-        $docname = I18n::__('deliverer_dealer_service_docname', null, 
+        $docname = I18n::__(
+            'deliverer_dealer_service_docname',
+            null,
             array(
                 $this->record->invoice->name
             )
@@ -157,12 +169,16 @@ class Controller_Deliverer extends Controller
     public function internal()
     {
         $this->layout = 'internal';
-        $filename = I18n::__('deliverer_company_invoice_filename', null, 
+        $filename = I18n::__(
+            'deliverer_company_invoice_filename',
+            null,
             array(
                 $this->record->invoice->name
             )
         );
-        $docname = I18n::__('deliverer_company_invoice_docname', null, 
+        $docname = I18n::__(
+            'deliverer_company_invoice_docname',
+            null,
             array(
                 $this->record->invoice->name
             )
@@ -171,7 +187,7 @@ class Controller_Deliverer extends Controller
         $mpdf->Output($filename, 'D');
         exit;
     }
-    
+
     /**
      * Sends an email to this beans person email address with the dealer invoice pdf attached.
      *
@@ -179,15 +195,15 @@ class Controller_Deliverer extends Controller
      * @param string $docname
      * @param mPDF $mpdf
      */
-    public function sendMail( $filename, $docname, $mpdf )
+    public function sendMail($filename, $docname, $mpdf)
     {
-        $mail = new PHPMailer();
-        
-        if ( $smtp = $this->record->invoice->company->smtp() ) {
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+        if ($smtp = $this->record->invoice->company->smtp()) {
             $mail->SMTPDebug = 1;                                 // Set debug mode, 1 = err/msg, 2 = msg
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
-            if ( $smtp['auth'] ) {
+            if ($smtp['auth']) {
                 $mail->SMTPAuth = true;                           // Enable SMTP authentication
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
@@ -196,15 +212,15 @@ class Controller_Deliverer extends Controller
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
         }
-        
+
         $mail->CharSet = 'UTF-8';
         $mail->From = $this->record->invoice->company->emailnoreply;
         $mail->FromName = $this->record->invoice->company->legalname;
-        $mail->addAddress( $this->record->person->email, $this->record->person->name );
+        $mail->addAddress($this->record->person->email, $this->record->person->name);
         $mail->WordWarp = 50;
-        $mail->isHTML( true );
+        $mail->isHTML(true);
         $mail->Subject = $docname;
-        
+
         ob_start();
         Flight::render('deliverer/mail/html', array(
             'record' => $this->record
@@ -218,12 +234,12 @@ class Controller_Deliverer extends Controller
         $mail->Body = $html;
         $mail->AltBody = $text;
         $attachment = $mpdf->Output('', 'S');
-        
-        $mail->addStringAttachment( $attachment, $filename );
-        
+
+        $mail->addStringAttachment($attachment, $filename);
+
         return $mail->send();
     }
-    
+
     /**
      * Generates an PDF using mPDF library and return the mPDF object.
      *
@@ -241,7 +257,7 @@ class Controller_Deliverer extends Controller
             'record' => $this->record,
             'records' => $this->records,
             'conditions' => $this->record->person->withCondition(" ( doesnotaffectinvoice IS NULL OR doesnotaffectinvoice = 0 ) ")->ownCondition,
-            'costs' => $this->record->person->ownCost, 
+            'costs' => $this->record->person->ownCost,
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => false,
             'bookingdate' => $this->record->invoice->localizedDate('bookingdate'),
@@ -249,28 +265,28 @@ class Controller_Deliverer extends Controller
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),
-            'javascripts' => $this->javascripts       
+            'javascripts' => $this->javascripts
         ));
         $html = ob_get_contents();
         ob_end_clean();
-        $mpdf->WriteHTML( $html );
+        $mpdf->WriteHTML($html);
         return $mpdf;
     }
-    
+
     /**
      * Renders the current layout.
      */
     protected function render()
     {
         Flight::render('shared/notification', array(), 'notification');
-	    //
+        //
         Flight::render('shared/navigation/account', array(), 'navigation_account');
-		Flight::render('shared/navigation/main', array(), 'navigation_main');
+        Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('deliverer/toolbar', array(
         ), 'toolbar');
-		Flight::render('shared/header', array(), 'header');
-		Flight::render('shared/footer', array(), 'footer');
+        Flight::render('shared/header', array(), 'header');
+        Flight::render('shared/footer', array(), 'footer');
         Flight::render('deliverer/'.$this->layout, array(
             'record' => $this->record,
             'records' => $this->records
