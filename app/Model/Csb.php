@@ -44,8 +44,10 @@ class Model_Csb extends Model
      */
     public function wasCalculated()
     {
-      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
-      return TRUE;
+        if ($this->bean->calcdate === null || $this->bean->calcdate == '0000-00-00 00:00:00') {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -55,8 +57,10 @@ class Model_Csb extends Model
      */
     public function wasBilled()
     {
-      if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
-      return TRUE;
+        if ($this->bean->billingdate === null || $this->bean->billingdate == '0000-00-00 00:00:00') {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -91,7 +95,7 @@ class Model_Csb extends Model
     public function getDateOfSlaughter()
     {
         Flight::setlocale();
-        return strftime( "%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime( $this->bean->pubdate ) );
+        return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
     }
 
     /**
@@ -159,7 +163,7 @@ class Model_Csb extends Model
      */
     public function getLatest()
     {
-        if ( ! $latest = R::findOne('csb', " ORDER BY pubdate DESC LIMIT 1 ")) {
+        if (! $latest = R::findOne('csb', " ORDER BY pubdate DESC LIMIT 1 ")) {
             $latest = R::dispense('csb');
         }
         return $latest;
@@ -277,7 +281,7 @@ class Model_Csb extends Model
      */
     public function getSql($fields = 'id', $where = '1', $order = null, $offset = null, $limit = null)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
 		SELECT
 		    {$fields}
 		FROM
@@ -345,10 +349,12 @@ SQL;
         $this->bean->piggery = 0;
         $this->bean->calcdate = null;
         $this->bean->pubdate = date('Y-m-d');
-        $this->addConverter('pubdate',
+        $this->addConverter(
+            'pubdate',
             new Converter_Mysqldate()
         );
-        $this->addConverter('calcdate',
+        $this->addConverter(
+            'calcdate',
             new Converter_Mysqldatetime()
         );
         $this->addConverter('baseprice', array(
@@ -376,9 +382,7 @@ SQL;
         $file = reset($files);
         if ($this->bean->getId() || (empty($file) || $file['error'] == 4)) {
             // do not handle the file a second time
-        }
-        else
-        {
+        } else {
             if ($file['error']) {
                 $this->addError($file['error'], 'file');
                 throw new Exception('fileupload error');
@@ -387,7 +391,7 @@ SQL;
             $this->bean->sanename = $this->sanitizeFilename($file_parts['filename']);
             $this->bean->extension = strtolower($file_parts['extension']);
             $this->bean->file = $this->bean->sanename.'.'.$this->bean->extension;
-            if ( ! move_uploaded_file($file['tmp_name'], Flight::get('upload_dir') . '/' . $this->bean->file)) {
+            if (! move_uploaded_file($file['tmp_name'], Flight::get('upload_dir') . '/' . $this->bean->file)) {
                 $this->addError('move_upload_file_failed', 'file');
                 throw new Exception('move_upload_file_failed');
             }
@@ -415,17 +419,21 @@ SQL;
     public function importFromCsb()
     {
         $file = Flight::get('upload_dir') . '/' . $this->bean->file;
-        if ( ! $fh = fopen($file, "r")) return false;
+        if (! $fh = fopen($file, "r")) {
+            return false;
+        }
         $this->bean->piggery = 0;
         $this->bean->ownStock = array();
-        while ( ! feof($fh) ) {
+        while (! feof($fh)) {
             $line = fgets($fh, 4096);
-            if ($this->bean->csbformat->getBuyerFromCSB($line) != $this->bean->company->buyer) continue;
+            if ($this->bean->csbformat->getBuyerFromCSB($line) != $this->bean->company->buyer) {
+                continue;
+            }
             $stock = R::dispense('stock');
             $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
 
-            if ( $stock->pubdate != $this->bean->pubdate ) {
+            if ($stock->pubdate != $this->bean->pubdate) {
                 throw new Exception_Csbfiledatemismatch('Date in CSB file does not match your csb date');
             }
 
@@ -454,14 +462,16 @@ SQL;
     public function checkAliasses()
     {
         $aliasses = R::findAll('kidnap');
-        if ( ! $aliasses ) return false;
+        if (! $aliasses) {
+            return false;
+        }
         $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE earmark = :earmark AND csb_id = :csb_id";
         foreach ($aliasses as $id => $alias) {
-            $new_earmark = strtoupper( $alias->person->nickname . substr( $alias->earmark, 2 ) );
+            $new_earmark = strtoupper($alias->person->nickname . substr($alias->earmark, 2));
             R::exec($sql, array(
                 ':new_earmark' => $new_earmark,
                 ':new_pid' => $alias->person->getId(),
-                ':new_supplier' => strtoupper( $alias->person->nickname ),
+                ':new_supplier' => strtoupper($alias->person->nickname),
                 ':earmark' => $alias->earmark,
                 ':csb_id' => $this->bean->getId()
             ));
@@ -481,11 +491,11 @@ SQL;
     {
         $sqlqsd = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND qs = 1";
         $sqlqss = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND qs = 1";
-        $stocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
+        $stocks = R::getAll("SELECT count(id) AS total, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
         foreach ($stocks as $id => $stock) {
             // Deliverer owns one or more earmarks of an csb day
             $deliverer = R::dispense('deliverer');
-            if ( ! $deliverer->person = R::findOne('person', ' nickname = ? LIMIT 1', array($stock['supplier']))) {
+            if (! $deliverer->person = R::findOne('person', ' nickname = ? LIMIT 1', array($stock['supplier']))) {
                 $p = R::dispense('person');
                 $p->nickname = $stock['supplier'];
                 $deliverer->person = $p;
@@ -545,21 +555,25 @@ SQL;
             $deliverer->meandprice = 0;
             $deliverer->meansprice = 0;
             foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
-                if ( ! $subdeliverer->dprice ) $subdeliverer->dprice = $deliverer->dprice;
-                if ( ! $subdeliverer->sprice ) $subdeliverer->sprice = $deliverer->sprice;
+                if (! $subdeliverer->dprice) {
+                    $subdeliverer->dprice = $deliverer->dprice;
+                }
+                if (! $subdeliverer->sprice) {
+                    $subdeliverer->sprice = $deliverer->sprice;
+                }
                 $summary = $subdeliverer->calculation($this->bean);
                 // save some of the summary to the subdeliverer
                 $subdeliverer->totalnet = $summary['totalnet'];
                 $subdeliverer->totalnetsprice = $summary['totalnetsprice'];
                 $subdeliverer->totalweight = $summary['totalweight'];
                 // subdeliverer mean values
-                if ( $summary['piggery'] != 0 ) {
+                if ($summary['piggery'] != 0) {
                     $subdeliverer->meanweight = $summary['totalweight'] / $summary['piggery'];
                 }
-                if ( $summary['hasmfacount'] != 0 ) {
+                if ($summary['hasmfacount'] != 0) {
                     $subdeliverer->meanmfa = $summary['totalmfa'] / $summary['hasmfacount'];
                 }
-                if ( $summary['totalweight'] != 0 ) {
+                if ($summary['totalweight'] != 0) {
                     $subdeliverer->meandprice = $summary['totalnet'] / $summary['totalweight'];
                     $subdeliverer->meansprice = $summary['totalnetsprice'] / $summary['totalweight'];
                     $subdeliverer->meandpricelanuv = $summary['totalnetlanuv'] / $summary['totalweight'];
@@ -573,11 +587,13 @@ SQL;
                 $deliverer->hasmfacount += $summary['hasmfacount'];
             }
             // calculate means
-            if ( $deliverer->piggery != 0 )
+            if ($deliverer->piggery != 0) {
                 $deliverer->meanweight = $deliverer->totalweight / $deliverer->piggery;
-            if ( $deliverer->hasmfacount != 0 )
+            }
+            if ($deliverer->hasmfacount != 0) {
                 $deliverer->meanmfa = $deliverer->totalmfa / $deliverer->hasmfacount;
-            if ( $deliverer->totalweight != 0 ) {
+            }
+            if ($deliverer->totalweight != 0) {
                 $deliverer->meandprice = $deliverer->totalnet / $deliverer->totalweight;
                 $deliverer->meansprice = $deliverer->totalnetsprice / $deliverer->totalweight;
                 $deliverer->meandpricelanuv = $deliverer->totalnetlanuv / $deliverer->totalweight;
