@@ -43,7 +43,7 @@ class Model_Analysis extends Model
      * @var array
      */
     protected $damages = array(
-        '01', '02', '03', '04', '05', '06', '07', '08', '09'
+        '01', '02', '03', '04', '05', '06', '07', '08', '09', '10'
     );
 
     /**
@@ -106,7 +106,7 @@ class Model_Analysis extends Model
      */
     public function getSql($fields = 'id', $where = '1', $order = null, $offset = null, $limit = null)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
 		SELECT
 		    {$fields}
 		FROM
@@ -152,13 +152,13 @@ SQL;
         $this->bean->ownAnalysisitem = array();
         //$this->bean->person = null;
         $summary = $this->getSummaryTotal();
-        if ( $summary['piggery'] == 0 ) {
+        if ($summary['piggery'] == 0) {
             throw new Exception('Grand total piggery is zero.');
         }
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
         $summary = $this->getSummaryDamageTotal();
         $this->copyFromSummaryDamage(null, $this->bean, $summary, $summary['piggery']);
-        $qualities = array_merge( $this->qualities, $this->nonQualities );
+        $qualities = array_merge($this->qualities, $this->nonQualities);
         foreach ($qualities as $quality) {
             $summary = $this->getSummary($quality); // totals and averages of the stock
             $analysisitem = R::dispense('analysisitem');
@@ -199,11 +199,11 @@ SQL;
             }
             // if supplier has conditions that apply to invoices we add them here
             $conditions = $person->withCondition(' doesnotaffectinvoice = 0 ')->ownCondition;
-            foreach ( $conditions as $id => $condition) {
+            foreach ($conditions as $id => $condition) {
                 $subAnalysisitem = R::dispense('analysisitem');
                 $subAnalysisitem->kind = 2;
-                $subAnalysisitem->quality = $condition->content . ' ' . I18n::__( 'condition_label_' . $condition->label );
-                switch ( $condition->label ) {
+                $subAnalysisitem->quality = $condition->content . ' ' . I18n::__('condition_label_' . $condition->label);
+                switch ($condition->label) {
                     case 'stockperitem':
                         $subAnalysisitem->piggery = $supplierSummary['piggery'];
                         $subAnalysisitem->sumtotaldprice = $subAnalysisitem->piggery * $condition->value;
@@ -242,7 +242,7 @@ SQL;
         $bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
         $bean->piggery = $summary['piggery'];
-        if ( $total != 0) {
+        if ($total != 0) {
             $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
         } else {
             $bean->piggerypercentage = 0;
@@ -272,7 +272,7 @@ SQL;
         $bean->kind = 1; //this is a damage entry
         $bean->damage = $damage;
         $bean->damagepiggery = $summary['piggery'];
-        if ( $total != 0 ) {
+        if ($total != 0) {
             $bean->damagepiggerypercentage = $summary['piggery'] * 100 / $total;
         } else {
             $bean->damagepiggerypercentage = 0;
@@ -296,7 +296,7 @@ SQL;
      */
     public function getSummary($quality)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -330,7 +330,7 @@ SQL;
      */
     public function getSummaryDamage($damage)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -365,7 +365,7 @@ SQL;
      */
     public function getSummarySupplier($quality, $supplier)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -402,7 +402,7 @@ SQL;
      */
     public function getSummaryDamageSupplier($damage, $supplier)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -437,7 +437,7 @@ SQL;
      */
     public function getSummaryTotal()
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -468,7 +468,7 @@ SQL;
      */
     public function getSummaryDamageTotal()
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -501,7 +501,7 @@ SQL;
      */
     public function getSummaryTotalSupplier($supplier)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -535,7 +535,7 @@ SQL;
      */
     public function getSummaryDamageTotalSupplier($supplier)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
