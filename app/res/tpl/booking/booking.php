@@ -18,6 +18,14 @@
         table {
             border-collapse: collapse;
         }
+        table.inbetween {
+            margin-bottom: 10mm;
+        }
+        div.square {
+            padding: 5mm 0;
+            border-top: 0.1mm solid dashed;
+            border-bottom: 0.1mm solid dashed;
+        }
         caption {
             font-weight: bold;
             padding-bottom: 3mm;
@@ -40,7 +48,7 @@
         th.number,
         td.number {
             text-align: right;
-        }     
+        }
     </style>
 </head>
 <body>
@@ -49,7 +57,8 @@
     foreach ($records as $_id => $_record):
         $_item++;
 ?>
-    <table width="100%">
+    <div class="square">
+    <table width="100%" class="inbetween">
         <thead>
             <tr>
                 <th width="30%"><?php echo I18n::__('invoice_label_person_account') ?></th>
@@ -63,8 +72,8 @@
             </tr>
         </tbody>
     </table>
-    <div style="height: 10mm;"></div>
-    <table width="100%">
+
+    <table width="100%" class="inbetween">
         <thead>
             <tr>
                 <th width="30%"><?php echo I18n::__('person_label_bic') ?></th>
@@ -78,7 +87,7 @@
             </tr>
         </tbody>
     </table>
-    <div style="height: 10mm;"></div>
+
     <table width="100%">
         <thead>
             <tr>
@@ -95,19 +104,14 @@
             </tr>
         </tbody>
     </table>
+    </div>
 <?php
-        if ( $_item == 3 ):
+        if ($_item == 3):
             $_item = 0;
             ?>
             <!--mpdf
             <pagebreak />
             mpdf-->
-            <?php
-        else:
-            ?>
-            <div style="height: 15mm;"></div>
-            <div style="border-top: 0.1mm dashed #000000;"></div>
-            <div style="height: 15mm;"></div>
             <?php
         endif;
     endforeach;
