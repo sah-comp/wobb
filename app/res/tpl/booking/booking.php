@@ -1,3 +1,13 @@
+<?php
+/**
+ * Booking paper strips.
+ */
+
+/**
+ * Number of strips per page.
+ */
+$_items_per_page = 2;
+?>
 <!DOCTYPE html>
 <html lang="<?php echo $language ?>" class="no-js">
 <head>
@@ -19,10 +29,10 @@
             border-collapse: collapse;
         }
         table.inbetween {
-            margin-bottom: 10mm;
+            margin-bottom: 15mm;
         }
         div.square {
-            padding: 5mm 0;
+            padding: 25mm 0 10mm 0;
             border-top: 0.1mm solid dashed;
             border-bottom: 0.1mm solid dashed;
         }
@@ -88,7 +98,7 @@
         </tbody>
     </table>
 
-    <table width="100%">
+    <table width="100%" class="inbetween">
         <thead>
             <tr>
                 <th width="30%"><?php echo I18n::__('invoice_label_name') ?></th>
@@ -106,7 +116,7 @@
     </table>
     </div>
 <?php
-        if ($_item == 3):
+        if ($_item == $_items_per_page):
             $_item = 0;
             ?>
             <!--mpdf
