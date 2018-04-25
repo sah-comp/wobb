@@ -2,11 +2,11 @@
 	HTML5 Reset :: style.css
 	----------------------------------------------------------
 	We have learned much from/been inspired by/taken code where offered from:
-	
+
 	Eric Meyer					:: http://ericmeyer.com
 	HTML5 Doctor				:: http://html5doctor.com
 	and the HTML5 Boilerplate	:: http://html5boilerplate.com
-	
+
 -------------------------------------------------------------------------------*/
 
 /* Let's default this puppy out
@@ -20,7 +20,7 @@ html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquot
 	font-size: 100%;
 	vertical-align: baseline;
 	background: transparent;
-}									
+}
 
 article, aside, figure, footer, header, hgroup, nav, section {display: block;}
 
@@ -34,15 +34,15 @@ embed {max-width: 100%; height: auto;}
 /* force a vertical scrollbar to prevent a jumpy page */
 html {overflow-y: scroll;}
 
-/* we use a lot of ULs that aren't bulleted. 
+/* we use a lot of ULs that aren't bulleted.
 	don't forget to restore the bullets within content. */
 ul {list-style: none;}
 
 blockquote, q {quotes: none;}
 
-blockquote:before, 
-blockquote:after, 
-q:before, 
+blockquote:before,
+blockquote:after,
+q:before,
 q:after {content: ''; content: none;}
 
 a {margin: 0; padding: 0; font-size: 100%; vertical-align: baseline; background: transparent;}
@@ -76,7 +76,7 @@ select, input, textarea {font: 99% sans-serif;}
 textarea { overflow: auto; } /* www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/ */
 
 table {font-size: inherit; font: 100%;}
- 
+
 /* Accessible focus treatment
 	people.opera.com/patrickl/experiments/keyboard/test */
 a:hover, a:active {outline: none;}
@@ -85,7 +85,7 @@ small {font-size: 85%;}
 
 strong, th {font-weight: bold;}
 
-td, td img {vertical-align: top;} 
+td, td img {vertical-align: top;}
 
 /* Make sure sup and sub don't screw with your line-heights
 	gist.github.com/413930 */
@@ -98,9 +98,9 @@ pre, code, kbd, samp {font-family: monospace, sans-serif;}
 
 /* hand cursor on clickable elements */
 .clickable,
-label, 
-input[type=button], 
-input[type=submit], 
+label,
+input[type=button],
+input[type=submit],
 button {cursor: pointer;}
 
 /* Webkit browsers add a 2px margin outside the chrome of form elements */
@@ -128,7 +128,7 @@ textarea {
 
 /* make buttons play nice in IE */
 button {width: auto; overflow: visible;}
- 
+
 /* scale images in IE7 more attractively */
 .ie7 img {-ms-interpolation-mode: bicubic;}
 
@@ -471,8 +471,12 @@ ul li ul {
     margin-bottom: inherit;
 }
 
+select {
+    font-size: small;
+}
 
-/* using local fonts? make sure to read up on Paul Irish's 
+
+/* using local fonts? make sure to read up on Paul Irish's
 	Bulletproof @font-face syntax: http://mky.be/font-face/bulletproof/ */
 
 /* we like off-black for text */
@@ -483,10 +487,10 @@ a:hover {color: #666;} /*#69f*/
 
 /* Custom text-selection colors (remove any text shadows: twitter.com/miketaylr/status/12228805301) */
 ::-moz-selection{background: #fcd700; color: #fff; text-shadow: none;}
-::selection {background: #fcd700; color: #fff; text-shadow: none;} 
+::selection {background: #fcd700; color: #fff; text-shadow: none;}
 
 /*	j.mp/webkit-tap-highlight-color */
-a:link {-webkit-tap-highlight-color: #fcd700;} 
+a:link {-webkit-tap-highlight-color: #fcd700;}
 
 ins {background-color: #fcd700; color: #000; text-decoration: none;}
 mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: bold;}
@@ -532,26 +536,17 @@ body > header > h1 {
     padding: 0;
 }
 
-a.logo-old-style-but-nicer {
-    display: block;
-    width: 98px;
-    height: 2em;
-    background-image: url(/img/tk-logo.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 48px 18px;
-}
 a.logo {
     display: block;
-    width: auto;
+	width: auto;
     height: 1.5em;
     padding-top: 0.5em;
     padding-left: 1em;
     background-image: none;
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 48px 18px;
-    text-decoration: none;
+	background-size: 48px 18px;
+	text-decoration: none;
 }
 
 ul.main-navigation,
@@ -721,7 +716,7 @@ a.toggle-options {
     text-decoration: none;
     margin-left: -0.8em;
     margin-bottom: 0.5em;
-    
+
 }
 a.toggle-options.active {
     background: url(/img/desc.png) left center no-repeat;
@@ -884,18 +879,19 @@ ul.tab-navigation a.selected {
     color: gray;
 }
 
-.panel .tab p.info.above {
-    margin-bottom: 1em;
-}
-
 th.label {
     width: 25.404255317%;
 }
 
-label.cb {
+.panel label.cb {
     text-align: left;
     width: auto;
     padding-left: 26.0%;
+}
+
+.panel .row.nomargins label {
+    margin: 0;
+	width: auto;
 }
 
 .panel input[type=text],
@@ -936,7 +932,7 @@ select.filter-select {
     width: auto;
 }
 
-select.cb {
+.panel select.cb {
     /*margin-left: 32%;*/
     margin-left: 27.666%;
 }
@@ -971,9 +967,6 @@ fieldset.tab fieldset:last-child .attach {
     display: block;
 }
 
-.panel .row.nomargins label {
-    text-align: left;
-}
 
 /* label in .tab will stretch */
 .panel .tab [class*="span"] label,
@@ -1033,6 +1026,7 @@ input[type=url]:focus,
 input[type=number]:focus,
 input[type=date]:focus,
 input[type=time]:focus,
+input[type=datetime]:focus,
 input[type=url]:focus,
 input[type=tel]:focus,
 textarea:focus {
@@ -1298,10 +1292,6 @@ img.media-preview-icon {
     z-index: 1;
 }
 
-select {
-    font-size: small;
-}
-
 /* Rounded gravatar: A background-image tag in html */
 .circular {
 	width: 72px;
@@ -1320,7 +1310,7 @@ select {
 	height: 48px;
 	border-radius: 24px;
 	-webkit-border-radius: 24px;
-	-moz-border-radius: 24px;    
+	-moz-border-radius: 24px;
 }
 
 .circular .circular-32 {
@@ -1328,7 +1318,7 @@ select {
 	height: 32px;
 	border-radius: 16px;
 	-webkit-border-radius: 16px;
-	-moz-border-radius: 16px;    
+	-moz-border-radius: 16px;
 }
 
 .circular .circular-16 {
@@ -1336,7 +1326,7 @@ select {
 	height: 16px;
 	border-radius: 8px;
 	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;    
+	-moz-border-radius: 8px;
 }
 
 .no-shadow {
@@ -1349,6 +1339,10 @@ select {
 .panel div.row.error label,
 .panel label.error {
     color: #7a0b0a;
+}
+
+.validation-errors {
+    font-size: small;
 }
 
 
@@ -1403,15 +1397,14 @@ select {
 
 /* Consider this: www.cloudfour.com/css-media-query-for-mobile-is-fools-gold/ */
 @media screen and (max-device-width: 480px) {
-	
-		
+
+
 }
 
 @media all and (orientation: portrait) {
-	
+
 }
 
 @media all and (orientation: landscape) {
-	
-}
 
+}
