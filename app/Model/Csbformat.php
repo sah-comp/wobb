@@ -51,7 +51,7 @@ class Model_Csbformat extends Model
             )
         );
     }
-    
+
     /**
      * Returns an array with stock information taken from a line of csb file.
      *
@@ -64,11 +64,11 @@ class Model_Csbformat extends Model
     public function exportFromCSB(RedBean_OODBBean $company, $line = '')
     {
         return array(
-            'buyer' => $this->getBuyerFromCSB( $line ),
+            'buyer' => $this->getBuyerFromCSB($line),
             'pubdate' => $this->makeDateFromCSBDate(substr($line, 3, 8)),
             'name' => (int)trim(substr($line, 12, 7)),
             'supplier' => trim(substr($line, 23, 2)),
-            'earmark' => trim(substr($line, 23, 6)),
+            'earmark' => trim(substr($line, 23, 10)),
             'quality' => trim(substr($line, 33, 1)),
             'weight' => trim($this->makeFloatFromCSBFloat(substr($line, 55, 6))),
             'mfa' => trim($this->makeFloatFromCSBFloat(substr($line, 40, 4))),
@@ -80,7 +80,7 @@ class Model_Csbformat extends Model
             'qs' => (trim(substr($line, 109, 1)) == 'Q') ? true : false
         );
     }
-    
+
     /**
      * Return the buyer code from a line of csb file.
      *
@@ -89,9 +89,9 @@ class Model_Csbformat extends Model
      */
     public function getBuyerFromCSB($line = '')
     {
-        return trim( substr( $line, 20, 3 ) );
+        return trim(substr($line, 20, 3));
     }
-    
+
     /**
      * Returns a double from a german number.
      *
@@ -101,7 +101,7 @@ class Model_Csbformat extends Model
     {
         return (float)str_replace(',', '.', $csb_double);
     }
-    
+
     /**
      * Returns a date with 4-digit year.
      *
@@ -111,7 +111,9 @@ class Model_Csbformat extends Model
     public function makeDateFromCSBDate($csb_date = '')
     {
         $fragments = explode('.', $csb_date);
-        if ( ! is_array($fragments) || count($fragments) != 3) return date('Y-m-d');
+        if (! is_array($fragments) || count($fragments) != 3) {
+            return date('Y-m-d');
+        }
         $day = $fragments[0];
         $month = $fragments[1];
         $year = $fragments[2];
@@ -119,7 +121,7 @@ class Model_Csbformat extends Model
         $year = $dt->Format('Y');
         return date('Y-m-d', strtotime($year . '-' . $month . '-'. $day));
     }
-    
+
     /**
      * Dispense.
      */
