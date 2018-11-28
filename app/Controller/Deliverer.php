@@ -201,11 +201,14 @@ class Controller_Deliverer extends Controller
 
         if ($smtp = $this->record->invoice->company->smtp()) {
             $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
-			
+			/**
+			 * uncomment this block to get verbose error logging in your error log file
+			 */
+			/*
 			$mail->Debugoutput = function($str, $level) {
 				error_log("debug level $level; message: $str");
 			};
-			
+			*/
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
             if ($smtp['auth']) {
@@ -216,7 +219,18 @@ class Controller_Deliverer extends Controller
 			$mail->Port = $smtp['port'];						  // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
-            $mail->SMTPSecure = 'tls';                          // Enable encryption, 'ssl' also accepted
+            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+			
+			/**
+			 * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
+			 */
+			$mail->SMTPOptions = array(
+				'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				)
+			);
         }
 
         $mail->CharSet = 'UTF-8';
