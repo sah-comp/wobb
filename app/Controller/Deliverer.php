@@ -236,8 +236,13 @@ class Controller_Deliverer extends Controller
         $attachment = $mpdf->Output('', 'S');
 
         $mail->addStringAttachment($attachment, $filename);
-
-        return $mail->send();
+		
+		if ($mail->send()) {
+			return true;
+		} else {
+			error_log($mail->ErrorInfo);
+			return false;
+		}
     }
 
     /**
