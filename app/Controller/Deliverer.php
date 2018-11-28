@@ -200,7 +200,12 @@ class Controller_Deliverer extends Controller
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 
         if ($smtp = $this->record->invoice->company->smtp()) {
-            $mail->SMTPDebug = 1;                                 // Set debug mode, 1 = err/msg, 2 = msg
+            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
+			
+			$mail->Debugoutput = function($str, $level) {
+				error_log("debug level $level; message: $str");
+			};
+			
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
             if ($smtp['auth']) {
@@ -208,14 +213,17 @@ class Controller_Deliverer extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
+			$mail->Port = $smtp['port'];						  // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
-            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+            $mail->SMTPSecure = 'tls';                          // Enable encryption, 'ssl' also accepted
         }
 
         $mail->CharSet = 'UTF-8';
-        $mail->From = $this->record->invoice->company->emailnoreply;
-        $mail->FromName = $this->record->invoice->company->legalname;
+        //$mail->From = $this->record->invoice->company->emailnoreply;
+        //$mail->FromName = $this->record->invoice->company->legalname;
+		$mail->setFrom($this->record->invoice->company->emailnoreply, $this->record->invoice->company->legalname);
+		$mail->addReplyTo($this->record->invoice->company->email, $this->record->invoice->company->legalname);
         $mail->addAddress($this->record->person->email, $this->record->person->name);
         $mail->WordWarp = 50;
         $mail->isHTML(true);
