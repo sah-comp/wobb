@@ -209,7 +209,8 @@ ul.action li:last-child a {
 
 .voucher-dealer,
 .voucher-dealer-mail,
-.voucher-internal {
+.voucher-internal,
+.adjustmentitem-internal {
     width: 24px;
     height: 26px;
 }
@@ -220,6 +221,9 @@ ul.action li:last-child a {
     background-image: url(/img/glyphicons/glyphicons_062_paperclip.png);
 }
 .voucher-internal {
+    background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
+}
+.adjustmentitem-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
 }
 

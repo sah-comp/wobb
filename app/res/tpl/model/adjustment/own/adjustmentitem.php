@@ -62,7 +62,7 @@
                 name="dialog[ownAdjustmentitem][<?php echo $index ?>][net]"
                 value="<?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?>" />
         </div>
-        <div class="span2">
+        <div class="span1">
             <input
                 id="adjustment-adjustmentitem-<?php echo $index ?>-vatvalue"
                 class="autowidth number"
@@ -89,6 +89,15 @@
                 readonly="readonly"
                 value="<?php echo ($_adjustmentitem->wasBilled()) ? htmlspecialchars($_adjustmentitem->invoice()->name) : I18n::__('adjustmentitem_not_yet_billed')  ?>" />
         </div>
+		<div class="span1">
+			<?php if ($_adjustmentitem->wasBilled()): ?>
+            <a
+                class="ir adjustmentitem-internal"
+                title="<?php echo I18n::__('adjustmentitem_link_internal_title') ?>"
+                href="<?php echo Url::build('/adjustmentitem/internal/' . $_adjustmentitem->getId()) ?>"><?php echo I18n::__('adjustmentitem_link_internal')
+			?></a>
+			<?php endif ?>
+		</div>
     </div>
 
 </fieldset>

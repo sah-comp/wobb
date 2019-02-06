@@ -75,7 +75,7 @@
                     <?php echo I18n::__('adjustmentitem_label_net') ?>
                 </label>
             </div>
-            <div class="span2">
+            <div class="span1">
                 <label class="number">
                     <?php echo I18n::__('adjustmentitem_label_vatvalue') ?>
                 </label>
@@ -89,6 +89,9 @@
                 <label class="number">
                     <?php echo I18n::__('adjustmentitem_label_invoice') ?>
                 </label>
+            </div>
+            <div class="span1">
+                <label><?php echo I18n::__('adjustmentitem_label_pdf') ?></label>
             </div>
         </div>
         <!-- end of grid based header -->
