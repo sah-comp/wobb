@@ -1,3 +1,6 @@
+<?php 
+Flight::setlocale();
+?>
 <article class="main">
     <header id="header-toolbar" class="fixable">
         <h1><?php echo I18n::__("adjustment_h1_index") ?></h1>
@@ -16,21 +19,7 @@
         <fieldset
             class="tab">
             <legend class="verbose"><?php echo I18n::__('adjustment_history_legend') ?></legend>
-            
-
-            <?php 
-                Flight::setlocale();
-                $_lastYear = null;
-            ?>
-            <?php foreach ($records as $_id => $_record): ?>
-                <?php 
-                    $ts = strtotime( $_record->pubdate );
-                    $_year = date('Y', $ts);
-                ?>
-                <?php if ( $_lastYear != $_year): 
-                        $_lastYear = $_year;
-                ?>
-            <h2 class="year-purchase"><?php echo $_year ?></h2>
+            <h2 class="year-purchase"><?php echo $fiscalyear ?></h2>
             <div class="row">
                 <div class="span1">
                     <label><?php echo I18n::__('adjustment_label_week') ?></label>
@@ -51,7 +40,9 @@
                     <label><?php echo I18n::__('adjustment_label_pdf') ?></label>
                 </div>
             </div>
-                <?php endif ?>
+            <?php foreach ($records as $_id => $_record):
+				$ts = strtotime( $_record->pubdate );
+			?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('adjustment_history_item_legend') ?></legend>
                 <a
@@ -76,7 +67,7 @@
                             <?php if ( $_record->wasBilled() ): ?>
                             <ul class="action">
                                 <li>
-                                    <sapn
+                                    <span
                                         class="ir voucher-internal anchor-substitute"
                                         title="<?php echo I18n::__('adjustment_link_internal_title') ?>"
                                         data-href="<?php echo Url::build('/adjustment/pdf/' . $_record->getId()) ?>"><?php echo I18n::__('adjustment_link_internal') ?></span>

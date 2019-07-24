@@ -46,9 +46,16 @@ class Controller_Adjustment extends Controller
      * @var array
      */
     public $records;
+	
+	/**
+	 * Holds the current fiscal year.
+	 *
+	 * @var int
+	 */
+	public $fiscalyear;
     
     /**
-     * Constructs a new Purchase controller.
+     * Constructs a new Adjustment controller.
      *
      * @param int (optional) id of a bean
      */
@@ -57,6 +64,7 @@ class Controller_Adjustment extends Controller
         session_start();
         Auth::check();
         $this->record = R::load('adjustment', $id);
+		$this->fiscalyear = Flight::setting()->fiscalyear;
     }
 
     /**
@@ -66,10 +74,9 @@ class Controller_Adjustment extends Controller
     {
         Permission::check(Flight::get('user'), 'adjustment', 'index');
         $this->layout = 'index';
-        $this->records = R::findAll('adjustment', ' ORDER BY pubdate DESC');
-        if (Flight::request()->method == 'POST') {
-            Flight::get('user')->notify(I18n::__('adjustment_day_select_success'));
-        }
+        $this->records = R::findAll('adjustment', ' YEAR(pubdate) = :fy ORDER BY pubdate DESC', array(
+        	':fy' => $this->fiscalyear
+        ));
         $this->render();
     }
     
@@ -174,7 +181,8 @@ class Controller_Adjustment extends Controller
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('adjustment/'.$this->layout, array(
             'record' => $this->record,
-            'records' => $this->records
+            'records' => $this->records,
+			'fiscalyear' => $this->fiscalyear
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("adjustment_head_title"),

@@ -49,11 +49,11 @@ class Controller_Purchase extends Controller
     public $records;
     
     /**
-     * Container for chart data.
+     * The fiscal year.
      *
-     * @var string
+     * @var int
      */
-    public $chartdata;
+    public $fiscalyear;
 
     
     /**
@@ -66,6 +66,7 @@ class Controller_Purchase extends Controller
         session_start();
         Auth::check();
         $this->record = R::load('csb', $id);
+		$this->fiscalyear = Flight::setting()->fiscalyear;
     }
     
     /**
@@ -81,26 +82,15 @@ class Controller_Purchase extends Controller
     }
 
     /**
-     * Choose an already existing day or create a new one.
+     * Lists all slaughterdays of the current year.
      */
     public function index()
     {
         Permission::check(Flight::get('user'), 'purchase', 'index');
         $this->layout = 'index';
-        $this->records = R::findAll('csb', ' ORDER BY pubdate DESC');
-        $this->chartdata = implode(',', array_values( 
-            R::getCol("SELECT ROUND(companyprice, 3) FROM csb ORDER BY pubdate ASC") ) 
-        );
-        if (Flight::request()->method == 'POST') {
-            //try to create a new csb bean with data from form
-            //which imports the csb data to stock
-            //from given stock
-            //create each deliverer with its subdeliverers
-            //spread data like prices and such
-            //if all went well goto /purchase/day/n with given new bean
-            //or generate a error notification and stay here
-            Flight::get('user')->notify(I18n::__('purchase_day_select_success'));
-        }
+        $this->records = R::findAll('csb', ' YEAR(pubdate) = :fy ORDER BY pubdate DESC', array(
+        	':fy' => $this->fiscalyear
+        ));
         $this->render();
     }
     
@@ -296,7 +286,7 @@ class Controller_Purchase extends Controller
         Flight::render('purchase/'.$this->layout, array(
             'record' => $this->record,
             'records' => $this->records,
-            'chartdata' => $this->chartdata
+            'fiscalyear' => $this->fiscalyear
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("purchase_head_title"),

@@ -1,3 +1,6 @@
+<?php 
+Flight::setlocale();
+?>
 <article class="main">
     <header id="header-toolbar" class="fixable">
         <h1><?php echo I18n::__("purchase_h1_index") ?></h1>
@@ -16,22 +19,7 @@
         <fieldset
             class="tab">
             <legend class="verbose"><?php echo I18n::__('purchase_history_legend') ?></legend>
-            
-
-            <?php 
-                Flight::setlocale();
-                $_lastYear = null;
-            ?>
-            <?php foreach ($records as $_id => $_record): ?>
-                <?php 
-                    $ts = strtotime( $_record->pubdate );
-                    $_year = date('Y', $ts);
-                ?>
-                <?php if ( $_lastYear != $_year): 
-                        $_lastYear = $_year;
-                ?>
-            <div class="chart-line companyprice"><?php echo $chartdata ?></div>
-            <h2 class="year-purchase"><?php echo $_year ?></h2>
+            <h2 class="year-purchase"><?php echo $fiscalyear ?></h2>
             <div class="row">
                 <div class="span1">
                     <label><?php echo I18n::__('purchase_label_week') ?></label>
@@ -55,7 +43,9 @@
                     &nbsp;
                 </div>
             </div>
-                <?php endif ?>
+            <?php foreach ($records as $_id => $_record):
+				$ts = strtotime( $_record->pubdate );
+			?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('purchase_history_item_legend') ?></legend>
                 <a
