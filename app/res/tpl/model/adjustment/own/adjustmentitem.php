@@ -54,32 +54,56 @@
                 <?php endforeach ?>
             </select>
         </div>
-        <div class="span2">
-            <input
-                id="adjustment-adjustmentitem-<?php echo $index ?>-net"
-                class="autowidth number"
-                type="text"
-                name="dialog[ownAdjustmentitem][<?php echo $index ?>][net]"
-                value="<?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?>" />
-        </div>
-        <div class="span1">
-            <input
-                id="adjustment-adjustmentitem-<?php echo $index ?>-vatvalue"
-                class="autowidth number"
-                type="text"
-                readonly="readonly"
-                name="dialog[ownAdjustmentitem][<?php echo $index ?>][vatvalue]"
-                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
-        </div>
-        <div class="span2">
-            <input
-                id="adjustment-adjustmentitem-<?php echo $index ?>-gros"
-                class="autowidth number"
-                type="text"
-                readonly="readonly"
-                name="dialog[ownAdjustmentitem][<?php echo $index ?>][gros]"
-                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('gros', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
-        </div>
+		<div class="span2">
+			<div class="row">
+		        <div class="span6">
+		            <input
+		                id="adjustment-adjustmentitem-<?php echo $index ?>-delddate"
+		                class="autowidth"
+		                type="date"
+		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][deldate]"
+		                value="<?php echo htmlspecialchars($_adjustmentitem->deldate) ?>" />
+		        </div>
+		        <div class="span6">
+		            <input
+		                id="adjustment-adjustmentitem-<?php echo $index ?>-deldinv"
+		                class="autowidth"
+		                type="text"
+		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][delinv]"
+		                value="<?php echo htmlspecialchars($_adjustmentitem->delinv) ?>" />
+		        </div>
+			</div>
+		</div>
+		<div class="span3">
+			<div class="row">
+		        <div class="span4">
+		            <input
+		                id="adjustment-adjustmentitem-<?php echo $index ?>-net"
+		                class="autowidth number"
+		                type="text"
+		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][net]"
+		                value="<?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?>" />
+		        </div>
+		        <div class="span4">
+		            <input
+		                id="adjustment-adjustmentitem-<?php echo $index ?>-vatvalue"
+		                class="autowidth number"
+		                type="text"
+		                readonly="readonly"
+		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][vatvalue]"
+		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
+		        </div>
+		        <div class="span4">
+		            <input
+		                id="adjustment-adjustmentitem-<?php echo $index ?>-gros"
+		                class="autowidth number"
+		                type="text"
+		                readonly="readonly"
+		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][gros]"
+		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('gros', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
+		        </div>
+			</div>
+		</div>
         <div class="span2">
             <input
                 id="adjustment-adjustmentitem-<?php echo $index ?>-value"

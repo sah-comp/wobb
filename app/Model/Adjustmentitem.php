@@ -160,7 +160,11 @@ class Model_Adjustmentitem extends Model
     {
         $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
         $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
+		$this->bean->deldate = NULL;//'0000-00-00 00:00:00';
         $this->addConverter('billingdate',
+            new Converter_Mysqldate()
+        );
+        $this->addConverter('deldate',
             new Converter_Mysqldate()
         );
         $this->addConverter('calcdate',

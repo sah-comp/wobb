@@ -71,20 +71,38 @@
                 </label>
             </div>
             <div class="span2">
-                <label class="number">
-                    <?php echo I18n::__('adjustmentitem_label_net') ?>
-                </label>
+				<div class="row">
+		            <div class="span6">
+		                <label>
+		                    <?php echo I18n::__('adjustmentitem_label_del_date') ?>
+		                </label>
+		            </div>
+		            <div class="span6">
+		                <label>
+		                    <?php echo I18n::__('adjustmentitem_label_del_inv') ?>
+		                </label>
+		            </div>
+				</div>
             </div>
-            <div class="span1">
-                <label class="number">
-                    <?php echo I18n::__('adjustmentitem_label_vatvalue') ?>
-                </label>
-            </div>
-            <div class="span2">
-                <label class="number">
-                    <?php echo I18n::__('adjustmentitem_label_gros') ?>
-                </label>
-            </div>
+			<div class="span3">
+				<div class="row">
+		            <div class="span4">
+		                <label class="number">
+		                    <?php echo I18n::__('adjustmentitem_label_net') ?>
+		                </label>
+		            </div>
+		            <div class="span4">
+		                <label class="number">
+		                    <?php echo I18n::__('adjustmentitem_label_vatvalue') ?>
+		                </label>
+		            </div>
+		            <div class="span4">
+		                <label class="number">
+		                    <?php echo I18n::__('adjustmentitem_label_gros') ?>
+		                </label>
+		            </div>
+				</div>
+			</div>
             <div class="span2">
                 <label class="number">
                     <?php echo I18n::__('adjustmentitem_label_invoice') ?>
