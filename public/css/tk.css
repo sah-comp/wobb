@@ -210,25 +210,27 @@ ul.action li:last-child a {
 .voucher-dealer,
 .voucher-dealer-mail,
 .voucher-internal,
-.adjustmentitem-internal {
+.adjustmentitem-internal,
+.adjustmentitem-mail {
     width: 24px;
     height: 26px;
 }
 .voucher-dealer {
     background-image: url(/img/glyphicons/glyphicons_135_inbox_out.png);
 }
-.voucher-dealer-mail {
+.voucher-dealer-mail,
+.adjustmentitem-mail {
     background-image: url(/img/glyphicons/glyphicons_062_paperclip.png);
 }
-.voucher-internal {
-    background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
-}
+.voucher-internal,
 .adjustmentitem-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
 }
 
 .voucher-dealer.email,
-.voucher-dealer-mail.mailed {
+.voucher-dealer-mail.mailed,
+.adjustmentitem.email,
+.adjustmentitem-mail.mailed {
     opacity: 0.3;
 }
 

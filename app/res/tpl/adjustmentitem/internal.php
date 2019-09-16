@@ -26,8 +26,12 @@
             font-size: 14pt;
             font-weight: bold;
         }
-		.desc {
+		.desc,
+		.subject {
 			font-size: 13pt;
+		}
+		.subject {
+			font-weight: bold;
 		}
         .dinky {
             font-size: 8pt;
@@ -207,18 +211,6 @@
             <td style="width: 65mm; vertical-align: top;">
                 <table class="info" width="100%">
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_serial') ?></label>
-                        <td class="value emphasize"><?php echo $record->invoice->name ?></label>
-                    </tr>
-                    <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></label>
-                        <td class="value"><?php echo $bookingdate ?></label>
-                    </tr>
-                    <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_nickname') ?></label>
-                        <td class="value"><?php echo $record->person->nickname ?></label>
-                    </tr>
-                    <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_person') ?></label>
                         <td class="value"><?php echo $record->person->account ?></label>
                     </tr>
@@ -231,43 +223,48 @@
         </tr>
     </table>
     
-    <div style="height: 18mm;"></div>    
+    <div style="height: 18mm;"></div>  
     <table width="100%">
 		<tr>
-			<td class="desc" style="vertical-align: top;">
-				<?php echo Flight::textile(I18n::__('adjustmentitem_wawi_text')) ?>
+			<td class="subject" style="vertical-align: top;">
+				<?php echo Flight::textile(I18n::__('adjustmentitem_bookingslot_text')) ?>
 			</td>
 		</tr>
-        <tr>
-			<td width="60%">&nbsp;</td>
-            <td width="40%" style="vertical-align: top;">
-                <table width="100%">
-                    <tr>
-                        <td width="50%" class="bb number"><?php echo I18n::__('wawi_label_net') ?></td>            
-                        <td width="50%" class="bb emphasize number"><?php echo $record->invoice->decimal('subtotalnet', 2) ?></td>
-                    </tr>
-                    <tr>
-                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->vat->name) ?></td>            
-                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalue', 2)) ?></td>
-                    </tr>
-                    <tr>
-                        <td width="50%" class="bt number"><?php echo I18n::__('wawi_label_gros') ?></td>            
-                        <td width="50%" class="bt uberemphasize number"><?php echo htmlspecialchars($record->invoice->decimal('totalgros', 2)) ?></td>
-                    </tr>
-                </table>
-                
-            </td>
-        </tr>
-    </table>
-    
-    <div style="height: 5mm;"></div>
-    
-    <table width="60%">
-        <tr>
-            <td class="dinky" style="vertical-align: top;">
-                <?php echo Flight::textile(I18n::__('invoice_internal_text_legal')) ?>
-            </td>
-        </tr>
+	</table>
+    <div style="height: 18mm;"></div>
+	<table width="100%">
+		<tr>
+			<td class="desc" style="vertical-align: top;">
+				<?php echo Flight::textile(I18n::__('adjustmentitem_wawi_text', null, array($bookingslot))) ?>
+			</td>
+		</tr>
+	</table>
+    <div style="height: 18mm;"></div>
+	<table width="100%">
+		<tr>
+			<td>
+				<table width="100%">
+					<tr>
+						<th><?php echo Flight::textile(I18n::__('adjustmentitem_label_del_inv')) ?></th>
+						<th><?php echo Flight::textile(I18n::__('adjustmentitem_label_del_date')) ?></th>
+						<th><?php echo Flight::textile(I18n::__('adjustmentitem_label_invoice')) ?></th>						
+						<th class="number"><?php echo Flight::textile(I18n::__('adjustmentitem_label_gros')) ?></th>
+					</tr>
+					<?php foreach ($records as $_id => $_record): ?>
+					<tr>
+						<td><?php echo $_record->delinv ?></td>
+						<td><?php echo $_record->localizedDate('deldate') ?></td>
+						<td><?php echo $_record->invoice->name ?></td>
+						<td class="number"><?php echo $_record->decimal('gros', 2) ?></td>
+					</tr>
+					<?php endforeach ?>
+					<tr>
+						<td colspan="3" class="bt bb number"><?php echo Flight::textile(I18n::__('adjustment_label_total')) ?></td>
+						<td class="bt bb emphasize number"><?php echo number_format($total, 2, ',', '.') ?></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
     </table>
 </body>
 </html>

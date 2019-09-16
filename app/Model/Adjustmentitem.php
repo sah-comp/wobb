@@ -110,6 +110,18 @@ class Model_Adjustmentitem extends Model
             'gros' => $this->bean->invoice->totalgros
         );
     }
+	
+	
+    /**
+     * Returns 'mailed' when sent flag is true, otherwise an empty string is returned.
+     *
+     * @return string
+     */
+    public function wasSent()
+    {
+        if ( $this->bean->sent ) return 'mailed';
+        return '';
+    }
 
     /**
      * Returns wether the adjustmentitem was already billed or not.
@@ -120,6 +132,17 @@ class Model_Adjustmentitem extends Model
     {
       if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
       return TRUE;
+    }
+	
+    /**
+     * Returns true when this beans person has either billingtransport set to email or both.
+     *
+     * @return bool
+     */
+    public function wantsInvoiceAsEmail()
+    {
+        if ( $this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both' ) return true;
+        return false;
     }
 
     /**

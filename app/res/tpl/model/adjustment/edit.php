@@ -117,15 +117,25 @@
         <div
             id="adjustment-<?php echo $record->getId() ?>-adjustmentitem-container"
             class="container attachable detachable sortable">
-        <?php $_adjustmentitems = $record->with(' ORDER BY id')->ownAdjustmentitem ?>
+		<?php $_adjustmentitems = $record->getAdjustmentitems() ?>
         <?php if (count($_adjustmentitems) == 0) $_adjustmentitems[] = R::dispense('adjustmentitem') ?>
-        <?php $index = 0 ?>
-        <?php foreach ($_adjustmentitems as $_adjustmentitem_id => $_adjustmentitem): ?>
-            <?php $index++  ?>
+        <?php
+		$index = 0;
+		$lastDeliverer = '';
+		?>
+        <?php foreach ($_adjustmentitems as $_adjustmentitem_id => $_adjustmentitem):
+			$index++;
+			$delivererChanged = false;
+			if ($lastDeliverer != $_adjustmentitem->person->nickname):
+				$lastDeliverer = $_adjustmentitem->person->nickname;
+				$delivererChanged = true;
+			endif;
+		?>
             <?php Flight::render('model/adjustment/own/adjustmentitem', array(
                 'record' => $record,
                 '_adjustmentitem' => $_adjustmentitem,
-                'index' => $index
+                'index' => $index,
+				'delivererChanged' => $delivererChanged
             )) ?>
         <?php endforeach ?>
         </div>

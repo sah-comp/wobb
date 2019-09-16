@@ -159,7 +159,7 @@
                             <?php endif ?>
                         </ul>
                         <?php else: ?>
-                            &nbsp;
+                        &nbsp;
                         <?php endif ?>
                     </div>
                 </div>

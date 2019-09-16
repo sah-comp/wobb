@@ -114,12 +114,26 @@
                 value="<?php echo ($_adjustmentitem->wasBilled()) ? htmlspecialchars($_adjustmentitem->invoice()->name) : I18n::__('adjustmentitem_not_yet_billed')  ?>" />
         </div>
 		<div class="span1">
-			<?php if ($_adjustmentitem->wasBilled()): ?>
-            <a
-                class="ir adjustmentitem-internal"
-                title="<?php echo I18n::__('adjustmentitem_link_internal_title') ?>"
-                href="<?php echo Url::build('/adjustmentitem/internal/' . $_adjustmentitem->getId()) ?>"><?php echo I18n::__('adjustmentitem_link_internal')
-			?></a>
+			<?php if ($_adjustmentitem->wasBilled() && $delivererChanged): ?>			
+            <ul class="action">
+                <li>
+		            <a
+		                class="ir adjustmentitem-internal"
+		                title="<?php echo I18n::__('adjustmentitem_link_internal_title') ?>"
+		                href="<?php echo Url::build('/adjustmentitem/internal/' . $_adjustmentitem->getId()) ?>"><?php echo I18n::__('adjustmentitem_link_internal')
+					?></a>
+                </li>
+                <?php if ( $_adjustmentitem->wantsInvoiceAsEmail() ): ?>
+                <li>
+                    <a
+                        class="ir adjustmentitem-mail <?php echo $_adjustmentitem->wasSent() ?>"
+                        title="<?php echo I18n::__('adjustmentitem_link_mail_title') ?>"
+                        href="<?php echo Url::build('/adjustmentitem/mail/' . $_adjustmentitem->getId()) ?>"><?php echo I18n::__('adjustmentitem_link_mail') ?></a>
+                </li>
+                <?php endif ?>
+            </ul>
+			<?php else: ?>
+			&nbsp;
 			<?php endif ?>
 		</div>
     </div>

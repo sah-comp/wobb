@@ -169,7 +169,7 @@ SQL;
                       ->ownAdjustmentitem as $_id => $adjustmentitem) {
             $adjustmentitem->calculation($this->bean);
         }
-        $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the adjustment bean
+        $this->bean->calcdate = date('Y-m-d'); //stamp that we have calculated the adjustment bean
         return null;
     }
 
@@ -190,7 +190,17 @@ SQL;
             $this->bean->vatvalue += $ret['vatvalue'];
             $this->bean->gros += $ret['gros'];
         }
-        $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the adjustment bean
+        $this->bean->billingdate = date('Y-m-d'); //stamp that we have billed the adjustment bean
         return null;
     }
+	
+	/**
+	 * Returns an array of adjustmentitems ordered by deliverer and invoice.
+	 *
+	 * @return array
+	 */
+	public function getAdjustmentitems()
+	{
+		return $this->bean->with(' ORDER BY person_id, invoice_id ')->ownAdjustmentitem;
+	}
 }
