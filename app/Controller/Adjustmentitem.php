@@ -221,7 +221,7 @@ class Controller_Adjustmentitem extends Controller
 			':adid' => $this->record->adjustment->getId()
 		));
 		
-		$total = R::getCell("SELECT ROUND(SUM(gros), 3) AS total FROM adjustmentitem WHERE person_id=:pid AND adjustment_id=:adid", array(
+		$total = R::getCell("SELECT ROUND(SUM(ROUND(gros, 2)), 2) AS total FROM adjustmentitem WHERE person_id=:pid AND adjustment_id=:adid", array(
 			':pid' => $this->record->person->getId(),
 			':adid' => $this->record->adjustment->getId()				
 		));
