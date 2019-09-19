@@ -184,6 +184,7 @@ class Model_Adjustmentitem extends Model
         $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
         $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
 		$this->bean->deldate = NULL;//'0000-00-00 00:00:00';
+		$this->bean->person = R::dispense('person');
         $this->addConverter('billingdate',
             new Converter_Mysqldate()
         );
