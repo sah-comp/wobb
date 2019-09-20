@@ -71,13 +71,13 @@ class Model_Adjustmentitem extends Model
             $this->bean->invoice->name = $nextbillingnumber;
             $this->bean->invoice->fy = Flight::setting()->fiscalyear;
             $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
-            $this->bean->invoice->instructed = false;//instructed to pay
-            $this->bean->invoice->paid = false;//not yet paid
             $this->bean->invoice->canceled = false;//storno
             $this->bean->invoice->duedate = date('Y-m-d', strtotime(
                 $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
             ));
         }
+        $this->bean->invoice->paid = false;//not yet paid
+        $this->bean->invoice->instructed = false;//instructed to pay
         $this->bean->invoice->company = $adjustment->company;
         $this->bean->invoice->person = $this->bean->person;
         $this->bean->invoice->vat = $this->bean->vat;
