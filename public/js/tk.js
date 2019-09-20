@@ -35,12 +35,14 @@ $(document).ready(function() {
 	 * This is used on purchase/index beneath each year headline.
 	 * @see app/tpl/purchase/index and purchase controller.
 	 */
+	/*
 	if ( $('.chart-line').length ) {
 	    $('.chart-line').peity('line', {
 	        width: '100%',
 	        height: '48px'
 	    });
 	}
+	*/
 	
 	/**
      * Anchors with .ask class will call their URL only if confirmation is given.

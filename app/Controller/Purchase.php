@@ -23,7 +23,6 @@ class Controller_Purchase extends Controller
       * @var array
       */
     public $javascripts = array(
-        '/js/jquery.peity.min',
         '/js/tk'
     );
     
