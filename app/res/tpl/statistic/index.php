@@ -16,7 +16,7 @@
         <fieldset
             class="tab">
             <legend class="verbose"><?php echo I18n::__('statistic_history_legend') ?></legend>
-            
+            <h2 class="year"><?php echo I18n::__('lanuv_h2_years', null, array($first_year, $last_year)) ?></h2>
             <div class="row">
                 <div class="span3">
                     <label><?php echo I18n::__('lanuv_label_company_id') ?></label>

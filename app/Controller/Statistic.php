@@ -46,6 +46,20 @@ class Controller_Statistic extends Controller
      * @var array
      */
     public $records;
+	
+	/**
+	 * Contains the first year of LANUV stats.
+	 *
+	 * @var int
+	 */
+	public $first_year;
+	
+	/**
+	 * Contains the last year of LANUV stats.
+	 *
+	 * @var int
+	 */
+	public $last_year;
     
     /**
      * Constructs a new Purchase controller.
@@ -57,6 +71,8 @@ class Controller_Statistic extends Controller
         session_start();
         Auth::check();
         $this->record = R::load('lanuv', $id);
+		$this->first_year = R::getCell("SELECT MIN(YEAR(startdate)) AS fy FROM lanuv");
+		$this->last_year = R::getCell("SELECT MAX(YEAR(enddate)) AS fy FROM lanuv");
     }
 
     /**
@@ -207,7 +223,9 @@ class Controller_Statistic extends Controller
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('statistic/'.$this->layout, array(
             'record' => $this->record,
-            'records' => $this->records
+            'records' => $this->records,
+			'first_year' => $this->first_year,
+			'last_year' => $this->last_year
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("statistic_head_title"),
