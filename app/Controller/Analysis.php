@@ -46,9 +46,16 @@ class Controller_Analysis extends Controller
      * @var array
      */
     public $records;
+	
+    /**
+     * The fiscal year.
+     *
+     * @var int
+     */
+    public $fiscalyear;
 
     /**
-     * Constructs a new Purchase controller.
+     * Constructs a new Analysis controller.
      *
      * @param int (optional) id of a bean
      */
@@ -57,6 +64,7 @@ class Controller_Analysis extends Controller
         session_start();
         Auth::check();
         $this->record = R::load('analysis', $id);
+		$this->fiscalyear = Flight::setting()->fiscalyear;
     }
 
     /**
@@ -149,7 +157,9 @@ class Controller_Analysis extends Controller
     {
         Permission::check(Flight::get('user'), 'analysis', 'index');
         $this->layout = 'index';
-        $this->records = R::find('analysis', ' company_id IS NOT NULL ORDER BY id DESC');
+        $this->records = R::find('analysis', ' company_id IS NOT NULL AND (YEAR(startdate) = :fy OR YEAR(enddate) = :fy) ORDER BY id DESC', array(
+			':fy' => $this->fiscalyear
+		));
         if (Flight::request()->method == 'POST') {
             //try to create a new csb bean with data from form
             //which imports the csb data to stock
@@ -180,7 +190,8 @@ class Controller_Analysis extends Controller
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('analysis/'.$this->layout, array(
             'record' => $this->record,
-            'records' => $this->records
+            'records' => $this->records,
+			'fiscalyear' => $this->fiscalyear
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("analysis_head_title"),
