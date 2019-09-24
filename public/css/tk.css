@@ -88,8 +88,7 @@ h2.date-slaughter span.week {
     padding-left: 0.5em;
 }
 
-h2.year-purchase,
-h2.year-fiscal {
+h2.year {
     font-size: 2em;
     color: rgb(0, 128, 212);
     margin-bottom: .5em;
