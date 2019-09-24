@@ -212,7 +212,7 @@
                 <table class="info" width="100%">
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_person') ?></label>
-                        <td class="value"><?php echo $record->person->account ?></label>
+                        <td class="value emphasize"><?php echo $record->person->account ?></label>
                     </tr>
                     <tr>
                         <td class="label"><?php echo I18n::__('invoice_internal_label_taxid') ?></label>
