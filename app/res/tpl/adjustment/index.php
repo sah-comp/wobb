@@ -19,7 +19,7 @@ Flight::setlocale();
         <fieldset
             class="tab">
             <legend class="verbose"><?php echo I18n::__('adjustment_history_legend') ?></legend>
-            <h2 class="year-purchase"><?php echo $fiscalyear ?></h2>
+            <h2 class="year"><?php echo $fiscalyear ?></h2>
             <div class="row">
                 <div class="span1">
                     <label><?php echo I18n::__('adjustment_label_week') ?></label>

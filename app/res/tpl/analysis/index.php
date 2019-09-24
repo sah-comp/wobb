@@ -16,7 +16,7 @@
         <fieldset
             class="tab">
             <legend class="verbose"><?php echo I18n::__('analysis_history_legend') ?></legend>
-            
+			<h2 class="year"><?php echo $fiscalyear ?></h2>
             <div class="row">
                 <div class="span3">
                     <label><?php echo I18n::__('analysis_label_company_id') ?></label>
