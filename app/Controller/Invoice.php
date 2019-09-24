@@ -97,7 +97,7 @@ class Controller_Invoice extends Controller
      */
     public function getLowestInvoiceNumber()
     {
-        return R::getCell(" SELECT min(name) FROM invoice WHERE fy = ? ", array(
+        return R::getCell(" SELECT min(name) FROM invoice WHERE fy = ? AND MONTH(dateofslaughter) = MONTH(CURRENT_DATE())", array(
             Flight::setting()->fiscalyear
         ));
     }
@@ -115,7 +115,7 @@ class Controller_Invoice extends Controller
     }
     
     /**
-     * Cancel of this invoice.
+     * Cancelation of this invoice.
      *
      * A new invoice will be created, identically to this invoice only all monetrary
      * values will be negated. Also the current filter will reset so that the new cancelation

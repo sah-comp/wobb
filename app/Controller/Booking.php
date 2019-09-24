@@ -97,7 +97,7 @@ class Controller_Booking extends Controller
      */
     public function getLowestInvoiceNumber()
     {
-        return R::getCell(" SELECT min(name) FROM invoice WHERE fy = ? ", array(
+        return R::getCell(" SELECT min(name) FROM invoice WHERE fy = ? AND MONTH(dateofslaughter) = MONTH(CURRENT_DATE())", array(
             Flight::setting()->fiscalyear
         ));
     }
