@@ -607,26 +607,19 @@ class Controller_Scaffold extends Controller
 		Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
 		if (Flight::view()->exists('model/' . $this->type . '/toolbar')) {
-	        Flight::render('model/' . $this->type . '/toolbar', array(
-	            'record' => $this->record,
-	            'base_url' => $this->base_url,
-	            'type' => $this->type,
-	            'layout' => $this->layout,
-	            'page' => $this->page,
-	            'order' => $this->order,
-	            'dir' => $this->dir
-	        ), 'toolbar');
+			$tpl_toolbar = 'model/' . $this->type . '/toolbar';
 		} else {
-	        Flight::render('scaffold/toolbar', array(
-	            'record' => $this->record,
-	            'base_url' => $this->base_url,
-	            'type' => $this->type,
-	            'layout' => $this->layout,
-	            'page' => $this->page,
-	            'order' => $this->order,
-	            'dir' => $this->dir
-	        ), 'toolbar');
+			$tpl_toolbar = 'scaffold/toolbar';
 		}
+        Flight::render($tpl_toolbar, array(
+            'record' => $this->record,
+            'base_url' => $this->base_url,
+            'type' => $this->type,
+            'layout' => $this->layout,
+            'page' => $this->page,
+            'order' => $this->order,
+            'dir' => $this->dir
+        ), 'toolbar');
 		Flight::render('shared/header', array(), 'header');
 		Flight::render('shared/footer', array(
 		    'pagination' => $this->pagination
