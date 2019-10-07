@@ -38,12 +38,15 @@ class Controller_Login extends Controller
             try {
                 $login = R::graph(Flight::request()->data->dialog, true);
                 if ($login->trial()) {
-                    //you must trial before store because of pw reset in update
                     $_SESSION['user']['id'] = $login->user->getId();
                     $_SESSION['backend']['language'] = Flight::get('language');
                     $login->user->sid = session_id();
                     R::store($login);
-                    $this->redirect(Flight::request()->data->goto, $raw = true);
+					$goto = Flight::request()->data->goto;
+					if ( ! $goto || empty($goto) || $goto == '') {
+						$goto = '/';
+					}
+                    $this->redirect($goto, $raw = true);
                 }
                 $this->message = I18n::__('login_failed');
                 R::store($login);
