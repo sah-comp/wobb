@@ -241,12 +241,12 @@
     <table class="deliverer" width="100%">
         <thead>
             <tr>
-                <th width="10%"><?php echo I18n::__(invoice_internal_label_earmark) ?></th>
-                <th width="10%" class="number"><?php echo I18n::__(invoice_internal_label_qs) ?></th>
-                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_piggery) ?></th>
-                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_baseprice) ?></th>
-                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_weight) ?></th>
-                <th width="20%" class="number"><?php echo I18n::__(invoice_internal_label_totalmerch) ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_piggery') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_baseprice') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_totalmerch') ?></th>
             </tr>
         </thead>
         <tfoot>
