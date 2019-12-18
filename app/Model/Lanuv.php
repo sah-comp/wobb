@@ -515,10 +515,10 @@ SQL;
     {
         $this->bean->dirty = false;
         $this->addConverter('startdate', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('enddate', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('piggery', array(
             new Converter_Decimal()

@@ -278,13 +278,13 @@ class Model_Invoice extends Model
 		$this->bean->paid = false;
 		$this->bean->instructed = false;
         $this->addConverter('bookingdate', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('dateofslaughter', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('duedate', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('totalnet', array(
             new Converter_Decimal()

@@ -549,7 +549,7 @@ class Model_Stock extends Model
     public function dispense()
     {
         $this->addConverter('pubdate', array(
-            new Converter_MysqlDate()
+            new Converter_Mysqldate()
         ));
         $this->addConverter('weight', array(
             new Converter_Decimal()
