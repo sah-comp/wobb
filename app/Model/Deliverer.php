@@ -37,7 +37,7 @@ class Model_Deliverer extends Model
         ));
 
         $this->addConverter('calcdate', array(
-            new Converter_MysqlDatetime()
+            new Converter_Mysqldatetime()
         ));
     }
 
