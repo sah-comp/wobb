@@ -1,6 +1,8 @@
 <?php
 /**
  * Cinnebar.
+ * 
+ * Just to know?
  *
  * @package Cinnebar
  * @subpackage System
