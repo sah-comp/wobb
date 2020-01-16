@@ -487,6 +487,23 @@
                 value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
             <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
         </div>
+		<div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
+		    <input
+		        type="hidden"
+		        name="dialog[nextweekprice]"
+		        value="0" />
+		    <input
+		        id="person-nextweekprice"
+		        type="checkbox"
+		        name="dialog[nextweekprice]"
+		        <?php echo ($record->nextweekprice) ? 'checked="checked"' : '' ?>
+		        value="1" />
+		    <label
+		        for="person-nextweekprice"
+		        class="cb">
+		        <?php echo I18n::__('person_label_nextweekprice') ?>
+		    </label>
+		</div>
         <div class="row <?php echo ($record->hasError('noterelprice')) ? 'error' : ''; ?>">
             <label
                 for="person-noterelprice">

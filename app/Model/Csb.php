@@ -360,6 +360,9 @@ SQL;
         $this->addConverter('baseprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('nextweekprice', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('pubdate', array(
             new Validator_HasValue()
         ));
@@ -503,8 +506,13 @@ SQL;
             $deliverer->supplier = $stock['supplier'];
             $deliverer->earmark = '';
             $deliverer->piggery = $stock['total'];
-            $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
-            $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+			if ($deliverer->person->nextweekprice && $this->bean->nextweekprice) {
+				$deliverer->dprice = $this->bean->nextweekprice + $deliverer->person->reldprice;
+				$deliverer->sprice = $this->bean->nextweekprice + $deliverer->person->relsprice;				
+			} else {
+				$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
+				$deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+			}
             $deliverer->qspiggery = R::getCell($sqlqsd, array(
                 ':csb_id' => $this->bean->getId(),
                 ':supplier' => $deliverer->supplier

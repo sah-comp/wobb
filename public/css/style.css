@@ -992,7 +992,7 @@ fieldset.tab fieldset:last-child .attach {
 }
 
 input[required=required] {
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 input[readonly=readonly] {
@@ -1062,13 +1062,13 @@ input.monetary {
 .panel .container.autoheight {
     min-height: 0;
 }
-
+/*
 .panel .container input[type=checkbox],
 .panel .container input[type=radio] {
     position: static;
     left: auto;
 }
-
+*/
 /* form table stuff */
 .panel table {
     table-layout: fixed;

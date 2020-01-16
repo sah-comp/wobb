@@ -76,17 +76,32 @@
     </div>
     <div class="row <?php echo ($record->hasError('baseprice')) ? 'error' : ''; ?>">
         <label
-            for="stock-baseprice">
+            for="csb-baseprice">
             <?php echo I18n::__('csb_label_baseprice') ?>
         </label>
         <input
-            id="stock-baseprice"
+            id="csb-baseprice"
             type="text"
             class="number"
             name="dialog[baseprice]"
             value="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
             placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>"
             required="required" />
+		<p class="info"><?php echo I18n::__('csb_info_baseprice') ?></p>
+    </div>
+    <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
+        <label
+            for="csb-nextweekprice">
+            <?php echo I18n::__('csb_label_nextweekprice') ?>
+        </label>
+        <input
+            id="csb-nextweekprice"
+            type="text"
+            class="number"
+            name="dialog[nextweekprice]"
+            value="<?php echo htmlspecialchars($record->decimal('nextweekprice', 3)) ?>"
+            placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>" />
+		<p class="info"><?php echo I18n::__('csb_info_nextweekprice') ?></p>
     </div>
 </fieldset>
 <!-- end of csb edit form -->
