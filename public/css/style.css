@@ -1117,9 +1117,14 @@ input.monetary {
     background-color: gray;
 }
 
-.panel thead tr.filter {
+.panel thead tr.filter,
+.panel thead tr.replacements {
     background-color: white;
     color: black;
+}
+
+.panel thead tr.replacements {
+	display: none;
 }
 
 
