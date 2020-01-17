@@ -152,10 +152,6 @@
             </th>
             <?php endforeach ?>
         </tr>
-		<tr
-			class="replacements">
-			<td colspan="<?php echo (2 + count($_attributes)) ?>">&nbsp;</td>
-		</tr>
         <?php endif ?>
 
     </thead>
