@@ -203,7 +203,8 @@ class Model_Pricing extends Model
                 ),
                 'filter' => array(
                     'tag' => 'bool'
-                )
+                ),
+				'width' => '5rem'
             )
         );
     }

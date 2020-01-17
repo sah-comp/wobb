@@ -46,7 +46,8 @@ class Model_Vat extends Model
                 'class' => 'number',
                 'filter' => array(
                     'tag' => 'number'
-                )
+                ),
+				'width' => '8rem'
             )
         );
     }

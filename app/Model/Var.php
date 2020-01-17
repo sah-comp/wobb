@@ -45,7 +45,8 @@ class Model_Var extends Model
                 ),
                 'filter' => array(
                     'tag' => 'text'
-                )
+                ),
+				'width' => '5rem'
             ),
             array(
                 'name' => 'supplier',
@@ -54,7 +55,8 @@ class Model_Var extends Model
                 ),
                 'filter' => array(
                     'tag' => 'text'
-                )
+                ),
+				'width' => '5rem'
             ),
             array(
                 'name' => 'note',
@@ -88,7 +90,8 @@ class Model_Var extends Model
                 'class' => 'number',
                 'filter' => array(
                     'tag' => 'number'
-                )
+                ),
+				'width' => '8rem'
             ),
             array(
                 'name' => 'dprice',
@@ -101,7 +104,8 @@ class Model_Var extends Model
                 'class' => 'number',
                 'filter' => array(
                     'tag' => 'number'
-                )
+                ),
+				'width' => '8rem'
             )
         );
     }

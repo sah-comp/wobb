@@ -47,7 +47,8 @@ class Model_Csbformat extends Model
                 ),
                 'filter' => array(
                     'tag' => 'bool'
-                )
+                ),
+				'width' => '5rem'
             )
         );
     }

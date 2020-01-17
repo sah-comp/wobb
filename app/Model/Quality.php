@@ -33,7 +33,8 @@ class Model_Quality extends Model
                 ),
                 'filter' => array(
                     'tag' => 'number'
-                )
+                ),
+				'width' => '5rem'
             ),
             array(
                 'name' => 'name',
@@ -42,7 +43,8 @@ class Model_Quality extends Model
                 ),
                 'filter' => array(
                     'tag' => 'text'
-                )
+                ),
+				'width' => '5rem'
             ),
             array(
                 'name' => 'desc',
@@ -63,7 +65,8 @@ class Model_Quality extends Model
                 ),
                 'filter' => array(
                     'tag' => 'bool'
-                )
+                ),
+				'width' => '8rem'
             ),
         );
     }
