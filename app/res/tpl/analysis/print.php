@@ -128,7 +128,8 @@
     
     <?php
     $_suppliers = $record->with(' ORDER BY id')->ownAnalysis;
-    $_lastKey = array_pop( array_keys( $_suppliers ) );
+	$_keys = array_keys($_suppliers);
+    $_lastKey = array_pop($_keys);
     ?>
     
     <!-- Totals of each supplier -->
