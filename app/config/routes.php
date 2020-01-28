@@ -316,12 +316,12 @@ Flight::route('(/[a-z]{2})/analysis(/@method:[a-z]+(/@id:[0-9]+))', function($me
 });
 
 /**
- * Route to the lab(oratory) controller.
+ * Route to the planning controller.
  */
-Flight::route('(/[a-z]{2})/lab(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
+Flight::route('(/[a-z]{2})/planning(/@method:[a-z]+(/@id:[0-9]+))', function($method, $id) {
     if ( $method === null) $method = 'index';
     if ( $id === null) $id = 0;
-	$controller = new Controller_Lab($id);
+	$controller = new Controller_Planning($id);
 	$controller->$method();
 });
 
