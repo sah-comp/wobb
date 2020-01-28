@@ -178,15 +178,6 @@ class Model_Csb extends Model
     public function getHeadline($label = 'calculation')
     {
         return I18n::__('purchase_h1_' . $label);
-        /*
-        return I18n::__('purchase_h1_mask', null,
-            array(
-                $this->localizedDate('pubdate'),
-                $this->bean->company->name,
-                $this->decimal('baseprice', 3)
-            )
-        );
-        */
     }
 
     /**

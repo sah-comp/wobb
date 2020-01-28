@@ -18,32 +18,6 @@
 </div>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('csb_legend') ?></legend>
-    <div class="row <?php echo ($record->hasError('file')) ? 'error' : ''; ?>">
-        <label
-            for="csb-file">
-            <?php echo I18n::__('csb_label_file') ?>
-        </label>
-            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Flight::get('max_upload_size') ?>" />
-        <input
-            id="csb-file"
-            type="file"
-            name="file"
-            value="<?php echo htmlspecialchars($record->file) ?>" />
-        <p class="info"><?php echo I18n::__('csb_info_file') ?></p>
-    </div>
-    <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
-        <label
-            for="csb-pubdate">
-            <?php echo I18n::__('csb_label_pubdate') ?>
-        </label>
-        <input
-            id="csb-pubdate"
-            type="date"
-            name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->pubdate) ?>"
-            required="required" />
-        <p class="info"><?php echo I18n::__('csb_info_pubdate') ?></p>
-    </div>
     <div class="row <?php echo ($record->hasError('company_id')) ? 'error' : ''; ?>">
         <label
             for="csb-company">
@@ -73,6 +47,32 @@
                 <?php echo ($record->csbformat_id == $_csbformat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_csbformat->name) ?></option>   
             <?php endforeach ?>
         </select>
+    </div>
+    <div class="row <?php echo ($record->hasError('file')) ? 'error' : ''; ?>">
+        <label
+            for="csb-file">
+            <?php echo I18n::__('csb_label_file') ?>
+        </label>
+            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Flight::get('max_upload_size') ?>" />
+        <input
+            id="csb-file"
+            type="file"
+            name="file"
+            value="<?php echo htmlspecialchars($record->file) ?>" />
+        <p class="info"><?php echo I18n::__('csb_info_file') ?></p>
+    </div>
+    <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
+        <label
+            for="csb-pubdate">
+            <?php echo I18n::__('csb_label_pubdate') ?>
+        </label>
+        <input
+            id="csb-pubdate"
+            type="date"
+            name="dialog[pubdate]"
+            value="<?php echo htmlspecialchars($record->pubdate) ?>"
+            required="required" />
+        <p class="info"><?php echo I18n::__('csb_info_pubdate') ?></p>
     </div>
     <div class="row <?php echo ($record->hasError('baseprice')) ? 'error' : ''; ?>">
         <label

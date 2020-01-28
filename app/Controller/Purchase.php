@@ -159,33 +159,6 @@ class Controller_Purchase extends Controller
     }
     
     /**
-     * A current slaughter charge.
-     *
-     * @deprecated since calculation can do all of day
-     */
-    public function day()
-    {
-        Permission::check(Flight::get('user'), 'purchase', 'edit');
-        $this->layout = 'day';
-        if (Flight::request()->method == 'POST') {
-            $this->record = R::graph(Flight::request()->data->dialog, true);
-            R::begin();
-            try {
-                R::store($this->record);
-                R::commit();
-                Flight::get('user')->notify(I18n::__('purchase_day_edit_success'));
-                $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
-                error_log($e);
-                R::rollback();
-                Flight::get('user')->notify(I18n::__('purchase_day_edit_error'), 'error');
-            }
-        }
-        $this->render();
-    }
-    
-    /**
      * Display and edit the stock with damages.
      *
      * @todo this has to be a controller on its own?
