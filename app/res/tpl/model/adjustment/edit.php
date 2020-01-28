@@ -15,19 +15,6 @@
 </div>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('adjustment_legend') ?></legend>
-    <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
-        <label
-            for="adjustment-pubdate">
-            <?php echo I18n::__('adjustment_label_pubdate') ?>
-        </label>
-        <input
-            id="adjustment-pubdate"
-            type="date"
-            name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->pubdate) ?>"
-            required="required" />
-        <p class="info"><?php echo I18n::__('adjustment_info_pubdate') ?></p>
-    </div>
     <div class="row <?php echo ($record->hasError('company_id')) ? 'error' : ''; ?>">
         <label
             for="adjustment-company">
@@ -42,6 +29,19 @@
                 <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name) ?></option>   
             <?php endforeach ?>
         </select>
+    </div>
+    <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
+        <label
+            for="adjustment-pubdate">
+            <?php echo I18n::__('adjustment_label_pubdate') ?>
+        </label>
+        <input
+            id="adjustment-pubdate"
+            type="date"
+            name="dialog[pubdate]"
+            value="<?php echo htmlspecialchars($record->pubdate) ?>"
+            required="required" />
+        <p class="info"><?php echo I18n::__('adjustment_info_pubdate') ?></p>
     </div>
 </fieldset>
 <div
