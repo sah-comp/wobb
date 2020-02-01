@@ -176,6 +176,12 @@ SQL;
 			'end' => $this->bean->pubdate
 		];
 		$this->bean->piggery = 0;
+		$this->bean->totalweight = 0;
+		$this->bean->totalnet = 0;
+		$this->bean->meanweight = 0;
+		$this->bean->meandprice = 0;
+		$totalmfa = 0;
+		$count = count($this->bean->ownDeliverer);
         foreach ($this->bean->ownDeliverer as $_id => $deliverer) {
 			$averages = $this->bean->getAverages($deliverer->person->nickname, $period);
 			$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
@@ -197,7 +203,13 @@ SQL;
 			$deliverer->totalnet = round($deliverer->meanweight * $deliverer->meandprice * $deliverer->piggery, 3);
 			
 			$this->bean->piggery += $deliverer->piggery;
+			$this->bean->totalweight += round($deliverer->piggery * $deliverer->meanweight, 3);
+			$this->bean->totalnet += $deliverer->totalnet;
+			$totalmfa += $deliverer->meanmfa;
 		}
+		$this->bean->meanweight = round($this->bean->totalweight / $this->bean->piggery, 3);
+		$this->bean->meandprice = round($this->bean->totalnet / $this->bean->totalweight, 3);
+		$this->bean->meanmfa = round($totalmfa / $count, 3);
 		return true;
 	}
 	
@@ -227,6 +239,12 @@ SQL;
             new Converter_Mysqldate()
         );
         $this->addConverter('baseprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
         $this->addValidator('pubdate', array(

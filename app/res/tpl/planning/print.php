@@ -12,6 +12,9 @@
 			font-size: 7pt;
 			color: #666666;
 		}
+		.gap {
+			padding-top: 10mm;
+		}
         .emphasize {
             font-weight: bold;
             font-size: 11pt;
@@ -86,7 +89,7 @@
         <?php foreach ($record->with(" ORDER BY id ")->ownDeliverer as $_id => $_deliverer): ?>
             <tr>
                 <td style="white-space: nowrap;"><?php echo htmlspecialchars($_deliverer->person->nickname . ' ' . $_deliverer->person->name) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_deliverer->piggery) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('piggery', 0)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?></td>				
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('totalnet', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('meanmfa', 3)) ?></td>
@@ -94,8 +97,17 @@
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('meandprice', 3)) ?></td>
             </tr>
         <?php endforeach ?>
+			<tr>
+                <td class="bt bb emphasize"><?php echo I18n::__('plan_label_total') ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
+				<td class="bt bb"></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('totalnet', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanmfa', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanweight', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?></td>
+			</tr>
             <tr>
-                <td class="bt bb notemphasized" colspan="7"><?php echo I18n::__('planning_text_footer', null, [$record->period]) ?></td>
+                <td class="bt gap notemphasized number" colspan="7"><?php echo I18n::__('planning_text_footer', null, [$record->period]) ?></td>
             </tr>
         </tbody>
     </table>
