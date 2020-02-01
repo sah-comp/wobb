@@ -247,6 +247,15 @@ SQL;
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('meanweight', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('meandprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('meanmfa', array(
+            new Converter_Decimal()
+        ));
         $this->addValidator('pubdate', array(
             new Validator_HasValue()
         ));
