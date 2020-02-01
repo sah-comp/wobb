@@ -17,11 +17,11 @@
     <legend class="verbose"><?php echo I18n::__('plan_legend') ?></legend>
     <div class="row <?php echo ($record->hasError('company_id')) ? 'error' : ''; ?>">
         <label
-            for="planning-company">
-            <?php echo I18n::__('planning_label_company') ?>
+            for="plan-company">
+            <?php echo I18n::__('plan_label_company') ?>
         </label>
         <select
-            id="planning-company"
+            id="plan-company"
             name="dialog[company_id]">
             <?php foreach (R::find('company', ' active = 1 ORDER BY name') as $_id => $_company): ?>
             <option
@@ -42,6 +42,21 @@
             value="<?php echo htmlspecialchars($record->pubdate) ?>"
             required="required" />
         <p class="info"><?php echo I18n::__('plan_info_pubdate') ?></p>
+    </div>
+    <div class="row <?php echo ($record->hasError('period')) ? 'error' : ''; ?>">
+        <label
+            for="plan-period">
+            <?php echo I18n::__('plan_label_period') ?>
+        </label>
+        <input
+            id="plan-period"
+            type="number"
+            min="1"
+            step="1"
+            max="52"
+            name="dialog[period]"
+            value="<?php echo htmlspecialchars($record->period) ?>" />
+		<span class="info"><?php echo I18n::__('plan_info_period') ?></span>
     </div>
     <div class="row <?php echo ($record->hasError('baseprice')) ? 'error' : ''; ?>">
         <label
@@ -75,19 +90,39 @@
         <!-- grid based header -->
         <div class="row">
             <div class="span1">&nbsp;</div>
-            <div class="span2">
+            <div class="span3">
                 <label>
-                    <?php echo I18n::__('deliverer_label_person') ?>
+                    <?php echo I18n::__('plan_deliverer_label_person') ?>
                 </label>
             </div>
-            <div class="span2">
-                <label>
-                    <?php echo I18n::__('deliverer_label_pricing') ?>
-                </label>
-            </div>
-            <div class="span7">
+            <div class="span1">
                 <label class="number">
-                    <?php echo I18n::__('deliverer_label_piggery') ?>
+                    <?php echo I18n::__('plan_deliverer_label_piggery') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_baseprice') ?>
+                </label>
+            </div>
+			<div class="span3">
+                <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_totalnet') ?>
+                </label>
+			</div>
+            <div class="span1">
+                <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_mfa') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_weight') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_price') ?>
                 </label>
             </div>
         </div>

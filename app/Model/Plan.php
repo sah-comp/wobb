@@ -10,7 +10,7 @@
  */
 
 /**
- * Csb model.
+ * Plan model.
  *
  * @package Cinnebar
  * @subpackage Model
@@ -38,32 +38,6 @@ class Model_Plan extends Model
     }
 
     /**
-     * Returns wether the plan was already calculated or not.
-     *
-     * @return bool
-     */
-    public function wasCalculated()
-    {
-        if ($this->bean->calcdate === null || $this->bean->calcdate == '0000-00-00 00:00:00') {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Returns wether the plan was already billed or not.
-     *
-     * @return bool
-     */
-    public function wasBilled()
-    {
-        if ($this->bean->billingdate === null || $this->bean->billingdate == '0000-00-00 00:00:00') {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Returns a string with nicely formatted date of slaughter.
      *
      * It's a happy date, isn't it? Not for the poor piggy, my dear.
@@ -78,9 +52,9 @@ class Model_Plan extends Model
 
 
     /**
-     * Returns the latest csb bean.
+     * Returns the latest plan bean.
      *
-     * @return RedBean_OODBBean $csb
+     * @return RedBean_OODBBean $plan
      */
     public function getLatest()
     {
@@ -189,22 +163,68 @@ SQL;
     {
         return $this->bean->company->name;
     }
+	
+    /**
+     * Calculates averages and sums based on the deliverers data using a fake pig.
+     *
+     * @return void
+     */
+    public function calculation()
+    {
+		$period = [
+			'start' => date('Y-m-d', strtotime($this->bean->pubdate . ' - ' . $this->bean->period . ' weeks')), 
+			'end' => $this->bean->pubdate
+		];
+		$this->bean->piggery = 0;
+        foreach ($this->bean->ownDeliverer as $_id => $deliverer) {
+			$averages = $this->bean->getAverages($deliverer->person->nickname, $period);
+			$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
+			$deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+			$deliverer->meanmfa = $averages['meanmfa'];
+			$deliverer->meanweight = $averages['meanweight'];
+			$deliverer->calcdate = date('Y-m-d H:i:s');
+			
+			$stock = R::dispense('stock');
+			$pricing = $deliverer->person->pricing;
+			
+			$stock->mfa = $deliverer->meanmfa;
+			$stock->weight = $deliverer->meanweight;
+			
+			$lanuv_tax = $deliverer->calculate($stock);
+			$stock->calculatePrice($deliverer, $pricing, $lanuv_tax);
+			$netvalue =  ($stock->weight * $stock->dprice) + $stock->bonus - $stock->cost;
+			$deliverer->meandprice = round($netvalue / $deliverer->meanweight, 3);
+			$deliverer->totalnet = round($deliverer->meanweight * $deliverer->meandprice * $deliverer->piggery, 3);
+			
+			$this->bean->piggery += $deliverer->piggery;
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns an array with averages of mfa and weight.
+	 *
+	 * @param string $supplier
+	 * @param array $period
+	 * @return array
+	 */
+	public function getAverages($supplier, array $period)
+	{
+		return R::getRow("SELECT AVG(mfa) AS meanmfa, ROUND(AVG(weight), 2) AS meanweight FROM stock WHERE buyer = ? AND supplier = ? AND (pubdate >= ? AND pubdate <= ?) AND csb_id IS NOT NULL", [$this->bean->company->buyer, $supplier, $period['start'], $period['end']]);
+	}
 
     /**
-     * dispense a new csb bean.
+     * dispense a new plan bean.
      */
     public function dispense()
     {
         $this->bean->piggery = 0;
-        $this->bean->calcdate = null;
+		$this->bean->season = 0; // 0 = winter, 1 = summer
         $this->bean->pubdate = date('Y-m-d');
+        $this->bean->period = 6; //weeks to look back for averages
         $this->addConverter(
             'pubdate',
             new Converter_Mysqldate()
-        );
-        $this->addConverter(
-            'calcdate',
-            new Converter_Mysqldatetime()
         );
         $this->addConverter('baseprice', array(
             new Converter_Decimal()
@@ -216,6 +236,24 @@ SQL;
             new Validator_HasValue()
         ));
     }
+	
+	/**
+	 * Checks if the plans given date is within summer or winter season.
+	 * Define seasons time periods in config.php.
+	 *
+	 * @return int
+	 */
+	public function whichSeason()
+	{
+		$ts = strtotime($this->bean->pubdate);
+		$seasons = Flight::get('seasons');
+		$summer_start = strtotime(date('Y', $ts) . '-' . $seasons['summer']['start']);
+		$summer_end = strtotime(date('Y', $ts) . '-' . $seasons['summer']['end']);
+		if (($ts >= $summer_start) && ($ts <= $summer_end)) {
+			return 1; //summer
+		}
+		return 0; //winter
+	}
 
     /**
      * update.
@@ -224,6 +262,7 @@ SQL;
      */
     public function update()
     {
+		$this->bean->season = $this->whichSeason();
         parent::update();
     }
 	
@@ -234,6 +273,6 @@ SQL;
 	 */
 	public function getDeliverers()
 	{
-		return $this->bean->with(' ORDER BY person_id ')->ownDeliverer;
+		return $this->bean->with(' ORDER BY id ')->ownDeliverer;
 	}
 }

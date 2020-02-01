@@ -121,7 +121,6 @@
                             value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('totalnet', 2)) : I18n::__('deliverer_not_yet_calculated')  ?>"
                             
                         />
-                        
                     </div>
                     <div class="span2">
                         <input

@@ -23,4 +23,12 @@
 			<?php echo I18n::__('action_add_nav') ?>
 		</a>
 	</li>
+	<?php if (isset($record) && is_a($record, 'RedBean_OODBBean') && $record->getId()): ?>
+	<li>
+	    <a
+			href="<?php echo Url::build("/planning/pdf/{$record->getId()}") ?>">
+			<?php echo I18n::__('action_planning_print') ?>
+		</a>
+	</li>
+	<?php endif ?>
 </ul>

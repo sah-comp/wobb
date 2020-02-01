@@ -221,7 +221,7 @@ class Model_Stock extends Model
         
         $this->bean->sprice = $deliverer->sprice + $this->bean->agio - $this->bean->disagio;
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
-        
+		 
         $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
         $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight );
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;

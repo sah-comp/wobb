@@ -26,16 +26,28 @@ class Model_Deliverer extends Model
     public function dispense()
     {
         $this->bean->enabled = true;
+		$this->bean->calcdate = NULL;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));
         $this->addConverter('dprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('meandprice', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
-
+        $this->addConverter('totalnetlanuv', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('meanmfa', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('meanweight', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('calcdate', array(
             new Converter_Mysqldatetime()
         ));

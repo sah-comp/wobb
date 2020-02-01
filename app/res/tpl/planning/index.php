@@ -34,7 +34,7 @@ Flight::setlocale();
                     <label class="number"><?php echo I18n::__('planning_label_baseprice') ?></label>
                 </div>
                 <div class="span5">
-                    <label><?php echo I18n::__('planning_label_calcdate') ?></label>
+                    &nbsp;
                 </div>
                 <div class="span1">
                     &nbsp;

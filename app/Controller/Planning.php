@@ -88,10 +88,6 @@ class Controller_Planning extends Controller
     public function drop()
     {
         Permission::check(Flight::get('user'), 'planning', 'expunge');
-        if ( $this->record->wasCalculated()) {
-            Flight::get('user')->notify(I18n::__('planning_day_drop_denied_already_billed'), 'error');
-            $this->redirect('/planning/index');
-        }
         R::begin();
         try {
             R::trash($this->record);
@@ -118,9 +114,11 @@ class Controller_Planning extends Controller
             R::begin();
             try {
                 R::store($this->record);
+				$this->record->calculation();
+                R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('planning_day_edit_success'));
-                $this->redirect('/planning/index');
+                $this->redirect(sprintf('/planning/edit/%d', $this->record->getId()));
             }
             catch (Exception $e) {
                 error_log($e);
@@ -143,9 +141,11 @@ class Controller_Planning extends Controller
             R::begin();
             try {
                 R::store($this->record);
+				$this->record->calculation();
+                R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('planning_day_add_success'));
-                $this->redirect(sprintf('/planning/calculation/%d', $this->record->getId()));
+                $this->redirect(sprintf('/planning/edit/%d', $this->record->getId()));
             }
             catch (Exception $e) {
                 error_log($e);
@@ -155,34 +155,31 @@ class Controller_Planning extends Controller
         }
         $this->render();
     }
-    
+	
     /**
-     * Calculates prices of the current slaughter charge.
+     * Generates an PDF using mPDF library and downloads it to the client.
      *
-     * @todo this has to be a controller on its own?
+     * @return void
      */
-    public function calculation()
+    public function pdf()
     {
-        Permission::check(Flight::get('user'), 'planning', 'edit');
-        $this->layout = 'calculation';
-        if (Flight::request()->method == 'POST') {
-            $this->record = R::graph(Flight::request()->data->dialog, true);
-            R::begin();
-            try {
-                R::store($this->record); //must do this, because otherwise prices dont copy!!
-                $this->record->calculation();
-                R::store($this->record);
-                R::commit();
-                Flight::get('user')->notify(I18n::__('planning_calculation_edit_success'));
-                $this->redirect(sprintf('/planning/calculation/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
-                error_log($e);
-                R::rollback();
-                Flight::get('user')->notify(I18n::__('planning_calculation_edit_error'), 'error');
-            }
-        }
-        $this->render();
+		$pubdate = $this->record->localizedDate('pubdate');
+        $filename = I18n::__('planning_filename', null, [$pubdate]);
+        $title = I18n::__('planning_docname', null, [$pubdate]);
+        $mpdf = new mPDF('c', 'A4');
+        $mpdf->SetTitle($title);
+        $mpdf->SetAuthor($this->record->company->legalname);
+        $mpdf->SetDisplayMode('fullpage');
+        ob_start();
+        Flight::render('planning/print', [
+            'record' => $this->record,
+			'pubdate' => $pubdate
+		]);
+        $html = ob_get_contents();
+        ob_end_clean();
+        $mpdf->WriteHTML( $html );
+        $mpdf->Output($filename, 'D');
+        exit;
     }
     
     /**
@@ -196,6 +193,7 @@ class Controller_Planning extends Controller
 		Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('planning/toolbar', array(
+			'record' => $this->record
         ), 'toolbar');
 		Flight::render('shared/header', array(), 'header');
 		Flight::render('shared/footer', array(), 'footer');
