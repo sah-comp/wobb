@@ -147,6 +147,70 @@
         <?php endforeach ?>
         </div>
         <!-- end of grid based data -->
+		
+        <!-- grid based footer -->
+        <div class="row">
+            <div class="span1">&nbsp;</div>
+            <div class="span3">
+                <label>
+                    <?php echo I18n::__('plan_label_total') ?>
+                </label>
+            </div>
+            <div class="span1">
+	            <input
+	                id="plan-piggery"
+	                class="autowidth number"
+	                type="text"
+	                name="dialog[piggery]"
+	                value="<?php echo ($record->piggery) ?>" />
+            </div>
+            <div class="span1">
+                &nbsp;
+            </div>
+			<div class="span3">
+	            <input
+	                type="text"
+	                class="number"
+	                readonly="readonly"
+	                name="dialog[totalnet]"
+	                value="<?php echo htmlspecialchars($record->decimal('totalnet', 3)) ?>"
+                
+	            />
+			</div>
+            <div class="span1">
+	            <input
+	                type="text"
+	                class="number"
+	                readonly="readonly"
+	                name="dialog[meanmfa]"
+	                value="<?php echo htmlspecialchars($record->decimal('meanmfa', 3)) ?>"
+                
+	            />
+            </div>
+            <div class="span1">
+	            <input
+	                type="text"
+	                class="number"
+	                readonly="readonly"
+	                name="dialog[meanweight]"
+	                value="<?php echo htmlspecialchars($record->decimal('meanweight', 3)) ?>"
+                
+	            />
+            </div>
+            <div class="span1">
+	            <input
+	                type="text"
+	                class="number"
+	                readonly="readonly"
+	                name="dialog[meandprice]"
+	                value="<?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?>"
+                
+	            />
+            </div>
+        </div>
+        <!-- end of grid based footer -->
+	
+
     </fieldset>
 </div>
 <!-- end of plan edit form -->
