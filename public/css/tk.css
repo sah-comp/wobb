@@ -34,6 +34,11 @@ body {
     font-size: small;
 }
 
+.plan-info {
+	font-size: small;
+	color: gray;
+}
+
 a.toggle {
     text-decoration: none;
 }

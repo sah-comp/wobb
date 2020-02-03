@@ -34,7 +34,7 @@ Flight::setlocale();
                     <label class="number"><?php echo I18n::__('planning_label_baseprice') ?></label>
                 </div>
                 <div class="span5">
-                    &nbsp;
+                    <label><?php echo I18n::__('planning_label_stats') ?></label>
                 </div>
                 <div class="span1">
                     &nbsp;
@@ -61,7 +61,7 @@ Flight::setlocale();
                             <?php echo $_record->decimal('baseprice', 3) ?>
                         </div>
                         <div class="span5">
-							&nbsp;
+							<span class="plan-info"><?php echo I18n::__('planning_text_footer', null, [$_record->period]) ?></span>
                         </div>
                         <div class="span1 number">
                             <?php if ( $_record->wasCalculated() ): ?>
