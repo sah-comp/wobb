@@ -45,6 +45,9 @@ class Model_Analysisitem extends Model
         $this->addConverter('avgdprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('avgpricenet', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('avgdpricelanuv', array(
             new Converter_Decimal()
         ));
@@ -79,6 +82,9 @@ class Model_Analysisitem extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('damageavgprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgpricenet', array(
             new Converter_Decimal()
         ));
         $this->addConverter('damageavgpricelanuv', array(

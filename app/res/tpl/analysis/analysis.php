@@ -84,11 +84,14 @@
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_avgweight') ?></label>
                 </div>
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_avgdprice') ?></label>
+                </div>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></label>
                 </div>
             </div>
             <!-- end of row with labels -->
@@ -164,7 +167,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -179,6 +182,15 @@
                             class="number"
                             name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgprice]"
                             value="<?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgpricenet]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('avgpricenet', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -236,7 +248,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -251,6 +263,15 @@
                             class="number"
                             name="dialog[avgprice]"
                             value="<?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[avgpricenet]"
+                            value="<?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -327,7 +348,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -342,6 +363,15 @@
                             class="number"
                             name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgprice]"
                             value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgpricenet]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenet', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -399,7 +429,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -414,6 +444,15 @@
                             class="number"
                             name="dialog[damageavgprice]"
                             value="<?php echo htmlspecialchars($record->decimal('damageavgprice', 3)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[damageavgpricenet]"
+                            value="<?php echo htmlspecialchars($record->decimal('damageavgpricenet', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>

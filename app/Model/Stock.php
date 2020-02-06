@@ -203,6 +203,9 @@ class Model_Stock extends Model
         }
         $this->calculateDamage1Price($deliverer, $lanuv_tax);
         $this->calculateDamage2Price($deliverer, $lanuv_tax);
+		
+		$this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
+		
         return null;
     }
     
@@ -224,6 +227,7 @@ class Model_Stock extends Model
 		 
         $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
         $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight );
+		
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return null;
     }
