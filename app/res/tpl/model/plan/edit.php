@@ -161,6 +161,7 @@
 	                id="plan-piggery"
 	                class="autowidth number"
 	                type="text"
+	                readonly="readonly"
 	                name="dialog[piggery]"
 	                value="<?php echo ($record->piggery) ?>" />
             </div>
