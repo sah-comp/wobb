@@ -161,28 +161,126 @@ class Controller_Statistic extends Controller
     /**
      * Export stock of the lanuv bean as csv for usage with Excel.
      */
-    public function csv()
+    public function weekascsv()
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
-        $this->record->exportAsCsv();
+        $this->record->exportWeekAsCsv();
         exit;
     }
     
     /**
      * Creates a CSV file as required for LANUV and tries to send it to
-     * the company lanuv email address.
+     * the lanuv email address which is defined in settings.
      */
-    public function send()
+    public function mail()
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
-        try {
-            $this->record->mail();
-            Flight::get('user')->notify(I18n::__('statistic_lanuv_send_success'));
-        } catch (Exception $e) {            
-            error_log($e);
-            Flight::get('user')->notify(I18n::__('statistic_lanuv_send_error'), 'error');
+		$filename = I18n::__('lanuv_csv_filename', null, array($this->record->weekOfYear()));
+		$docname = I18n::__('lanuv_csv_docname', null, array($this->record->weekOfYear()));
+
+		$csv = $this->record->exportAsCsv();
+		$csv->save(Flight::get('upload_dir') . '/' . $filename);
+		
+        if ($this->sendMail($filename, $docname, $csv)) {
+            $this->record->sent = true;
+            Flight::get('user')->notify(I18n::__('lanuv_send_mail_success'));
+        } else {
+            $this->record->sent = false;
+            Flight::get('user')->notify(I18n::__('lanuv_send_mail_failed'), 'warning');
         }
+        R::store($this->record);
         $this->redirect(sprintf('/statistic/lanuv/%d', $this->record->getId()));
+    }
+	
+    /**
+     * Creates a CSV file as required for LANUV and tries to download it to the client.
+     */
+    public function download()
+    {
+        Permission::check(Flight::get('user'), 'statistic', 'edit');
+		$filename = I18n::__('lanuv_csv_filename', null, array($this->record->weekOfYear()));
+		//$docname = I18n::__('lanuv_csv_docname', null, array($this->record->weekOfYear()));
+
+		$csv = $this->record->exportAsCsv();
+		$csv->output($filename);
+		exit;
+    }
+	
+    /**
+     * Sends an email to LANUV email address with the LANUV stats as CSV file attached.
+     *
+     * @param string $filename
+     * @param string $docname
+     * @param mPDF $mpdf
+     */
+    public function sendMail($filename, $docname, $csv)
+    {
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+        if ($smtp = $this->record->company->smtp()) {
+            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
+			/**
+			 * uncomment this block to get verbose error logging in your error log file
+			 */
+			/*
+			$mail->Debugoutput = function($str, $level) {
+				error_log("debug level $level; message: $str");
+			};
+			*/
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = $smtp['host'];                          // Specify main and backup server
+            if ($smtp['auth']) {
+                $mail->SMTPAuth = true;                           // Enable SMTP authentication
+            } else {
+                $mail->SMTPAuth = false;                          // Disable SMTP authentication
+            }
+			$mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Username = $smtp['user'];                      // SMTP username
+            $mail->Password = $smtp['password'];                  // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+			
+			/**
+			 * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
+			 */
+			$mail->SMTPOptions = array(
+				'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				)
+			);
+        }
+
+        $mail->CharSet = 'UTF-8';
+		$mail->setFrom($this->record->company->emailnoreply, $this->record->company->legalname);
+		$mail->addReplyTo($this->record->company->email, $this->record->company->legalname);
+        $mail->addAddress($this->record->company->lanuvemail, I18n::__('lanuv_mail_name'));
+		
+        $mail->WordWarp = 50;
+        $mail->isHTML(true);
+        $mail->Subject = $docname;
+
+        ob_start();
+        Flight::render('statistic/mail/html', array(
+            'record' => $this->record
+        ));
+        $html = ob_get_clean();
+        ob_start();
+        Flight::render('statistic/mail/text', array(
+            'record' => $this->record
+        ));
+        $text = ob_get_clean();
+        $mail->Body = $html;
+        $mail->AltBody = $text;
+
+        $mail->addAttachment(Flight::get('upload_dir') . '/' . $filename, $filename);
+		
+		if ($mail->send()) {
+			return true;
+		} else {
+			error_log($mail->ErrorInfo);
+			return false;
+		}
     }
 
     /**

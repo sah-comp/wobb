@@ -18,19 +18,19 @@
             <legend class="verbose"><?php echo I18n::__('statistic_history_legend') ?></legend>
             <h2 class="year"><?php echo I18n::__('lanuv_h2_years', null, array($first_year, $last_year)) ?></h2>
             <div class="row">
-                <div class="span3">
+                <div class="span2">
                     <label><?php echo I18n::__('lanuv_label_company_id') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label><?php echo I18n::__('lanuv_label_startdate') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label><?php echo I18n::__('lanuv_label_enddate') ?></label>
                 </div>
                 <div class="span2">
                     <label><?php echo I18n::__('lanuv_label_weekofyear') ?></label>
                 </div>
-                <div class="span3">
+                <div class="span6">
                     &nbsp;
                 </div>
             </div>
@@ -41,20 +41,20 @@
                 <a
                     href="<?php echo Url::build(sprintf('/statistic/lanuv/%d', $_record->getId())) ?>">
                     <div class="row">
-                        <div class="span3">
+                        <div class="span2">
                             <?php echo htmlspecialchars($_record->company->name) ?>
                         </div>
-                        <div class="span2">
+                        <div class="span1">
                             <?php echo htmlspecialchars($_record->localizedDate('startdate')) ?>
                         </div>
-                        <div class="span2">
+                        <div class="span1">
                             <?php echo htmlspecialchars($_record->localizedDate('enddate')) ?>
                         </div>
                         <div class="span2">
                             <?php echo htmlspecialchars($_record->weekOfYear()) ?>
                         </div>
-                        <div class="span3">
-                            <?php echo ( $_record->dirty ) ? I18n::__('lanuv_isdirty') : "&nbsp;"  ?>
+                        <div class="span6">
+                            <span class="lanuv-info"><?php echo $_record->getStatus() ?></span>
                         </div>
                     </div>
                 </a>

@@ -34,7 +34,9 @@ body {
     font-size: small;
 }
 
-.plan-info {
+.plan-info,
+.lanuv-info,
+.analysis-info {
 	font-size: small;
 	color: gray;
 }
@@ -236,6 +238,14 @@ ul.action li:last-child a {
 .adjustmentitem.email,
 .adjustmentitem-mail.mailed {
     opacity: 0.3;
+}
+
+.mail {
+	color: #ce838f;
+}
+
+.mail.sent {
+	color: #54b646;
 }
 
 @media print {

@@ -402,50 +402,94 @@ SQL;
             ':hi' => $margin_hi
         ));
     }
+	
+	/**
+	 * Returns the string "sent" when the report was sent successfully to LANUV by email.
+	 */
+	public function wasSent()
+	{
+		if ($this->bean->sent) {
+			return "sent";
+		}
+		return '';
+	}
+	
+	/**
+	 * Return a string representing the status of the lanuv bean.
+	 * The bean could be dirty, that is some re-calculation changed the data and
+	 * the lanuv bean has to be recalculated.
+	 * The lanuv bean may not yet have been sent by e-mail to LANUV which is mandatory
+	 * from May 2020 on.
+	 */
+	public function getStatus()
+	{
+		$status = [];
+		if ($this->bean->dirty) {
+			$status[] = I18n::__('lanuv_isdirty');
+		}
+		if ( !$this->bean->sent) {
+			$status[] = I18n::__('lanuv_not_yet_sent');
+		}
+		return implode(', ', $status);
+	}
 
     /**
-     * Export the lanuv bean as csv.
+     * Export the calendar week of slaughtered stock as csv.
      */
-    public function exportAsCsv()
+    public function exportWeekAsCsv()
     {
         $stocks = $this->bean->getStock();
+		$filename = I18n::__('lanuv_weekascsv_filename', null, array($this->bean->weekOfYear()));
         require_once '../app/lib/parsecsv.lib.php';
         $csv = new parseCSV();
-        $csv->output('lanuv.csv', $stocks, ',');
+        $csv->output($filename, $stocks, ',');
     }
+	
+	/**
+	 * Returns a csv object with the lanuv weekly statistics.
+	 *
+	 * @return parseCSV
+	 */
+	public function exportAsCsv()
+	{
+        require_once '../app/lib/parsecsv.lib.php';
+        $csv = new parseCSV();
+		$csv->encoding('UTF-8');
+		$csv->delimiter = ";";
+		$csv->heading = false;
+		$csv->data = $this->bean->generateLanuvStatsAsCsv();
+		return $csv;
+	}
 
     /**
-     * Generates a CSV file after the specs of LANUV weekly price report.
+     * Returns an array with lanuvitem beans as array to be used with csv parse lib.
      *
-     * @throws Exception if the csv file could not be generated
-     * @return bool wether the file could be created or not
+     * @return array
      */
-    public function exportAsLANUVReport()
+    public function generateLanuvStatsAsCsv()
     {
+		$data = [];
         foreach ( $this->bean->with(' ORDER BY id ')->ownLanuvitem as $id => $item ) {
             if ( $item->piggery == 0 ) continue; //skip when no piggies are in da house :-)
-            $class = $item->quality;
-            $total = $item->piggery;
-            $weight = round( $item->sumweight, 0 );
-            $price = round( round( $item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP ), 0 );
-            $mfa = round( round( $item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0 );
-            error_log("{$class};{$total};{$weight};{$price};{$mfa}\n");
+			$data[] = [
+				'A' => '20',
+				'B' => date('d.m.Y', strtotime($this->bean->startdate)),
+				'C' => 'NW',
+				'D' => '',
+				'E' => '10',
+				'F' => 'Schweine',
+				'G' => 'SW',
+				'H' => $item->quality,
+				'I' => '',
+				'J' => '1',
+				'K' => '1',
+				'L' => $item->piggery,
+				'M' => round($item->sumweight, 0),
+				'N' => round(round($item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP), 0),
+				'O' => round(round($item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0)
+			];
         }
-        return true;
-    }
-
-    /**
-     * Generate a CSV file after LANUV requirements and try to email it to this
-     * beans company LANUV email address.
-     *
-     * @throws Exception if email could not be send
-     * @return bool wether email was send or not
-     */
-    public function mail()
-    {
-        $this->bean->exportAsLANUVReport();
-        //throw new Exception('Blubb');
-        return true;
+        return $data;
     }
 
     /**

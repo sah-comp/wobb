@@ -261,16 +261,6 @@
         
         <!-- statistic buttons -->
         <div class="buttons">
-            <a
-                href="<?php echo Url::build(sprintf("/statistic/send/%d", $record->getId())) ?>"
-                class="btn">
-                <?php echo I18n::__('lanuv_href_lanuv_report') ?>
-            </a>
-            <a
-                href="<?php echo Url::build(sprintf("/statistic/csv/%d", $record->getId())) ?>"
-                class="btn">
-                <?php echo I18n::__('lanuv_href_export_csv') ?>
-            </a>
             <input
                 type="submit"
                 name="submit"
