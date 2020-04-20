@@ -312,7 +312,8 @@
             'person-cost' => I18n::__('person_cost_tab'),
             'person-billing' => I18n::__('person_billing_tab'),
             'person-bankaccount' => I18n::__('person_bankaccount_tab'),
-            'person-kidnap' => I18n::__('person_kidnap_tab')
+            'person-kidnap' => I18n::__('person_kidnap_tab'),
+			'person-stockman' => I18n::__('person_stockman_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -627,6 +628,31 @@
             <?php Flight::render('model/person/own/kidnap', array(
                 'record' => $record,
                 '_kidnap' => $_kidnap,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
+        </div>
+    </fieldset>
+    <fieldset
+        id="person-stockman"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_stockman') ?></legend>
+		<div class="row">
+			<div class="span3">&nbsp;</div>
+			<div class="span3">Col A</div>
+			<div class="span3">Col B</div>
+		</div>
+        <div
+            id="person-<?php echo $record->getId() ?>-stockman-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownStockman) == 0) $record->ownStockman[] = R::dispense('stockman') ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownStockman as $_stockman_id => $_stockman): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/person/own/stockman', array(
+                'record' => $record,
+                '_stockman' => $_stockman,
                 'index' => $index
             )) ?>
             <?php endforeach ?>
