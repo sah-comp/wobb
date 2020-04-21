@@ -54,7 +54,8 @@
             'company-id' => I18n::__('company_id_tab'),
             'company-bankaccount' => I18n::__('company_bankaccount_tab'),
             'company-serial' => I18n::__('company_serial_tab'),
-            'company-lanuv' => I18n::__('company_lanuv_tab')
+            'company-lanuv' => I18n::__('company_lanuv_tab'),
+            'company-iqagrar' => I18n::__('company_iqagrar_tab')
         ),
         'default_tab' => 'company-address'
     )) ?>
@@ -410,5 +411,40 @@
             <p class="info"><?php echo I18n::__('company_info_lanuvemail') ?></p>
         </div>
     </fieldset>
+    <fieldset
+        id="company-iqagrar"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('company_legend_iqagrar_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('ident')) ? 'error' : ''; ?>">
+            <label
+                for="company-ident">
+                <?php echo I18n::__('company_label_ident') ?>
+            </label>
+            <input
+                id="company-ident"
+                type="text"
+                name="dialog[ident]"
+                value="<?php echo htmlspecialchars($record->ident) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_ident') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('hasiqagrar')) ? 'error' : ''; ?>">
+            <label
+                for="company-hasiqagrar"
+				class="cb">
+                <?php echo I18n::__('company_label_hasiqagrar') ?>
+            </label>
+	        <input
+	            type="hidden"
+	            name="dialog[hasiqagrar]"
+	            value="0" />
+	        <input
+	            id="company-hasiqagrar"
+	            type="checkbox"
+	            name="dialog[hasiqagrar]"
+	            <?php echo ($record->hasiqagrar) ? 'checked="checked"' : '' ?>
+	            value="1" />
+        </div>
+	</fieldset>
 </div>
 <!-- end of company edit form -->
