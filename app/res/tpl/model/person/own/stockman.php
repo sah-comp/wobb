@@ -38,15 +38,34 @@
 </div>
 <div class="row">
 	<div class="span3">&nbsp;</div>
-	<div class="span3">
+	<div class="span2">
 	    <input
 	        id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-earmark"
 	        type="text"
 	        name="dialog[ownStockman][<?php echo $index ?>][earmark]"
 	        value="<?php echo htmlspecialchars($_stockman->earmark) ?>" />
 	</div>
+	<div class="span2">
+        <input
+            id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-reldprice"
+            type="text"
+            class="number"
+            name="dialog[ownStockman][<?php echo $index ?>][reldprice]"
+            value="<?php echo htmlspecialchars($_stockman->decimal('reldprice', 3)) ?>" />
+	</div>
 	<div class="span3">
-		col b
+	    <input
+	        id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-name"
+	        type="text"
+	        name="dialog[ownStockman][<?php echo $index ?>][name]"
+	        value="<?php echo htmlspecialchars($_stockman->name) ?>" />
+	</div>
+	<div class="span2">
+	    <input
+	        id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-vvvo"
+	        type="text"
+	        name="dialog[ownStockman][<?php echo $index ?>][vvvo]"
+	        value="<?php echo htmlspecialchars($_stockman->vvvo) ?>" />
 	</div>
 </div>
 </fieldset>
