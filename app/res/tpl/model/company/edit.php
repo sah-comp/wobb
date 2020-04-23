@@ -416,18 +416,6 @@
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('company_legend_iqagrar_tab') ?></legend>
-        <div class="row <?php echo ($record->hasError('ident')) ? 'error' : ''; ?>">
-            <label
-                for="company-ident">
-                <?php echo I18n::__('company_label_ident') ?>
-            </label>
-            <input
-                id="company-ident"
-                type="text"
-                name="dialog[ident]"
-                value="<?php echo htmlspecialchars($record->ident) ?>" />
-            <p class="info"><?php echo I18n::__('company_info_ident') ?></p>
-        </div>
         <div class="row <?php echo ($record->hasError('hasiqagrar')) ? 'error' : ''; ?>">
             <label
                 for="company-hasiqagrar"
@@ -444,6 +432,30 @@
 	            name="dialog[hasiqagrar]"
 	            <?php echo ($record->hasiqagrar) ? 'checked="checked"' : '' ?>
 	            value="1" />
+        </div>
+        <div class="row <?php echo ($record->hasError('ident')) ? 'error' : ''; ?>">
+            <label
+                for="company-ident">
+                <?php echo I18n::__('company_label_ident') ?>
+            </label>
+            <input
+                id="company-ident"
+                type="text"
+                name="dialog[ident]"
+                value="<?php echo htmlspecialchars($record->ident) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_ident') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('iqagraremail')) ? 'error' : ''; ?>">
+            <label
+                for="company-iqagraremail">
+                <?php echo I18n::__('company_label_iqagraremail') ?>
+            </label>
+            <input
+                id="company-iqagraremail"
+                type="text"
+                name="dialog[iqagraremail]"
+                value="<?php echo htmlspecialchars($record->iqagraremail) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_iqagraremail') ?></p>
         </div>
 	</fieldset>
 </div>

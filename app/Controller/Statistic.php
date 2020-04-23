@@ -181,7 +181,7 @@ class Controller_Statistic extends Controller
 		$csv = $this->record->exportAsCsv();
 		$csv->save(Flight::get('upload_dir') . '/' . $filename);
 		
-        if ($this->sendMail($filename, $docname, $csv)) {
+        if ($this->sendMail($filename, $docname)) {
             $this->record->sent = true;
             Flight::get('user')->notify(I18n::__('lanuv_send_mail_success'));
         } else {
@@ -211,9 +211,8 @@ class Controller_Statistic extends Controller
      *
      * @param string $filename
      * @param string $docname
-     * @param mPDF $mpdf
      */
-    public function sendMail($filename, $docname, $csv)
+    public function sendMail($filename, $docname)
     {
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 

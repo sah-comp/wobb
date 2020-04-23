@@ -112,6 +112,19 @@ class Model_Person extends Model
                 )
             ),
             array(
+                'name' => 'nextweekprice',
+                'sort' => array(
+                    'name' => 'person.nextweekprice'
+                ),
+                'callback' => array(
+                    'name' => 'boolean'
+                ),
+                'filter' => array(
+                    'tag' => 'bool'
+                ),
+				'width' => '5rem'
+            ),
+            array(
                 'name' => 'enabled',
                 'sort' => array(
                     'name' => 'person.enabled'

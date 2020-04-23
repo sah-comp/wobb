@@ -52,6 +52,38 @@ class Model_Deliverer extends Model
             new Converter_Mysqldatetime()
         ));
     }
+	
+	/**
+	 * Set the dprice of a (sub)-deliverer if not already set.
+	 *
+	 * If the dealer and service prices are not already set, they will be set based on the given csb bean baseprice or
+	 * the nextweekprice, if the deliverer is set to use next weeks price. If a (sub)-deliverer has a special adjustment,
+	 * that one is used instead of the overall adjustment to the baseprice.
+	 *
+	 * @param RedBean_OODBBean $csb
+	 * @return RedBean_OODBBean
+	 */
+	public function setBaseprices(RedBean_OODBBean $csb)
+	{
+		if (! $this->bean->dprice) {
+			if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " earmark = :earmark AND person_id = :pid LIMIT 1", [
+				':earmark' => $this->bean->earmark,
+				':pid' => $this->bean->person->getId()
+			])) {
+				if ($this->bean->deliverer->person->nextweekprice && $csb->nextweekprice) {
+					$this->bean->dprice = $csb->nextweekprice + $hasStockmanWithPriceAdjust->reldprice;
+				} else {
+					$this->bean->dprice = $csb->baseprice + $hasStockmanWithPriceAdjust->reldprice;
+				}
+			} else {
+				$this->bean->dprice = $this->bean->deliverer->dprice;
+			}
+		}
+		if (! $this->bean->sprice) {
+			$this->bean->sprice = $this->bean->deliverer->sprice;
+		}
+		return $this->bean;
+	}
 
     /**
      * Returns 'mailed' when sent flag is true, otherwise an empty string is returned.

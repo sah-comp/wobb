@@ -9,6 +9,15 @@
  */
 ?>
 <ul class="panel-navigation">
+	<?php if (isset($record) && is_a($record, 'RedBean_OODBBean') && $record->getId() && $record->hasIqagrar()): ?>
+	<li>
+        <a
+            href="<?php echo Url::build(sprintf("/purchase/iqagrar/%d", $record->getId())) ?>"
+            class="mail <?php echo $record->wasIqagrarSent() ?>">
+            <?php echo I18n::__('action_purchase_iqagrar') ?>
+        </a>
+	</li>
+	<?php endif ?>
 	<li>
 		<a
 			href="<?php echo Url::build("/purchase/index") ?>"

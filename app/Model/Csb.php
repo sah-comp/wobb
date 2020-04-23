@@ -62,6 +62,17 @@ class Model_Csb extends Model
         }
         return true;
     }
+	
+	/**
+	 * Returns the string "sent" when the report was sent successfully to iQAgrar by email.
+	 */
+	public function wasIqagrarSent()
+	{
+		if ($this->bean->iqagrarsent) {
+			return "sent";
+		}
+		return '';
+	}
 
     /**
      * Mark all lanuv beans as dirty which are effected by this csb bean.
@@ -97,6 +108,97 @@ class Model_Csb extends Model
         Flight::setlocale();
         return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
     }
+	
+	/**
+	 * Returns wether iQAgrar needs to be sent or not.
+	 *
+	 * @return bool
+	 */
+	public function hasIqagrar()
+	{
+		return $this->bean->company->hasiqagrar;
+	}
+	
+	/**
+	 * Generate the data to be sent to iQ-Agrar using ADS format.
+	 *
+	 * @return string
+	 */
+	public function generateADS()
+	{
+		$ts = time();
+		$file = '';
+		
+		// ADIS header
+		$file .= "DH990001000000000800090000208000900003080009000040600090000624000900009080" . "\r\n";
+		$header = [
+			'VH990001',
+			str_pad("DD:", 8, " ", STR_PAD_RIGHT),
+			str_pad("1996", 8, " ", STR_PAD_RIGHT),
+			date('Ymd', $ts),
+			date('hms', $ts),
+			str_pad($this->bean->company->name, 24, " ", STR_PAD_RIGHT),
+			str_pad('AGRO2017', 8, " ", STR_PAD_RIGHT)
+		];
+		$file .= implode($header) . "\r\n";
+		
+		// ADIS data stock
+		$file .= "DN610101006103011400061031408000610310150006103081400061031505200610316031006103190310061031803100610320020" . "\r\n";
+		
+		// cycle through all our piggies
+		$stocks = R::find("stock", " csb_id = :csb_id ORDER BY earmark, mfa DESC", ['csb_id' => $this->bean->getId()]);
+		foreach ($stocks as $id => $stock) {
+			$data = [
+				'VN610101',
+				str_pad($this->bean->company->ident, 14, " ", STR_PAD_LEFT),
+				str_replace("-", "", $stock->pubdate),
+				str_pad($stock->name, 15, " ", STR_PAD_LEFT),
+				str_pad($stock->earmark, 14, " ", STR_PAD_LEFT),
+				str_pad($stock->weight * 100, 5, "0", STR_PAD_LEFT),
+				str_pad($stock->mfa * 10, 3, "0", STR_PAD_LEFT),
+				str_pad($stock->speck * 10, 3, "0", STR_PAD_LEFT),
+				str_pad($stock->flesh * 10, 3, "0", STR_PAD_LEFT),
+				str_pad($stock->quality, 2, " ", STR_PAD_LEFT)
+			];
+			$file .= implode($data) . "\r\n";
+		}
+		
+		// ADIS data damages
+		$file .= "DN6101050061030114000610314080006103101500061030904000610539500" . "\r\n";
+		
+		// cycle through all our damage1 piggies
+		$stocks = R::find("stock", " csb_id = :csb_id AND damage1 != '' ORDER BY earmark, mfa DESC", ['csb_id' => $this->bean->getId()]);
+		foreach ($stocks as $id => $stock) {
+			$damage = R::findOne("var", " kind = 'damage1' AND name = :code LIMIT 1 ", [':code' => $stock->damage1]);
+			$data = [
+				'VN610105',
+				str_pad($this->bean->company->ident, 14, " ", STR_PAD_LEFT),
+				str_replace("-", "", $stock->pubdate),
+				str_pad($stock->name, 15, " ", STR_PAD_LEFT),
+				str_pad($stock->damage1, 4, " ", STR_PAD_LEFT),
+				str_pad($damage->note, 50, " ", STR_PAD_LEFT)
+			];
+			$file .= implode($data) . "\r\n";
+		}
+		
+		// cycle through all our damage12piggies
+		$stocks = R::find("stock", " csb_id = :csb_id AND damage2 != '' ORDER BY earmark, mfa DESC", ['csb_id' => $this->bean->getId()]);
+		foreach ($stocks as $id => $stock) {
+			$damage = R::findOne("var", " kind = 'damage2' AND name = :code LIMIT 1 ", [':code' => $stock->damage2]);
+			$data = [
+				'VN610105',
+				str_pad($this->bean->company->ident, 14, " ", STR_PAD_LEFT),
+				str_replace("-", "", $stock->pubdate),
+				str_pad($stock->name, 15, " ", STR_PAD_LEFT),
+				str_pad('9999', 4, " ", STR_PAD_LEFT), // use of 9999 because ADIS allows only numeric data
+				str_pad($damage->note, 50, " ", STR_PAD_LEFT)
+			];
+			$file .= implode($data) . "\r\n";
+		}
+		
+		$file .= "ZN" . "\r\n";
+		return $file;
+	}
 
     /**
      * Returns the count of a certain damage code within this days stock.
@@ -554,12 +656,7 @@ SQL;
             $deliverer->meandprice = 0;
             $deliverer->meansprice = 0;
             foreach ($deliverer->with(" ORDER BY earmark ")->ownDeliverer as $_sub_id => $subdeliverer) {
-                if (! $subdeliverer->dprice) {
-                    $subdeliverer->dprice = $deliverer->dprice;
-                }
-                if (! $subdeliverer->sprice) {
-                    $subdeliverer->sprice = $deliverer->sprice;
-                }
+				$subdeliverer->setBaseprices($this->bean);
                 $summary = $subdeliverer->calculation($this->bean);
                 // save some of the summary to the subdeliverer
                 $subdeliverer->totalnet = $summary['totalnet'];

@@ -240,6 +240,108 @@ class Controller_Purchase extends Controller
         }
         $this->render();
     }
+	
+    /**
+     * Creates a CSV file as required for iQAgrar and tries to send it to
+     * the iQAgrar email address which is defined in company.
+     */
+    public function iqagrar()
+    {
+        Permission::check(Flight::get('user'), 'purchase', 'edit');
+		
+		$filename = I18n::__('iqagrar_csv_filename', null, [$this->record->company->ident, $this->record->pubdate]);
+		$docname = I18n::__('iqagrar_csv_docname', null, [$this->record->company->ident, $this->record->pubdate]);
+
+		$ads = $this->record->generateADS();
+		$check = file_put_contents(Flight::get('upload_dir') . '/' . $filename, $ads, LOCK_EX);
+
+        if ($check !== false && $this->sendIqagrarAsMail($filename, $docname)) {
+            $this->record->iqagrarsent = true;
+            Flight::get('user')->notify(I18n::__('iqagrar_send_mail_success'));
+        } else {
+            $this->record->iqagrarsent = false;
+            Flight::get('user')->notify(I18n::__('iqagrar_send_mail_failed'), 'warning');
+        }
+        R::store($this->record);
+		
+        $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));
+    }
+	
+    /**
+     * Sends an email to iQAgrar email address with the CSV file attached.
+     *
+     * @param string $filename
+     * @param string $docname
+     */
+    public function sendIqagrarAsMail($filename, $docname)
+    {
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+        if ($smtp = $this->record->company->smtp()) {
+            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
+			/**
+			 * uncomment this block to get verbose error logging in your error log file
+			 */
+			/*
+			$mail->Debugoutput = function($str, $level) {
+				error_log("debug level $level; message: $str");
+			};
+			*/
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = $smtp['host'];                          // Specify main and backup server
+            if ($smtp['auth']) {
+                $mail->SMTPAuth = true;                           // Enable SMTP authentication
+            } else {
+                $mail->SMTPAuth = false;                          // Disable SMTP authentication
+            }
+			$mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Username = $smtp['user'];                      // SMTP username
+            $mail->Password = $smtp['password'];                  // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+			
+			/**
+			 * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
+			 */
+			$mail->SMTPOptions = array(
+				'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				)
+			);
+        }
+
+        $mail->CharSet = 'UTF-8';
+		$mail->setFrom($this->record->company->emailnoreply, $this->record->company->legalname);
+		$mail->addReplyTo($this->record->company->email, $this->record->company->legalname);
+        $mail->addAddress($this->record->company->iqagraremail, I18n::__('iqagrar_mail_name'));
+		
+        $mail->WordWarp = 50;
+        $mail->isHTML(true);
+        $mail->Subject = $docname;
+
+        ob_start();
+        Flight::render('purchase/mail/html', array(
+            'record' => $this->record
+        ));
+        $html = ob_get_clean();
+        ob_start();
+        Flight::render('purchase/mail/text', array(
+            'record' => $this->record
+        ));
+        $text = ob_get_clean();
+        $mail->Body = $html;
+        $mail->AltBody = $text;
+
+        $mail->addAttachment(Flight::get('upload_dir') . '/' . $filename, $filename);
+		
+		if ($mail->send()) {
+			return true;
+		} else {
+			error_log($mail->ErrorInfo);
+			return false;
+		}
+	}
     
     /**
      * Renders the current layout.
@@ -251,8 +353,7 @@ class Controller_Purchase extends Controller
         Flight::render('shared/navigation/account', array(), 'navigation_account');
 		Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
-        Flight::render('purchase/toolbar', array(
-        ), 'toolbar');
+        Flight::render('purchase/toolbar', ['record' => $this->record], 'toolbar');
 		Flight::render('shared/header', array(), 'header');
 		Flight::render('shared/footer', array(), 'footer');
         Flight::render('purchase/'.$this->layout, array(
