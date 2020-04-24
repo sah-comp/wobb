@@ -398,6 +398,17 @@
                 name="dialog[region]"
                 value="<?php echo htmlspecialchars($record->region) ?>" />
         </div>
+        <div class="row <?php echo ($record->hasError('subpart')) ? 'error' : ''; ?>">
+            <label
+                for="company-subpart">
+                <?php echo I18n::__('company_label_subpart') ?>
+            </label>
+            <input
+                id="company-subpart"
+                type="text"
+                name="dialog[subpart]"
+                value="<?php echo htmlspecialchars($record->subpart) ?>" />
+        </div>
         <div class="row <?php echo ($record->hasError('lanuvemail')) ? 'error' : ''; ?>">
             <label
                 for="company-lanuvemail">

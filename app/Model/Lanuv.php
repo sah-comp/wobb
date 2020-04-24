@@ -474,9 +474,9 @@ SQL;
 			$data[] = [
 				'A' => '20',
 				'B' => date('d.m.Y', strtotime($this->bean->startdate)),
-				'C' => 'NW',
-				'D' => '',
-				'E' => '10',
+				'C' => $this->bean->company->county,
+				'D' => $this->bean->company->region,
+				'E' => $this->bean->company->subpart,
 				'F' => 'Schweine',
 				'G' => 'SW',
 				'H' => $item->quality,
@@ -485,8 +485,8 @@ SQL;
 				'K' => '1',
 				'L' => $item->piggery,
 				'M' => round($item->sumweight, 0),
-				'N' => round(round($item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP), 0),
-				'O' => round(round($item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0)
+				'N' => round(round($item->avgpricelanuv * 1000, 2, PHP_ROUND_HALF_UP), 0),
+				'O' => round(round($item->avgmfa * 100, 1, PHP_ROUND_HALF_UP ), 0)
 			];
         }
         return $data;
