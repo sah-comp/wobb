@@ -18,3 +18,11 @@ Features
 * iQ-Agrar Datenaustausch
 * Webbasiert
 * Multilingual
+* Mehrbenutzerfähig
+
+Technische Voraussetzungen
+--------------------------
+
+* PHP
+* MySQL, MariaDB oder andere Datenbank
+* Apache oder ein anderer Webserver
