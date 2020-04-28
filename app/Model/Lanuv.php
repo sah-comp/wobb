@@ -438,11 +438,17 @@ SQL;
      */
     public function exportWeekAsCsv()
     {
-        $stocks = $this->bean->getStock();
+        $stock = $this->bean->getStock();
 		$filename = I18n::__('lanuv_weekascsv_filename', null, array($this->bean->weekOfYear()));
         require_once '../app/lib/parsecsv.lib.php';
         $csv = new parseCSV();
-        $csv->output($filename, $stocks, ',');
+		$csv->encoding('UTF-8', 'UTF-8');
+		$csv->delimiter = ";";
+		$csv->output_delimiter = ";";
+		$csv->linefeed = "\r\n";
+		$csv->heading = false;
+		$csv->data = $stock;
+        $csv->output($filename);
     }
 	
 	/**
@@ -454,8 +460,10 @@ SQL;
 	{
         require_once '../app/lib/parsecsv.lib.php';
         $csv = new parseCSV();
-		$csv->encoding('UTF-8');
+		$csv->encoding('UTF-8', 'ISO-8859-1');
 		$csv->delimiter = ";";
+		$csv->output_delimiter = ";";
+		$csv->linefeed = "\r\n";
 		$csv->heading = false;
 		$csv->data = $this->bean->generateLanuvStatsAsCsv();
 		return $csv;
@@ -463,6 +471,8 @@ SQL;
 
     /**
      * Returns an array with lanuvitem beans as array to be used with csv parse lib.
+	 *
+	 * @see https://meldfleisch.ble.de/docs/Datensatz-HB-3.2.pdf
      *
      * @return array
      */
@@ -507,7 +517,7 @@ SQL;
             stock.billnumber,
             person.nickname,
             person.account,
-            person.name,
+            REPLACE(person.name, "\r\n", " "),
             stock.quality,
             stock.mfa,
             stock.weight,
