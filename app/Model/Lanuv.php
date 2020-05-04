@@ -495,7 +495,7 @@ SQL;
 				'K' => '1',
 				'L' => $item->piggery,
 				'M' => round($item->sumweight, 0),
-				'N' => round(round($item->avgpricelanuv * 1000, 2, PHP_ROUND_HALF_UP), 0),
+				'N' => round(round($item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP), 0),
 				'O' => round(round($item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0)
 			];
         }
