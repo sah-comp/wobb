@@ -28,7 +28,7 @@
     </a>
     <div class="row">
         <div class="span1">&nbsp;</div>
-        <div class="span3">
+        <div class="span2">
             <input type="hidden" name="dialog[ownDeliverer][<?php echo $index ?>][type]" value="<?php echo $_deliverer->getMeta('type') ?>" />
             <input type="hidden" name="dialog[ownDeliverer][<?php echo $index ?>][id]" value="<?php echo $_deliverer->getId() ?>" />
 			<input type="hidden" name="dialog[ownDeliverer][<?php echo $index ?>][calcdate]" value="<?php echo $_deliverer->calcdate ?>" />
@@ -55,13 +55,20 @@
             <input
                 type="text"
                 class="number"
-                readonly="readonly"
                 name="dialog[ownDeliverer][<?php echo $index ?>][dprice]"
                 value="<?php echo ($_deliverer->wasCalculated()) ? htmlspecialchars($_deliverer->decimal('dprice', 3)) : I18n::__('deliverer_not_yet_calculated')  ?>"
                 
             />
         </div>
-        <div class="span3">
+        <div class="span2">
+            <input
+                type="text"
+                name="dialog[ownDeliverer][<?php echo $index ?>][desc]"
+                value="<?php echo htmlspecialchars($_deliverer->desc); ?>"
+                
+            />
+		</div>
+        <div class="span2">
             <input
                 type="text"
                 class="number"

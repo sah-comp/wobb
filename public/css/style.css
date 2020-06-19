@@ -870,6 +870,10 @@ ul.tab-navigation a.selected {
     font-weight: normal;
 }
 
+.panel .row [class*="span"] label {
+	padding-bottom: 0.444em;
+}
+
 .panel p.info {
     margin-top: 0.25em;
     /*margin-left: 30%;*/
@@ -878,6 +882,10 @@ ul.tab-navigation a.selected {
     font-size: small;
     padding-left: 0.5em;
     color: gray;
+}
+
+.panel .row [class*="span"] p.info {
+	margin-left: 0;
 }
 
 th.label {
@@ -942,6 +950,10 @@ select.filter-select {
     width: 100%;
     margin-left: 0;
     margin-right: 0;
+}
+
+.panel .row [class*="span"] input {
+	margin-left: 0;
 }
 
 .detach,

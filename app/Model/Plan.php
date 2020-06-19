@@ -184,8 +184,15 @@ SQL;
 		$count = count($this->bean->ownDeliverer);
         foreach ($this->bean->ownDeliverer as $_id => $deliverer) {
 			$averages = $this->bean->getAverages($deliverer->person->nickname, $period);
-			$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
-			$deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+			if (! $deliverer->dprice) {
+				if ($deliverer->person->nextweekprice && $this->bean->nextweekprice) {
+					$deliverer->dprice = $this->bean->nextweekprice + $deliverer->person->reldprice;
+					$deliverer->sprice = $this->bean->nextweekprice + $deliverer->person->relsprice;				
+				} else {
+					$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
+					$deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+				}
+			}
 			$deliverer->meanmfa = $averages['meanmfa'];
 			$deliverer->meanweight = $averages['meanweight'];
 			$deliverer->calcdate = date('Y-m-d H:i:s');
@@ -239,6 +246,15 @@ SQL;
             new Converter_Mysqldate()
         );
         $this->addConverter('baseprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('nextweekprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sowprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageprice', array(
             new Converter_Decimal()
         ));
         $this->addConverter('totalweight', array(

@@ -30,48 +30,118 @@
             <?php endforeach ?>
         </select>
     </div>
-    <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
-        <label
-            for="plan-pubdate">
-            <?php echo I18n::__('plan_label_pubdate') ?>
-        </label>
-        <input
-            id="plan-pubdate"
-            type="date"
-            name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->pubdate) ?>"
-            required="required" />
-        <p class="info"><?php echo I18n::__('plan_info_pubdate') ?></p>
+	<div class="row nomargins">
+		<div class="span3">
+			&nbsp;
+		</div>
+		<div class="span3 <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
+	        <label
+	            for="plan-pubdate">
+	            <?php echo I18n::__('plan_label_pubdate') ?>
+	        </label>
+		</div>
+		<div class="span3 <?php echo ($record->hasError('period')) ? 'error' : ''; ?>">
+	        <label
+	            for="plan-period">
+	            <?php echo I18n::__('plan_label_period') ?>
+	        </label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span3">
+			&nbsp;
+		</div>
+	    <div class="span3">
+	        <input
+	            id="plan-pubdate"
+	            type="date"
+	            name="dialog[pubdate]"
+	            value="<?php echo htmlspecialchars($record->pubdate) ?>"
+	            required="required" />
+	        <p class="info"><?php echo I18n::__('plan_info_pubdate') ?></p>
+	    </div>
+	    <div class="span3">
+	        <input
+	            id="plan-period"
+	            type="number"
+	            min="1"
+	            step="1"
+	            max="52"
+	            name="dialog[period]"
+	            value="<?php echo htmlspecialchars($record->period) ?>" />
+			<span class="info"><?php echo I18n::__('plan_info_period') ?></span>
+	    </div>
+	</div>
+	<div class="row nomargins">
+		<div class="span3">
+			&nbsp;
+		</div>
+		<div class="span3 <?php echo ($record->hasError('baseprice')) ? 'error' : ''; ?>">
+	        <label
+	            for="plan-baseprice">
+	            <?php echo I18n::__('plan_label_baseprice') ?>
+	        </label>
+		</div>
+		<div class="span3 <?php echo ($record->hasError('sowprice')) ? 'error' : ''; ?>">
+	        <label
+	            for="plan-sowprice">
+	            <?php echo I18n::__('plan_label_sowprice') ?>
+	        </label>
+		</div>
+		<div class="span3 <?php echo ($record->hasError('damageprice')) ? 'error' : ''; ?>">
+	        <label
+	            for="plan-damageprice">
+	            <?php echo I18n::__('plan_label_damageprice') ?>
+	        </label>
+		</div>
+	</div>
+    <div class="row">
+		<div class="span3">
+			&nbsp;
+		</div>
+		<div class="span3">
+	        <input
+	            id="plan-baseprice"
+	            type="text"
+	            class="number"
+	            name="dialog[baseprice]"
+	            value="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
+	            placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>"
+	            required="required" />
+			<p class="info"><?php echo I18n::__('plan_info_baseprice') ?></p>
+		</div>
+		<div class="span3">
+	        <input
+	            id="plan-sowprice"
+	            type="text"
+	            class="number"
+	            name="dialog[sowprice]"
+	            value="<?php echo htmlspecialchars($record->decimal('sowprice', 3)) ?>"
+	            placeholder="" />
+		</div>
+		<div class="span3">
+	        <input
+	            id="plan-damageprice"
+	            type="text"
+	            class="number"
+	            name="dialog[damageprice]"
+	            value="<?php echo htmlspecialchars($record->decimal('damageprice', 3)) ?>"
+	            placeholder="" />
+		</div>
     </div>
-    <div class="row <?php echo ($record->hasError('period')) ? 'error' : ''; ?>">
+    <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
         <label
-            for="plan-period">
-            <?php echo I18n::__('plan_label_period') ?>
+            for="plan-nextweekprice">
+			&nbsp;
         </label>
         <input
-            id="plan-period"
-            type="number"
-            min="1"
-            step="1"
-            max="52"
-            name="dialog[period]"
-            value="<?php echo htmlspecialchars($record->period) ?>" />
-		<span class="info"><?php echo I18n::__('plan_info_period') ?></span>
-    </div>
-    <div class="row <?php echo ($record->hasError('baseprice')) ? 'error' : ''; ?>">
-        <label
-            for="plan-baseprice">
-            <?php echo I18n::__('plan_label_baseprice') ?>
-        </label>
-        <input
-            id="plan-baseprice"
+            id="plan-nextweekprice"
             type="text"
             class="number"
-            name="dialog[baseprice]"
-            value="<?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?>"
-            placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>"
-            required="required" />
-		<p class="info"><?php echo I18n::__('plan_info_baseprice') ?></p>
+            name="dialog[nextweekprice]"
+            value="<?php echo htmlspecialchars($record->decimal('nextweekprice', 3)) ?>"
+            placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>" />
+		<p class="info"><?php echo I18n::__('plan_info_nextweekprice') ?></p>
     </div>
 </fieldset>
 <div
@@ -90,7 +160,7 @@
         <!-- grid based header -->
         <div class="row">
             <div class="span1">&nbsp;</div>
-            <div class="span3">
+            <div class="span2">
                 <label>
                     <?php echo I18n::__('plan_deliverer_label_person') ?>
                 </label>
@@ -105,7 +175,12 @@
                     <?php echo I18n::__('plan_deliverer_label_baseprice') ?>
                 </label>
             </div>
-			<div class="span3">
+			<div class="span2">
+                <label>
+                    <?php echo I18n::__('plan_deliverer_label_desc') ?>
+                </label>
+			</div>
+			<div class="span2">
                 <label class="number">
                     <?php echo I18n::__('plan_deliverer_label_totalnet') ?>
                 </label>
@@ -151,7 +226,7 @@
         <!-- grid based footer -->
         <div class="row">
             <div class="span1">&nbsp;</div>
-            <div class="span3">
+            <div class="span2">
                 <label>
                     <?php echo I18n::__('plan_label_total') ?>
                 </label>
@@ -165,10 +240,10 @@
 	                name="dialog[piggery]"
 	                value="<?php echo ($record->piggery) ?>" />
             </div>
-            <div class="span1">
+            <div class="span3">
                 &nbsp;
             </div>
-			<div class="span3">
+			<div class="span2">
 	            <input
 	                type="text"
 	                class="number"
