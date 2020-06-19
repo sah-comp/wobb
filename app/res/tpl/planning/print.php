@@ -99,18 +99,41 @@
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('meandprice', 3)) ?></td>
             </tr>
         <?php endforeach ?>
-				<tr>
-	        <td class="bt bb emphasize"><?php echo I18n::__('plan_label_total') ?></td>
-					<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
-					<td class="bt bb" colspan="2"></td>
-					<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('totalnet', 3)) ?></td>
-					<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanmfa', 3)) ?></td>
-					<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanweight', 3)) ?></td>
-					<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?></td>
-				</tr>
-            <tr>
-                <td class="bt gap notemphasized number" colspan="8"><?php echo I18n::__('planning_text_footer', null, [$record->period]) ?></td>
-            </tr>
+			<tr>
+		        <td class="bt bb emphasize"><?php echo I18n::__('plan_label_total') ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
+				<td class="bt bb" colspan="2"></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('totalnet', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanmfa', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanweight', 3)) ?></td>
+				<td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?></td>
+			</tr>
+			<tr>
+				<td class="gap" colspan="8"></td>
+			</tr>
+			<tr>
+				<td class="text"><?php echo I18n::__('plan_label_baseprice') ?></td>
+				<td class="number"><?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?></td>
+				<td colspan="6"></td>
+			</tr>
+			<tr>
+				<td class="text"><?php echo I18n::__('plan_label_nextweekprice') ?></td>
+				<td class="number"><?php echo htmlspecialchars($record->decimal('nextweekprice', 3)) ?></td>
+				<td colspan="6"></td>
+			</tr>
+			<tr>
+				<td class="text"><?php echo I18n::__('plan_label_sowprice') ?></td>
+				<td class="number"><?php echo htmlspecialchars($record->decimal('sowprice', 3)) ?></td>
+				<td colspan="6"></td>
+			</tr>
+			<tr>
+				<td class="text"><?php echo I18n::__('plan_label_damageprice') ?></td>
+				<td class="number"><?php echo htmlspecialchars($record->decimal('damageprice', 3)) ?></td>
+				<td colspan="6"></td>
+			</tr>
+			<tr>
+				<td class="bt notemphasized number" colspan="8"><?php echo I18n::__('planning_text_footer', null, [$record->period]) ?></td>
+        	</tr>
         </tbody>
     </table>
         
