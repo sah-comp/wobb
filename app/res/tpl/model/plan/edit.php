@@ -143,6 +143,20 @@
             placeholder="<?php echo htmlspecialchars($record->getLatest()->decimal('baseprice', 3)) ?>" />
 		<p class="info"><?php echo I18n::__('plan_info_nextweekprice') ?></p>
     </div>
+    <div class="row <?php echo ($record->hasError('desc')) ? 'error' : ''; ?>">
+        <label
+            for="plan-desc">
+            <?php echo I18n::__('plan_label_desc') ?>
+        </label>
+        <textarea
+            id="plan-desc"
+            name="dialog[desc]"
+            placeholder="<?php echo I18n::__('plan_placeholder_desc') ?>"
+            rows="3"><?php echo htmlspecialchars($record->desc) ?></textarea>
+            <p class="info">
+                <?php echo I18n::__('plan_info_desc') ?>
+            </p>
+    </div>
 </fieldset>
 <div
     class="tab-container">

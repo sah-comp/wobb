@@ -228,6 +228,19 @@ class Model_Csb extends Model
                     ))
                     ->countOwn('stock');
     }
+	
+	/**
+	 * Returns the plan bean desc(ription) attribute if there is any.
+	 *
+	 * @return string
+	 */
+	public function hasPlanningInformation()
+	{
+		if ($plan = R::findOne('plan', " pubdate = :slaughterdate LIMIT 1", [':slaughterdate' => $this->bean->pubdate])) {
+			return $plan->desc;
+		}
+		return '';
+	}
 
     /**
      * Returns an array with stock that needs manual work.
