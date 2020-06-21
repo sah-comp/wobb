@@ -61,6 +61,7 @@
 		                id="adjustment-adjustmentitem-<?php echo $index ?>-delddate"
 		                class="autowidth"
 		                type="date"
+						placeholder="yyyy-mm-dd"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][deldate]"
 		                value="<?php echo htmlspecialchars($_adjustmentitem->deldate) ?>" />
 		        </div>

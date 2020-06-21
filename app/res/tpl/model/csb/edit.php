@@ -69,6 +69,7 @@
         <input
             id="csb-pubdate"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[pubdate]"
             value="<?php echo htmlspecialchars($record->pubdate) ?>"
             required="required" />

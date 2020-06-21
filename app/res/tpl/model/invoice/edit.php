@@ -79,6 +79,7 @@
         <input
             id="invoice-bookingdate"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[bookingdate]"
             value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record->bookingdate))) ?>"
             required="required" />
@@ -91,6 +92,7 @@
         <input
             id="invoice-dateofslaughter"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[dateofslaughter]"
             value="<?php echo htmlspecialchars($record->dateofslaughter) ?>"
             required="required" />
@@ -205,6 +207,7 @@
         <input
             id="invoice-duedate"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[duedate]"
             value="<?php echo htmlspecialchars($record->duedate) ?>"
             required="required" />

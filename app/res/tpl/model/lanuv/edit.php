@@ -38,6 +38,7 @@
         <input
             id="lanuv-startdate"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[startdate]"
             value="<?php echo htmlspecialchars($record->startdate) ?>"
             required="required" />
@@ -50,6 +51,7 @@
         <input
             id="lanuv-enddate"
             type="date"
+			placeholder="yyyy-mm-dd"
             name="dialog[enddate]"
             value="<?php echo htmlspecialchars($record->enddate) ?>"
             required="required" />
