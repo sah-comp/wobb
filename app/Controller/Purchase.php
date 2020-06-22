@@ -211,9 +211,11 @@ class Controller_Purchase extends Controller
             Flight::get('user')->notify(I18n::__('purchase_stock_needs_your_attention_again', null, array($count_attention)), 'warning');
             $this->redirect(sprintf('/purchase/stock/%d', $this->record->getId()));
         }
+		/*
 		if ($plan_info = $this->record->hasPlanningInformation()) {
 			Flight::get('user')->notify($plan_info, 'warning');
 		}
+		*/
         if (Flight::request()->method == 'POST') {
             $this->record = R::graph(Flight::request()->data->dialog, true);
             R::begin();
