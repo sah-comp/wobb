@@ -26,6 +26,12 @@
 	<?php if (isset($record) && is_a($record, 'RedBean_OODBBean') && $record->getId()): ?>
 	<li>
 	    <a
+			href="<?php echo Url::build("/planning/pdf/{$record->getId()}/?layout=prices") ?>">
+			<?php echo I18n::__('action_planning_print_prices') ?>
+		</a>
+	</li>
+	<li>
+	    <a
 			href="<?php echo Url::build("/planning/pdf/{$record->getId()}") ?>">
 			<?php echo I18n::__('action_planning_print') ?>
 		</a>

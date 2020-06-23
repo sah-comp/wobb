@@ -158,11 +158,18 @@ class Controller_Planning extends Controller
 	
     /**
      * Generates an PDF using mPDF library and downloads it to the client.
+	 *
+	 * If there is a query parameter named 'layout', the template prices is used
+	 * instead of the usual template print.
      *
      * @return void
      */
     public function pdf()
     {
+		$layout = 'print';
+		if (Flight::request()->query['layout']) {
+			$layout = 'print_price';
+		}
 		$pubdate = $this->record->localizedDate('pubdate');
         $filename = I18n::__('planning_filename', null, [$pubdate]);
         $title = I18n::__('planning_docname', null, [$pubdate]);
@@ -171,7 +178,7 @@ class Controller_Planning extends Controller
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
-        Flight::render('planning/print', [
+        Flight::render('planning/' . $layout, [
             'record' => $this->record,
 			'pubdate' => $pubdate
 		]);
