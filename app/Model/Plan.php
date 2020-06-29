@@ -183,6 +183,7 @@ SQL;
 		$totalmfa = 0;
 		$count = count($this->bean->ownDeliverer);
         foreach ($this->bean->ownDeliverer as $_id => $deliverer) {
+			$deliverer->supplier = $deliverer->person->nickname;
 			$averages = $this->bean->getAverages($deliverer->person->nickname, $period);
 			if (! $deliverer->dprice) {
 				if ($deliverer->person->nextweekprice && $this->bean->nextweekprice) {
@@ -316,6 +317,6 @@ SQL;
 	 */
 	public function getDeliverers()
 	{
-		return $this->bean->with(' ORDER BY id ')->ownDeliverer;
+		return $this->bean->with(' ORDER BY supplier, earmark ')->ownDeliverer;
 	}
 }

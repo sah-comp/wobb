@@ -87,7 +87,8 @@
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($record->with(" ORDER BY id ")->ownDeliverer as $_id => $_deliverer): ?>
+		<?php $_deliverers = $record->getDeliverers() ?>
+        <?php foreach ($_deliverers as $_id => $_deliverer): ?>
             <tr>
                 <td style="white-space: nowrap;"><?php echo htmlspecialchars($_deliverer->person->nickname . ' ' . $_deliverer->person->name) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_deliverer->decimal('piggery', 0)) ?></td>
