@@ -70,18 +70,17 @@
     <table class="invoice" width="100%">
         <thead>
             <tr>
-                <th width="5%"><?php echo I18n::__('invoice_label_name') ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_label_name') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_dateofslaughter_list') ?></th>
-                <th width="5%"><?php echo I18n::__('invoice_label_person_account') ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_label_person_account') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_person_name') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_bonusnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_costnet') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnetnormal') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnetfarmer') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnetother') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_subtotalnet') ?></th>
+                <th width="5%" class="number"><?php echo I18n::__('invoice_label_vat') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_vatvalue') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
+                <th width="15%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -94,9 +93,8 @@
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('bonusnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('costnet', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetnormal', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetfarmer', 2)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetother', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->decimal('subtotalnet', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars(Flight::myDecimal($_record->vat->value)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('vatvalue', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?></td>
             </tr>
@@ -109,9 +107,8 @@
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnet'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['bonusnet'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['costnet'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetnormal'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetfarmer'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetother'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['subtotalnet'])) ?></td>
+                <td class="bb bt number emphasize">&nbsp;</td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['vatvalue'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalgros'])) ?></td>
             </tr>
