@@ -204,27 +204,29 @@ class Controller_Booking extends Controller
     {
         $this->getCollection('ASC');
         $this->record = reset($this->records);
+		$fy = $_SESSION['booking']['fy'];
+		$lo = $_SESSION['booking']['lo'];
+		$hi = $_SESSION['booking']['hi'];
         $filename = I18n::__('booking_list_filename', null, array(
-            $_SESSION['booking']['fy'],
-            $_SESSION['booking']['lo'],
-            $_SESSION['booking']['hi']
+            $fy,
+            $lo,
+            $hi
         ));
         $title = I18n::__('booking_list_docname', null, array(
-            $_SESSION['booking']['fy'],
-            $_SESSION['booking']['lo'],
-            $_SESSION['booking']['hi']
+            $fy,
+            $lo,
+            $hi
         ));
         $mpdf = new mPDF('c', 'A4-L');
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
-        Flight::render('booking/print', array(
+        Flight::render('pdf/invoice', array(
+			'company_name' => $this->record->company->legalname,
+			'pdf_headline' => I18n::__('booking_text_header', null, array($fy, $lo, $hi)),
             'record' => $this->record,
             'records' => $this->records,
-            'fy' => $_SESSION['booking']['fy'],
-            'lo' => $_SESSION['booking']['lo'],
-            'hi' => $_SESSION['booking']['hi'],
             'totals' => $this->totals
         ));
         $html = ob_get_contents();

@@ -1,19 +1,3 @@
-<?php
-/**
- * Renders a decimal value nicely.
- *
- * @param string $value
- * @param int $decimals defaults to 2
- * @param string $decimal_point defaults to '.'
- * @param string $thousands_separator defaults to ','
- * @return string
- */    
-function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separator = '.')
-{
-    if ( ! $value ) return '';
-    return number_format($value, $decimals, $decimal_point, $thousands_separator);
-}
-?>
 <!DOCTYPE html>
 <html lang="<?php echo $language ?>" class="no-js">
 <head>
@@ -69,8 +53,8 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
     <htmlpageheader name="tkheader" style="display: none;">
         <table width="100%">
             <tr>
-                <td width="60%" style="text-align: left;"><?php echo htmlspecialchars($record->company->legalname) ?></td>
-                <td width="40%" style="text-align: right;"><?php echo I18n::__('invoice_text_header', null, array($fy, $lo, $hi)) ?></td>
+                <td width="60%" style="text-align: left;"><?php echo htmlspecialchars($company_name) ?></td>
+                <td width="40%" style="text-align: right;"><?php echo $pdf_headline ?></td>
             </tr>
         </table>
     </htmlpageheader>
@@ -122,14 +106,14 @@ function myDecimal($value, $decimals = 2, $decimal_point = ',', $thousands_separ
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnet'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['bonusnet'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['costnet'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnetnormal'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnetfarmer'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalnetother'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['vatvalue'])) ?></td>
-                <td class="bb bt number emphasize"><?php echo htmlspecialchars(myDecimal($totals['totalgros'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnet'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['bonusnet'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['costnet'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetnormal'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetfarmer'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetother'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['vatvalue'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalgros'])) ?></td>
             </tr>
         </tbody>
     </table>

@@ -177,24 +177,26 @@ class Controller_Openitem extends Controller
     {
         $this->getCollection('ASC');
         $this->record = reset($this->records);
+		$fy = $_SESSION['openitem']['fy'];
+		$nickname = $_SESSION['openitem']['nickname'];
         $filename = I18n::__('openitem_filename', null, array(
-            $_SESSION['openitem']['fy'],
-            $_SESSION['openitem']['nickname']
+            $fy,
+            $nickname
         ));
         $title = I18n::__('openitem_docname', null, array(
-            $_SESSION['openitem']['fy'],
-            $_SESSION['openitem']['nickname']
+            $fy,
+            $nickname
         ));
         $mpdf = new mPDF('c', 'A4-L');
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
-        Flight::render('openitem/print', array(
+        Flight::render('pdf/invoice', array(
+			'company_name' => $this->record->company->legalname,
+			'pdf_headline' => I18n::__('openitem_text_header', null, [$fy, $nickname]),
             'record' => $this->record,
             'records' => $this->records,
-            'fy' => $_SESSION['openitem']['fy'],
-            'nickname' => $_SESSION['openitem']['nickname'],
             'totals' => $this->totals
         ));
         $html = ob_get_contents();

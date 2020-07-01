@@ -215,27 +215,29 @@ class Controller_Invoice extends Controller
     {
         $this->getCollection('ASC');
         $this->record = reset($this->records);
+		$fy = $_SESSION['invoice']['fy'];
+		$lo = $_SESSION['invoice']['lo'];
+		$hi = $_SESSION['invoice']['hi'];
         $filename = I18n::__('invoice_filename', null, array(
-            $_SESSION['invoice']['fy'],
-            $_SESSION['invoice']['lo'],
-            $_SESSION['invoice']['hi']
+            $fy,
+            $lo,
+            $hi
         ));
         $title = I18n::__('invoice_docname', null, array(
-            $_SESSION['invoice']['fy'],
-            $_SESSION['invoice']['lo'],
-            $_SESSION['invoice']['hi']
+            $fy,
+            $lo,
+            $hi
         ));
         $mpdf = new mPDF('c', 'A4-L');
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
-        Flight::render('invoice/print', array(
+        Flight::render('pdf/invoice', array(
+			'company_name' => $this->record->company->legalname,
+			'pdf_headline' => I18n::__('invoice_text_header', null, [$fy, $lo, $hi]),
             'record' => $this->record,
             'records' => $this->records,
-            'fy' => $_SESSION['invoice']['fy'],
-            'lo' => $_SESSION['invoice']['lo'],
-            'hi' => $_SESSION['invoice']['hi'],
             'totals' => $this->totals
         ));
         $html = ob_get_contents();
