@@ -151,6 +151,20 @@ Flight::map('setlocale', function($category = LC_TIME) {
     return setlocale($category, Flight::get('language').'_'.strtoupper(Flight::get('language')).'.UTF-8');
 });
 
+/**
+ * Renders a decimal value nicely.
+ *
+ * @param string $value
+ * @param int $decimals defaults to 2
+ * @param string $decimal_point defaults to '.'
+ * @param string $thousands_separator defaults to ','
+ * @return string
+ */
+Flight::map('myDecimal', function ($value, $decimals = 2, $decimal_point = ',', $thousands_separator = '.') {
+    if ( ! $value ) return '';
+    return number_format($value, $decimals, $decimal_point, $thousands_separator);
+});
+
 // There shall be non url rewriter and session id gets handled by cookies only
 ini_set('url_rewriter.tags', '');
 ini_set('session.use_trans_sid', '0');
