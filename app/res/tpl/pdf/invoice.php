@@ -72,15 +72,15 @@
             <tr>
                 <th width="10%"><?php echo I18n::__('invoice_label_name') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_dateofslaughter_list') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_label_person_account') ?></th>
-                <th width="5%"><?php echo I18n::__('invoice_label_person_name') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_person_account') ?></th>
+                <th width="10%"><?php echo I18n::__('invoice_label_person_name') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_bonusnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_costnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_subtotalnet') ?></th>
                 <th width="5%" class="number"><?php echo I18n::__('invoice_label_vat') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_vatvalue') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -88,7 +88,7 @@
             <tr class="invoice-kind-<?php echo $_record->kind ?>">
                 <td><?php echo htmlspecialchars($_record->name) ?></td>
                 <td><?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?></td>
-                <td><?php echo htmlspecialchars($_record->getPersonAccount()) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->getPersonAccount()) ?></td>
                 <td><?php echo htmlspecialchars($_record->getPersonNickname()) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('bonusnet', 2)) ?></td>
