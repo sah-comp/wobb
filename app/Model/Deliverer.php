@@ -52,7 +52,7 @@ class Model_Deliverer extends Model
             new Converter_Mysqldatetime()
         ));
     }
-	
+
 	/**
 	 * Set the dprice of a (sub)-deliverer if not already set.
 	 *
@@ -149,7 +149,8 @@ class Model_Deliverer extends Model
         return I18n::__('deliverer_information_mask', null, array(
             $this->bean->person->account,
             $this->bean->person->nickname,
-            $this->bean->person->pricing->name
+            $this->bean->person->pricing->name,
+            $this->bean->person->vat->name
         ));
     }
 
