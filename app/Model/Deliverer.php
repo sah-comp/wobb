@@ -26,7 +26,7 @@ class Model_Deliverer extends Model
     public function dispense()
     {
         $this->bean->enabled = true;
-		$this->bean->calcdate = NULL;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
+        $this->bean->calcdate = null;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
         $this->addConverter('sprice', array(
             new Converter_Decimal()
         ));
@@ -53,37 +53,37 @@ class Model_Deliverer extends Model
         ));
     }
 
-	/**
-	 * Set the dprice of a (sub)-deliverer if not already set.
-	 *
-	 * If the dealer and service prices are not already set, they will be set based on the given csb bean baseprice or
-	 * the nextweekprice, if the deliverer is set to use next weeks price. If a (sub)-deliverer has a special adjustment,
-	 * that one is used instead of the overall adjustment to the baseprice.
-	 *
-	 * @param RedBean_OODBBean $csb
-	 * @return RedBean_OODBBean
-	 */
-	public function setBaseprices(RedBean_OODBBean $csb)
-	{
-		if (! $this->bean->dprice) {
-			if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " earmark = :earmark AND person_id = :pid LIMIT 1", [
-				':earmark' => $this->bean->earmark,
-				':pid' => $this->bean->person->getId()
-			])) {
-				if ($this->bean->deliverer->person->nextweekprice && $csb->nextweekprice) {
-					$this->bean->dprice = $csb->nextweekprice + $hasStockmanWithPriceAdjust->reldprice;
-				} else {
-					$this->bean->dprice = $csb->baseprice + $hasStockmanWithPriceAdjust->reldprice;
-				}
-			} else {
-				$this->bean->dprice = $this->bean->deliverer->dprice;
-			}
-		}
-		if (! $this->bean->sprice) {
-			$this->bean->sprice = $this->bean->deliverer->sprice;
-		}
-		return $this->bean;
-	}
+    /**
+     * Set the dprice of a (sub)-deliverer if not already set.
+     *
+     * If the dealer and service prices are not already set, they will be set based on the given csb bean baseprice or
+     * the nextweekprice, if the deliverer is set to use next weeks price. If a (sub)-deliverer has a special adjustment,
+     * that one is used instead of the overall adjustment to the baseprice.
+     *
+     * @param RedBean_OODBBean $csb
+     * @return RedBean_OODBBean
+     */
+    public function setBaseprices(RedBean_OODBBean $csb)
+    {
+        if (! $this->bean->dprice) {
+            if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " earmark = :earmark AND person_id = :pid LIMIT 1", [
+                ':earmark' => $this->bean->earmark,
+                ':pid' => $this->bean->person->getId()
+            ])) {
+                if ($this->bean->deliverer->person->nextweekprice && $csb->nextweekprice) {
+                    $this->bean->dprice = $csb->nextweekprice + $hasStockmanWithPriceAdjust->reldprice;
+                } else {
+                    $this->bean->dprice = $csb->baseprice + $hasStockmanWithPriceAdjust->reldprice;
+                }
+            } else {
+                $this->bean->dprice = $this->bean->deliverer->dprice;
+            }
+        }
+        if (! $this->bean->sprice) {
+            $this->bean->sprice = $this->bean->deliverer->sprice;
+        }
+        return $this->bean;
+    }
 
     /**
      * Returns 'mailed' when sent flag is true, otherwise an empty string is returned.
@@ -92,7 +92,9 @@ class Model_Deliverer extends Model
      */
     public function wasSent()
     {
-        if ( $this->bean->sent ) return 'mailed';
+        if ($this->bean->sent) {
+            return 'mailed';
+        }
         return '';
     }
 
@@ -103,7 +105,9 @@ class Model_Deliverer extends Model
      */
     public function wantsInvoiceAsEmail()
     {
-        if ( $this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both' ) return true;
+        if ($this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both') {
+            return true;
+        }
         return false;
     }
 
@@ -114,7 +118,9 @@ class Model_Deliverer extends Model
      */
     public function wantsEmail()
     {
-        if ( $this->bean->person->billingtransport == 'email' ) return true;
+        if ($this->bean->person->billingtransport == 'email') {
+            return true;
+        }
         return false;
     }
 
@@ -145,7 +151,9 @@ class Model_Deliverer extends Model
      */
     public function getInformation()
     {
-        if ( ! $this->bean->person->pricing ) return I18n::__('deliverer_person_pricemask_not_set');
+        if (! $this->bean->person->pricing) {
+            return I18n::__('deliverer_person_pricemask_not_set');
+        }
         return I18n::__('deliverer_information_mask', null, array(
             $this->bean->person->account,
             $this->bean->person->nickname,
@@ -163,7 +171,9 @@ class Model_Deliverer extends Model
      */
     public function wasBilled()
     {
-        if ( ! $this->bean->invoice()->getId()) return false;
+        if (! $this->bean->invoice()->getId()) {
+            return false;
+        }
         return true;
     }
 
@@ -174,7 +184,7 @@ class Model_Deliverer extends Model
      */
     public function invoice()
     {
-        if ( ! $this->bean->invoice ) {
+        if (! $this->bean->invoice) {
             $this->bean->invoice = R::dispense('invoice');
         }
         return $this->bean->invoice;
@@ -187,8 +197,10 @@ class Model_Deliverer extends Model
      */
     public function wasCalculated()
     {
-      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
-      return TRUE;
+        if ($this->bean->calcdate === null || $this->bean->calcdate == '0000-00-00 00:00:00') {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -211,7 +223,9 @@ class Model_Deliverer extends Model
      */
     public function calculate(RedBean_OODBBean $stock)
     {
-        if ( ! $this->bean->person) return (float)0;
+        if (! $this->bean->person) {
+            return (float)0;
+        }
         $mix = 0;
         $mix += $this->calculateCondition($stock);
         $mix += $this->calculateCost($stock);
@@ -230,9 +244,11 @@ class Model_Deliverer extends Model
         $bonus = 0;
         $stock->bonusitem = 0;
         $stock->bonusweight = 0;
-        if ( count ($conditions) == 0) return (float)0.00;
+        if (count($conditions) == 0) {
+            return (float)0.00;
+        }
         foreach ($conditions as $id => $condition) {
-            switch ( $condition->label ) {
+            switch ($condition->label) {
                 case 'stockperitem':
                     $bonus += $condition->value;
                     $stock->bonusitem += $condition->value;
@@ -264,9 +280,11 @@ class Model_Deliverer extends Model
         $cost_sum = 0;
         $stock->costitem = 0;
         $stock->costweight = 0;
-        if ( count ($costs) == 0) return (float)0.00;
+        if (count($costs) == 0) {
+            return (float)0.00;
+        }
         foreach ($costs as $id => $cost) {
-            switch ( $cost->label ) {
+            switch ($cost->label) {
                 case 'stockperitem':
                     $cost_sum += $cost->value;
                     $stock->costitem += $cost->value;
@@ -299,12 +317,11 @@ class Model_Deliverer extends Model
      */
     public function getSpecialPrices()
     {
-        if ( ! $this->bean->ownSpecialprice) {
+        if (! $this->bean->ownSpecialprice) {
             // damage1
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
-
-                if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", array(
+                if (! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage1' => $stock['damage1'],
                     ':supplier' => $this->bean->supplier
                 ))) {
@@ -331,8 +348,7 @@ class Model_Deliverer extends Model
             // damage2
             $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", array($this->bean->csb->getId(), $this->bean->supplier));
             foreach ($stocks as $id => $stock) {
-
-                if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", array(
+                if (! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", array(
                     ':damage2' => $stock['damage2'],
                     ':supplier' => $this->bean->supplier
                 ))) {
@@ -361,8 +377,7 @@ class Model_Deliverer extends Model
                 // quality
                 $stocks = R::getAll("SELECT COUNT(id) AS total, quality FROM stock WHERE csb_id = ? AND supplier = ? AND quality = ? GROUP BY quality ORDER BY quality ", array($this->bean->csb->getId(), $this->bean->supplier, $quality->name));
                 foreach ($stocks as $id => $stock) {
-
-                    if ( ! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' ORDER BY supplier DESC LIMIT 1 ", array(
+                    if (! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' ORDER BY supplier DESC LIMIT 1 ", array(
                         ':quality' => $stock['quality'],
                         ':supplier' => $this->bean->supplier
                     ))) {
@@ -399,8 +414,8 @@ class Model_Deliverer extends Model
      */
     public function billing(RedBean_OODBBean $csb)
     {
-        if ( ! $this->bean->invoice()->name ) {
-            if ( ! $nextbillingnumber = $csb->company->nextBillingnumber() ) {
+        if (! $this->bean->invoice()->name) {
+            if (! $nextbillingnumber = $csb->company->nextBillingnumber()) {
                 throw new Exception();
             }
             $this->bean->invoice->name = $nextbillingnumber;
@@ -419,20 +434,22 @@ class Model_Deliverer extends Model
         $this->bean->invoice->totalnet = $this->bean->totalnet;
         $bonusnet = 0;
         foreach ($this->bean->person->ownCondition as $id => $condition) {
-            if ( $condition->doesnotaffectinvoice ) continue;//skip condition
-            if ( $condition->label == 'stockperitem' ) {
+            if ($condition->doesnotaffectinvoice) {
+                continue;
+            }//skip condition
+            if ($condition->label == 'stockperitem') {
                 $bonusnet += $this->bean->piggery * $condition->value;
-            } elseif ( $condition->label == 'stockperweight' ) {
+            } elseif ($condition->label == 'stockperweight') {
                 $bonusnet += $this->bean->totalweight * $condition->value;
             }
         }
         $costnet = 0;
         foreach ($this->bean->person->ownCost as $id => $cost) {
-            if ( $cost->label == 'stockperitem' ) {
+            if ($cost->label == 'stockperitem') {
                 $costnet += $this->bean->piggery * $cost->value;
-            } elseif ( $cost->label == 'stockperweight' ) {
+            } elseif ($cost->label == 'stockperweight') {
                 $costnet += $this->bean->totalweight * $cost->value;
-            } elseif ( $cost->label == 'flat' ) {
+            } elseif ($cost->label == 'flat') {
                 $costnet += $cost->value;
             }
         }
@@ -442,11 +459,11 @@ class Model_Deliverer extends Model
         $this->bean->invoice->subtotalnet += $this->bean->invoice->bonusnet;
         $this->bean->invoice->subtotalnet -= $this->bean->invoice->costnet;
         // set special net value attributes according to vat setting
-        if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
+        if ($this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetnormal = 0;
             $this->bean->invoice->totalnetother = 0;
-        } elseif ( $this->bean->invoice->vat->getId() == Flight::setting()->vatnormal ) {
+        } elseif ($this->bean->invoice->vat->getId() == Flight::setting()->vatnormal) {
             $this->bean->invoice->totalnetfarmer = 0;
             $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetother = 0;
@@ -497,8 +514,8 @@ class Model_Deliverer extends Model
             $csb->getId(),
             $this->bean->earmark
         ));
-        if ( ! $pricing = $this->bean->person->pricing) {
-            throw new Exception_Missingpricemask( $this->bean->supplier );
+        if (! $pricing = $this->bean->person->pricing) {
+            throw new Exception_Missingpricemask($this->bean->supplier);
         }
         $ret = array(
             'totalnet' => 0,
@@ -516,7 +533,9 @@ class Model_Deliverer extends Model
             $ret['totalnetlanuv'] += $stock->totallanuvprice;
             $ret['totalweight'] += $stock->weight;
             $ret['totalmfa'] += $stock->mfa;
-            if ($stock->mfa) $ret['hasmfacount']++;
+            if ($stock->mfa) {
+                $ret['hasmfacount']++;
+            }
             $ret['piggery']++;
         }
         $this->bean->calcdate = date('Y-m-d H:i:s');

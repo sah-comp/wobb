@@ -46,7 +46,7 @@ class Controller_Analysis extends Controller
      * @var array
      */
     public $records;
-	
+
     /**
      * The fiscal year.
      *
@@ -64,7 +64,7 @@ class Controller_Analysis extends Controller
         session_start();
         Auth::check();
         $this->record = R::load('analysis', $id);
-		$this->fiscalyear = Flight::setting()->fiscalyear;
+        $this->fiscalyear = Flight::setting()->fiscalyear;
     }
 
     /**
@@ -84,8 +84,7 @@ class Controller_Analysis extends Controller
                 R::commit();
                 Flight::get('user')->notify(I18n::__('analysis_analysis_add_success'));
                 $this->redirect(sprintf('/analysis/analysis/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('analysis_analysis_add_error'), 'error');
@@ -112,8 +111,7 @@ class Controller_Analysis extends Controller
                 R::commit();
                 Flight::get('user')->notify(I18n::__('analysis_analysis_edit_success'));
                 $this->redirect(sprintf('/analysis/analysis/%d', $this->record->getId()));
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('analysis_analysis_edit_error'), 'error');
@@ -145,7 +143,35 @@ class Controller_Analysis extends Controller
         ));
         $html = ob_get_contents();
         ob_end_clean();
-        $mpdf->WriteHTML( $html );
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($filename, 'D');
+        exit;
+    }
+
+    /**
+     * Generates an PDF using mPDF library and downloads it to the client.
+     *
+     * @return void
+     */
+    public function pdfoverview()
+    {
+        $startdate = $this->record->localizedDate('startdate');
+        $enddate = $this->record->localizedDate('enddate');
+        $filename = I18n::__('analysis_filename', null, array($startdate));
+        $title = I18n::__('analysis_docname', null, array($startdate));
+        $mpdf = new mPDF('c', 'A4');
+        $mpdf->SetTitle($title);
+        $mpdf->SetAuthor($this->record->company->legalname);
+        $mpdf->SetDisplayMode('fullpage');
+        ob_start();
+        Flight::render('analysis/print_overview', array(
+            'record' => $this->record,
+            'startdate' => $startdate,
+            'enddate' => $enddate
+        ));
+        $html = ob_get_contents();
+        ob_end_clean();
+        $mpdf->WriteHTML($html);
         $mpdf->Output($filename, 'D');
         exit;
     }
@@ -158,16 +184,9 @@ class Controller_Analysis extends Controller
         Permission::check(Flight::get('user'), 'analysis', 'index');
         $this->layout = 'index';
         $this->records = R::find('analysis', ' company_id IS NOT NULL AND (YEAR(startdate) = :fy OR YEAR(enddate) = :fy) ORDER BY id DESC', array(
-			':fy' => $this->fiscalyear
-		));
+            ':fy' => $this->fiscalyear
+        ));
         if (Flight::request()->method == 'POST') {
-            //try to create a new csb bean with data from form
-            //which imports the csb data to stock
-            //from given stock
-            //create each deliverer with its subdeliverers
-            //spread data like prices and such
-            //if all went well goto /purchase/day/n with given new bean
-            //or generate a error notification and stay here
             Flight::get('user')->notify(I18n::__('analysis_select_success'));
         }
         $this->render();
@@ -179,19 +198,18 @@ class Controller_Analysis extends Controller
     protected function render()
     {
         Flight::render('shared/notification', array(), 'notification');
-	    //
         Flight::render('shared/navigation/account', array(), 'navigation_account');
-		Flight::render('shared/navigation/main', array(), 'navigation_main');
+        Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('analysis/toolbar', array(
             'record' => $this->record
         ), 'toolbar');
-		Flight::render('shared/header', array(), 'header');
-		Flight::render('shared/footer', array(), 'footer');
+        Flight::render('shared/header', array(), 'header');
+        Flight::render('shared/footer', array(), 'footer');
         Flight::render('analysis/'.$this->layout, array(
             'record' => $this->record,
             'records' => $this->records,
-			'fiscalyear' => $this->fiscalyear
+            'fiscalyear' => $this->fiscalyear
         ), 'content');
         Flight::render('html5', array(
             'title' => I18n::__("analysis_head_title"),

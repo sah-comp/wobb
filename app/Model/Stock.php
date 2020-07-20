@@ -146,7 +146,7 @@ class Model_Stock extends Model
             )
         );
     }
-    
+
     /**
      * Returns a person bean.
      *
@@ -157,13 +157,13 @@ class Model_Stock extends Model
      */
     public function getPersonBySupplier()
     {
-        if ( ! $person = R::findOne('person', " nickname = ? ", array($this->bean->supplier))) {
+        if (! $person = R::findOne('person', " nickname = ? ", array($this->bean->supplier))) {
             $person = R::dispense('person');
             $person->name = I18n::__('person_name_unknown');
         }
         return $person;
     }
-    
+
     /**
      * Returns a string with all the damages of this stock.
      *
@@ -171,10 +171,12 @@ class Model_Stock extends Model
      */
     public function getDamageAsText()
     {
-        if ( ! $this->bean->damage1 && ! $this->bean->damage2) return '';
+        if (! $this->bean->damage1 && ! $this->bean->damage2) {
+            return '';
+        }
         return trim($this->bean->damage1 . ' ' . $this->bean->damage2);
     }
-    
+
     /**
      * Returns a literal when stock has QS.
      *
@@ -182,10 +184,12 @@ class Model_Stock extends Model
      */
     public function getQsAsText()
     {
-        if ( ! $this->bean->qs ) return '';
+        if (! $this->bean->qs) {
+            return '';
+        }
         return 'QS';
     }
-    
+
     /**
      * Calculates the price of this stock bean according to given parameters by the deliverer bean.
      *
@@ -198,17 +202,17 @@ class Model_Stock extends Model
         $this->bean->agio = 0;
         $this->bean->disagio = 0;
         $lanuv_tax = $deliverer->calculate($this->bean);
-        if ( ! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
+        if (! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
             $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
         }
         $this->calculateDamage1Price($deliverer, $lanuv_tax);
         $this->calculateDamage2Price($deliverer, $lanuv_tax);
-		
-		$this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
-		
+
+        $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
+
         return null;
     }
-    
+
     /**
      * Calculate the stock beans prices according to deliverer bean settings.
      *
@@ -219,19 +223,18 @@ class Model_Stock extends Model
      */
     public function calculatePrice(RedBean_OODBBean $deliverer, RedBean_OODBBean $pricing, $tax)
     {
-        
         $pricing->calculate($this->bean, $deliverer);
-        
+
         $this->bean->sprice = $deliverer->sprice + $this->bean->agio - $this->bean->disagio;
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
-		 
-        $this->bean->totalsprice = ( $this->bean->sprice * $this->bean->weight );
-        $this->bean->totaldprice = ( $this->bean->dprice * $this->bean->weight );
-		
+
+        $this->bean->totalsprice = ($this->bean->sprice * $this->bean->weight);
+        $this->bean->totaldprice = ($this->bean->dprice * $this->bean->weight);
+
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return null;
     }
-    
+
     /**
      * Checks for fixed price.
      *
@@ -243,28 +246,28 @@ class Model_Stock extends Model
      */
     public function calculateFixedPrice(RedBean_OODBBean $deliverer, $tax)
     {
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", array(
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", array(
             ':quality' => $this->bean->quality,
             ':del_id' => $deliverer->deliverer->getId()
         ))) {
             return false;
         }
-        
+
         $this->bean->agio = 0;
         $this->bean->disagio = 0;
         //$this->bean->bonus = 0;
         $this->bean->sprice = $fixedPrice->sprice;
         $this->bean->dprice = $fixedPrice->dprice;
-        
+
         $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
         $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-        
+
         $this->calculateFixedpriceCost($fixedPrice);
-        
+
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return true;
     }
-    
+
     /**
      * Checks for damage1 code.
      *
@@ -279,16 +282,18 @@ class Model_Stock extends Model
      */
     public function calculateDamage1Price(RedBean_OODBBean $deliverer, $tax)
     {
-        if ( empty($this->bean->damage1) ) return false;
-        
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", array(
+        if (empty($this->bean->damage1)) {
+            return false;
+        }
+
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", array(
             ':damage1' => $this->bean->damage1,
             ':del_id' => $deliverer->deliverer->getId()
         ))) {
             return false;
         }
-        
-        if ( $fixedPrice->condition == 'fixed' ) {
+
+        if ($fixedPrice->condition == 'fixed') {
             $this->bean->agio = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
@@ -296,23 +301,23 @@ class Model_Stock extends Model
             $this->bean->dprice = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-        } elseif ( $fixedPrice->condition == 'disagio') {
+        } elseif ($fixedPrice->condition == 'disagio') {
             $this->bean->totalsprice -= $fixedPrice->sprice;
             $this->bean->totaldprice -= $fixedPrice->dprice;
-        } elseif ( $fixedPrice->condition == 'agio') {
+        } elseif ($fixedPrice->condition == 'agio') {
             $this->bean->totalsprice += $fixedPrice->sprice;
             $this->bean->totaldprice += $fixedPrice->dprice;
         }
-        
+
         $this->calculateFixedpriceCost($fixedPrice);
-        
-        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+
+        if (! $fixedPrice->doesnotaffectlanuv) {
             $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Checks for damage2 code.
      *
@@ -324,16 +329,18 @@ class Model_Stock extends Model
      */
     public function calculateDamage2Price(RedBean_OODBBean $deliverer, $tax)
     {
-        if ( empty($this->bean->damage2) ) return false;
-        
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", array(
+        if (empty($this->bean->damage2)) {
+            return false;
+        }
+
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", array(
             ':damage2' => $this->bean->damage2,
             ':del_id' => $deliverer->deliverer->getId()
         ))) {
             return false;
         }
-        
-        if ( $fixedPrice->condition == 'fixed' ) {
+
+        if ($fixedPrice->condition == 'fixed') {
             $this->bean->agio = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
@@ -341,23 +348,23 @@ class Model_Stock extends Model
             $this->bean->dprice = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-        } elseif ( $fixedPrice->condition == 'disagio') {
+        } elseif ($fixedPrice->condition == 'disagio') {
             $this->bean->totalsprice -= $fixedPrice->sprice;
             $this->bean->totaldprice -= $fixedPrice->dprice;
-        } elseif ( $fixedPrice->condition == 'agio') {
+        } elseif ($fixedPrice->condition == 'agio') {
             $this->bean->totalsprice += $fixedPrice->sprice;
             $this->bean->totaldprice += $fixedPrice->dprice;
         }
-        
+
         $this->calculateFixedpriceCost($fixedPrice);
-        
-        if ( ! $fixedPrice->doesnotaffectlanuv ) {
+
+        if (! $fixedPrice->doesnotaffectlanuv) {
             $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         }
-        
+
         return true;
     }
-    
+
     /**
      * The given fixedprice eventually has additional costs to be applied.
      *
@@ -366,21 +373,23 @@ class Model_Stock extends Model
      */
     public function calculateFixedpriceCost(RedBean_OODBBean $fixedprice)
     {
-        if ( ! $fixedprice->ownScost ) return false;
+        if (! $fixedprice->ownScost) {
+            return false;
+        }
         $sum = 0;
         foreach ($fixedprice->ownScost as $id => $cost) {
-            if ( $cost->label == 'flat' ) {
+            if ($cost->label == 'flat') {
                 $sum += $cost->value;
-            } elseif ( $cost->label == 'stockperitem' ) {
+            } elseif ($cost->label == 'stockperitem') {
                 $sum += $cost->value;
-            } elseif ( $cost->label == 'stockperweight' ) {
+            } elseif ($cost->label == 'stockperweight') {
                 $sum += $cost->value * $this->bean->weight;
             }
-        }        
+        }
         $this->bean->totalsprice -= $sum;
         $this->bean->totaldprice -= $sum;
     }
-    
+
     /**
      * Dispense.
      */
@@ -438,7 +447,7 @@ class Model_Stock extends Model
             new Validator_HasValue()
         ));
     }
-    
+
     /**
      * Update.
      */
