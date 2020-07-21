@@ -15,6 +15,11 @@
             font-size: 14pt;
             font-weight: bold;
         }
+		.notemphasized {
+			font-weight: normal;
+			font-size: 7pt;
+			color: #666666;
+		}
         table {
             border-collapse: collapse;
         }
@@ -80,10 +85,10 @@
                 <th width="10%"><?php echo I18n::__('analysis_label_supplier') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
-                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
+                <th width="15%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
+                <th width="15%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
             </tr>
         </thead>
@@ -109,6 +114,10 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?></td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+                <td class="bt notemphasized number" colspan="4"><?php echo I18n::__('analysis_text_footer_overview') ?></td>
             </tr>
         </tbody>
     </table>
