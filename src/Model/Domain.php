@@ -117,7 +117,7 @@ class Model_Domain extends Model
         if (empty($pages)) {
             return false;
         }
-        R::preload($pages, array('template'));
+        //R::preload($pages, array('template'));
         $first_page = reset($pages);
         $template_data = array(
             'mytemplate' => $first_page->template,
@@ -217,8 +217,7 @@ class Model_Domain extends Model
         $break = null,
         $order = 'sequence ASC',
         $level = 0
-    )
-    {
+    ) {
         $level++;
         $sql_invisible = 'AND invisible != 1';
         if ($invisible) {
