@@ -9,7 +9,7 @@
  */
 ?>
 <ul class="panel-navigation">
-	<?php if (isset($record) && is_a($record, 'RedBean_OODBBean') && $record->getId() && $record->hasIqagrar()): ?>
+	<?php if (isset($record) && $record->getId() && $record->hasIqagrar()): ?>
 	<li>
         <a
             href="<?php echo Url::build(sprintf("/purchase/iqagrar/%d", $record->getId())) ?>"

@@ -11,24 +11,24 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->userAsBean = R::dispense('user');
         $this->login = R::dispense('login');
     }
-    
+
     public function tearDown()
     {
         unset($this->userAsModel);
         unset($this->userAsBean);
         unset($this->login);
     }
-    
+
     public function testUserModelInstanciation()
     {
         $this->assertTrue(is_a($this->userAsModel, 'Model_User'));
     }
-    
+
     public function testUserBeanInstanciation()
     {
-        $this->assertTrue(is_a($this->userAsBean, 'RedBean_OODBBean'));
+        $this->assertTrue(is_a($this->userAsBean, 'RedBeanPHP\OODBBean'));
     }
-    
+
     public function testUserStoreValidBean()
     {
         $this->userAsBean->name = 'John Doe';
@@ -38,7 +38,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         R::store($this->userAsBean);
         $this->assertTrue($this->userAsBean->getId() != 0);
     }
-    
+
     public function testUserStoreInvalidBeanDefaultValidationModeExplicit()
     {
         $invalidUser = R::dispense('user');
@@ -49,7 +49,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $invalidUser->pw = 'secret';
         $this->assertFalse($invalidUser->validate());
     }
-    
+
     public function testUserStoreInvalidBeanDefaultValidationModeImplicit()
     {
         $invalidUser = R::dispense('user');
@@ -63,7 +63,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($invalidUser->getId() != 0);
         $this->assertNotEquals(false, $invalidUser->invalid);
     }
-    
+
     /**
      * @expectedException Exception_Validation
      */
@@ -78,7 +78,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($invalidUser->validate());
         R::store($invalidUser);
     }
-    
+
     public function testUserNotify()
     {
         $this->userAsBean->name = 'Receiver';
@@ -98,50 +98,50 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(count($notifications) == 0);
         $this->userAsBean->notify('My test notification, to have something in the test db');
     }
- 
+
     public function testLoginSQLInjection1()
     {
         $this->login->uname = "anything' OR 'x'='x";
         $this->login->pw = '*';
         $this->assertFalse($this->login->trial());
     }
-    
+
     public function testLoginSQLInjection2()
     {
         $this->login->uname = "x' AND email IS NULL; --";
         $this->login->pw = '*';
         $this->assertFalse($this->login->trial());
     }
-    
+
     public function testLoginSQLInjection3()
     {
         $this->login->uname = "x';
-                INSERT INTO user ('email','pw','name','shortname') 
+                INSERT INTO user ('email','pw','name','shortname')
                 VALUES ('hacker@example.com','hello','Hacker','hkr');--";
         $this->login->pw = '*';
         $this->assertFalse($this->login->trial());
         $this->assertNull(R::findOne('user', 'shortname=?', array('hkr')));
     }
-    
+
     public function testLoginFailed()
     {
         $this->login->uname = 'badusername@example.com';
         $this->login->pw = 'secret';
         $this->assertFalse($this->login->trial());
-                
+
         $this->login->uname = 'info@example.com'; //good username
         $this->login->pw = 'wrongpassword';
         $this->assertFalse($this->login->trial());
-        
+
         $this->login->uname = 'badusername@example.com';
         $this->login->pw = 'wrongpassword';
         $this->assertFalse($this->login->trial());
-        
+
         $this->login->uname = 'badusername@example.com';
         $this->login->pw = 'wrongpassword';
         $this->assertFalse($this->login->trial());
     }
-    
+
     public function testLoginFailedBecauseOfBan()
     {
         $this->userAsBean->name = 'I am a good Shepard, but banned';
@@ -155,7 +155,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->login->pw = 'secret2';
         $this->assertFalse($this->login->trial());
     }
-    
+
     public function testLoginFailedBecauseOfSuspension()
     {
         $this->userAsBean->name = 'I am a good Sheep, but deleted';
@@ -170,31 +170,31 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         $this->login->pw = 'secret23';
         $this->assertFalse($this->login->trial());
     }
-    
+
     public function testLoginWithEmailGood()
     {
         $this->login->uname = 'info@example.com';
         $this->login->pw = 'secret';
         $this->assertTrue($this->login->trial());
-        $this->assertTrue(is_a($this->login->user, 'RedBean_OODBBean'));
+        $this->assertTrue(is_a($this->login->user, 'RedBeanPHP\OODBBean'));
         $this->assertEmpty($this->login->pw);
     }
-    
+
     public function testLoginWithNameGood()
     {
         $this->login->uname = 'jd';
         $this->login->pw = 'secret';
         $this->assertTrue($this->login->trial());
-        $this->assertTrue(is_a($this->login->user, 'RedBean_OODBBean'));
+        $this->assertTrue(is_a($this->login->user, 'RedBeanPHP\OODBBean'));
         $this->assertEmpty($this->login->pw);
     }
-    
+
     public function testLoginWithShortnameGood()
     {
         $this->login->uname = 'jd';
         $this->login->pw = 'secret';
         $this->assertTrue($this->login->trial());
-        $this->assertTrue(is_a($this->login->user, 'RedBean_OODBBean'));
+        $this->assertTrue(is_a($this->login->user, 'RedBeanPHP\OODBBean'));
         $this->assertEmpty($this->login->pw);
     }
 
@@ -208,9 +208,9 @@ class UserModelTest extends PHPUnit_Framework_TestCase
         R::store($user);
         $this->assertTrue($user->getId() != 0);
         // some changes and restoring
-        
+
         $reloaded = R::load('user', $user->getId());
-        
+
         $reloaded->shortname = 'wow';
         R::store($reloaded);
     }

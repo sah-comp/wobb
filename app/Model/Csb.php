@@ -274,7 +274,7 @@ class Model_Csb extends Model
     /**
      * Returns the latest csb bean.
      *
-     * @return RedBean_OODBBean $csb
+     * @return $csb
      */
     public function getLatest()
     {

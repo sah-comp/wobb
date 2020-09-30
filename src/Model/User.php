@@ -34,7 +34,7 @@ class Model_User extends Model
                 'filter' => array(
                     'tag' => 'text'
                 ),
-				'width' => '10rem'
+                'width' => '10rem'
             ),
             array(
                 'name' => 'name',
@@ -65,7 +65,7 @@ class Model_User extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
@@ -165,9 +165,9 @@ class Model_User extends Model
         $notification = R::dispense('notification');
         $notification->class = $class;
         $notification->content = $message;
+        $this->bean->sharedNotification[] = $notification;
         try {
-            R::store($notification);
-            R::associate($this->bean, $notification);
+            R::store($this->bean);
             return true;
         } catch (Exception $e) {
             return false;
@@ -185,7 +185,8 @@ class Model_User extends Model
      */
     public function getNotifications($readOnlyOnce = true)
     {
-        $all = R::related($this->bean, 'notification', ' 1 ORDER BY class, stamp DESC');
+        $all = $this->bean->with('ORDER BY class, stamp DESC')->sharedNotification;
+        //$all = R::related($this->bean, 'notification', ' 1 ORDER BY class, stamp DESC');
         if ($readOnlyOnce === true) {
             R::trashAll($all);
         }

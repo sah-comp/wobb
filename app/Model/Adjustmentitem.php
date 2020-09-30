@@ -32,10 +32,10 @@ class Model_Adjustmentitem extends Model
     /**
      * Calculation of this bean.
      *
-     * @param RedBean_OODBBean $adjustment
+     * @param $adjustment
      * @return void
      */
-    public function calculation(RedBean_OODBBean $adjustment)
+    public function calculation($adjustment)
     {
         if ( ! $this->bean->vat || ! $this->bean->vat->getId() ) {
             $this->bean->vat = $this->bean->person->vat;
@@ -59,10 +59,10 @@ class Model_Adjustmentitem extends Model
     /**
      * Billing of this bean.
      *
-     * @param RedBean_OODBBean $adjustment
+     * @param $adjustment
      * @return array with net, vat value and gros
      */
-    public function billing(RedBean_OODBBean $adjustment)
+    public function billing($adjustment)
     {
         if ( ! $this->bean->invoice()->name ) {
             if ( ! $nextbillingnumber = $adjustment->company->nextBillingnumber() ) {

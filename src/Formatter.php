@@ -21,10 +21,10 @@ class Formatter
     /**
      * Returns a formatted string composed of a bean.
      *
-     * @param RedBean_OODBBean $bean to format
+     * @param $bean to format
      * @return string $formattedString
      */
-    public function format(RedBean_OODBBean $bean)
+    public function format($bean)
     {
         return 'My formatted bean';
     }
