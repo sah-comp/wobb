@@ -24,6 +24,12 @@
 		</a>
 	</li>
 	<?php if (isset($record) && $record->getId()): ?>
+    <li>
+	    <a
+			href="<?php echo Url::build("/analysis/pdfoverview/{$record->getId()}") ?>">
+			<?php echo I18n::__('action_analysis_print_overview') ?>
+		</a>
+	</li>
 	<li>
 	    <a
 			href="<?php echo Url::build("/analysis/pdf/{$record->getId()}") ?>">
