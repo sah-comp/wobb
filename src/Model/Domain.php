@@ -26,7 +26,7 @@ class Model_Domain extends Model
     {
         $this->setAction('index', array('idle', 'toggleInvisible', 'expunge'));
     }
-    
+
     /**
      * Toggle the invisible attribute and store the bean.
      *
@@ -86,7 +86,7 @@ class Model_Domain extends Model
                 'filter' => array(
                     'tag' => 'number'
                 ),
-				'width' => '8rem'
+                'width' => '8rem'
             ),
             array(
                 'name' => 'invisible',
@@ -99,11 +99,11 @@ class Model_Domain extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
-    
+
     /**
      * Returns either an array with rendered content or false if domain has no content.
      *
@@ -114,7 +114,9 @@ class Model_Domain extends Model
     public function getContent($language, $invisible = null)
     {
         $pages = $this->getPages($language, $invisible);
-        if (empty($pages)) return false;
+        if (empty($pages)) {
+            return false;
+        }
         R::preload($pages, array('template'));
         $first_page = reset($pages);
         $template_data = array(
@@ -150,10 +152,10 @@ class Model_Domain extends Model
                 }
             }
             */
-        } 
-        return $template_data;       
+        }
+        return $template_data;
     }
-    
+
     /**
      * Returns an array with page beans.
      *
@@ -175,16 +177,16 @@ class Model_Domain extends Model
             $language
         ));
     }
-    
+
     /**
      * Returns the permission bean for the given method name.
      *
      * @param string $method_name
-     * @return RedBean_OODBBean $permission
+     * @return $permission
      */
     public function getPermission($method_name)
     {
-        if ( ! $permission = R::findOne('permission', ' method = ? AND domain_id = ?', array(
+        if (! $permission = R::findOne('permission', ' method = ? AND domain_id = ?', array(
             $method_name,
             $this->bean->getId()
         ))) {
@@ -192,7 +194,7 @@ class Model_Domain extends Model
         }
         return $permission;
     }
-    
+
     /**
      * Builds a hierarchical menu from an adjancy bean.
      *
@@ -207,8 +209,15 @@ class Model_Domain extends Model
      * @param int (optional) $level the current depth of the hierarchical menu
      * @return Menu
      */
-    public function hierMenu($url_prefix = '', $lng = null, $invisible = false, 
-                            $attr = 'url', $break = null, $order = 'sequence ASC', $level = 0)
+    public function hierMenu(
+        $url_prefix = '',
+        $lng = null,
+        $invisible = false,
+        $attr = 'url',
+        $break = null,
+        $order = 'sequence ASC',
+        $level = 0
+    )
     {
         $level++;
         $sql_invisible = 'AND invisible != 1';
@@ -218,7 +227,8 @@ class Model_Domain extends Model
         $sql = sprintf(
             '%s = ? %s ORDER BY %s',
             $this->bean->getMeta('type').'_id',
-            $sql_invisible, $order
+            $sql_invisible,
+            $order
         );
         $records = R::find(
             $this->bean->getMeta('type'),
@@ -226,7 +236,9 @@ class Model_Domain extends Model
             array($this->bean->getId())
         );
         $menu = new Menu();
-        if ($break !== null && $level > $break) return $menu;
+        if ($break !== null && $level > $break) {
+            return $menu;
+        }
         foreach ($records as $record) {
             $menu->add(
                 $record->i18n($lng)->name,
@@ -237,7 +249,7 @@ class Model_Domain extends Model
         }
         return $menu;
     }
-    
+
     /**
      * Returns SQL string.
      *
@@ -250,7 +262,7 @@ class Model_Domain extends Model
      */
     public function getSql($fields = 'id', $where = '1', $order = null, $offset = null, $limit = null)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
 		SELECT
 		    {$fields}
 		FROM
@@ -270,7 +282,7 @@ SQL;
         }
         return $sql;
     }
-    
+
     /**
      * Update.
      */
@@ -278,12 +290,11 @@ SQL;
     {
         if ($this->bean->domain_id) {
             $this->bean->domain = R::load('domain', $this->bean->domain_id);
-        }
-        else {
+        } else {
             unset($this->bean->domain);
         }
     }
-    
+
     /**
      * Dispense.
      */

@@ -54,7 +54,7 @@ class Model_Plan extends Model
     /**
      * Returns the latest plan bean.
      *
-     * @return RedBean_OODBBean $plan
+     * @return $plan
      */
     public function getLatest()
     {

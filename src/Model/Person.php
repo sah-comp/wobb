@@ -144,7 +144,7 @@ class Model_Person extends Model
      * Returns an address bean of this person with a given label.
      *
      * @param string $label defaults to 'default'
-     * @return RedBean_OODBBean $address
+     * @return $address
      */
     public function getAddress($label = 'default')
     {

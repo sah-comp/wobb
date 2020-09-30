@@ -23,7 +23,7 @@
 			<?php echo I18n::__('action_add_nav') ?>
 		</a>
 	</li>
-	<?php if (isset($record) && is_a($record, 'RedBean_OODBBean') && $record->getId()): ?>
+	<?php if (isset($record) && $record->getId()): ?>
 	<li>
         <a
             href="<?php echo Url::build(sprintf("/statistic/download/%d", $record->getId())) ?>">

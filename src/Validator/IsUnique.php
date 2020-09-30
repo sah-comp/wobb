@@ -26,14 +26,16 @@ class Validator_IsUnique extends Validator
      */
     public function validate($value)
     {
-        if ( ! isset($this->options['bean']) || ! isset($this->options['attribute']) || ! is_a($this->options['bean'], 'RedBean_OODBBean')) {
+        if (! isset($this->options['bean']) || ! isset($this->options['attribute'])) {
             throw new Exception('A unique validator needs bean and attribute as parameters');
         }
-        if ( $this->options['bean']->getId() &&
+        if ($this->options['bean']->getId() &&
                 ! $this->options['bean']->hasChanged($this->options['attribute'])) {
             return true;
         }
-        if (R::findOne($this->options['bean']->getMeta('type'), $this->options['attribute'].' = ?', array($value))) return false; // ... because you are not allowed to store it a second time
+        if (R::findOne($this->options['bean']->getMeta('type'), $this->options['attribute'].' = ?', array($value))) {
+            return false;
+        } // ... because you are not allowed to store it a second time
         return true;
     }
 }

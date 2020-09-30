@@ -60,10 +60,10 @@ class Model_Deliverer extends Model
      * the nextweekprice, if the deliverer is set to use next weeks price. If a (sub)-deliverer has a special adjustment,
      * that one is used instead of the overall adjustment to the baseprice.
      *
-     * @param RedBean_OODBBean $csb
+     * @param $csb
      * @return RedBean_OODBBean
      */
-    public function setBaseprices(RedBean_OODBBean $csb)
+    public function setBaseprices($csb)
     {
         if (! $this->bean->dprice) {
             if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " earmark = :earmark AND person_id = :pid LIMIT 1", [
@@ -218,10 +218,10 @@ class Model_Deliverer extends Model
     /**
      * Calculates conditions and costs of this deliverer with given stock bean and returns total mix.
      *
-     * @param RedBean_OODBBean $stock
+     * @param $stock
      * @return float
      */
-    public function calculate(RedBean_OODBBean $stock)
+    public function calculate($stock)
     {
         if (! $this->bean->person) {
             return (float)0;
@@ -235,10 +235,10 @@ class Model_Deliverer extends Model
     /**
      * Calculates conditions of this deliverer with given stock bean and returns the total bonus.
      *
-     * @param RedBean_OODBBean $stock
+     * @param $stock
      * @return float
      */
-    protected function calculateCondition(RedBean_OODBBean $stock)
+    protected function calculateCondition($stock)
     {
         $conditions = $this->bean->person->ownCondition; // fetch it from the person
         $bonus = 0;
@@ -271,10 +271,10 @@ class Model_Deliverer extends Model
     /**
      * Calculates cost of this deliverer with given stock bean and returns the total cost.
      *
-     * @param RedBean_OODBBean $stock
+     * @param $stock
      * @return float
      */
-    protected function calculateCost(RedBean_OODBBean $stock)
+    protected function calculateCost($stock)
     {
         $costs = $this->bean->person->ownCost; // fetch it from the person
         $cost_sum = 0;
@@ -408,11 +408,11 @@ class Model_Deliverer extends Model
     /**
      * Generates an invoice for this deliverer for the given slaughterday csb bean.
      *
-     * @param RedBean_OODBBean $csb
+     * @param $csb
      * @throws Exception if no billing number can be generated
      * @return void
      */
-    public function billing(RedBean_OODBBean $csb)
+    public function billing($csb)
     {
         if (! $this->bean->invoice()->name) {
             if (! $nextbillingnumber = $csb->company->nextBillingnumber()) {
@@ -487,7 +487,7 @@ class Model_Deliverer extends Model
     /**
      * Dispatches the billingnumber (invoice->name) of this deliverer of the given csb to its stock.
      *
-     * @param RedBean_OODBBean $csb
+     * @param $csb
      * @return void
      */
     public function dispatchBillingNumberToStock($csb)
@@ -505,7 +505,7 @@ class Model_Deliverer extends Model
      * Calculates the prices of all stock that belongs to this deliverer of the given csb bean and
      * returns an array with a summery of the calculation.
      *
-     * @param RedBean_OODBBean $csb
+     * @param $csb
      * @return array
      */
     public function calculation($csb)

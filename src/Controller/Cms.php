@@ -30,7 +30,7 @@ class Controller_Cms extends Controller
      * @uses Model_Domain::getContent()
      * @param RedBean_OODBean $domain to render
      */
-    public function frontend(RedBean_OODBBean $domain)
+    public function frontend($domain)
     {
         $template_data = $domain->getContent(Flight::get('language'));
         if ( ! Flight::request()->query->preview) Flight::lastModified($domain->lastmodified);

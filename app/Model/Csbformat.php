@@ -58,11 +58,11 @@ class Model_Csbformat extends Model
      *
      * @todo Configurable Format
      *
-     * @param RedBean_OODBBean $company
+     * @param $company
      * @param string $line from a CSB file
      * @return array
      */
-    public function exportFromCSB(RedBean_OODBBean $company, $line = '')
+    public function exportFromCSB($company, $line = '')
     {
         return array(
             'buyer' => $this->getBuyerFromCSB($line),

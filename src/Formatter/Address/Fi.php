@@ -24,10 +24,10 @@ class Formatter_Address_Fi extends Formatter
     /**
      * Formats attributes of a bean.
      *
-     * @param RedBean_OODBBean $bean to format
+     * @param $bean to format
      * @return string $formattedString
      */
-    public function format(RedBean_OODBBean $bean)
+    public function format($bean)
     {
         return sprintf("%s\n%s %s\n%s", $bean->street, 'FI-'.$bean->zip, mb_strtoupper($bean->city), 'FINLAND');
     }

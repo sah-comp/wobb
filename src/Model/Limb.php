@@ -87,10 +87,10 @@ class Model_Limb extends Model
     /**
      * Renders a limb together with a bean.
      *
-     * @param RedBean_OODBBean $record
+     * @param $record
      * @return void
      */
-    public function render(RedBean_OODBBEan $record)
+    public function render($record)
     {
         Flight::render(sprintf('model/limb/tag/%s', $this->bean->tag), array(
             'record' => $record,

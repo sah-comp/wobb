@@ -208,12 +208,12 @@ SQL;
      * Copies values from summary array into the given bean.
      *
      * @param string $quality or empty
-     * @param RedBean_OODBBean $bean
+     * @param $bean
      * @param array $summary
      * @param int $total
      * @return void
      */
-    public function copyFromSummary($quality = '', RedBean_OODBBean $bean, array $summary = array(), $total)
+    public function copyFromSummary($quality = '', $bean, array $summary = array(), $total)
     {
         //$bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
