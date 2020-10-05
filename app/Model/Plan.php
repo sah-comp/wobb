@@ -163,7 +163,7 @@ SQL;
     {
         return $this->bean->company->name;
     }
-	
+
     /**
      * Calculates averages and sums based on the deliverers data using a fake pig.
      *
@@ -171,67 +171,81 @@ SQL;
      */
     public function calculation()
     {
-		$period = [
-			'start' => date('Y-m-d', strtotime($this->bean->pubdate . ' - ' . $this->bean->period . ' weeks')), 
-			'end' => $this->bean->pubdate
-		];
-		$this->bean->piggery = 0;
-		$this->bean->totalweight = 0;
-		$this->bean->totalnet = 0;
-		$this->bean->meanweight = 0;
-		$this->bean->meandprice = 0;
-		$totalmfa = 0;
-		$count = count($this->bean->ownDeliverer);
+        $period = [
+            'start' => date('Y-m-d', strtotime($this->bean->pubdate . ' - ' . $this->bean->period . ' weeks')),
+            'end' => $this->bean->pubdate
+        ];
+        $this->bean->piggery = 0;
+        $piggery_nostockdatayet = 0;
+        $this->bean->totalweight = 0;
+        $this->bean->totalnet = 0;
+        $this->bean->meanweight = 0;
+        $this->bean->meandprice = 0;
+        $totalmfa = 0;
+        $count = count($this->bean->ownDeliverer);
         foreach ($this->bean->ownDeliverer as $_id => $deliverer) {
-			$deliverer->supplier = $deliverer->person->nickname;
-			$averages = $this->bean->getAverages($deliverer->person->nickname, $period);
-			if (! $deliverer->dprice) {
-				if ($deliverer->person->nextweekprice && $this->bean->nextweekprice) {
-					$deliverer->dprice = $this->bean->nextweekprice + $deliverer->person->reldprice;
-					$deliverer->sprice = $this->bean->nextweekprice + $deliverer->person->relsprice;				
-				} else {
-					$deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
-					$deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
-				}
-			}
-			$deliverer->meanmfa = $averages['meanmfa'];
-			$deliverer->meanweight = $averages['meanweight'];
-			$deliverer->calcdate = date('Y-m-d H:i:s');
-			
-			$stock = R::dispense('stock');
-			$pricing = $deliverer->person->pricing;
-			
-			$stock->mfa = $deliverer->meanmfa;
-			$stock->weight = $deliverer->meanweight;
-			
-			$lanuv_tax = $deliverer->calculate($stock);
-			$stock->calculatePrice($deliverer, $pricing, $lanuv_tax);
-			$netvalue =  ($stock->weight * $stock->dprice) + $stock->bonus - $stock->cost;
-			$deliverer->meandprice = round($netvalue / $deliverer->meanweight, 3);
-			$deliverer->totalnet = round($deliverer->meanweight * $deliverer->meandprice * $deliverer->piggery, 3);
-			
-			$this->bean->piggery += $deliverer->piggery;
-			$this->bean->totalweight += round($deliverer->piggery * $deliverer->meanweight, 3);
-			$this->bean->totalnet += $deliverer->totalnet;
-			$totalmfa += $deliverer->meanmfa;
-		}
-		$this->bean->meanweight = round($this->bean->totalweight / $this->bean->piggery, 3);
-		$this->bean->meandprice = round($this->bean->totalnet / $this->bean->totalweight, 3);
-		$this->bean->meanmfa = round($totalmfa / $count, 3);
-		return true;
-	}
-	
-	/**
-	 * Returns an array with averages of mfa and weight.
-	 *
-	 * @param string $supplier
-	 * @param array $period
-	 * @return array
-	 */
-	public function getAverages($supplier, array $period)
-	{
-		return R::getRow("SELECT AVG(mfa) AS meanmfa, ROUND(AVG(weight), 2) AS meanweight FROM stock WHERE buyer = ? AND supplier = ? AND (pubdate >= ? AND pubdate <= ?) AND csb_id IS NOT NULL", [$this->bean->company->buyer, $supplier, $period['start'], $period['end']]);
-	}
+            $deliverer->supplier = $deliverer->person->nickname;
+            $averages = $this->bean->getAverages($deliverer->person->nickname, $period);
+
+            if (! $deliverer->dprice) {
+                if ($deliverer->person->nextweekprice && $this->bean->nextweekprice) {
+                    $deliverer->dprice = $this->bean->nextweekprice + $deliverer->person->reldprice;
+                    $deliverer->sprice = $this->bean->nextweekprice + $deliverer->person->relsprice;
+                } else {
+                    $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
+                    $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
+                }
+            }
+
+            if ($averages['count'] == 0) {
+                if (strpos($deliverer->desc, I18n::__('planning_no_stock_yet')) === false) {
+                    $deliverer->desc = trim($deliverer->desc . ' ' . I18n::__('planning_no_stock_yet'));
+                }
+                $piggery_nostockdatayet += $deliverer->piggery;
+                continue; // there are no averages, so we just leave deliverer standing in the rain.
+            }
+
+            $deliverer->meanmfa = $averages['meanmfa'];
+            $deliverer->meanweight = $averages['meanweight'];
+            $deliverer->calcdate = date('Y-m-d H:i:s');
+
+            $stock = R::dispense('stock');
+            $pricing = $deliverer->person->pricing;
+
+            $stock->mfa = $deliverer->meanmfa;
+            $stock->weight = $deliverer->meanweight;
+
+            $lanuv_tax = $deliverer->calculate($stock);
+            $stock->calculatePrice($deliverer, $pricing, $lanuv_tax);
+            $netvalue =  ($stock->weight * $stock->dprice) + $stock->bonus - $stock->cost;
+            $deliverer->meandprice = round($netvalue / $deliverer->meanweight, 3);
+            $deliverer->totalnet = round($deliverer->meanweight * $deliverer->meandprice * $deliverer->piggery, 3);
+
+            $this->bean->piggery += $deliverer->piggery;
+            $this->bean->totalweight += round($deliverer->piggery * $deliverer->meanweight, 3);
+            $this->bean->totalnet += $deliverer->totalnet;
+            $totalmfa += $deliverer->meanmfa;
+        }
+        if ($this->bean->piggery > 0) {
+            $this->bean->meanweight = round($this->bean->totalweight / $this->bean->piggery, 3);
+            $this->bean->meandprice = round($this->bean->totalnet / $this->bean->totalweight, 3);
+            $this->bean->meanmfa = round($totalmfa / $count, 3);
+        }
+        $this->bean->piggery += $piggery_nostockdatayet;
+        return true;
+    }
+
+    /**
+     * Returns an array with averages of mfa and weight.
+     *
+     * @param string $supplier
+     * @param array $period
+     * @return array
+     */
+    public function getAverages($supplier, array $period)
+    {
+        return R::getRow("SELECT count(*) AS count, AVG(mfa) AS meanmfa, ROUND(AVG(weight), 2) AS meanweight FROM stock WHERE buyer = ? AND supplier = ? AND (pubdate >= ? AND pubdate <= ?) AND csb_id IS NOT NULL", [$this->bean->company->buyer, $supplier, $period['start'], $period['end']]);
+    }
 
     /**
      * dispense a new plan bean.
@@ -239,7 +253,7 @@ SQL;
     public function dispense()
     {
         $this->bean->piggery = 0;
-		$this->bean->season = 0; // 0 = winter, 1 = summer
+        $this->bean->season = 0; // 0 = winter, 1 = summer
         $this->bean->pubdate = date('Y-m-d');
         $this->bean->period = 6; //weeks to look back for averages
         $this->addConverter(
@@ -280,24 +294,24 @@ SQL;
             new Validator_HasValue()
         ));
     }
-	
-	/**
-	 * Checks if the plans given date is within summer or winter season.
-	 * Define seasons time periods in config.php.
-	 *
-	 * @return int
-	 */
-	public function whichSeason()
-	{
-		$ts = strtotime($this->bean->pubdate);
-		$seasons = Flight::get('seasons');
-		$summer_start = strtotime(date('Y', $ts) . '-' . $seasons['summer']['start']);
-		$summer_end = strtotime(date('Y', $ts) . '-' . $seasons['summer']['end']);
-		if (($ts >= $summer_start) && ($ts <= $summer_end)) {
-			return 1; //summer
-		}
-		return 0; //winter
-	}
+
+    /**
+     * Checks if the plans given date is within summer or winter season.
+     * Define seasons time periods in config.php.
+     *
+     * @return int
+     */
+    public function whichSeason()
+    {
+        $ts = strtotime($this->bean->pubdate);
+        $seasons = Flight::get('seasons');
+        $summer_start = strtotime(date('Y', $ts) . '-' . $seasons['summer']['start']);
+        $summer_end = strtotime(date('Y', $ts) . '-' . $seasons['summer']['end']);
+        if (($ts >= $summer_start) && ($ts <= $summer_end)) {
+            return 1; //summer
+        }
+        return 0; //winter
+    }
 
     /**
      * update.
@@ -306,17 +320,17 @@ SQL;
      */
     public function update()
     {
-		$this->bean->season = $this->whichSeason();
+        $this->bean->season = $this->whichSeason();
         parent::update();
     }
-	
-	/**
-	 * Returns an array of deliverers ordered by person and invoice.
-	 *
-	 * @return array
-	 */
-	public function getDeliverers()
-	{
-		return $this->bean->with(' ORDER BY supplier, earmark ')->ownDeliverer;
-	}
+
+    /**
+     * Returns an array of deliverers ordered by person and invoice.
+     *
+     * @return array
+     */
+    public function getDeliverers()
+    {
+        return $this->bean->with(' ORDER BY supplier, earmark ')->ownDeliverer;
+    }
 }
