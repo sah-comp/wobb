@@ -313,7 +313,7 @@ class Controller_Scaffold extends Controller
             }
         }
         $order = $attributes[$this->order]['sort']['name'].' '.$this->dir_map[$this->dir];
-        /*
+
         $sqlCollection = $this->record->getSql(
             "DISTINCT({$this->type}.id) AS id, " . $attributes[$this->order]['sort']['name'],
             $where,
@@ -321,16 +321,6 @@ class Controller_Scaffold extends Controller
             $this->offset($this->page, $this->limit),
             $this->limit
         );
-        */
-
-        $sqlCollection = $this->record->getSql(
-            "{$this->type}.*, " . $attributes[$this->order]['sort']['name'],
-            $where,
-            $order,
-            $this->offset($this->page, $this->limit),
-            $this->limit
-        );
-        
         $sqlTotal = $this->record->getSql(
             "COUNT(DISTINCT({$this->type}.id)) AS total",
             $where,
@@ -339,21 +329,8 @@ class Controller_Scaffold extends Controller
         $this->total_records = 0;
         try {
             //R::debug(true);
-            /*
-            $this->records = R::batch(
-                $this->type,
-                array_keys(R::$adapter->getAssoc(
-                    $sqlCollection, $this->filter->getFilterValues())
-                )
-            );
-            */
-
-            $rows = R::getAll($sqlCollection, $this->filter->getFilterValues());
-            $this->records = R::convertToBeans($this->type, $rows);
-            /*
             $rows = R::getAssoc($sqlCollection, $this->filter->getFilterValues());
             $this->records = R::batch($this->type, array_keys($rows));
-            */
             //R::debug(false);
             //R::debug(true);
             $this->total_records = R::getCell(
