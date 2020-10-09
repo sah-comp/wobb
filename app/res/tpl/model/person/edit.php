@@ -540,16 +540,16 @@ $stats = $record->ownStat;
         <?php if (count($stats)): ?>
         <div class="row nomargins">
             <div class="span3">
-                <label>Historie</label>
+                <label><?php echo I18n::__('baseprice_history_headline') ?></label>
             </div>
             <div class="span3">
-                <label>Datum</label>
+                <label><?php echo I18n::__('baseprice_history_date') ?></label>
             </div>
             <div class="span3">
-                <label class="number">Service</label>
+                <label class="number"><?php echo I18n::__('baseprice_history_relsprice') ?></label>
             </div>
             <div class="span3">
-                <label class="number">Händler</label>
+                <label class="number"><?php echo I18n::__('baseprice_history_reldprice') ?></label>
             </div>
         </div>
         <?php foreach ($stats as $_id => $_stat): ?>
