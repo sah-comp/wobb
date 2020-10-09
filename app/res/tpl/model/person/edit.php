@@ -8,6 +8,9 @@
  * @version $Id$
  */
 ?>
+<?php
+$stats = $record->ownStat;
+?>
 <!-- person edit form -->
 <div>
     <input type="hidden" name="dialog[type]" value="<?php echo $record->getMeta('type') ?>" />
@@ -101,7 +104,7 @@
             <?php echo I18n::__('person_label_enabled') ?>
         </label>
     </div>
-    <!-- end of grid based data -->	
+    <!-- end of grid based data -->
     <!-- grid based header -->
     <div class="row nomargins">
         <div class="span3">&nbsp;</div>
@@ -130,7 +133,7 @@
 	            <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing): ?>
 	            <option
 	                value="<?php echo $_pricing->getId() ?>"
-	                <?php echo ($record->pricing_id == $_pricing->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_pricing->name) ?></option>   
+	                <?php echo ($record->pricing_id == $_pricing->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_pricing->name) ?></option>
 	            <?php endforeach ?>
 	        </select>
     	</div>
@@ -142,7 +145,7 @@
 	            <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
 	            <option
 	                value="<?php echo $_vat->getId() ?>"
-	                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+	                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>
 	            <?php endforeach ?>
 	        </select>
 		</div>
@@ -323,7 +326,7 @@
             'person-cost' => I18n::__('person_cost_tab'),
             'person-billing' => I18n::__('person_billing_tab'),
             'person-bankaccount' => I18n::__('person_bankaccount_tab'),
-			'person-stockman' => I18n::__('person_stockman_tab'),
+            'person-stockman' => I18n::__('person_stockman_tab'),
             'person-kidnap' => I18n::__('person_kidnap_tab')
         ),
         'default_tab' => 'person-address'
@@ -336,7 +339,9 @@
             <div
                 id="person-<?php echo $record->getId() ?>-address-container"
                 class="container attachable detachable sortable">
-                <?php if (count($record->ownAddress) == 0) $record->ownAddress[] = R::dispense('address') ?>
+                <?php if (count($record->ownAddress) == 0) {
+        $record->ownAddress[] = R::dispense('address');
+    } ?>
                 <?php $index = 0 ?>
                 <?php foreach ($record->ownAddress as $_address_id => $_address): ?>
                 <?php $index++ ?>
@@ -367,7 +372,9 @@
         <div
             id="person-<?php echo $record->getId() ?>-condition-container"
             class="container attachable detachable sortable">
-            <?php if (count($record->ownCondition) == 0) $record->ownCondition[] = R::dispense('condition') ?>
+            <?php if (count($record->ownCondition) == 0) {
+                    $record->ownCondition[] = R::dispense('condition');
+                } ?>
             <?php $index = 0 ?>
             <?php foreach ($record->ownCondition as $_condition_id => $_condition): ?>
             <?php $index++ ?>
@@ -387,7 +394,9 @@
         <div
             id="person-<?php echo $record->getId() ?>-cost-container"
             class="container attachable detachable sortable">
-            <?php if (count($record->ownCost) == 0) $record->ownCost[] = R::dispense('cost') ?>
+            <?php if (count($record->ownCost) == 0) {
+                $record->ownCost[] = R::dispense('cost');
+            } ?>
             <?php $index = 0 ?>
             <?php foreach ($record->ownCost as $_cost_id => $_cost): ?>
             <?php $index++ ?>
@@ -528,6 +537,49 @@
                 cols="60"><?php echo htmlspecialchars($record->noterelprice) ?></textarea>
             <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
         </div>
+        <?php if (count($stats)): ?>
+        <div class="row nomargins">
+            <div class="span3">
+                <label>Historie</label>
+            </div>
+            <div class="span3">
+                <label>Datum</label>
+            </div>
+            <div class="span3">
+                <label class="number">Service</label>
+            </div>
+            <div class="span3">
+                <label class="number">Händler</label>
+            </div>
+        </div>
+        <?php foreach ($stats as $_id => $_stat): ?>
+        <div class="row nomargins">
+            <div class="span3">
+                &nbsp;
+            </div>
+            <div class="span3">
+                <input
+                    type="text"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars(date('d.m.Y H:i', $_stat->stamp)) ?>" />
+            </div>
+            <div class="span3">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('relsprice')) ?>" />
+            </div>
+            <div class="span3">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('reldprice')) ?>" />
+            </div>
+        </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
     </fieldset>
     <fieldset
         id="person-bankaccount"
@@ -632,7 +684,9 @@
         <div
             id="person-<?php echo $record->getId() ?>-kidnap-container"
             class="container attachable detachable sortable">
-            <?php if (count($record->ownKidnap) == 0) $record->ownKidnap[] = R::dispense('kidnap') ?>
+            <?php if (count($record->ownKidnap) == 0) {
+                $record->ownKidnap[] = R::dispense('kidnap');
+            } ?>
             <?php $index = 0 ?>
             <?php foreach ($record->ownKidnap as $_kidnap_id => $_kidnap): ?>
             <?php $index++ ?>
@@ -659,7 +713,9 @@
         <div
             id="person-<?php echo $record->getId() ?>-stockman-container"
             class="container attachable detachable sortable">
-            <?php if (count($record->ownStockman) == 0) $record->ownStockman[] = R::dispense('stockman') ?>
+            <?php if (count($record->ownStockman) == 0) {
+                $record->ownStockman[] = R::dispense('stockman');
+            } ?>
             <?php $index = 0 ?>
             <?php foreach ($record->ownStockman as $_stockman_id => $_stockman): ?>
             <?php $index++ ?>
