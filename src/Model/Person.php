@@ -26,7 +26,7 @@ class Model_Person extends Model
     {
         $this->setAction('index', array('idle', 'toggleEnabled', 'expunge'));
     }
-    
+
     /**
      * Returns an array with billingtransport names.
      *
@@ -43,7 +43,7 @@ class Model_Person extends Model
             'both'
         );
     }
-    
+
     /**
      * Toggle the enabled attribute and store the bean.
      *
@@ -72,7 +72,7 @@ class Model_Person extends Model
                 'filter' => array(
                     'tag' => 'text'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             ),
             array(
                 'name' => 'account',
@@ -82,7 +82,7 @@ class Model_Person extends Model
                 'filter' => array(
                     'tag' => 'text'
                 ),
-				'width' => '8rem'
+                'width' => '8rem'
             ),
             array(
                 'name' => 'organization',
@@ -122,7 +122,7 @@ class Model_Person extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             ),
             array(
                 'name' => 'enabled',
@@ -135,11 +135,11 @@ class Model_Person extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
-    
+
     /**
      * Returns an address bean of this person with a given label.
      *
@@ -148,7 +148,7 @@ class Model_Person extends Model
      */
     public function getAddress($label = 'default')
     {
-        if ( ! $address = R::findOne('address', 'label = ? AND person_id = ?', array($label, $this->bean->getId())) ) {
+        if (! $address = R::findOne('address', 'label = ? AND person_id = ?', array($label, $this->bean->getId()))) {
             $address = R::dispense('address');
         }
         return $address;
@@ -210,7 +210,7 @@ class Model_Person extends Model
         } else {
             unset($this->bean->pricing);
         }
-        
+
         if ($this->bean->vat_id) {
             $this->bean->vat = R::load('vat', $this->bean->vat_id);
         } else {
@@ -224,18 +224,28 @@ class Model_Person extends Model
             ));
         }
         */
-		// set the phonetic names
-		$this->bean->phoneticlastname = soundex($this->bean->lastname);
-		$this->bean->phoneticfirstname = soundex($this->bean->firstname);
-		// set the name according to sort rule
-		$this->bean->name = implode(' ', array($this->bean->firstname, $this->bean->lastname));
-		// company name
-		if (trim($this->bean->name) == '' && $this->bean->organization || $this->bean->company) {
-			$this->bean->name = $this->bean->organization;
-		}
-		if (trim($this->bean->name) == '') {
-			$this->bean->name = $this->bean->nickname;
-		}
-		parent::update();
+        // set the phonetic names
+        $this->bean->phoneticlastname = soundex($this->bean->lastname);
+        $this->bean->phoneticfirstname = soundex($this->bean->firstname);
+        // set the name according to sort rule
+        $this->bean->name = implode(' ', array($this->bean->firstname, $this->bean->lastname));
+        // company name
+        if (trim($this->bean->name) == '' && $this->bean->organization || $this->bean->company) {
+            $this->bean->name = $this->bean->organization;
+        }
+        if (trim($this->bean->name) == '') {
+            $this->bean->name = $this->bean->nickname;
+        }
+        parent::update();
+
+        // if the price has changed, we record it in our article statistics.
+        if ($this->bean->relsprice != $this->bean->old('relsprice') ||
+            $this->bean->reldprice != $this->bean->old('reldprice')) {
+            $stat = R::dispense('stat');
+            $stat->relsprice = $this->bean->old('relsprice');
+            $stat->reldprice = $this->bean->old('reldprice');
+            $this->bean->ownStat[] = $stat;
+            $this->bean->lastchange = date('Y-m-d');
+        }
     }
 }
