@@ -38,7 +38,7 @@ class Model_Invoice extends Model
     {
         $this->setAction('index', array('idle', 'togglePaid'));
     }
-    
+
     /**
      * Returns the invoice kinds.
      *
@@ -48,7 +48,7 @@ class Model_Invoice extends Model
     {
         return $this->kinds;
     }
-    
+
     /**
      * Toggle the paid attribute and store the bean.
      *
@@ -59,7 +59,7 @@ class Model_Invoice extends Model
         $this->bean->paid = ! $this->bean->paid;
         R::store($this->bean);
     }
-        
+
     /**
      * Returns the vat bean.
      *
@@ -67,7 +67,7 @@ class Model_Invoice extends Model
      */
     public function vat()
     {
-        if ( ! $this->bean->vat ) {
+        if (! $this->bean->vat) {
             $this->bean->vat = R::dispense('vat');
         }
         return $this->bean->vat;
@@ -187,7 +187,7 @@ class Model_Invoice extends Model
             )
         );
     }
-    
+
     /**
      * Cancel the invoice.
      *
@@ -206,8 +206,13 @@ class Model_Invoice extends Model
         $canceled->totalnetnormal = $canceled->totalnetnormal * -1;
         $canceled->totalnetfarmer = $canceled->totalnetfarmer * -1;
         $canceled->totalnetother = $canceled->totalnetother * -1;
+        foreach ($canceled->ownAdjustmentitem as $id => $adjustmentitem) {
+            $adjustmentitem->net = $adjustmentitem->net * -1;
+            $adjustmentitem->vatvalue = $adjustmentitem->vatvalue * -1;
+            $adjustmentitem->gros = $adjustmentitem->gros * -1;
+        }
         $canceled->canceled = true;
-        if ( ! $nextbillingnumber = $canceled->company->nextBillingnumber() ) {
+        if (! $nextbillingnumber = $canceled->company->nextBillingnumber()) {
             throw new Exception();
         }
         $canceled->name = $nextbillingnumber;
@@ -244,21 +249,21 @@ class Model_Invoice extends Model
     {
         return $this->bean->person->account;
     }
-    
+
     /**
      * Returns the name of this beans person aka deliverer.
      *
      * @param int $maxlength
      * @return string
      */
-    public function getPersonName($maxlength = NULL)
+    public function getPersonName($maxlength = null)
     {
-        if ( $maxlength && mb_strlen($this->bean->person->name) > $maxlength ) {
+        if ($maxlength && mb_strlen($this->bean->person->name) > $maxlength) {
             return mb_substr($this->bean->person->name, 0, $maxlength).'...';
         }
         return $this->bean->person->name;
     }
-    
+
     /**
      * Returns the name of this beans person, aka deliverer.
      *
@@ -269,14 +274,14 @@ class Model_Invoice extends Model
     {
         return $this->bean->person->name;
     }
-    
+
     /**
      * Dispense.
      */
     public function dispense()
     {
-		$this->bean->paid = false;
-		$this->bean->instructed = false;
+        $this->bean->paid = false;
+        $this->bean->instructed = false;
         $this->addConverter('bookingdate', array(
             new Converter_Mysqldate()
         ));
@@ -305,7 +310,7 @@ class Model_Invoice extends Model
             new Converter_Decimal()
         ));
     }
-    
+
     /**
      * Update.
      */
@@ -313,7 +318,7 @@ class Model_Invoice extends Model
     {
         parent::update();
     }
-    
+
     /**
      * Returns SQL string.
      *
@@ -326,7 +331,7 @@ class Model_Invoice extends Model
      */
     public function getSql($fields = 'id', $where = '1', $order = null, $offset = null, $limit = null)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
 		SELECT
 		    {$fields}
 		FROM
