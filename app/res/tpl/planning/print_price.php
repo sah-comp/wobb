@@ -81,8 +81,8 @@
             <tr>
                 <th width="30%"><?php echo I18n::__('plan_deliverer_label_person') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('plan_deliverer_label_piggery') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('plan_deliverer_label_baseprice') ?></th>
-                <th width="10%" class="text">&nbsp;</th>
+                <th width="15%" class="number"><?php echo I18n::__('plan_deliverer_label_baseprice') ?></th>
+                <th width="5%" class="text">&nbsp;</th>
                 <th width="40%" class="text"><?php echo I18n::__('plan_deliverer_label_desc') ?></th>
             </tr>
         </thead>
