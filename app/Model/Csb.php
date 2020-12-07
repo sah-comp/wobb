@@ -595,12 +595,14 @@ SQL;
      * The baseprice will be added with rel*price values of the found person bean. A subdeliverer
      * will not have a *price because they will inherit from their each and every main deliverer bean.
      *
+     * @return bool
      */
     public function makeDeliverer()
     {
         $sqlqsd = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND qs = 1";
         $sqlqss = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND qs = 1";
         $stocks = R::getAll("SELECT count(id) AS total, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
+        $nonqs = []; // container for eventually non QS earmarks.
         foreach ($stocks as $id => $stock) {
             // Deliverer owns one or more earmarks of an csb day
             $deliverer = R::dispense('deliverer');
@@ -638,9 +640,19 @@ SQL;
                     ':earmark' => $subdeliverer->earmark
                 ));
                 $deliverer->ownDeliverer[] = $subdeliverer;
+                // Check if this earmark is non QS
+                if ($deliverer->isEarmarkNonQS($subdeliverer->earmark) > 0) {
+                    $nonqs[] = $subdeliverer->earmark;
+                }
             }
             $this->bean->ownDeliverer[] = $deliverer;
         }
+        if (count($nonqs) > 0) {
+            //there are earmarks which are non QS in this batch. Add a notification
+            $nonqs_flat = implode(", ", $nonqs); // flatten the earmarks nicely
+            Flight::get('user')->notify(I18n::__('csb_has_nonqs', null, array($nonqs_flat)), 'error');
+        }
+        return true;
     }
 
     /**

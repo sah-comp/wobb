@@ -145,6 +145,17 @@ class Model_Deliverer extends Model
     }
 
     /**
+     * Wether returns if the given earmark is a non QS earmark or not.
+     *
+     * @param string $earmark
+     * @return bool
+     */
+    public function isEarmarkNonQS($earmark)
+    {
+        return $this->bean->person->withCondition('earmark = ?', [$earmark])->countOwn('nonqs');
+    }
+
+    /**
      * Returns information about this deliverer.
      *
      * @return string

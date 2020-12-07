@@ -327,7 +327,8 @@ $stats = $record->ownStat;
             'person-billing' => I18n::__('person_billing_tab'),
             'person-bankaccount' => I18n::__('person_bankaccount_tab'),
             'person-stockman' => I18n::__('person_stockman_tab'),
-            'person-kidnap' => I18n::__('person_kidnap_tab')
+            'person-kidnap' => I18n::__('person_kidnap_tab'),
+            'person-nonqs' => I18n::__('person_nonqs_tab')
         ),
         'default_tab' => 'person-address'
     )) ?>
@@ -722,6 +723,29 @@ $stats = $record->ownStat;
             <?php Flight::render('model/person/own/stockman', array(
                 'record' => $record,
                 '_stockman' => $_stockman,
+                'index' => $index
+            )) ?>
+            <?php endforeach ?>
+        </div>
+    </fieldset>
+    <fieldset
+        id="person-nonqs"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('person_legend_nonqs') ?></legend>
+        <p class="info above"><?php echo I18n::__('person_info_nonqs') ?></p>
+        <div
+            id="person-<?php echo $record->getId() ?>-nonqs-container"
+            class="container attachable detachable sortable">
+            <?php if (count($record->ownNonqs) == 0) {
+                $record->ownNonqs[] = R::dispense('nonqs');
+            } ?>
+            <?php $index = 0 ?>
+            <?php foreach ($record->ownNonqs as $_nonqs_id => $_nonqs): ?>
+            <?php $index++ ?>
+            <?php Flight::render('model/person/own/nonqs', array(
+                'record' => $record,
+                '_nonqs' => $_nonqs,
                 'index' => $index
             )) ?>
             <?php endforeach ?>
