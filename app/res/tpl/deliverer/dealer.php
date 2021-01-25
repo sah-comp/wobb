@@ -76,7 +76,7 @@
         table.stock td {
             font-size: 8pt;
         }
-        
+
     </style>
 </head>
 <body>
@@ -183,7 +183,7 @@
     <sethtmlpageheader name="tkheader" value="on" />
     <sethtmlpagefooter name="tkfooter" value="on" />
     mpdf-->
-    
+
     <div style="height: 25mm;"></div>
     <table width="100%">
         <tr>
@@ -235,9 +235,9 @@
             </td>
         </tr>
     </table>
-    
+
     <div style="height: 18mm;"></div>
-    
+
     <table class="deliverer" width="100%">
         <thead>
             <tr>
@@ -281,7 +281,7 @@
         </tbody>
     </table>
     <div style="height: 5mm;"></div>
-    <?php if ( $conditions ): ?>
+    <?php if ($conditions): ?>
     <table width="100%">
         <thead>
             <tr>
@@ -307,12 +307,12 @@
                     <?php echo $_condition->decimal('value', 3) ?>
                 </td>
                 <td class="number">
-                <?php if ( $_condition->label == 'stockperitem' ): ?>
+                <?php if ($_condition->label == 'stockperitem'): ?>
                     <?php
                         $_value = $record->piggery * $_condition->value;
                         echo $record->piggery;
                     ?>
-                <?php elseif ( $_condition->label == 'stockperweight' ): ?>
+                <?php elseif ($_condition->label == 'stockperweight'): ?>
                     <?php
                         $_value = $record->totalweight * $_condition->value;
                         echo $record->decimal('totalweight', 2);
@@ -320,23 +320,23 @@
                 <?php endif ?>
                 </td>
                 <td class="number">
-                    <?php echo number_format( $_value, 2, ',', '.') ?>
+                    <?php echo number_format($_value, 2, ',', '.') ?>
                 </td>
             </tr>
     <?php endforeach ?>
         </tbody>
     </table>
     <?php endif ?>
-    <?php if ( $costs ): ?>
+    <?php if ($costs): ?>
     <table width="100%">
         <thead>
             <tr>
                 <th width="40%" colspan="2"><?php echo I18n::__('invoice_internal_label_cost') ?></th>
-                <?php if ( ! $conditions): ?>
+                <?php if (! $conditions): ?>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_unitprice') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_unit') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_total') ?></th>
-                <?php else: ?>                    
+                <?php else: ?>
                 <th width="20%" class="number">&nbsp;</th>
                 <th width="20%" class="number">&nbsp;</th>
                 <th width="20%" class="number">&nbsp;</th>
@@ -359,17 +359,17 @@
                     <?php echo $_cost->decimal('value', 3) ?>
                 </td>
                 <td class="number">
-                <?php if ( $_cost->label == 'stockperitem' ): ?>
+                <?php if ($_cost->label == 'stockperitem'): ?>
                     <?php
                         $_value = $record->piggery * $_cost->value;
                         echo $record->piggery;
                     ?>
-                <?php elseif ( $_cost->label == 'stockperweight' ): ?>
+                <?php elseif ($_cost->label == 'stockperweight'): ?>
                     <?php
                         $_value = $record->totalweight * $_cost->value;
                         echo $record->decimal('totalweight', 2);
                     ?>
-                <?php elseif ( $_cost->label == 'flat' ): ?>
+                <?php elseif ($_cost->label == 'flat'): ?>
                     <?php
                         $_value = $_cost->value;
                         echo "&nbsp;";
@@ -377,7 +377,7 @@
                 <?php endif ?>
                 </td>
                 <td class="number">
-                    <?php echo number_format( $_value, 2, ',', '.') ?>
+                    <?php echo number_format($_value, 2, ',', '.') ?>
                 </td>
             </tr>
     <?php endforeach ?>
@@ -385,11 +385,11 @@
     </table>
     <div style="height: 5mm;"></div>
     <?php endif ?>
-    
+
     <table width="100%">
         <tr>
             <td width="40%" style="vertical-align: top;">
-                <?php if ( $specialprices || $nonqs ): ?>
+                <?php if ($specialprices || $nonqs): ?>
                 <table width="100%">
                     <thead>
                         <tr>
@@ -413,7 +413,7 @@
                             <td class="dinky number"><?php echo $_specialprice->decimal('dprice', 3) ?></td>
                         </tr>
                 <?php endforeach ?>
-                <?php if ( $nonqs ): ?>
+                <?php if ($nonqs): ?>
                         <tr>
                             <td class="dinky number"><?php echo htmlspecialchars($nonqs) ?></td>
                             <td class="dinky"><?php echo I18n::__('invoice_internal_label_nonqs') ?></td>
@@ -430,31 +430,31 @@
             <td width="40%" style="vertical-align: top;">
                 <table width="100%">
                     <tr>
-                        <td width="50%" class="bb number"><?php echo I18n::__('wawi_label_net') ?></td>            
+                        <td width="50%" class="bb number"><?php echo I18n::__('wawi_label_net') ?></td>
                         <td width="50%" class="bb emphasize number"><?php echo $record->invoice->decimal('subtotalnet', 2) ?></td>
                     </tr>
                     <tr>
-                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->person->vat->name) ?></td>            
+                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->person->vat->name) ?></td>
                         <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalue', 2)) ?></td>
                     </tr>
                     <tr>
-                        <td width="50%" class="bt number"><?php echo I18n::__('wawi_label_gros') ?></td>            
+                        <td width="50%" class="bt number"><?php echo I18n::__('wawi_label_gros') ?></td>
                         <td width="50%" class="bt uberemphasize number"><?php echo htmlspecialchars($record->invoice->decimal('totalgros', 2)) ?></td>
                     </tr>
                 </table>
-                
+
             </td>
         </tr>
     </table>
-    
+
     <div style="height: 5mm;"></div>
-    
+
     <?php Flight::render('deliverer/dealer/pricemask', array(
         'record' => $record
     )) ?>
-    
+
     <div style="height: 5mm;"></div>
-    
+
     <table width="60%">
         <tr>
             <td class="dinky" style="vertical-align: top;">
@@ -520,7 +520,7 @@
     </table>
     <div style="height: 5mm;"></div>
 <?php endforeach; ?>
-<?php if ( $record->invoice->person->hasservice): ?>
+<?php if ($record->invoice->person->hasservice): ?>
         <!--mpdf
         <pagebreak resetpagenum="1" />
         <htmlpageheader name="dealerheader" style="display: none;">
@@ -549,14 +549,14 @@
     $deliverers = $record->with(' ORDER BY earmark ')->ownDeliverer;
     $end_sub = end($deliverers);
     ?>
-    <?php foreach ($deliverers as $_sub_id => $_sub): ?>  
-        
+    <?php foreach ($deliverers as $_sub_id => $_sub): ?>
+
         <?php Flight::render('deliverer/dealer/pricemask', array(
             'record' => $record
         )) ?>
-        
+
         <div style="height: 5mm;"></div>
-          
+
         <table width="100%" class="stock">
             <thead>
                 <tr>
@@ -612,12 +612,12 @@
             </tbody>
         </table>
 
-        <?php if ( $end_sub->getId() != $_sub->getId() ): ?>
+        <?php if ($end_sub->getId() != $_sub->getId()): ?>
         <!--mpdf
         <pagebreak resetpagenum="1" />
         mpdf-->
         <?php endif ?>
-    <?php endforeach; ?>   
+    <?php endforeach; ?>
 <?php endif ?>
 </body>
 </html>
