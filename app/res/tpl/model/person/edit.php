@@ -154,6 +154,17 @@ $stats = $record->ownStat;
 </fieldset>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('person_legend_email') ?></legend>
+    <div class="row <?php echo ($record->hasError('vvvo')) ? 'error' : ''; ?>">
+        <label
+            for="person-vvvo">
+            <?php echo I18n::__('person_label_vvvo') ?>
+        </label>
+        <input
+            id="person-vvvo"
+            type="text"
+            name="dialog[vvvo]"
+            value="<?php echo htmlspecialchars($record->vvvo) ?>" />
+    </div>
     <div class="row <?php echo ($record->hasError('email')) ? 'error' : ''; ?>">
         <label
             for="person-email">
