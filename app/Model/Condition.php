@@ -29,7 +29,36 @@ class Model_Condition extends Model
             'stockperweight'
         );
     }
-  
+
+    /**
+     * Returns an array with precondition names.
+     *
+     * @return array
+     */
+    public function getPreconditions()
+    {
+        return array(
+            'none',
+            'weight',
+            'mfa',
+            //'quality'
+        );
+    }
+
+    /**
+     * Returns an array with comparisons for preconditions.
+     *
+     * @return array
+     */
+    public function getComparisons()
+    {
+        return array(
+            'none',//none
+            'gt',// greater than
+            'lt',// less than
+        );
+    }
+
     /**
      * Dispense.
      */
@@ -39,6 +68,9 @@ class Model_Condition extends Model
             new Validator_HasValue()
         ));
         $this->addConverter('value', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('cvalue', array(
             new Converter_Decimal()
         ));
     }
