@@ -534,7 +534,7 @@ class Model_Deliverer extends Model
                                 $sql = "mfa < ?";
                             }
                         }
-                        $appliedcondition->factor = R::getCell('SUM(weight) AS sumweight FROM stock WHERE csb_id = ? AND supplier = ? AND ' . $sql, [
+                        $appliedcondition->factor = R::getCell('SELECT SUM(weight) AS sumweight FROM stock WHERE csb_id = ? AND supplier = ? AND ' . $sql, [
                             $csb->getId(),
                             $this->bean->supplier,
                             $condition->cvalue
