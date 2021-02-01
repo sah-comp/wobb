@@ -721,6 +721,7 @@ SQL;
             }
             $deliverer->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated a subdeliverer
             $deliverer->calcVat();
+            $deliverer->applyConditions($this->bean);
         }
         $this->bean->calcdate = date('Y-m-d H:i:s'); //stamp that we have calculated the csb bean
         $this->calcAverages();

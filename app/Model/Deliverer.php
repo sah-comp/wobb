@@ -259,15 +259,64 @@ class Model_Deliverer extends Model
             return (float)0.00;
         }
         foreach ($conditions as $id => $condition) {
+            $applyCondition = false;
             switch ($condition->label) {
                 case 'stockperitem':
-                    $bonus += $condition->value;
-                    $stock->bonusitem += $condition->value;
+                    if ($condition->precondition == '' || $condition->precondition == 'none') {
+                        $applyCondition = true;
+                    } else {
+                        $criteria = $stock->{$condition->precondition}; //can be either mfa or weight
+                        switch ($condition->comparison) {
+                            case 'gt':
+                                if ($criteria > $condition->cvalue) {
+                                    $applyCondition = true;
+                                }
+                                break;
+
+                            case 'lt':
+                                if ($criteria < $condition->cvalue) {
+                                    $applyCondition = true;
+                                }
+                                break;
+
+                            default:
+                                // code...
+                                break;
+                        }
+                    }
+                    if ($applyCondition) {
+                        $bonus += $condition->value;
+                        $stock->bonusitem += $condition->value;
+                    }
                     break;
 
                 case 'stockperweight':
-                    $bonus += $stock->weight * $condition->value;
-                    $stock->bonusweight += $condition->value;
+                    if ($condition->precondition == '' || $condition->precondition == 'none') {
+                        $applyCondition = true;
+                    } else {
+                        $criteria = $stock->{$condition->precondition}; //can be either mfa or weight
+                        switch ($condition->comparison) {
+                            case 'gt':
+                                if ($criteria > $condition->cvalue) {
+                                    $applyCondition = true;
+                                }
+                                break;
+
+                            case 'lt':
+                                if ($criteria < $condition->cvalue) {
+                                    $applyCondition = true;
+                                }
+                                break;
+
+                            default:
+                                // code...
+                                break;
+                        }
+                    }
+                    if ($applyCondition) {
+                        $bonus += $stock->weight * $condition->value;
+                        $stock->bonusweight += $condition->value;
+                    }
                     break;
 
                 default:
@@ -417,6 +466,99 @@ class Model_Deliverer extends Model
     }
 
     /**
+     * Generates related records according to condition beans, if any.
+     *
+     * @param RedBean_OODBBean $csb
+     * @return bool
+     */
+    public function applyConditions($csb)
+    {
+        $this->bean->ownAppliedcondition = []; //clear this (sub-)deliveres applied conditions
+        $conditions = $this->bean->person->withCondition('doesnotaffectinvoice = 0')->ownCondition;
+        if (count($conditions) == 0) {
+            return false;
+        }
+        foreach ($conditions as $id => $condition) {
+            $appliedcondition = R::dispense('appliedcondition');
+            $appliedcondition->content = $condition->content;
+            $appliedcondition->value = $condition->value;
+
+            $applyCondition = false;
+
+            switch ($condition->label) {
+
+                case 'stockperitem':
+                    if ($condition->precondition == '' || $condition->precondition == 'none') {
+                        $appliedcondition->factor = $this->bean->piggery;
+                        $applyCondition = true;
+                    } else {
+                        if ($condition->precondition == 'weight') {
+                            if ($condition->comparison == 'gt') {
+                                $sql = "weight > ?";
+                            } else {
+                                $sql = "weight < ?";
+                            }
+                        } elseif ($condition->precondition == 'mfa') {
+                            if ($condition->comparison == 'gt') {
+                                $sql = "mfa > ?";
+                            } else {
+                                $sql = "mfa < ?";
+                            }
+                        }
+                        $appliedcondition->factor = R::count('stock', 'csb_id = ? AND supplier = ? AND ' . $sql, [
+                            $csb->getId(),
+                            $this->bean->supplier,
+                            $condition->cvalue
+                        ]);
+                        if ($appliedcondition->factor > 0) {
+                            $applyCondition = true;
+                        }
+                    }
+                    break;
+
+                case 'stockperweight':
+                    if ($condition->precondition == '' || $condition->precondition == 'none') {
+                        $appliedcondition->factor = $this->bean->totalweight;
+                        $applyCondition = true;
+                    } else {
+                        if ($condition->precondition == 'weight') {
+                            if ($condition->comparison == 'gt') {
+                                $sql = "weight > ?";
+                            } else {
+                                $sql = "weight < ?";
+                            }
+                        } elseif ($condition->precondition == 'mfa') {
+                            if ($condition->comparison == 'gt') {
+                                $sql = "mfa > ?";
+                            } else {
+                                $sql = "mfa < ?";
+                            }
+                        }
+                        $appliedcondition->factor = R::getCell('SUM(weight) AS sumweight FROM stock WHERE csb_id = ? AND supplier = ? AND ' . $sql, [
+                            $csb->getId(),
+                            $this->bean->supplier,
+                            $condition->cvalue
+                        ]);
+                        if ($appliedcondition->factor > 0) {
+                            $applyCondition = true;
+                        }
+                    }
+                    break;
+
+                default:
+                    // code...
+                    break;
+            }
+
+            if ($applyCondition) {
+                $appliedcondition->net = $appliedcondition->factor * $appliedcondition->value;
+                $this->bean->ownAppliedcondition[] = $appliedcondition;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Generates an invoice for this deliverer for the given slaughterday csb bean.
      *
      * @param $csb
@@ -444,6 +586,10 @@ class Model_Deliverer extends Model
         $this->bean->invoice->vat = $this->bean->person->vat;
         $this->bean->invoice->totalnet = $this->bean->totalnet;
         $bonusnet = 0;
+        foreach ($this->bean->ownAppliedcondition as $id => $appliedcondition) {
+            $bonusnet += $appliedcondition->net;
+        }
+        /*
         foreach ($this->bean->person->ownCondition as $id => $condition) {
             if ($condition->doesnotaffectinvoice) {
                 continue;
@@ -454,6 +600,7 @@ class Model_Deliverer extends Model
                 $bonusnet += $this->bean->totalweight * $condition->value;
             }
         }
+        */
         $costnet = 0;
         foreach ($this->bean->person->ownCost as $id => $cost) {
             if ($cost->label == 'stockperitem') {

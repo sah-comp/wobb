@@ -198,7 +198,9 @@ SQL;
                 $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
             }
             // if supplier has conditions that apply to invoices we add them here
+            /*
             $conditions = $person->withCondition(' doesnotaffectinvoice = 0 ')->ownCondition;
+            //$conditions = $supplier->ownAppliedcondition;
             foreach ($conditions as $id => $condition) {
                 $subAnalysisitem = R::dispense('analysisitem');
                 $subAnalysisitem->kind = 2;
@@ -222,7 +224,7 @@ SQL;
                 }
                 $subAnalysis->ownAnalysisitem[] = $subAnalysisitem;
             }
-
+            */
             $this->bean->ownAnalysis[] = $subAnalysis;
         }
         return true;

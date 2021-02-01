@@ -298,32 +298,22 @@
             </tr>
         </tfoot>
         <tbody>
-    <?php foreach ($conditions as $_id => $_condition): ?>
+            <?php foreach ($conditions as $_id => $_condition): ?>
             <tr>
                 <td colspan="2">
-                    <?php echo $_condition->content, ' ', I18n::__('condition_label_'.$_condition->label) ?>
+                    <?php echo $_condition->content ?>
                 </td>
                 <td class="number">
                     <?php echo $_condition->decimal('value', 3) ?>
                 </td>
                 <td class="number">
-                <?php if ($_condition->label == 'stockperitem'): ?>
-                    <?php
-                        $_value = $record->piggery * $_condition->value;
-                        echo $record->piggery;
-                    ?>
-                <?php elseif ($_condition->label == 'stockperweight'): ?>
-                    <?php
-                        $_value = $record->totalweight * $_condition->value;
-                        echo $record->decimal('totalweight', 2);
-                    ?>
-                <?php endif ?>
+                    <?php echo $_condition->decimal('factor', 2); ?>
                 </td>
                 <td class="number">
-                    <?php echo number_format($_value, 2, ',', '.') ?>
+                    <?php echo $_condition->decimal('net', 2); ?>
                 </td>
             </tr>
-    <?php endforeach ?>
+            <?php endforeach ?>
         </tbody>
     </table>
     <?php endif ?>

@@ -201,14 +201,14 @@ class Controller_Deliverer extends Controller
 
         if ($smtp = $this->record->invoice->company->smtp()) {
             $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
-			/**
-			 * uncomment this block to get verbose error logging in your error log file
-			 */
-			/*
-			$mail->Debugoutput = function($str, $level) {
-				error_log("debug level $level; message: $str");
-			};
-			*/
+            /**
+             * uncomment this block to get verbose error logging in your error log file
+             */
+            /*
+            $mail->Debugoutput = function($str, $level) {
+                error_log("debug level $level; message: $str");
+            };
+            */
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
             if ($smtp['auth']) {
@@ -216,28 +216,28 @@ class Controller_Deliverer extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
-			$mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Port = $smtp['port'];						  // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
-			
-			/**
-			 * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
-			 */
-			$mail->SMTPOptions = array(
-				'ssl' => array(
-					'verify_peer' => false,
-					'verify_peer_name' => false,
-					'allow_self_signed' => true
-				)
-			);
+
+            /**
+             * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
+             */
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
         }
 
         $mail->CharSet = 'UTF-8';
         //$mail->From = $this->record->invoice->company->emailnoreply;
         //$mail->FromName = $this->record->invoice->company->legalname;
-		$mail->setFrom($this->record->invoice->company->emailnoreply, $this->record->invoice->company->legalname);
-		$mail->addReplyTo($this->record->invoice->company->email, $this->record->invoice->company->legalname);
+        $mail->setFrom($this->record->invoice->company->emailnoreply, $this->record->invoice->company->legalname);
+        $mail->addReplyTo($this->record->invoice->company->email, $this->record->invoice->company->legalname);
         $mail->addAddress($this->record->person->email, $this->record->person->name);
         $mail->WordWarp = 50;
         $mail->isHTML(true);
@@ -258,13 +258,13 @@ class Controller_Deliverer extends Controller
         $attachment = $mpdf->Output('', 'S');
 
         $mail->addStringAttachment($attachment, $filename);
-		
-		if ($mail->send()) {
-			return true;
-		} else {
-			error_log($mail->ErrorInfo);
-			return false;
-		}
+
+        if ($mail->send()) {
+            return true;
+        } else {
+            error_log($mail->ErrorInfo);
+            return false;
+        }
     }
 
     /**
@@ -283,7 +283,7 @@ class Controller_Deliverer extends Controller
         Flight::render('deliverer/' . $this->layout, array(
             'record' => $this->record,
             'records' => $this->records,
-            'conditions' => $this->record->person->withCondition(" ( doesnotaffectinvoice IS NULL OR doesnotaffectinvoice = 0 ) ")->ownCondition,
+            'conditions' => $this->record->ownAppliedcondition,
             'costs' => $this->record->person->ownCost,
             'specialprices' => $this->record->with(" ORDER BY kind, piggery DESC ")->ownSpecialprice,
             'nonqs' => false,
