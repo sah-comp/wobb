@@ -1,4 +1,4 @@
-<?php 
+<?php
 Flight::setlocale();
 ?>
 <article class="main">
@@ -14,7 +14,7 @@ Flight::setlocale();
         method="POST"
         accept-charset="utf-8"
         enctype="multipart/form-data">
-        
+
         <!-- form details -->
         <fieldset
             class="tab">
@@ -44,24 +44,27 @@ Flight::setlocale();
                 </div>
             </div>
             <?php foreach ($records as $_id => $_record):
-				$ts = strtotime( $_record->pubdate );
-			?>
+                $ts = strtotime($_record->pubdate);
+            ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('purchase_history_item_legend') ?></legend>
                 <a
                     href="<?php echo Url::build(sprintf('/purchase/calculation/%d', $_record->getId())) ?>">
                     <div class="row">
                         <div class="span1">
-                            <?php echo strftime( "%V", $ts) ?>
+                            <?php echo strftime("%V", $ts) ?>
                         </div>
                         <div class="span2">
-                            <?php echo strftime( "%a, %e. %b", $ts) ?>
+                            <?php echo strftime("%a, %e. %b", $ts) ?>
                         </div>
                         <div class="span1 number">
                             <?php echo $_record->piggery ?>
                         </div>
-                        <div class="span2 number">
-                            <?php echo $_record->decimal('baseprice', 3) ?>
+                        <div class="span1 number">
+                            <?php echo $_record->decimal('baseprice', 2) ?>
+                        </div>
+                        <div class="span1 number">
+                            <?php echo $_record->decimal('nextweekprice', 2) ?>&nbsp;
                         </div>
                         <div class="span3">
                             <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
@@ -70,7 +73,7 @@ Flight::setlocale();
                             <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, array(htmlspecialchars($_record->hasStockThatNeedsAttention()))) : "&nbsp;" ?>
                         </div>
                         <div class="span1 number">
-                            <?php if ( $_record->wasCalculated() ): ?>
+                            <?php if ($_record->wasCalculated()): ?>
                                 &nbsp;
                             <?php else: ?>
                                 <a
@@ -86,7 +89,7 @@ Flight::setlocale();
             <?php endforeach ?>
         </fieldset>
         <!-- end of form details -->
-        
+
         <!-- Purchase buttons -->
         <div class="buttons">
             <input
