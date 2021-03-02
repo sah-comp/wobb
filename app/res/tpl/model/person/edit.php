@@ -128,7 +128,8 @@ $stats = $record->ownStat;
 		<div class="span3">
 	        <select
 	            id="person-pricing"
-	            name="dialog[pricing_id]">
+	            name="dialog[pricing_id]"
+                required="required">
 	            <option value=""><?php echo I18n::__('person_pricing_please_select') ?></option>
 	            <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing): ?>
 	            <option
@@ -140,7 +141,8 @@ $stats = $record->ownStat;
  	   <div class="span3">
 	        <select
 	            id="person-vat"
-	            name="dialog[vat_id]">
+	            name="dialog[vat_id]"
+                required="required">
 	            <option value=""><?php echo I18n::__('person_vat_please_select') ?></option>
 	            <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
 	            <option

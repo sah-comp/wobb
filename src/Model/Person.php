@@ -183,6 +183,7 @@ class Model_Person extends Model
     {
         $this->autoTag(true);
         $this->autoInfo(true);
+        $this->timeforpay = 0;
         $this->addConverter('relsprice', array(
             new Converter_Decimal()
         ));
