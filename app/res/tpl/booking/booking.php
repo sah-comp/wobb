@@ -33,8 +33,9 @@ $_items_per_page = 2;
         }
         div.square {
             padding: 25mm 0 10mm 0;
-            border-top: 0.1mm solid dashed;
-            border-bottom: 0.1mm solid dashed;
+            border: 0;
+            border-top: 1px solid dotted;
+            border-bottom: 1px solid dotted;
         }
         caption {
             font-weight: bold;
@@ -68,6 +69,7 @@ $_items_per_page = 2;
         $_item++;
 ?>
     <div class="square">
+
     <table width="100%" class="inbetween">
         <thead>
             <tr>
@@ -114,6 +116,7 @@ $_items_per_page = 2;
             </tr>
         </tbody>
     </table>
+
     </div>
 <?php
         if ($_item == $_items_per_page):

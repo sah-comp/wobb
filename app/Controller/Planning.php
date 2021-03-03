@@ -171,12 +171,13 @@ class Controller_Planning extends Controller
         $pubdate = $this->record->localizedDate('pubdate');
         $filename = I18n::__('planning_filename', null, [$pubdate]);
         $title = I18n::__('planning_docname', null, [$pubdate]);
-        $mpdf = new mPDF('c', 'A4');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('planning/' . $layout, [
+            'language' => Flight::get('language'),
             'record' => $this->record,
             'pubdate' => $pubdate
         ]);

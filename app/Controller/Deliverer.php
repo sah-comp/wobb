@@ -275,7 +275,7 @@ class Controller_Deliverer extends Controller
      */
     private function generatePDF($docname = 'invoice')
     {
-        $mpdf = new mPDF('c', 'A4');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($docname);
         $mpdf->SetAuthor($this->record->invoice->company->legalname);
         $mpdf->SetDisplayMode('fullpage');

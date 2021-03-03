@@ -131,12 +131,13 @@ class Controller_Analysis extends Controller
         $enddate = $this->record->localizedDate('enddate');
         $filename = I18n::__('analysis_filename', null, array($startdate));
         $title = I18n::__('analysis_docname', null, array($startdate));
-        $mpdf = new mPDF('c', 'A4');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('analysis/print', array(
+            'language' => Flight::get('language'),
             'record' => $this->record,
             'startdate' => $startdate,
             'enddate' => $enddate
@@ -159,12 +160,13 @@ class Controller_Analysis extends Controller
         $enddate = $this->record->localizedDate('enddate');
         $filename = I18n::__('analysis_filename', null, array($startdate));
         $title = I18n::__('analysis_docname', null, array($startdate));
-        $mpdf = new mPDF('c', 'A4');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('analysis/print_overview', array(
+            'language' => Flight::get('language'),
             'record' => $this->record,
             'startdate' => $startdate,
             'enddate' => $enddate

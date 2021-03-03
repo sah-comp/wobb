@@ -32,44 +32,44 @@ class Model_Pricing extends Model
         //$stock->disagio = 0;
         $optimalWeightMargin = $this->getOptimalMargin('weight');
         $mfaMarginKind = 'mfa'; // use mfa kind for mfa margins
-        if ( ($stock->weight >= $optimalWeightMargin->lo AND
-              $stock->weight <= $optimalWeightMargin->hi ) ) {
+        if (($stock->weight >= $optimalWeightMargin->lo and
+              $stock->weight <= $optimalWeightMargin->hi)) {
             // optimal weight
-        } else if ( $stock->weight < $optimalWeightMargin->lo ) {
+        } elseif ($stock->weight < $optimalWeightMargin->lo) {
             // underweight
             $mfaMarginKind = 'mfasub'; // we have a underweight stock, use mfasub
             $lowerWeights = $this->getLowerMargins('weight', $optimalWeightMargin);
-            foreach ( $lowerWeights as $id => $lowerWeight ) {
+            foreach ($lowerWeights as $id => $lowerWeight) {
                 $this->calculateAgioDisagoLo('weight', $stock, $lowerWeight);
             }
-        } else if ( $stock->weight > $optimalWeightMargin->hi ) {
+        } elseif ($stock->weight > $optimalWeightMargin->hi) {
             // overweight
             $overWeights = $this->getOverMargins('weight', $optimalWeightMargin);
-            foreach ( $overWeights as $id => $overWeight ) {
+            foreach ($overWeights as $id => $overWeight) {
                 $this->calculateAgioDisagoHi('weight', $stock, $overWeight);
             }
         }
         // calculate mfa margins, using either mfa or mfasub if the stock is underweight
         $optimalMfaMargin = $this->getOptimalMargin($mfaMarginKind); // can be 'mfa' or 'mfasub'
-        if ( ($stock->mfa >= $optimalMfaMargin->lo AND
-              $stock->mfa <= $optimalMfaMargin->hi ) ) {
+        if (($stock->mfa >= $optimalMfaMargin->lo and
+              $stock->mfa <= $optimalMfaMargin->hi)) {
             // optimal mfa
-        } else if ( $stock->mfa < $optimalMfaMargin->lo ) {
+        } elseif ($stock->mfa < $optimalMfaMargin->lo) {
             // mfa lower than optimal
             $lowerMfas = $this->getLowerMargins($mfaMarginKind, $optimalMfaMargin);
-            foreach ( $lowerMfas as $id => $lowerMfa ) {
+            foreach ($lowerMfas as $id => $lowerMfa) {
                 $this->calculateAgioDisagoLo('mfa', $stock, $lowerMfa);
             }
-        } else if ( $stock->mfa > $optimalMfaMargin->hi ) {
+        } elseif ($stock->mfa > $optimalMfaMargin->hi) {
             // mfa higher than optimal
             $overMfas = $this->getOverMargins($mfaMarginKind, $optimalMfaMargin);
-            foreach ( $overMfas as $id => $overMfa ) {
+            foreach ($overMfas as $id => $overMfa) {
                 $this->calculateAgioDisagoHi('mfa', $stock, $overMfa);
             }
-        }      
+        }
         return true;
     }
-    
+
     /**
      * Calculates a difference and adjusts agio and disagion of the given stock when stock is low.
      *
@@ -78,23 +78,20 @@ class Model_Pricing extends Model
      * @param $margin
      * @return float
      */
-    public function calculateAgioDisagoLo($field = 'mfa', $stock, $margin)
+    public function calculateAgioDisagoLo($field, $stock, $margin)
     {
-        $diff = 0;        
-        if ( $margin->op == '-') {
-            if ( $stock->$field < $margin->lo ) {
+        $diff = 0;
+        if ($margin->op == '-') {
+            if ($stock->$field < $margin->lo) {
                 $diff = $margin->hi - $margin->lo;
-            }
-            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+            } elseif ($stock->$field >= $margin->lo && $stock->$field <= $margin->hi) {
                 $diff = $margin->hi - $stock->$field;
             }
             $stock->disagio += $diff * $margin->value;
-        }
-        elseif ( $margin->op == '+') {
-            if ( $stock->$field > $margin->hi ) {
+        } elseif ($margin->op == '+') {
+            if ($stock->$field > $margin->hi) {
                 $diff = $margin->hi - $margin->lo;
-            }
-            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+            } elseif ($stock->$field >= $margin->lo && $stock->$field <= $margin->hi) {
                 $diff = $margin->hi - $stock->$field;
             }
             $stock->agio += $diff * $margin->value;
@@ -110,23 +107,20 @@ class Model_Pricing extends Model
      * @param $margin
      * @return float
      */
-    public function calculateAgioDisagoHi($field = 'mfa', $stock, $margin)
+    public function calculateAgioDisagoHi($field, $stock, $margin)
     {
-        $diff = 0;        
-        if ( $margin->op == '-') {
-            if ( $stock->$field > $margin->hi ) {
+        $diff = 0;
+        if ($margin->op == '-') {
+            if ($stock->$field > $margin->hi) {
                 $diff = $margin->hi - $margin->lo;
-            }
-            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+            } elseif ($stock->$field >= $margin->lo && $stock->$field <= $margin->hi) {
                 $diff = $stock->$field - $margin->lo;
             }
             $stock->disagio += $diff * $margin->value;
-        }
-        elseif ( $margin->op == '+') {
-            if ( $stock->$field > $margin->hi ) {
+        } elseif ($margin->op == '+') {
+            if ($stock->$field > $margin->hi) {
                 $diff = $margin->hi - $margin->lo;
-            }
-            else if ( $stock->$field >= $margin->lo && $stock->$field <= $margin->hi ) {
+            } elseif ($stock->$field >= $margin->lo && $stock->$field <= $margin->hi) {
                 $diff = $stock->$field - $margin->lo;
             }
             $stock->agio += $diff * $margin->value;
@@ -134,7 +128,7 @@ class Model_Pricing extends Model
         return (float)$diff;
     }
 
-    
+
     /**
      * Returns a margin bean which holds the values for a optimal mfa stock.
      *
@@ -148,7 +142,7 @@ class Model_Pricing extends Model
         ))->ownMargin;
         return reset($margins);
     }
-    
+
     /**
      * Returns an array with margin beans that have lower mfa compared to given optimal mfa margin.
       *
@@ -156,12 +150,12 @@ class Model_Pricing extends Model
       * @param $optimalMargin
       * @return array
       */
-     public function getLowerMargins($kind = 'mfa', $optimalMargin)
+    public function getLowerMargins($kind, $optimalMargin)
     {
         $margins = $this->bean->withCondition(" kind = ? AND lo < ? AND op != '=' ORDER BY lo DESC ", array($kind, $optimalMargin->lo))->ownMargin;
         return $margins;
     }
-    
+
     /**
      * Returns an array with margin beans that have over mfa compared to given optimal mfa margin.
      *
@@ -169,7 +163,7 @@ class Model_Pricing extends Model
      * @param $optimalMargin
      * @return array
      */
-    public function getOverMargins($kind = 'mfa', $optimalMargin)
+    public function getOverMargins($kind, $optimalMargin)
     {
         $margins = $this->bean->withCondition(" kind = ? AND hi > ? AND op != '=' ORDER BY lo ASC ", array($kind, $optimalMargin->hi))->ownMargin;
         return $margins;
@@ -204,11 +198,11 @@ class Model_Pricing extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
-    
+
     /**
      * Dispense.
      */

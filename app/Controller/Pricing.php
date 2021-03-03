@@ -75,7 +75,7 @@ class Controller_Pricing extends Controller
      */
     private function generatePDF($docname = 'pricing')
     {
-        $mpdf = new mPDF('c', 'A4');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($docname);
         $mpdf->SetAuthor('Current User');
         $mpdf->SetDisplayMode('fullpage');

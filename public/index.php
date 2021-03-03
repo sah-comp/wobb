@@ -12,7 +12,7 @@
 /**
  * RedbeanPHP Version 5.5.
  */
-require __DIR__ . '/../lib/redbean/rb-5.5.php';
+require __DIR__ . '/../lib/redbean/rb-mysql.php';
 require __DIR__ . '/../lib/redbean/Plugin/Cooker.php';
 
 /**
