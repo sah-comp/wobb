@@ -621,6 +621,14 @@ SQL;
                 $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
                 $deliverer->sprice = $this->bean->baseprice + $deliverer->person->relsprice;
             }
+            // if person has set a fixed service price we use that. It will override previous price settings
+            if ($deliverer->person->fixsprice) {
+                $deliverer->sprice = $deliverer->person->fixsprice;
+            }
+            // if person has set a fixed dealer price we use that. It will override previous price settings
+            if ($deliverer->person->fixdprice) {
+                $deliverer->dprice = $deliverer->person->fixdprice;
+            }
             $deliverer->qspiggery = R::getCell($sqlqsd, array(
                 ':csb_id' => $this->bean->getId(),
                 ':supplier' => $deliverer->supplier

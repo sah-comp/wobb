@@ -25,6 +25,8 @@ class Model_Stat extends Model
         $this->stamp = time();
         $this->addConverter('relsprice', new Converter_Decimal());
         $this->addConverter('reldprice', new Converter_Decimal());
+        $this->addConverter('fixsprice', new Converter_Decimal());
+        $this->addConverter('fixdprice', new Converter_Decimal());
     }
 
     /**

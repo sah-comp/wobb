@@ -496,6 +496,23 @@ $stats = $record->ownStat;
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_baseprice_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
+		    <input
+		        type="hidden"
+		        name="dialog[nextweekprice]"
+		        value="0" />
+		    <input
+		        id="person-nextweekprice"
+		        type="checkbox"
+		        name="dialog[nextweekprice]"
+		        <?php echo ($record->nextweekprice) ? 'checked="checked"' : '' ?>
+		        value="1" />
+		    <label
+		        for="person-nextweekprice"
+		        class="cb">
+		        <?php echo I18n::__('person_label_nextweekprice') ?>
+		    </label>
+		</div>
         <div class="row <?php echo ($record->hasError('relsprice')) ? 'error' : ''; ?>">
             <label
                 for="person-relsprice">
@@ -522,23 +539,32 @@ $stats = $record->ownStat;
                 value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
             <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
         </div>
-		<div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
-		    <input
-		        type="hidden"
-		        name="dialog[nextweekprice]"
-		        value="0" />
-		    <input
-		        id="person-nextweekprice"
-		        type="checkbox"
-		        name="dialog[nextweekprice]"
-		        <?php echo ($record->nextweekprice) ? 'checked="checked"' : '' ?>
-		        value="1" />
-		    <label
-		        for="person-nextweekprice"
-		        class="cb">
-		        <?php echo I18n::__('person_label_nextweekprice') ?>
-		    </label>
-		</div>
+        <div class="row <?php echo ($record->hasError('fixsprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-fixsprice">
+                <?php echo I18n::__('person_label_fixsprice') ?>
+            </label>
+            <input
+                id="person-fixsprice"
+                type="text"
+                class="number"
+                name="dialog[fixsprice]"
+                value="<?php echo htmlspecialchars($record->decimal('fixsprice', 3)) ?>" />
+            <p class="info"><?php echo I18n::__('person_info_fixsprice') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('fixdprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-fixdprice">
+                <?php echo I18n::__('person_label_fixdprice') ?>
+            </label>
+            <input
+                id="person-fixdprice"
+                type="text"
+                class="number"
+                name="dialog[fixdprice]"
+                value="<?php echo htmlspecialchars($record->decimal('fixdprice', 3)) ?>" />
+            <p class="info"><?php echo I18n::__('person_info_fixdprice') ?></p>
+        </div>
         <div class="row <?php echo ($record->hasError('noterelprice')) ? 'error' : ''; ?>">
             <label
                 for="person-noterelprice">
@@ -556,14 +582,20 @@ $stats = $record->ownStat;
             <div class="span3">
                 <label><?php echo I18n::__('baseprice_history_headline') ?></label>
             </div>
-            <div class="span3">
+            <div class="span5">
                 <label><?php echo I18n::__('baseprice_history_date') ?></label>
             </div>
-            <div class="span3">
+            <div class="span1">
                 <label class="number"><?php echo I18n::__('baseprice_history_relsprice') ?></label>
             </div>
-            <div class="span3">
+            <div class="span1">
                 <label class="number"><?php echo I18n::__('baseprice_history_reldprice') ?></label>
+            </div>
+            <div class="span1">
+                <label class="number"><?php echo I18n::__('baseprice_history_fixsprice') ?></label>
+            </div>
+            <div class="span1">
+                <label class="number"><?php echo I18n::__('baseprice_history_fixdprice') ?></label>
             </div>
         </div>
         <?php foreach ($stats as $_id => $_stat): ?>
@@ -571,25 +603,39 @@ $stats = $record->ownStat;
             <div class="span3">
                 &nbsp;
             </div>
-            <div class="span3">
+            <div class="span5">
                 <input
                     type="text"
                     disabled="disabled"
                     value="<?php echo htmlspecialchars(date('d.m.Y H:i', $_stat->stamp)) ?>" />
             </div>
-            <div class="span3">
+            <div class="span1">
                 <input
                     type="text"
                     class="number"
                     disabled="disabled"
                     value="<?php echo htmlspecialchars($_stat->decimal('relsprice')) ?>" />
             </div>
-            <div class="span3">
+            <div class="span1">
                 <input
                     type="text"
                     class="number"
                     disabled="disabled"
                     value="<?php echo htmlspecialchars($_stat->decimal('reldprice')) ?>" />
+            </div>
+            <div class="span1">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('fixsprice')) ?>" />
+            </div>
+            <div class="span1">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('fixdprice')) ?>" />
             </div>
         </div>
         <?php endforeach; ?>
