@@ -34,8 +34,8 @@ $_items_per_page = 2;
         div.square {
             padding: 25mm 0 10mm 0;
             border: 0;
-            border-top: 1px solid dotted;
-            border-bottom: 1px solid dotted;
+            border-top: 1px dashed #000000;
+            border-bottom: 1px dashed #000000;
         }
         caption {
             font-weight: bold;
@@ -48,13 +48,13 @@ $_items_per_page = 2;
             text-align: left;
         }
         td.bt {
-            border-top: 0.1mm solid #000000;
+            border-top: 1px solid #000000;
         }
         td.br {
-            border-right: 0.1mm solid #000000;
+            border-right: 1px solid #000000;
         }
         td.bb {
-            border-bottom: 0.1mm solid #000000;
+            border-bottom: 1px solid #000000;
         }
         th.number,
         td.number {
