@@ -112,7 +112,7 @@ class Model_Lanuv extends Model
      */
     public function getSql($fields = 'id', $where = '1', $order = null, $offset = null, $limit = null)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
 		SELECT
 		    {$fields}
 		FROM
@@ -157,7 +157,7 @@ SQL;
     {
         $this->bean->ownLanuvitem = array();
         $summary = $this->getSummaryTotal($lowerMargin, $upperMargin);
-        if ( $summary['piggery'] == 0 ) {
+        if ($summary['piggery'] == 0) {
             throw new Exception('Grand total piggery is zero.');
         }
         $this->copyFromSummary(null, $this->bean, $summary, $summary['piggery']);
@@ -218,7 +218,7 @@ SQL;
         //$bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
         $bean->piggery = $summary['piggery'];
-        if ( $total != 0) {
+        if ($total != 0) {
             $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
         } else {
             $bean->piggerypercentage = 0;
@@ -244,7 +244,7 @@ SQL;
      */
     public function getSummaryTotal($margin_lo, $margin_hi)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -283,7 +283,7 @@ SQL;
      */
     public function getSummaryQuality($quality, $margin_lo, $margin_hi)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -321,7 +321,7 @@ SQL;
      */
     public function getSummaryNonQuality($quality)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             count(id) as piggery,
             sum(weight) as sumweight,
@@ -356,7 +356,7 @@ SQL;
      */
     public function markAsReportedNoWeight(array $qualities)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         UPDATE stock
         SET lanuvreported = 1
         WHERE
@@ -383,7 +383,7 @@ SQL;
      */
     public function markAsReportedWeight(array $qualities, $margin_lo, $margin_hi)
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         UPDATE stock
         SET lanuvreported = 1
         WHERE
@@ -402,36 +402,36 @@ SQL;
             ':hi' => $margin_hi
         ));
     }
-	
-	/**
-	 * Returns the string "sent" when the report was sent successfully to LANUV by email.
-	 */
-	public function wasSent()
-	{
-		if ($this->bean->sent) {
-			return "sent";
-		}
-		return '';
-	}
-	
-	/**
-	 * Return a string representing the status of the lanuv bean.
-	 * The bean could be dirty, that is some re-calculation changed the data and
-	 * the lanuv bean has to be recalculated.
-	 * The lanuv bean may not yet have been sent by e-mail to LANUV which is mandatory
-	 * from May 2020 on.
-	 */
-	public function getStatus()
-	{
-		$status = [];
-		if ($this->bean->dirty) {
-			$status[] = I18n::__('lanuv_isdirty');
-		}
-		if ( !$this->bean->sent) {
-			$status[] = I18n::__('lanuv_not_yet_sent');
-		}
-		return implode(', ', $status);
-	}
+
+    /**
+     * Returns the string "sent" when the report was sent successfully to LANUV by email.
+     */
+    public function wasSent()
+    {
+        if ($this->bean->sent) {
+            return "sent";
+        }
+        return '';
+    }
+
+    /**
+     * Return a string representing the status of the lanuv bean.
+     * The bean could be dirty, that is some re-calculation changed the data and
+     * the lanuv bean has to be recalculated.
+     * The lanuv bean may not yet have been sent by e-mail to LANUV which is mandatory
+     * from May 2020 on.
+     */
+    public function getStatus()
+    {
+        $status = [];
+        if ($this->bean->dirty) {
+            $status[] = I18n::__('lanuv_isdirty');
+        }
+        if (!$this->bean->sent) {
+            $status[] = I18n::__('lanuv_not_yet_sent');
+        }
+        return implode(', ', $status);
+    }
 
     /**
      * Export the calendar week of slaughtered stock as csv.
@@ -439,65 +439,77 @@ SQL;
     public function exportWeekAsCsv()
     {
         $stock = $this->bean->getStock();
-		$filename = I18n::__('lanuv_weekascsv_filename', null, array($this->bean->weekOfYear()));
-        require_once '../app/lib/parsecsv.lib.php';
-        $csv = new parseCSV();
-		$csv->encoding('UTF-8', 'UTF-8');
-		$csv->delimiter = ";";
-		$csv->output_delimiter = ";";
-		$csv->linefeed = "\r\n";
-		$csv->heading = false;
-		$csv->data = $stock;
+        $filename = I18n::__('lanuv_weekascsv_filename', null, array($this->bean->weekOfYear()));
+        //require_once '../app/lib/parsecsv.lib.php';
+        //$csv = new parseCSV();
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding('UTF-8', 'UTF-8');
+        $csv->delimiter = ";";
+        $csv->output_delimiter = ";";
+        $csv->linefeed = "\r\n";
+        $csv->titles = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'
+        ];
+        $csv->heading = false;
+        $csv->data = $stock;
         $csv->output($filename);
     }
-	
-	/**
-	 * Returns a csv object with the lanuv weekly statistics.
-	 *
-	 * @return parseCSV
-	 */
-	public function exportAsCsv()
-	{
-        require_once '../app/lib/parsecsv.lib.php';
-        $csv = new parseCSV();
-		$csv->encoding('UTF-8', 'ISO-8859-1');
-		$csv->delimiter = ";";
-		$csv->output_delimiter = ";";
-		$csv->linefeed = "\r\n";
-		$csv->heading = false;
-		$csv->data = $this->bean->generateLanuvStatsAsCsv();
-		return $csv;
-	}
+
+    /**
+     * Returns a csv object with the lanuv weekly statistics.
+     *
+     * @return parseCSV
+     */
+    public function exportAsCsv()
+    {
+        //require_once '../app/lib/parsecsv.lib.php';
+        //$csv = new parseCSV();
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding('UTF-8', 'ISO-8859-1');
+        $csv->delimiter = ";";
+        $csv->output_delimiter = ";";
+        $csv->linefeed = "\r\n";
+        $csv->titles = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'
+        ];
+        $csv->heading = false;
+        $csv->data = $this->bean->generateLanuvStatsAsCsv();
+        return $csv;
+    }
 
     /**
      * Returns an array with lanuvitem beans as array to be used with csv parse lib.
-	 *
-	 * @see https://meldfleisch.ble.de/docs/Datensatz-HB-3.2.pdf
+     *
+     * @see https://meldfleisch.ble.de/docs/Datensatz-HB-3.2.pdf
      *
      * @return array
      */
     public function generateLanuvStatsAsCsv()
     {
-		$data = [];
-        foreach ( $this->bean->with(' ORDER BY id ')->ownLanuvitem as $id => $item ) {
-            if ( $item->piggery == 0 ) continue; //skip when no piggies are in da house :-)
-			$data[] = [
-				'A' => '20',
-				'B' => date('d.m.Y', strtotime($this->bean->startdate)),
-				'C' => $this->bean->company->county,
-				'D' => $this->bean->company->region,
-				'E' => $this->bean->company->subpart,
-				'F' => 'Schweine',
-				'G' => 'SW',
-				'H' => $item->quality,
-				'I' => '',
-				'J' => '1',
-				'K' => '1',
-				'L' => $item->piggery,
-				'M' => round($item->sumweight, 0),
-				'N' => round(round($item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP), 0),
-				'O' => round(round($item->avgmfa * 10, 1, PHP_ROUND_HALF_UP ), 0)
-			];
+        $data = [];
+        foreach ($this->bean->with(' ORDER BY id ')->ownLanuvitem as $id => $item) {
+            if ($item->piggery == 0) {
+                continue;
+            } //skip when no piggies are in da house :-)
+            $line = [
+                'A' => '20',
+                'B' => date('d.m.Y', strtotime($this->bean->startdate)),
+                'C' => $this->bean->company->county,
+                'D' => $this->bean->company->region,
+                'E' => $this->bean->company->subpart,
+                'F' => 'Schweine',
+                'G' => 'SW',
+                'H' => $item->quality,
+                'I' => '',
+                'J' => '1',
+                'K' => '1',
+                'L' => $item->piggery,
+                'M' => round($item->sumweight, 0),
+                'N' => round(round($item->avgpricelanuv * 100, 2, PHP_ROUND_HALF_UP), 0),
+                'O' => round(round($item->avgmfa * 10, 1, PHP_ROUND_HALF_UP), 0)
+            ];
+            error_log(implode(";", $line));
+            $data[] = $line;
         }
         return $data;
     }
@@ -509,7 +521,7 @@ SQL;
      */
     public function getStock()
     {
-		$sql = <<<SQL
+        $sql = <<<SQL
         SELECT
             stock.pubdate,
             stock.name AS sname,
