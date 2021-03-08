@@ -198,8 +198,6 @@ class Controller_Statistic extends Controller
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
         $filename = I18n::__('lanuv_csv_filename', null, array($this->record->weekOfYear()));
-        //$docname = I18n::__('lanuv_csv_docname', null, array($this->record->weekOfYear()));
-
         $csv = $this->record->exportAsCsv();
         $csv->output($filename);
         exit;
@@ -216,7 +214,7 @@ class Controller_Statistic extends Controller
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 
         if ($smtp = $this->record->company->smtp()) {
-            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
+            $mail->SMTPDebug = 4; // Set debug mode, 1 = err/msg, 2 = msg
             /**
              * uncomment this block to get verbose error logging in your error log file
              */

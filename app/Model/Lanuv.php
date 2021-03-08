@@ -440,8 +440,6 @@ SQL;
     {
         $stock = $this->bean->getStock();
         $filename = I18n::__('lanuv_weekascsv_filename', null, array($this->bean->weekOfYear()));
-        //require_once '../app/lib/parsecsv.lib.php';
-        //$csv = new parseCSV();
         $csv = new \ParseCsv\Csv();
         $csv->encoding('UTF-8', 'UTF-8');
         $csv->delimiter = ";";
@@ -462,8 +460,6 @@ SQL;
      */
     public function exportAsCsv()
     {
-        //require_once '../app/lib/parsecsv.lib.php';
-        //$csv = new parseCSV();
         $csv = new \ParseCsv\Csv();
         $csv->encoding('UTF-8', 'ISO-8859-1');
         $csv->delimiter = ";";
