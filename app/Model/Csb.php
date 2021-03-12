@@ -539,7 +539,7 @@ SQL;
                 continue;
             }
             $stock = R::dispense('stock');
-            $stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
+            //$stock->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
             $stock->import($this->bean->csbformat->exportFromCSB($this->bean->company, $line));
 
             if ($stock->pubdate != $this->bean->pubdate) {
@@ -549,6 +549,9 @@ SQL;
             $stock->lanuvreported = 0;
             $stock->billnumber = 0;
             $stock->person = $stock->getPersonBySupplier();
+            if (!$stock->person->getId()) {
+                throw new Exception_UnknownSupplier($stock->supplier);
+            }
 
             $this->bean->ownStock[] = $stock;
             $this->bean->piggery++;
