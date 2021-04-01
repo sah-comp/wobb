@@ -25,40 +25,40 @@ class Controller_Invoice extends Controller
     public $javascripts = array(
         '/js/tk'
     );
-    
+
     /**
      * Holds the base url
      */
-    public  $base_url = '/invoice';
-    
+    public $base_url = '/invoice';
+
     /**
      * Holds the layout to render.
      *
      * @var string
      */
     public $layout = 'index';
-    
+
     /**
      * Container for the current csb bean.
      *
      * @var Model_Csb
      */
     public $record;
-    
+
     /**
      * Container for the current collection of csb beans.
      *
      * @var array
      */
     public $records = array();
-    
+
     /**
      * Container for the totals of the current selection.
      *
      * @var array
      */
     public $totals = array();
-    
+
     /**
      * Constructs a new Purchase controller.
      *
@@ -68,18 +68,18 @@ class Controller_Invoice extends Controller
     {
         session_start();
         Auth::check();
-        if ( ! isset($_SESSION['invoice'])) {
+        if (! isset($_SESSION['invoice'])) {
             $_SESSION['invoice'] = array(
                 'fy' => Flight::setting()->fiscalyear,
                 'lo' => $this->getLowestInvoiceNumber(),
                 'hi' => $this->getHighestInvoiceNumber(),
                 'deliverer' => null
-                
+
             );
         }
         $this->record = R::load('invoice', $id);
     }
-    
+
     /**
      * Clear the filter and start over.
      */
@@ -89,7 +89,7 @@ class Controller_Invoice extends Controller
         unset($_SESSION['invoice']);
         $this->redirect('/invoice/index');
     }
-    
+
     /**
      * Returns the lowest invoice number of the current fiscal year.
      *
@@ -100,14 +100,14 @@ class Controller_Invoice extends Controller
         $low = R::getCell(" SELECT min(name) FROM invoice WHERE fy = ? AND MONTH(dateofslaughter) = MONTH(CURRENT_DATE())", array(
             Flight::setting()->fiscalyear
         ));
-		if ( ! $low) {
-			$low = R::getCell(" SELECT name FROM invoice WHERE fy = ? ORDER BY dateofslaughter DESC LIMIT 1", array(
-				Flight::setting()->fiscalyear
-			));
-		}
-		return $low;
+        if (! $low) {
+            $low = R::getCell(" SELECT name FROM invoice WHERE fy = ? ORDER BY dateofslaughter DESC LIMIT 1", array(
+                Flight::setting()->fiscalyear
+            ));
+        }
+        return $low;
     }
-    
+
     /**
      * Returns the highest invoice number of the current fiscal year.
      *
@@ -119,7 +119,7 @@ class Controller_Invoice extends Controller
             Flight::setting()->fiscalyear
         ));
     }
-    
+
     /**
      * Cancelation of this invoice.
      *
@@ -166,7 +166,7 @@ class Controller_Invoice extends Controller
         $this->getCollection();
         $this->render();
     }
-    
+
     /**
      * Find all records according to filter settings.
      *
@@ -189,13 +189,13 @@ class Controller_Invoice extends Controller
         ));
         return null;
     }
-    
+
     /**
      * Toggle paid attribute.
      */
     public function payment()
     {
-        if ( $this->record->paid ) {
+        if ($this->record->paid) {
             $this->record->paid = 0;
         } else {
             $this->record->paid = 1;
@@ -205,7 +205,7 @@ class Controller_Invoice extends Controller
             'record' => $this->record
         ));
     }
-    
+
     /**
      * Generates an PDF using mPDF library and downloads it to the client.
      *
@@ -215,9 +215,9 @@ class Controller_Invoice extends Controller
     {
         $this->getCollection('ASC');
         $this->record = reset($this->records);
-		$fy = $_SESSION['invoice']['fy'];
-		$lo = $_SESSION['invoice']['lo'];
-		$hi = $_SESSION['invoice']['hi'];
+        $fy = $_SESSION['invoice']['fy'];
+        $lo = $_SESSION['invoice']['lo'];
+        $hi = $_SESSION['invoice']['hi'];
         $filename = I18n::__('invoice_filename', null, array(
             $fy,
             $lo,
@@ -228,39 +228,40 @@ class Controller_Invoice extends Controller
             $lo,
             $hi
         ));
-        $mpdf = new mPDF('c', 'A4-L');
+        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4-L']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('pdf/invoice', array(
-			'company_name' => $this->record->company->legalname,
-			'pdf_headline' => I18n::__('invoice_text_header', null, [$fy, $lo, $hi]),
+            'company_name' => $this->record->company->legalname,
+            'language' => Flight::get('language'),
+            'pdf_headline' => I18n::__('invoice_text_header', null, [$fy, $lo, $hi]),
             'record' => $this->record,
             'records' => $this->records,
             'totals' => $this->totals
         ));
         $html = ob_get_contents();
         ob_end_clean();
-        $mpdf->WriteHTML( $html );
+        $mpdf->WriteHTML($html);
         $mpdf->Output($filename, 'D');
         exit;
     }
-    
+
     /**
      * Renders the current layout.
      */
     protected function render()
     {
         Flight::render('shared/notification', array(), 'notification');
-	    //
+        //
         Flight::render('shared/navigation/account', array(), 'navigation_account');
-		Flight::render('shared/navigation/main', array(), 'navigation_main');
+        Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('invoice/toolbar', array(
         ), 'toolbar');
-		Flight::render('shared/header', array(), 'header');
-		Flight::render('shared/footer', array(), 'footer');
+        Flight::render('shared/header', array(), 'header');
+        Flight::render('shared/footer', array(), 'footer');
         Flight::render('invoice/'.$this->layout, array(
             'record' => $this->record,
             'records' => $this->records
