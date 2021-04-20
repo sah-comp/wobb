@@ -1,7 +1,6 @@
 /**
  * Extras for TK
  */
- 
 body {
     background-color: rgb(249, 249, 249);
 }
@@ -14,7 +13,9 @@ body {
     height: 100%;
 }
 
-.not-yet-implemented h1 { display: none; }
+.not-yet-implemented h1 {
+    display: none;
+}
 
 .chart-line {
     visibility: hidden;
@@ -37,8 +38,8 @@ body {
 .plan-info,
 .lanuv-info,
 .analysis-info {
-	font-size: small;
-	color: gray;
+    font-size: small;
+    color: gray;
 }
 
 a.toggle {
@@ -71,14 +72,14 @@ a.toggle.open {
 
 a.delete {
     width: 26px;
-    height: 26px;/*1em font-size + 2 x 0.222em padding in input fields*/
+    height: 26px;
+    /*1em font-size + 2 x 0.222em padding in input fields*/
     padding: 0;
     margin: 0;
     background-image: url(/img/glyphicons/glyphicons_191_circle_minus.png);
 }
 
-.subdeliverer-container .subdeliverer-earmark {
-}
+.subdeliverer-container .subdeliverer-earmark {}
 
 h2.date-slaughter {
     font-weight: normal;
@@ -220,17 +221,36 @@ ul.action li:last-child a {
 .adjustmentitem-mail {
     width: 24px;
     height: 26px;
+    position: relative;
 }
+
 .voucher-dealer {
     background-image: url(/img/glyphicons/glyphicons_135_inbox_out.png);
 }
+
 .voucher-dealer-mail,
 .adjustmentitem-mail {
     background-image: url(/img/glyphicons/glyphicons_062_paperclip.png);
 }
+
 .voucher-internal,
 .adjustmentitem-internal {
     background-image: url(/img/glyphicons/glyphicons_134_inbox_in.png);
+}
+
+.voucher-internal:after,
+.voucher-dealer:after {
+    content: "•";
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    color: red;
+    text-indent: 0px;
+}
+
+.voucher-internal.done:after,
+.voucher-dealer.done:after {
+    color: #54b646;
 }
 
 .voucher-dealer.email,
@@ -241,12 +261,11 @@ ul.action li:last-child a {
 }
 
 .mail {
-	color: #ce838f;
+    color: #ce838f;
 }
 
 .mail.sent {
-	color: #54b646;
+    color: #54b646;
 }
 
-@media print {
-}
+@media print {}

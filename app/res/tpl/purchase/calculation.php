@@ -53,7 +53,7 @@
                 $_m = 0;
             ?>
             <?php foreach ($record->with(' ORDER BY supplier, earmark ')->ownDeliverer as $_id => $_deliverer): ?>
-            <fieldset>
+            <fieldset id="deli-<?php echo $_deliverer->getId() ?>">
                 <legend class="verbose"><?php echo I18n::__('purchase_deliverer_sub_legend') ?></legend>
                 <div>
                     <input
@@ -138,13 +138,13 @@
                         <ul class="action">
                             <li>
                                 <a
-                                    class="ir voucher-internal"
+                                    class="ir voucher-internal <?php echo $_deliverer->genPdfInternal() ?>"
                                     title="<?php echo I18n::__('invoice_link_internal_title') ?>"
                                     href="<?php echo Url::build('/deliverer/internal/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_internal') ?></a>
                             </li>
                             <li>
                                 <a
-                                    class="ir voucher-dealer <?php echo $_deliverer->person->billingtransport ?>"
+                                    class="ir voucher-dealer <?php echo $_deliverer->person->billingtransport ?>  <?php echo $_deliverer->genPdfDealer() ?>"
                                     title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
                                     href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
                             </li>

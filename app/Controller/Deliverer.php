@@ -94,7 +94,9 @@ class Controller_Deliverer extends Controller
         );
         $mpdf = $this->generatePDF($filename, $docname);
         $mpdf->Output($filename, 'D');
-        exit;
+        $this->record->pdfStateDealer = true;
+        R::store($this->record);
+        $this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
     }
 
     /**
@@ -129,35 +131,7 @@ class Controller_Deliverer extends Controller
             Flight::get('user')->notify(I18n::__('deliverer_send_mail_failed'), 'warning');
         }
         R::store($this->record);
-        $this->redirect(sprintf('/purchase/calculation/%d', $this->record->csb->getId()));
-    }
-
-    /**
-     * Generates the service PDF for dealer audience.
-     *
-     * @uses generatePDF()
-     * @return void
-     */
-    public function service()
-    {
-        $this->layout = 'service';
-        $filename = I18n::__(
-            'deliverer_dealer_service_filename',
-            null,
-            array(
-                $this->record->invoice->name
-            )
-        );
-        $docname = I18n::__(
-            'deliverer_dealer_service_docname',
-            null,
-            array(
-                $this->record->invoice->name
-            )
-        );
-        $this->generatePDF($filename, $docname);
-        $mpdf->Output($filename, 'D');
-        exit;
+        $this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
     }
 
     /**
@@ -185,7 +159,9 @@ class Controller_Deliverer extends Controller
         );
         $mpdf = $this->generatePDF($filename, $docname);
         $mpdf->Output($filename, 'D');
-        exit;
+        $this->record->pdfStateInternal = true;
+        R::store($this->record);
+        $this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
     }
 
     /**

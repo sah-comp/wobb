@@ -26,6 +26,9 @@ class Model_Deliverer extends Model
     public function dispense()
     {
         $this->bean->enabled = true;
+        $this->bean->pdfStateDealer = false;
+        $this->bean->pdfStateInternal = false;
+        $this->bean->sent = false;
         $this->bean->calcdate = null;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
         $this->addConverter('sprice', array(
             new Converter_Decimal()
@@ -94,6 +97,32 @@ class Model_Deliverer extends Model
     {
         if ($this->bean->sent) {
             return 'mailed';
+        }
+        return '';
+    }
+
+    /**
+     * Returns 'internal-done' when flag indicated that the internal PDF was generated.
+     *
+     * @return string
+     */
+    public function genPdfInternal()
+    {
+        if ($this->bean->pdfStateInternal) {
+            return 'done';
+        }
+        return '';
+    }
+
+    /**
+     * Returns 'internal-done' when flag indicated that the internal PDF was generated.
+     *
+     * @return string
+     */
+    public function genPdfDealer()
+    {
+        if ($this->bean->pdfStateDealer) {
+            return 'done';
         }
         return '';
     }
