@@ -92,11 +92,12 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $mpdf = $this->generatePDF($filename, $docname);
-        $mpdf->Output($filename, 'D');
         $this->record->pdfStateDealer = true;
         R::store($this->record);
-        $this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
+        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf->Output($filename, 'D');
+        exit;
+        //$this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
     }
 
     /**
@@ -157,11 +158,12 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $mpdf = $this->generatePDF($filename, $docname);
-        $mpdf->Output($filename, 'D');
         $this->record->pdfStateInternal = true;
         R::store($this->record);
-        $this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
+        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf->Output($filename, 'D');
+        exit;
+        //$this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
     }
 
     /**
