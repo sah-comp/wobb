@@ -26,8 +26,8 @@ class Model_Deliverer extends Model
     public function dispense()
     {
         $this->bean->enabled = true;
-        $this->bean->pdfStateDealer = false;
-        $this->bean->pdfStateInternal = false;
+        $this->bean->pdfStateDealer = 0;
+        $this->bean->pdfStateInternal = 0;
         $this->bean->sent = false;
         $this->bean->calcdate = null;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
         $this->addConverter('sprice', array(
@@ -108,8 +108,18 @@ class Model_Deliverer extends Model
      */
     public function genPdfInternal()
     {
-        if ($this->bean->pdfStateInternal) {
-            return 'done';
+        switch ($this->bean->pdfStateInternal) {
+            case 0:
+                return '';
+                break;
+
+            case 1:
+                return 'done';
+                break;
+
+            default:
+                return 'done2x';
+                break;
         }
         return '';
     }
@@ -121,10 +131,15 @@ class Model_Deliverer extends Model
      */
     public function genPdfDealer()
     {
-        if ($this->bean->pdfStateDealer) {
-            return 'done';
+        switch ($this->bean->pdfStateDealer) {
+            case 0:
+                return '';
+                break;
+
+            default:
+                return 'done2x';
+                break;
         }
-        return '';
     }
 
     /**

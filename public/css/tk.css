@@ -250,6 +250,11 @@ ul.action li:last-child a {
 
 .voucher-internal.done:after,
 .voucher-dealer.done:after {
+    color: orange;
+}
+
+.voucher-internal.done2x:after,
+.voucher-dealer.done2x:after {
     color: #54b646;
 }
 

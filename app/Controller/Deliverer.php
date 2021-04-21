@@ -92,7 +92,7 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $this->record->pdfStateDealer = true;
+        $this->record->pdfStateDealer++;
         R::store($this->record);
         $mpdf = $this->generatePDF($filename, $docname);
         $mpdf->Output($filename, 'D');
@@ -158,7 +158,7 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $this->record->pdfStateInternal = true;
+        $this->record->pdfStateInternal++;
         R::store($this->record);
         $mpdf = $this->generatePDF($filename, $docname);
         $mpdf->Output($filename, 'D');
