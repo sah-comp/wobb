@@ -209,6 +209,7 @@ input[type=text],
 input[type=password],
 input[type=email],
 input[type=number],
+input[type=datetime],
 input[type=date],
 input[type=time],
 input[type=url],
@@ -947,7 +948,9 @@ input[type=email],
 input[type=tel],
 input[type=url],
 input[type=number],
-input[type=date] input[type=time],
+input[type=date],
+input[type=datetime],
+input[type=time],
 textarea {
     width: 100%;
     padding: 0.25em;
@@ -1091,6 +1094,7 @@ th.label {
 }
 
 .panel input[type=file],
+.panel input[type=date],
 .panel input[type=datetime] {
     width: auto;
 }
@@ -1185,23 +1189,6 @@ input[readonly=readonly] {
     background-size: 16px 19px;
 }
 
-/*
-.container input[type=text],
-.container input[type=password],
-.container input[type=email],
-.container input[type=url],
-.container input[type=number],
-.container input[type=date],
-.container input[type=time],
-.container input[type=url],
-.container input[type=tel],
-.container textarea,
-.container select {
-    margin-left: 0;
-    width: 100%;
-    padding: 0.222em;
-}
-*/
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus,
@@ -1232,9 +1219,7 @@ input.monetary {
 .panel .row input[type=checkbox],
 .panel .row input[type=radio] {
     position: absolute;
-    /*left: 23.404255317%;*/
     left: 20.404255317%;
-    /*left: 28%;*/
     top: 0.6em;
 }
 
@@ -1246,13 +1231,6 @@ input.monetary {
     min-height: 0;
 }
 
-/*
-.panel .container input[type=checkbox],
-.panel .container input[type=radio] {
-    position: static;
-    left: auto;
-}
-*/
 /* form table stuff */
 .panel table {
     table-layout: fixed;
