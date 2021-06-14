@@ -446,9 +446,36 @@ SQL;
         $csv->output_delimiter = ";";
         $csv->linefeed = "\r\n";
         $csv->titles = [
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U'
+            I18n::__('lanuv_fn_pubdate'), //Schlachtdatum
+            I18n::__('lanuv_fn_name'), //Schlachtnummer
+            I18n::__('lanuv_fn_name_ext'), //Schlachtnummer gemäß elektronischen Protokoll
+            I18n::__('lanuv_fn_earmark'), //Täto
+            I18n::__('lanuv_fn_billnumber'), //Abrechnungsnummer
+            I18n::__('lanuv_fn_person_nickname'), //Lieferantencode
+            I18n::__('lanuv_fn_person_account'), //Lieferantennummer
+            I18n::__('lanuv_fn_person_name'), //Lieferantenname
+            I18n::__('lanuv_fn_quality'), //Handelsklasse
+            I18n::__('lanuv_fn_mfa'), //MFA %
+            I18n::__('lanuv_fn_weight'), //Nettoschlachtgewicht in KG
+            I18n::__('lanuv_fn_damage1'), //Schaden 1
+            I18n::__('lanuv_fn_damage2'), //Schaden 2 Organverwurf
+            I18n::__('lanuv_fn_dprice'), //Preis je KG ohne Boni Euro
+            I18n::__('lanuv_fn_totaldprice'), //Warenwert ohne Boni Euro
+            I18n::__('lanuv_fn_discount1'), //Abzug Schäden in KG zu Schaden 1
+            I18n::__('lanuv_fn_discount2'), //Abzug Schäden in KG zu Schaden 2
+            I18n::__('lanuv_fn_discount3'), //Abzug Schäden in KG zu Schaden 3 Leberschaden
+            I18n::__('lanuv_fn_cost'),
+            I18n::__('lanuv_fn_bonus_item'),
+            I18n::__('lanuv_fn_bonus_weight'),
+            I18n::__('lanuv_fn_bonus_value'),
+            I18n::__('lanuv_fn_totallanuvprice'),
+            I18n::__('lanuv_fn_lanuvprice'),
+            I18n::__('lanuv_fn_qs'),
+            I18n::__('lanuv_fn_flat'),
+            I18n::__('lanuv_fn_lanuvreported'),
+            I18n::__('lanuv_fn_paidslaughter')
         ];
-        $csv->heading = false;
+        $csv->heading = true;
         $csv->data = $stock;
         $csv->output($filename);
     }
@@ -521,25 +548,32 @@ SQL;
         SELECT
             stock.pubdate,
             stock.name AS sname,
+            '-' AS jd1,
             stock.earmark,
             stock.billnumber,
             person.nickname,
             person.account,
             REPLACE(person.name, "\r\n", " "),
             stock.quality,
-            stock.mfa,
-            stock.weight,
+            FORMAT(stock.mfa, 1, 'de_DE') AS mfa,
+            FORMAT(stock.weight, 1, 'de_DE') AS weight,
             stock.damage1,
             stock.damage2,
-            stock.dprice,
-            stock.totaldprice,
-            'Abzug',
-            stock.bonusitem,
-            stock.bonusweight,
-            stock.totallanuvprice,
+            FORMAT(stock.dprice, 3, 'de_DE') AS dprice,
+            FORMAT(stock.totaldprice, 2, 'de_DE') AS totaldprice,
+            '-' AS jd2,
+            '-' AS jd3,
+            IF(LOCATE('L', stock.damage2), 'Ja', 'Nein') AS liver,
+            FORMAT(stock.cost, 2, 'de_DE') AS cost,
+            FORMAT(stock.bonusitem, 2, 'de_DE') AS bonusitem,
+            FORMAT(stock.bonusweight, 2, 'de_DE') AS bonusweight,
+            FORMAT(stock.bonus, 2, 'de_DE') AS bonusvalue,
+            FORMAT(stock.totallanuvprice, 3, 'de_DE') AS totallanuvprice,
+            FORMAT(ROUND(stock.totallanuvprice / stock.weight, 3), 3, 'de_DE') AS dpricelanuv,
             stock.qs,
-            'Pauschal',
-            stock.lanuvreported
+            '-' AS jd4,
+            stock.lanuvreported,
+            '-' AS jd5
         FROM
             stock
         LEFT JOIN
