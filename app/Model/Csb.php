@@ -548,6 +548,21 @@ SQL;
                 throw new Exception_Csbfiledatemismatch('Date in CSB file does not match your csb date');
             }
 
+            // check for initiative tierwohl
+            if ($this->bean->company->hastierwohl) {
+                if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
+                    $stock->itw = true; // this stock is qualified to be paid additional amount ITW
+                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
+                    if ($stockman = R::findOne('stockman', "earmark = ? LIMIT 1", [$stock->earmark])) {
+                        // there is a special price defined for this sub deliverer
+                        $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
+                    } else {
+                        // no special price, use the usual price
+                        $stock->tierwohlnetperstock = $this->bean->company->tierwohlnetperstock;
+                    }
+                }
+            }
+
             $stock->lanuvreported = 0;
             $stock->billnumber = 0;
             $stock->person = $stock->getPersonBySupplier();
@@ -606,6 +621,8 @@ SQL;
     {
         $sqlqsd = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND qs = 1";
         $sqlqss = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND qs = 1";
+        $sqlitwd = "SELECT count(id) AS totalitw FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND itw = 1";
+        $sqlitws = "SELECT count(id) AS totalitw FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND itw = 1";
         $stocks = R::getAll("SELECT count(id) AS total, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
         $nonqs = []; // container for eventually non QS earmarks.
         foreach ($stocks as $id => $stock) {
@@ -638,6 +655,10 @@ SQL;
                 ':csb_id' => $this->bean->getId(),
                 ':supplier' => $deliverer->supplier
             ));
+            $deliverer->itwpiggery = R::getCell($sqlitwd, array(
+                ':csb_id' => $this->bean->getId(),
+                ':supplier' => $deliverer->supplier
+            ));
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
@@ -649,6 +670,10 @@ SQL;
                 $subdeliverer->dprice = 0;
                 $subdeliverer->sprice = 0;
                 $subdeliverer->qspiggery = R::getCell($sqlqss, array(
+                    ':csb_id' => $this->bean->getId(),
+                    ':earmark' => $subdeliverer->earmark
+                ));
+                $subdeliverer->itwpiggery = R::getCell($sqlitws, array(
                     ':csb_id' => $this->bean->getId(),
                     ':earmark' => $subdeliverer->earmark
                 ));

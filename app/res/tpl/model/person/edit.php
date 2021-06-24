@@ -766,8 +766,9 @@ $stats = $record->ownStat;
 		<div class="row">
 			<div class="span3">&nbsp;</div>
 			<div class="span2"><label><?php echo I18n::__('stockman_label_earmark') ?></label></div>
-			<div class="span2"><label><?php echo I18n::__('stockman_label_reldprice') ?></label></div>
-			<div class="span3"><label><?php echo I18n::__('stockman_label_name') ?></label></div>
+            <div class="span3"><label><?php echo I18n::__('stockman_label_name') ?></label></div>
+			<div class="span1"><label><?php echo I18n::__('stockman_label_reldprice') ?></label></div>
+			<div class="span1"><label><?php echo I18n::__('stockman_label_tierwohlnetperstock') ?></label></div>
 			<div class="span2"><label><?php echo I18n::__('stockman_label_vvvo') ?></label></div>
 		</div>
         <div

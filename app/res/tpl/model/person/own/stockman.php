@@ -45,7 +45,14 @@
 	        name="dialog[ownStockman][<?php echo $index ?>][earmark]"
 	        value="<?php echo htmlspecialchars($_stockman->earmark) ?>" />
 	</div>
-	<div class="span2">
+    <div class="span3">
+	    <input
+	        id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-name"
+	        type="text"
+	        name="dialog[ownStockman][<?php echo $index ?>][name]"
+	        value="<?php echo htmlspecialchars($_stockman->name) ?>" />
+	</div>
+	<div class="span1">
         <input
             id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-reldprice"
             type="text"
@@ -53,12 +60,13 @@
             name="dialog[ownStockman][<?php echo $index ?>][reldprice]"
             value="<?php echo htmlspecialchars($_stockman->decimal('reldprice', 3)) ?>" />
 	</div>
-	<div class="span3">
-	    <input
-	        id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-name"
-	        type="text"
-	        name="dialog[ownStockman][<?php echo $index ?>][name]"
-	        value="<?php echo htmlspecialchars($_stockman->name) ?>" />
+	<div class="span1">
+        <input
+            id="person-<?php echo $record->getId() ?>-stockman-<?php echo $index ?>-tierwohlnetperstock"
+            type="text"
+            class="number"
+            name="dialog[ownStockman][<?php echo $index ?>][tierwohlnetperstock]"
+            value="<?php echo htmlspecialchars($_stockman->decimal('tierwohlnetperstock', 3)) ?>" />
 	</div>
 	<div class="span2">
 	    <input

@@ -228,8 +228,8 @@ class Model_Stock extends Model
         $this->bean->sprice = $deliverer->sprice + $this->bean->agio - $this->bean->disagio;
         $this->bean->dprice = $deliverer->dprice + $this->bean->agio - $this->bean->disagio;
 
-        $this->bean->totalsprice = ($this->bean->sprice * $this->bean->weight);
-        $this->bean->totaldprice = ($this->bean->dprice * $this->bean->weight);
+        $this->bean->totalsprice = ($this->bean->sprice * $this->bean->weight) + $this->bean->tierwohlnetperstock;
+        $this->bean->totaldprice = ($this->bean->dprice * $this->bean->weight) + $this->bean->tierwohlnetperstock;
 
         $this->bean->totallanuvprice = $this->bean->totaldprice + $tax;
         return null;
@@ -349,6 +349,7 @@ class Model_Stock extends Model
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
         } elseif ($fixedPrice->condition == 'disagio') {
+            // e.g. damag2 = L and condition is "Abzug" 1,02 euro is subtracted from the total price
             $this->bean->totalsprice -= $fixedPrice->sprice;
             $this->bean->totaldprice -= $fixedPrice->dprice;
         } elseif ($fixedPrice->condition == 'agio') {
@@ -391,10 +392,25 @@ class Model_Stock extends Model
     }
 
     /**
+     * Return itw label if this stock has itw flag raised.
+     *
+     * @return string
+     */
+    public function getItwAsText()
+    {
+        if ($this->bean->itw) {
+            return I18n::__('invoice_internal_label_itw');
+        }
+        return '';
+    }
+
+    /**
      * Dispense.
      */
     public function dispense()
     {
+        $this->bean->itw = false; // initiative Tierwahl flag
+        $this->bean->tierwohlnetperstock = 0;
         $this->addConverter('pubdate', array(
             new Converter_Mysqldate()
         ));

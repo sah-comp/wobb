@@ -102,7 +102,7 @@ class Model_Company extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             ),
             array(
                 'name' => 'buyer',
@@ -112,7 +112,7 @@ class Model_Company extends Model
                 'filter' => array(
                     'tag' => 'text'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
@@ -124,6 +124,9 @@ class Model_Company extends Model
     {
         $this->addValidator('name', array(
             new Validator_HasValue()
+        ));
+        $this->addConverter('tierwohlnetperstock', array(
+            new Converter_Decimal()
         ));
     }
 

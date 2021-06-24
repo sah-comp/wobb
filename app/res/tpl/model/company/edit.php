@@ -55,7 +55,8 @@
             'company-bankaccount' => I18n::__('company_bankaccount_tab'),
             'company-serial' => I18n::__('company_serial_tab'),
             'company-lanuv' => I18n::__('company_lanuv_tab'),
-            'company-iqagrar' => I18n::__('company_iqagrar_tab')
+            'company-iqagrar' => I18n::__('company_iqagrar_tab'),
+            'company-tierwohl' => I18n::__('company_tierwohl_tab')
         ),
         'default_tab' => 'company-address'
     )) ?>
@@ -467,6 +468,65 @@
                 name="dialog[iqagraremail]"
                 value="<?php echo htmlspecialchars($record->iqagraremail) ?>" />
             <p class="info"><?php echo I18n::__('company_info_iqagraremail') ?></p>
+        </div>
+	</fieldset>
+    <fieldset
+        id="company-tierwohl"
+        class="tab"
+        style="display: none;">
+        <legend class="verbose"><?php echo I18n::__('company_legend_tierwohl_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('hastierwohl')) ? 'error' : ''; ?>">
+            <label
+                for="company-hastierwohl"
+				class="cb">
+                <?php echo I18n::__('company_label_hastierwohl') ?>
+            </label>
+	        <input
+	            type="hidden"
+	            name="dialog[hastierwohl]"
+	            value="0" />
+	        <input
+	            id="company-hastierwohl"
+	            type="checkbox"
+	            name="dialog[hastierwohl]"
+	            <?php echo ($record->hastierwohl) ? 'checked="checked"' : '' ?>
+	            value="1" />
+        </div>
+        <div class="row <?php echo ($record->hasError('tierwohlflag')) ? 'error' : ''; ?>">
+            <label
+                for="company-tierwohlflag">
+                <?php echo I18n::__('company_label_tierwohlflag') ?>
+            </label>
+            <input
+                id="company-tierwohlflag"
+                type="text"
+                name="dialog[tierwohlflag]"
+                value="<?php echo htmlspecialchars($record->tierwohlflag) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_tierwohlflag') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('tierwohlident')) ? 'error' : ''; ?>">
+            <label
+                for="company-tierwohlident">
+                <?php echo I18n::__('company_label_tierwohlident') ?>
+            </label>
+            <input
+                id="company-tierwohlident"
+                type="text"
+                name="dialog[tierwohlident]"
+                value="<?php echo htmlspecialchars($record->tierwohlident) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_tierwohlident') ?></p>
+        </div>
+        <div class="row <?php echo ($record->hasError('tierwohlnetperstock')) ? 'error' : ''; ?>">
+            <label
+                for="company-tierwohlnetperstock">
+                <?php echo I18n::__('company_label_tierwohlnetperstock') ?>
+            </label>
+            <input
+                id="company-tierwohlnetperstock"
+                type="text"
+                name="dialog[tierwohlnetperstock]"
+                value="<?php echo htmlspecialchars($record->decimal('tierwohlnetperstock', 3)) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_tierwohlnetperstock') ?></p>
         </div>
 	</fieldset>
 </div>

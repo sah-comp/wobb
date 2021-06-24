@@ -242,7 +242,8 @@
         <thead>
             <tr>
                 <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
+                <th width="5%" class="number"><?php echo I18n::__('invoice_internal_label_itw') ?></th>
+                <th width="5%" class="number"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_piggery') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_baseprice') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
@@ -254,12 +255,14 @@
                 <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
                 <td class="bt bb number">&nbsp;</td>
                 <td class="bt bb number">&nbsp;</td>
+                <td class="bt bb number">&nbsp;</td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meandprice', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('meanweight', 2)) ?></td>
                 <td class="bt bb number">&nbsp;</td>
             </tr>
             <tr>
                 <td class="bt emphasize"><?php echo I18n::__('invoice_internal_label_dealertotal') ?></td>
+                <td class="bt emphasize number"><?php echo $record->itwpiggery ?></td>
                 <td class="bt emphasize number"><?php echo $record->qspiggery ?></td>
                 <td class="bt emphasize number"><?php echo $record->piggery ?></td>
                 <td class="bt number"></td>
@@ -271,6 +274,7 @@
     <?php foreach ($record->with(' ORDER BY earmark ')->ownDeliverer as $_sub_id => $_sub): ?>
             <tr>
                 <td><?php echo $_sub->earmark ?></td>
+                <td class="number"><?php echo $_sub->itwpiggery ?></td>
                 <td class="number"><?php echo $_sub->qspiggery ?></td>
                 <td class="number"><?php echo $_sub->piggery ?></td>
                 <td class="number"><?php echo htmlspecialchars($_sub->decimal('dprice', 3)) ?></td>
@@ -439,6 +443,19 @@
 
     <div style="height: 5mm;"></div>
 
+    <?php if ($record->invoice->company->hastierwohl): ?>
+    <table width="60%">
+        <tr>
+            <td class="dinky" style="vertical-align: top;">
+                <?php
+                Flight::setlocale(LC_ALL);
+                echo Flight::textile(I18n::__('invoice_internal_text_itw', null, [$record->invoice->company->tierwohlnetperstock])) ?>
+            </td>
+        </tr>
+    </table>
+    <div style="height: 5mm;"></div>
+    <?php endif; ?>
+
     <?php Flight::render('deliverer/dealer/pricemask', array(
         'record' => $record
     )) ?>
@@ -459,8 +476,9 @@
             <tr>
                 <th width="10%"><?php echo I18n::__('invoice_internal_label_earmark') ?></th>
                 <th width="10%"><?php echo I18n::__('invoice_internal_label_name') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_internal_label_quality') ?></th>
+                <th width="5%"><?php echo I18n::__('invoice_internal_label_quality') ?></th>
                 <th width="15%"><?php echo I18n::__('invoice_internal_label_damagestock') ?></th>
+                <th width="5%"><?php echo I18n::__('invoice_internal_label_itw') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_internal_label_qs') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_internal_label_mfa') ?></th>
                 <th width="12.5%" class="number"><?php echo I18n::__('invoice_internal_label_weight') ?></th>
@@ -471,6 +489,7 @@
         <tfoot>
             <tr>
                 <td class="bt bb"><?php echo I18n::__('invoice_internal_label_dealermean') ?></td>
+                <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
                 <td class="bt bb">&nbsp;</td>
@@ -487,6 +506,7 @@
                 <td class="bt">&nbsp;</td>
                 <td class="bt">&nbsp;</td>
                 <td class="bt">&nbsp;</td>
+                <td class="bt">&nbsp;</td>
                 <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalweight', 2)) ?></td>
                 <td class="bt">&nbsp;</td>
                 <td class="bt emphasize number"><?php echo htmlspecialchars($_sub->decimal('totalnet', 2)) ?></td>
@@ -499,6 +519,7 @@
                 <td><?php echo $_stock->name ?></td>
                 <td><?php echo $_stock->quality ?></td>
                 <td><?php echo $_stock->getDamageAsText() ?></td>
+                <td><?php echo $_stock->getItwAsText() ?></td>
                 <td><?php echo $_stock->getQsAsText() ?></td>
                 <td class="number"><?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?></td>
