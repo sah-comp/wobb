@@ -27,6 +27,9 @@ class Model_Analysisitem extends Model
         $this->addConverter('piggery', array(
           new Converter_Decimal()
         ));
+        $this->addConverter('itwpiggery', array(
+          new Converter_Decimal()
+        ));
         $this->addConverter('piggerypercentage', array(
           new Converter_Decimal()
         ));
@@ -64,6 +67,9 @@ class Model_Analysisitem extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('damagepiggery', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('itwdamagepiggery', array(
             new Converter_Decimal()
         ));
         $this->addConverter('damagepiggerypercentage', array(

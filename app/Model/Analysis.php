@@ -201,7 +201,7 @@ SQL;
             /*
             $conditions = $person->withCondition(' doesnotaffectinvoice = 0 ')->ownCondition;
             //$conditions = $supplier->ownAppliedcondition;
-            foreach ($conditions as $id => $condition) {
+            foreach ($conditions AS $id => $condition) {
                 $subAnalysisitem = R::dispense('analysisitem');
                 $subAnalysisitem->kind = 2;
                 $subAnalysisitem->quality = $condition->content . ' ' . I18n::__('condition_label_' . $condition->label);
@@ -244,6 +244,7 @@ SQL;
         $bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
         $bean->piggery = $summary['piggery'];
+        $bean->itwpiggery = $summary['sumitw'];
         if ($total != 0) {
             $bean->piggerypercentage = $summary['piggery'] * 100 / $total;
         } else {
@@ -277,6 +278,7 @@ SQL;
         $bean->kind = 1; //this is a damage entry
         $bean->damage = $damage;
         $bean->damagepiggery = $summary['piggery'];
+        $bean->itwdamagepiggery = $summary['sumitw'];
         if ($total != 0) {
             $bean->damagepiggerypercentage = $summary['piggery'] * 100 / $total;
         } else {
@@ -304,17 +306,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             buyer = :buyer AND
@@ -340,17 +343,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             buyer = :buyer AND
@@ -377,17 +381,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             supplier = :supplier AND
@@ -416,17 +421,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             supplier = :supplier AND
@@ -453,17 +459,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             buyer = :buyer AND
@@ -486,17 +493,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             buyer = :buyer AND
@@ -521,17 +529,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             supplier = :supplier AND
@@ -557,17 +566,18 @@ SQL;
     {
         $sql = <<<SQL
         SELECT
-            count(id) as piggery,
-            sum(weight) as sumweight,
-            avg(mfa) as avgmfa,
-            sum(totaldprice) as sumtotaldprice,
-            sum(totallanuvprice) as sumtotallanuvprice,
-            sum(totaldpricenet) as sumtotalpricenet,
-            (sum(totaldprice) / sum(weight)) as avgprice,
-            (sum(totaldpricenet) / sum(weight)) as avgpricenet,
-            (sum(totallanuvprice) / sum(weight)) as avgpricelanuv,
-            avg(weight) as avgweight,
-            avg(dprice) as avgdprice
+            count(id) AS piggery,
+            sum(itw) AS sumitw,
+            sum(weight) AS sumweight,
+            avg(mfa) AS avgmfa,
+            sum(totaldprice) AS sumtotaldprice,
+            sum(totallanuvprice) AS sumtotallanuvprice,
+            sum(totaldpricenet) AS sumtotalpricenet,
+            (sum(totaldprice) / sum(weight)) AS avgprice,
+            (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
+            avg(weight) AS avgweight,
+            avg(dprice) AS avgdprice
         FROM stock
         WHERE
             supplier = :supplier AND

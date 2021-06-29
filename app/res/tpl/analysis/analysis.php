@@ -11,12 +11,12 @@
         method="POST"
         accept-charset="utf-8"
         enctype="multipart/form-data">
-        
+
         <div>
             <input type="hidden" name="dialog[type]" value="<?php echo $record->getMeta('type') ?>" />
             <input type="hidden" name="dialog[id]" value="<?php echo $record->getId() ?>" />
         </div>
-        
+
         <fieldset>
             <legend class="verbose"><?php echo I18n::__('analysis_legend') ?></legend>
             <div class="row <?php echo ($record->hasError('company_id')) ? 'error' : ''; ?>">
@@ -30,7 +30,7 @@
                     <?php foreach (R::find('company', ' active = 1 ORDER BY name') as $_id => $_company): ?>
                     <option
                         value="<?php echo $_company->getId() ?>"
-                        <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name) ?></option>   
+                        <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name) ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -61,21 +61,24 @@
                     required="required" />
             </div>
         </fieldset>
-        
+
         <!-- form details -->
         <fieldset class="tab">
             <legend class="verbose"><?php echo I18n::__('statistic_analysisitem_legend') ?></legend>
-            
+
             <!-- row with labels -->
             <div class="row">
                 <div class="span1">
                     <label><?php echo I18n::__('analysis_label_quality') ?></label>
                 </div>
-                <div class="span2">
+                <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_piggery') ?></label>
                 </div>
                 <div class="span1">
                     <label class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></label>
+                </div>
+                <div class="span1">
+                    <label class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></label>
                 </div>
                 <div class="span2">
                     <label class="number"><?php echo I18n::__('analysis_label_sumweight') ?></label>
@@ -97,7 +100,7 @@
                 </div>
             </div>
             <!-- end of row with labels -->
-            
+
             <?php foreach ($record->withCondition(' kind = 0 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <fieldset>
                 <legend class="verbose"><?php echo I18n::__('statistic_analysisitem_legend') ?></legend>
@@ -124,7 +127,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -139,6 +142,15 @@
                             class="number"
                             name="dialog[ownAnalysisitem][<?php echo $_id ?>][piggerypercentage]"
                             value="<?php echo htmlspecialchars($_analysisitem->decimal('piggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][itwpiggery]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('itwpiggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -205,7 +217,7 @@
                     <div class="span1">
                         &nbsp;
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -220,6 +232,15 @@
                             class="number"
                             name="dialog[piggerypercentage]"
                             value="<?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[itwpiggery]"
+                            value="<?php echo htmlspecialchars($record->decimal('itwpiggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -305,7 +326,7 @@
                             readonly="readonly"
                         />
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
@@ -320,6 +341,15 @@
                             class="number"
                             name="dialog[ownAnalysisitem][<?php echo $_id ?>][damagepiggerypercentage]"
                             value="<?php echo htmlspecialchars($_analysisitem->decimal('damagepiggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][itwdamagepiggery]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('itwdamagepiggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -386,12 +416,12 @@
                     <div class="span1">
                         &nbsp;
                     </div>
-                    <div class="span2">
+                    <div class="span1">
                         <input
                             type="text"
                             class="number"
-                            name="dialog[damagepiggery]"
-                            value="<?php echo htmlspecialchars($record->decimal('damagepiggery', 0)) ?>"
+                            name="dialog[itwdamagepiggery]"
+                            value="<?php echo htmlspecialchars($record->decimal('itwdamagepiggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -401,6 +431,15 @@
                             class="number"
                             name="dialog[damagepiggerypercentage]"
                             value="<?php echo htmlspecialchars($record->decimal('damagepiggerypercentage', 2)) ?>"
+                            readonly="readonly"
+                        />
+                    </div>
+                    <div class="span1">
+                        <input
+                            type="text"
+                            class="number"
+                            name="dialog[itwpiggery]"
+                            value="<?php echo htmlspecialchars($record->decimal('print_overviewpiggery', 0)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -462,7 +501,7 @@
             </fieldset>
         </fieldset>
         <!-- end of form details -->
-        
+
         <!-- statistic buttons -->
         <div class="buttons">
             <input

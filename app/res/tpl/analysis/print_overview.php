@@ -5,14 +5,14 @@
     <style>
         body {
             font-family: sans-serif;
-	        font-size: 10pt;
+	        font-size: 9pt;
         }
         .emphasize {
             font-weight: bold;
-            font-size: 11pt;
+            font-size: 10pt;
         }
         .uberemphasize {
-            font-size: 14pt;
+            font-size: 13pt;
             font-weight: bold;
         }
 		.notemphasized {
@@ -82,13 +82,14 @@
         </caption>
         <thead>
             <tr>
-                <th width="10%"><?php echo I18n::__('analysis_label_supplier') ?></th>
+                <th width="9%"><?php echo I18n::__('analysis_label_supplier') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
+                <th width="5%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
                 <th width="15%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
                 <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
-                <th width="15%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
+                <th width="11%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
             </tr>
         </thead>
@@ -98,6 +99,7 @@
                 <td><?php echo htmlspecialchars($_analysis->person->nickname) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('piggery', 0)) ?></td>
                 <td class="number"><?php echo htmlspecialchars(number_format($_analysis->piggery * 100 / $record->piggery, 2, ',', '.')) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('itwpiggery', 0)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumtotalpricenet', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
@@ -109,6 +111,7 @@
                 <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('itwpiggery', 0)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
@@ -116,7 +119,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?></td>
             </tr>
             <tr>
-                <td colspan="4">&nbsp;</td>
+                <td colspan="5">&nbsp;</td>
                 <td class="bt notemphasized number" colspan="4"><?php echo I18n::__('analysis_text_footer_overview') ?></td>
             </tr>
         </tbody>
