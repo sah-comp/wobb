@@ -44,6 +44,9 @@ class Model_Deliverer extends Model
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('totalnetitw', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('totalnetlanuv', array(
             new Converter_Decimal()
         ));
@@ -631,22 +634,12 @@ class Model_Deliverer extends Model
         $this->bean->invoice->person = $this->bean->person;
         $this->bean->invoice->vat = $this->bean->person->vat;
         $this->bean->invoice->totalnet = $this->bean->totalnet;
+        $this->bean->invoice->totalnetitw = $this->bean->totalnetitw;
         $bonusnet = 0;
         foreach ($this->bean->ownAppliedcondition as $id => $appliedcondition) {
             $bonusnet += $appliedcondition->net;
         }
-        /*
-        foreach ($this->bean->person->ownCondition as $id => $condition) {
-            if ($condition->doesnotaffectinvoice) {
-                continue;
-            }//skip condition
-            if ($condition->label == 'stockperitem') {
-                $bonusnet += $this->bean->piggery * $condition->value;
-            } elseif ($condition->label == 'stockperweight') {
-                $bonusnet += $this->bean->totalweight * $condition->value;
-            }
-        }
-        */
+        // cost
         $costnet = 0;
         foreach ($this->bean->person->ownCost as $id => $cost) {
             if ($cost->label == 'stockperitem') {
@@ -657,6 +650,7 @@ class Model_Deliverer extends Model
                 $costnet += $cost->value;
             }
         }
+        // bonus
         $this->bean->invoice->bonusnet = $bonusnet;
         $this->bean->invoice->costnet = $costnet;
         $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet;
@@ -676,10 +670,14 @@ class Model_Deliverer extends Model
             $this->bean->invoice->totalnetnormal = 0;
             $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
         }
+        // calc vat value for total net (warenwert - cost + bonus)
         $this->bean->invoice->vatvalue =
                 round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
+        // calc vat valut for itw total
+        $this->bean->invoice->vatvalueitw =
+                round($this->bean->invoice->totalnetitw * $this->bean->csb->company->vat->value / 100, 2);
         $this->bean->invoice->totalgros =
-                                $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue;
+                $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue + $this->bean->invoice->totalnetitw + $this->bean->invoice->vatvalueitw;
 
         $this->bean->invoice->kind = 0;//depends on the kind of invoice. 0 = Slaughter, 1 = other
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
@@ -723,6 +721,7 @@ class Model_Deliverer extends Model
         }
         $ret = array(
             'totalnet' => 0,
+            'totalnetitw' => 0,
             'totalnetsprice' => 0,
             'totalnetlanuv' => 0,
             'totalweight' => 0,
@@ -733,6 +732,7 @@ class Model_Deliverer extends Model
         foreach ($stocks as $id => $stock) {
             $stock->calculation($this->bean, $pricing);
             $ret['totalnet'] += $stock->totaldprice;
+            $ret['totalnetitw'] += $stock->tierwohlnetperstock;
             $ret['totalnetsprice'] += $stock->totalsprice;
             $ret['totalnetlanuv'] += $stock->totallanuvprice;
             $ret['totalweight'] += $stock->weight;

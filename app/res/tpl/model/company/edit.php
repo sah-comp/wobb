@@ -528,6 +528,23 @@
                 value="<?php echo htmlspecialchars($record->decimal('tierwohlnetperstock', 3)) ?>" />
             <p class="info"><?php echo I18n::__('company_info_tierwohlnetperstock') ?></p>
         </div>
+        <div class="row <?php echo ($record->hasError('vat_id')) ? 'error' : ''; ?>">
+            <label
+                for="company-tierwohl-vat">
+                <?php echo I18n::__('company_label_companytierwohlvat') ?>
+            </label>
+ 	        <select
+ 	            id="company-tierwohl-vat"
+ 	            name="dialog[vat_id]"
+                required="required">
+ 	            <option value=""><?php echo I18n::__('company_tierwohl_vat_please_select') ?></option>
+ 	            <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
+ 	            <option
+ 	                value="<?php echo $_vat->getId() ?>"
+ 	                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>
+ 	            <?php endforeach ?>
+ 	        </select>
+ 		</div>
 	</fieldset>
 </div>
 <!-- end of company edit form -->

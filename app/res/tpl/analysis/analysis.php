@@ -203,8 +203,8 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgpricenet]"
-                            value="<?php echo htmlspecialchars($_analysisitem->decimal('avgpricenet', 3)) ?>"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][avgpricenetitw]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('avgpricenetitw', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -293,8 +293,8 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[avgpricenet]"
-                            value="<?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?>"
+                            name="dialog[avgpricenetitw]"
+                            value="<?php echo htmlspecialchars($record->decimal('avgpricenetitw', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -402,8 +402,8 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgpricenet]"
-                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenet', 3)) ?>"
+                            name="dialog[ownAnalysisitem][<?php echo $_id ?>][damageavgpricenetitw]"
+                            value="<?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenetitw', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>
@@ -492,8 +492,8 @@
                         <input
                             type="text"
                             class="number"
-                            name="dialog[damageavgpricenet]"
-                            value="<?php echo htmlspecialchars($record->decimal('damageavgpricenet', 3)) ?>"
+                            name="dialog[damageavgpricenetitw]"
+                            value="<?php echo htmlspecialchars($record->decimal('damageavgpricenetitw', 3)) ?>"
                             readonly="readonly"
                         />
                     </div>

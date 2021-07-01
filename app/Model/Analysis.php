@@ -255,9 +255,11 @@ SQL;
         $bean->sumtotaldprice = $summary['sumtotaldprice'];
         $bean->sumtotallanuvprice = $summary['sumtotallanuvprice'];
         $bean->sumtotalpricenet = $summary['sumtotalpricenet'];
+        $bean->sumtotalpricenetitw = $summary['sumtotalpricenetitw'];
         $bean->avgmfa = $summary['avgmfa'];
         $bean->avgprice = $summary['avgprice'];
         $bean->avgpricenet = $summary['avgpricenet'];
+        $bean->avgpricenetitw = $summary['avgpricenetitw'];
         $bean->avgpricelanuv = $summary['avgpricelanuv'];
         $bean->avgweight = $summary['avgweight'];
         $bean->avgdprice = $summary['avgdprice'];
@@ -290,6 +292,7 @@ SQL;
         $bean->damageavgmfa = $summary['avgmfa'];
         $bean->damageavgprice = $summary['avgprice'];
         $bean->damageavgpricenet = $summary['avgpricenet'];
+        $bean->damageavgpricenetitw = $summary['avgpricenetitw'];
         $bean->damageavgpricelanuv = $summary['avgpricelanuv'];
         $bean->damageavgweight = $summary['avgweight'];
         $bean->damageavgdprice = $summary['avgdprice'];
@@ -313,8 +316,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -350,8 +355,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -388,8 +395,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -428,8 +437,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -466,8 +477,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -500,8 +513,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -536,8 +551,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -573,8 +590,10 @@ SQL;
             sum(totaldprice) AS sumtotaldprice,
             sum(totallanuvprice) AS sumtotallanuvprice,
             sum(totaldpricenet) AS sumtotalpricenet,
+            sum(totaldpricenetitw) AS sumtotalpricenetitw,
             (sum(totaldprice) / sum(weight)) AS avgprice,
             (sum(totaldpricenet) / sum(weight)) AS avgpricenet,
+            (sum(totaldpricenetitw) / sum(weight)) AS avgpricenetitw,
             (sum(totallanuvprice) / sum(weight)) AS avgpricelanuv,
             avg(weight) AS avgweight,
             avg(dprice) AS avgdprice
@@ -637,6 +656,8 @@ SQL;
     public function dispense()
     {
         $this->bean->dirty = false;
+        $this->bean->itwpiggery = 0;
+        $this->bean->itwdamagepiggery = 0;
         $this->addConverter('startdate', array(
             new Converter_Mysqldate()
         ));
@@ -644,6 +665,9 @@ SQL;
             new Converter_Mysqldate()
         ));
         $this->addConverter('piggery', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('itwpiggery', array(
             new Converter_Decimal()
         ));
         $this->addConverter('piggerypercentage', array(
@@ -661,6 +685,9 @@ SQL;
         $this->addConverter('sumtotalpricenet', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('sumtotalpricenetitw', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('avgmfa', array(
             new Converter_Decimal()
         ));
@@ -668,6 +695,9 @@ SQL;
             new Converter_Decimal()
         ));
         $this->addConverter('avgpricenet', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('avgpricenetitw', array(
             new Converter_Decimal()
         ));
         $this->addConverter('avgpricelanuv', array(
@@ -713,6 +743,12 @@ SQL;
             new Converter_Decimal()
         ));
         $this->addConverter('damageavgdprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgpricenetitw', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumtotalpricenetitw', array(
             new Converter_Decimal()
         ));
     }

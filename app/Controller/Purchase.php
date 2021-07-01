@@ -70,6 +70,9 @@ class Controller_Purchase extends Controller
 
     /**
      * Update all csb beans averages.
+     *
+     * @todo delete
+     * @deprecated sincd July 1th 2021
      */
     public function avgAfterburner()
     {

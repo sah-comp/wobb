@@ -24,6 +24,8 @@ class Model_Analysisitem extends Model
      */
     public function dispense()
     {
+        $this->bean->itwpiggery = 0;
+        $this->bean->itwdamagepiggery = 0;
         $this->addConverter('piggery', array(
           new Converter_Decimal()
         ));
@@ -51,7 +53,7 @@ class Model_Analysisitem extends Model
         $this->addConverter('avgpricenet', array(
             new Converter_Decimal()
         ));
-        $this->addConverter('avgdpricelanuv', array(
+        $this->addConverter('avgpricenetitw', array(
             new Converter_Decimal()
         ));
         $this->addConverter('sumtotaldprice', array(
@@ -100,6 +102,12 @@ class Model_Analysisitem extends Model
             new Converter_Decimal()
         ));
         $this->addConverter('damageavgdprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damageavgpricenetitw', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('sumtotalpricenetitw', array(
             new Converter_Decimal()
         ));
     }

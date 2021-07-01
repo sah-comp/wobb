@@ -5,14 +5,14 @@
     <style>
         body {
             font-family: sans-serif;
-	        font-size: 10pt;
+	        font-size: 9pt;
         }
         .emphasize {
             font-weight: bold;
-            font-size: 11pt;
+            font-size: 10pt;
         }
         .uberemphasize {
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
         }
         table {
@@ -45,7 +45,7 @@
         th.number,
         td.number {
             text-align: right;
-        }     
+        }
     </style>
 </head>
 <body>
@@ -66,20 +66,22 @@
     <sethtmlpageheader name="tkheader" value="on" show-this-page="1" />
     <sethtmlpagefooter name="tkfooter" value="on" />
     mpdf-->
-    
+
     <table class="invoice" width="100%">
         <thead>
             <tr>
                 <th width="10%"><?php echo I18n::__('invoice_label_name') ?></th>
                 <th width="5%"><?php echo I18n::__('invoice_label_dateofslaughter_list') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_person_account') ?></th>
-                <th width="10%"><?php echo I18n::__('invoice_label_person_name') ?></th>
+                <th width="7%" class="number"><?php echo I18n::__('invoice_label_person_account') ?></th>
+                <th width="6%"><?php echo I18n::__('invoice_label_person_name') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalnet') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_bonusnet') ?></th>
-                <th width="10%" class="number"><?php echo I18n::__('invoice_label_costnet') ?></th>
+                <th width="6%" class="number"><?php echo I18n::__('invoice_label_bonusnet') ?></th>
+                <th width="6%" class="number"><?php echo I18n::__('invoice_label_costnet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_subtotalnet') ?></th>
                 <th width="5%" class="number"><?php echo I18n::__('invoice_label_vat') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_vatvalue') ?></th>
+                <th width="8%" class="number"><?php echo I18n::__('invoice_label_totalnetitw') ?></th>
+                <th width="7%" class="number"><?php echo I18n::__('invoice_label_vatvalueitw') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('invoice_label_totalgros') ?></th>
             </tr>
         </thead>
@@ -96,6 +98,8 @@
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('subtotalnet', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars(Flight::myDecimal($_record->vat->value)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('vatvalue', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->decimal('totalnetitw', 2)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_record->decimal('vatvalueitw', 2)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?></td>
             </tr>
         <?php endforeach ?>
@@ -110,6 +114,8 @@
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['subtotalnet'])) ?></td>
                 <td class="bb bt number emphasize">&nbsp;</td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['vatvalue'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalnetitw'])) ?></td>
+                <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['vatvalueitw'])) ?></td>
                 <td class="bb bt number emphasize"><?php echo htmlspecialchars(Flight::myDecimal($totals['totalgros'])) ?></td>
             </tr>
         </tbody>

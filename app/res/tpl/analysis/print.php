@@ -92,7 +92,7 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -105,7 +105,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php foreach ($record->withCondition(' kind = 1 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <tr>
@@ -118,7 +118,7 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -131,7 +131,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('damageavgpricenetitw', 3)) ?></td>
             </tr>
         </tbody>
     </table>
@@ -175,7 +175,7 @@
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -188,7 +188,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         </tbody>
     </table>
@@ -235,7 +235,7 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -248,7 +248,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php foreach ($_analysis->withCondition(' kind = 1 ORDER BY id ')->ownAnalysisitem as $_id => $_analysisitem): ?>
             <tr>
@@ -261,7 +261,7 @@
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgprice', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysisitem->decimal('damageavgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -274,7 +274,7 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgprice', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($_analysis->decimal('damageavgpricenetitw', 3)) ?></td>
             </tr>
         </tbody>
     </table>

@@ -706,6 +706,7 @@ SQL;
                       ->withCondition(" enabled = 1 ORDER BY supplier ")
                       ->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
+            $deliverer->totalnetitw = 0;
             $deliverer->totalnetsprice = 0;
             $deliverer->subtotalnet = 0;
             $deliverer->vatvalue = 0;
@@ -723,6 +724,7 @@ SQL;
                 $summary = $subdeliverer->calculation($this->bean);
                 // save some of the summary to the subdeliverer
                 $subdeliverer->totalnet = $summary['totalnet'];
+                $subdeliverer->totalnetitw = $summary['totalnetitw'];
                 $subdeliverer->totalnetsprice = $summary['totalnetsprice'];
                 $subdeliverer->totalweight = $summary['totalweight'];
                 // subdeliverer mean values
@@ -739,6 +741,7 @@ SQL;
                 }
                 // add all up
                 $deliverer->totalnet += $summary['totalnet'];
+                $deliverer->totalnetitw += $summary['totalnetitw'];
                 $deliverer->totalnetsprice += $summary['totalnetsprice'];
                 $deliverer->totalnetlanuv += $summary['totalnetlanuv'];
                 $deliverer->totalweight += $summary['totalweight'];

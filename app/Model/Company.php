@@ -19,7 +19,6 @@
  */
 class Model_Company extends Model
 {
-
     /**
      * Returns an integer number representing the next serial number.
      *
@@ -143,6 +142,11 @@ class Model_Company extends Model
                 ':buyer' => $this->bean->buyer,
                 ':oldbuyer' => $this->bean->old('buyer')
             ));
+        }
+        if ($this->bean->vat_id) {
+            $this->bean->vat = R::load('vat', $this->bean->vat_id);
+        } else {
+            unset($this->bean->vat);
         }
         parent::update();
     }

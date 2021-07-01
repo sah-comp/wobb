@@ -111,14 +111,14 @@ Flight::set('templates', array(
 /**
  * Setting.
  */
-Flight::map('setting', function() {
+Flight::map('setting', function () {
     return R::load('setting', 1);//setting there can only be one
 });
 
 /**
  * Textile.
  */
-Flight::map('textile', function($text, $restricted = false) {
+Flight::map('textile', function ($text, $restricted = false) {
     $parser = new Textile('html5');
     return $parser->TextileThis($text);
 });
@@ -126,28 +126,28 @@ Flight::map('textile', function($text, $restricted = false) {
 /**
  * Blessed folder.
  */
-Flight::map('blessedfolder', function() {
+Flight::map('blessedfolder', function () {
     return R::load('domain', Flight::setting()->blessedfolder);//
 });
 
 /**
  * Sites folder.
  */
-Flight::map('sitesfolder', function() {
+Flight::map('sitesfolder', function () {
     return R::load('domain', Flight::setting()->sitesfolder);//
 });
 
 /**
  * Blessed folder.
  */
-Flight::map('basecurrency', function() {
+Flight::map('basecurrency', function () {
     return R::load('currency', Flight::setting()->basecurrency);
 });
 
 /**
  * Sets a locale category according to the current language.
  */
-Flight::map('setlocale', function($category = LC_TIME) {
+Flight::map('setlocale', function ($category = LC_TIME) {
     return setlocale($category, Flight::get('language').'_'.strtoupper(Flight::get('language')).'.UTF-8');
 });
 
@@ -161,7 +161,9 @@ Flight::map('setlocale', function($category = LC_TIME) {
  * @return string
  */
 Flight::map('myDecimal', function ($value, $decimals = 2, $decimal_point = ',', $thousands_separator = '.') {
-    if ( ! $value ) return '';
+    if (! $value) {
+        return '';
+    }
     return number_format($value, $decimals, $decimal_point, $thousands_separator);
 });
 
@@ -177,12 +179,14 @@ ini_set('session.use_only_cookies', '1');
 define('MAX_SESSION_LIFETIME', 14400); // 4 hours
 
 $sessionhandler = new Sessionhandler_Database();
-session_set_save_handler(array($sessionhandler, 'open'),
-                         array($sessionhandler, 'close'),
-                         array($sessionhandler, 'read'),
-                         array($sessionhandler, 'write'),
-                         array($sessionhandler, 'destroy'),
-                         array($sessionhandler, 'gc'));
+session_set_save_handler(
+    array($sessionhandler, 'open'),
+    array($sessionhandler, 'close'),
+    array($sessionhandler, 'read'),
+    array($sessionhandler, 'write'),
+    array($sessionhandler, 'destroy'),
+    array($sessionhandler, 'gc')
+);
 register_shutdown_function('session_write_close');
 
 /**

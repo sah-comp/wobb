@@ -101,10 +101,10 @@
                 <td class="number"><?php echo htmlspecialchars(number_format($_analysis->piggery * 100 / $record->piggery, 2, ',', '.')) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('itwpiggery', 0)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumtotalpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumtotalpricenetitw', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenet', 3)) ?></td>
+                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
         <?php endforeach ?>
             <tr>
@@ -113,10 +113,10 @@
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('piggerypercentage', 2)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('itwpiggery', 0)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotaldprice', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotalpricenetitw', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenet', 3)) ?></td>
+                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenetitw', 3)) ?></td>
             </tr>
             <tr>
                 <td colspan="5">&nbsp;</td>

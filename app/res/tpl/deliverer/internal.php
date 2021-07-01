@@ -420,8 +420,8 @@
                 </table>
                 <?php endif ?>
             </td>
-            <td width="20%"></td>
-            <td width="40%" style="vertical-align: top;">
+            <td width="10%"></td>
+            <td width="50%" style="vertical-align: top;">
                 <table width="100%">
                     <tr>
                         <td width="50%" class="bb number"><?php echo I18n::__('wawi_label_net') ?></td>
@@ -431,6 +431,16 @@
                         <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->person->vat->name) ?></td>
                         <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalue', 2)) ?></td>
                     </tr>
+                    <?php if ($record->invoice->company->hastierwohl && $record->itwpiggery > 0 && ($record->invoice->totalnetitw > 0 || $record->invoice->totalnetitw < 0)): ?>
+                    <tr>
+                        <td width="50%" class="bb number"><?php echo I18n::__('wawi_label_net_itw') ?></td>
+                        <td width="50%" class="bb number"><?php echo $record->invoice->decimal('totalnetitw', 2) ?></td>
+                    </tr>
+                    <tr>
+                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->company->vat->name) ?></td>
+                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalueitw', 2)) ?></td>
+                    </tr>
+                    <?php endif ?>
                     <tr>
                         <td width="50%" class="bt number"><?php echo I18n::__('wawi_label_gros') ?></td>
                         <td width="50%" class="bt uberemphasize number"><?php echo htmlspecialchars($record->invoice->decimal('totalgros', 2)) ?></td>
@@ -442,19 +452,6 @@
     </table>
 
     <div style="height: 5mm;"></div>
-
-    <?php if ($record->invoice->company->hastierwohl): ?>
-    <table width="60%">
-        <tr>
-            <td class="dinky" style="vertical-align: top;">
-                <?php
-                Flight::setlocale(LC_ALL);
-                echo Flight::textile(I18n::__('invoice_internal_text_itw', null, [$record->invoice->company->tierwohlnetperstock])) ?>
-            </td>
-        </tr>
-    </table>
-    <div style="height: 5mm;"></div>
-    <?php endif; ?>
 
     <table width="60%">
         <tr>

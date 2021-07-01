@@ -294,10 +294,25 @@ class Model_Invoice extends Model
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('totalnetother', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalnetnormal', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalnetfarmer', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('totalnetitw', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('subtotalnet', array(
             new Converter_Decimal()
         ));
         $this->addConverter('vatvalue', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('vatvalueitw', array(
             new Converter_Decimal()
         ));
         $this->addConverter('totalgros', array(
