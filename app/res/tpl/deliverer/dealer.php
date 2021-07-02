@@ -453,19 +453,6 @@
 
     <div style="height: 5mm;"></div>
 
-    <?php if ($record->invoice->company->hastierwohl): ?>
-    <table width="60%">
-        <tr>
-            <td class="dinky" style="vertical-align: top;">
-                <?php
-                Flight::setlocale(LC_ALL);
-                echo Flight::textile(I18n::__('invoice_internal_text_itw', null, [$record->invoice->company->tierwohlnetperstock])) ?>
-            </td>
-        </tr>
-    </table>
-    <div style="height: 5mm;"></div>
-    <?php endif; ?>
-
     <?php Flight::render('deliverer/dealer/pricemask', array(
         'record' => $record
     )) ?>
