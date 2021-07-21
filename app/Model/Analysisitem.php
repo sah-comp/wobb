@@ -86,6 +86,10 @@ class Model_Analysisitem extends Model
         $this->addConverter('damagesumtotallanuvprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('damagesumtotalpricenetitw', array(
+            new Converter_Decimal()
+        ));
+
         $this->addConverter('damageavgmfa', array(
             new Converter_Decimal()
         ));

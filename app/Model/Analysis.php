@@ -289,6 +289,7 @@ SQL;
         $bean->damagesumweight = $summary['sumweight'];
         $bean->damagesumtotaldprice = $summary['sumtotaldprice'];
         $bean->damagesumtotallanuvprice = $summary['sumtotallanuvprice'];
+        $bean->damagesumtotalpricenetitw = $summary['sumtotalpricenetitw'];
         $bean->damageavgmfa = $summary['avgmfa'];
         $bean->damageavgprice = $summary['avgprice'];
         $bean->damageavgpricenet = $summary['avgpricenet'];
@@ -725,6 +726,9 @@ SQL;
             new Converter_Decimal()
         ));
         $this->addConverter('damagesumtotallanuvprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('damagesumtotalpricenetitw', array(
             new Converter_Decimal()
         ));
         $this->addConverter('damageavgmfa', array(
