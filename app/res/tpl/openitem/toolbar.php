@@ -16,6 +16,12 @@
 			<?php echo I18n::__('action_list_nav') ?>
 		</a>
 	</li>
+    <li>
+		<a
+			href="<?php echo Url::build("/openitem/csv") ?>">
+			<?php echo I18n::__('openitem_action_csv') ?>
+		</a>
+	</li>
 	<li>
 		<a
 			href="<?php echo Url::build("/openitem/pdf") ?>"
