@@ -78,11 +78,7 @@ class Model_Deliverer extends Model
                 ':earmark' => $this->bean->earmark,
                 ':pid' => $this->bean->person->getId()
             ])) {
-                if ($this->bean->deliverer->person->nextweekprice && $csb->nextweekprice) {
-                    $this->bean->dprice = $csb->nextweekprice + $hasStockmanWithPriceAdjust->reldprice;
-                } else {
-                    $this->bean->dprice = $csb->baseprice + $hasStockmanWithPriceAdjust->reldprice;
-                }
+                $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
             } else {
                 $this->bean->dprice = $this->bean->deliverer->dprice;
             }
