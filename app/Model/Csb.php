@@ -143,7 +143,7 @@ class Model_Csb extends Model
         $file .= implode($header) . "\r\n";
 
         // ADIS data stock
-        $file .= "DN610101006103011400061031408000610310150006103081400061031505200610316031006103190310061031803100610320020" . "\r\n";
+        $file .= "DN61010100610301140006103140800061031015000610308140006103150520061031603100610319031006103180310061032002000610014150" . "\r\n";
 
         // cycle through all our piggies
         $stocks = R::find("stock", " csb_id = :csb_id ORDER BY earmark, mfa DESC", ['csb_id' => $this->bean->getId()]);
@@ -158,7 +158,8 @@ class Model_Csb extends Model
                 str_pad($stock->mfa * 10, 3, "0", STR_PAD_LEFT),
                 str_pad($stock->speck * 10, 3, "0", STR_PAD_LEFT),
                 str_pad($stock->flesh * 10, 3, "0", STR_PAD_LEFT),
-                str_pad($stock->quality, 2, " ", STR_PAD_LEFT)
+                str_pad($stock->quality, 2, " ", STR_PAD_LEFT),
+                str_pad($stock->vvvo, 15, " ", STR_PAD_LEFT)
             ];
             $file .= implode($data) . "\r\n";
         }

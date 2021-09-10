@@ -48,7 +48,7 @@ class Model_Csbformat extends Model
                 'filter' => array(
                     'tag' => 'bool'
                 ),
-				'width' => '5rem'
+                'width' => '5rem'
             )
         );
     }
@@ -78,7 +78,8 @@ class Model_Csbformat extends Model
             'tare' => trim($this->makeFloatFromCSBFloat(substr($line, 62, 4))),
             'damage1' => trim(substr($line, 67, 2)),
             'damage2' => trim(substr($line, 88, 3)),
-            'qs' => (trim(substr($line, 109, 1)) == 'Q') ? true : false
+            'qs' => (trim(substr($line, 109, 1)) == 'Q') ? true : false,
+            'vvvo' => trim(substr($line, 111, 15))
         );
     }
 

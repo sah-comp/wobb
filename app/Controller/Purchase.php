@@ -287,7 +287,7 @@ class Controller_Purchase extends Controller
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 
         if ($smtp = $this->record->company->smtp()) {
-            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
+            $mail->SMTPDebug = 4; // Set debug mode, 1 = err/msg, 2 = msg
             /**
              * uncomment this block to get verbose error logging in your error log file
              */

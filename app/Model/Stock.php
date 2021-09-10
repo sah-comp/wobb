@@ -31,6 +31,15 @@ class Model_Stock extends Model
     {
         return array(
             array(
+                'name' => 'vvvo',
+                'sort' => array(
+                    'name' => 'vvvo'
+                ),
+                'filter' => array(
+                    'tag' => 'text'
+                )
+            ),
+            array(
                 'name' => 'buyer',
                 'sort' => array(
                     'name' => 'buyer'
