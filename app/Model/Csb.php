@@ -527,6 +527,7 @@ SQL;
      * Reads the file and tries to import stock from the given file.
      *
      * @todo Implement a test on imported. Already imported CSB file have to be rejected
+     * @todo Check deliverer VVVO number for Tierwohl qualification instead of checking via flag
      */
     public function importFromCsb()
     {
@@ -661,12 +662,13 @@ SQL;
                 ':supplier' => $deliverer->supplier
             ));
             // Subdeliverer is owned by deliverer bean
-            $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
+            $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier, vvvo FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
                 $subdeliverer = R::dispense('deliverer');
                 $subdeliverer->person = $deliverer->person;
                 $subdeliverer->supplier = $substock['supplier'];
                 $subdeliverer->earmark = $substock['earmark'];
+                $subdeliverer->vvvo = $substock['vvvo'];
                 $subdeliverer->piggery = $substock['total'];
                 $subdeliverer->dprice = 0;
                 $subdeliverer->sprice = 0;

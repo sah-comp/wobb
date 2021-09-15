@@ -74,8 +74,8 @@ class Model_Deliverer extends Model
     public function setBaseprices($csb)
     {
         if (! $this->bean->dprice) {
-            if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " earmark = :earmark AND person_id = :pid LIMIT 1", [
-                ':earmark' => $this->bean->earmark,
+            if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
+                ':vvvo' => $this->bean->vvvo,
                 ':pid' => $this->bean->person->getId()
             ])) {
                 $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
