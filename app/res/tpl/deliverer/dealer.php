@@ -204,32 +204,32 @@
             <td style="width: 65mm; vertical-align: top;">
                 <table class="info" width="100%">
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_serial') ?></label>
-                        <td class="value emphasize"><?php echo $record->invoice->name ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_serial') ?></td>
+                        <td class="value emphasize"><?php echo $record->invoice->name ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></label>
-                        <td class="value"><?php echo $bookingdate ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_bookingdate') ?></td>
+                        <td class="value"><?php echo $bookingdate ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></label>
-                        <td class="value"><?php echo $pubdate ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_slaughterdate') ?></td>
+                        <td class="value"><?php echo $pubdate ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_vezgprice') ?></label>
-                        <td class="value"><?php echo $record->csb->decimal('baseprice', 2) ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_vezgprice') ?></td>
+                        <td class="value"><?php echo $record->csb->decimal('baseprice', 2) ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_nickname') ?></label>
-                        <td class="value"><?php echo $record->person->nickname ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_nickname') ?></td>
+                        <td class="value"><?php echo $record->person->nickname ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_person') ?></label>
-                        <td class="value"><?php echo $record->person->account ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_person') ?></td>
+                        <td class="value"><?php echo $record->person->account ?></td>
                     </tr>
                     <tr>
-                        <td class="label"><?php echo I18n::__('invoice_internal_label_taxid') ?></label>
-                        <td class="value"><?php echo $record->person->taxid ?></label>
+                        <td class="label"><?php echo I18n::__('invoice_internal_label_taxid') ?></td>
+                        <td class="value"><?php echo $record->person->taxid ?></td>
                     </tr>
                 </table>
             </td>
@@ -411,7 +411,7 @@
                         <tr>
                             <td class="dinky number"><?php echo htmlspecialchars($nonqs) ?></td>
                             <td class="dinky"><?php echo I18n::__('invoice_internal_label_nonqs') ?></td>
-                            <td></td>
+                            <td>&nbsp;</td>
                             <td class="dinky"><?php echo I18n::__('invoice_internal_method_nonqs') ?></td>
                             <td class="dinky number"><?php echo $record->person->decimal('qsdiscount', 3) ?></td>
                         </tr>
