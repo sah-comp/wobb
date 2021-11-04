@@ -156,7 +156,7 @@ class Controller_Booking extends Controller
             ':lo' => $_SESSION['booking']['lo'],
             ':hi' => $_SESSION['booking']['hi']
         ));
-        $this->totals = R::getRow(" SELECT count(id) AS count, SUM(totalnet) AS totalnet, SUM(subtotalnet) AS subtotalnet, SUM(totalnetnormal) as totalnetnormal, SUM(totalnetfarmer) as totalnetfarmer, SUM(totalnetother) as totalnetother, SUM(vatvalue) AS vatvalue, SUM(totalgros) AS totalgros, SUM(bonusnet) AS bonusnet, SUM(costnet) AS costnet FROM invoice WHERE fy = :fy AND ( name >= :lo AND name <= :hi ) ", array(
+        $this->totals = R::getRow(" SELECT count(id) AS count, SUM(totalnetitw) AS totalnetitw, SUM(totalnet) AS totalnet, SUM(subtotalnet) AS subtotalnet, SUM(totalnetnormal) as totalnetnormal, SUM(totalnetfarmer) as totalnetfarmer, SUM(totalnetother) as totalnetother, SUM(vatvalue) AS vatvalue, SUM(vatvalueitw) AS vatvalueitw, SUM(totalgros) AS totalgros, SUM(bonusnet) AS bonusnet, SUM(costnet) AS costnet FROM invoice WHERE fy = :fy AND ( name >= :lo AND name <= :hi ) ", array(
             ':fy' => $_SESSION['booking']['fy'],
             ':lo' => $_SESSION['booking']['lo'],
             ':hi' => $_SESSION['booking']['hi']
