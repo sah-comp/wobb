@@ -30,4 +30,16 @@
 		</a>
 	</li>
 	<?php endif ?>
+	<?php
+    if (isset($record) && $record->hasMenu()):
+        Flight::render("model/{$type}/toolbar/items.php", [
+            'record' => $record,
+            'type' => $type,
+            'base_url' => $base_url,
+            'layout' => $layout,
+            'order' => $order,
+            'dir' => $dir
+        ]);
+    endif;
+    ?>
 </ul>

@@ -163,7 +163,42 @@ class Controller_Deliverer extends Controller
         $mpdf = $this->generatePDF($filename, $docname);
         $mpdf->Output($filename, 'D');
         exit;
-        //$this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
+    }
+
+    /**
+     * Export the person list as .csv file
+     *
+     * @return void
+     */
+    public function csv()
+    {
+        $company = R::load('company', 1);
+        $filename = I18n::__('person_filename_csv', null, [$company->legalname]);
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding('UTF-8', 'UTF-8');
+        $csv->delimiter = ";";
+        $csv->output_delimiter = ";";
+        $csv->linefeed = "\r\n";
+        $csv->titles = [
+            I18n::__('person_csv_nickname'),
+            I18n::__('person_csv_account'),
+            I18n::__('person_csv_vvvo'),
+            I18n::__('person_csv_name'),
+            I18n::__('person_csv_email'),
+            I18n::__('person_csv_postaladdress')
+        ];
+        $csv->heading = true;
+        $csv->data = $this->makeCsvData();
+        $csv->output($filename);
+    }
+
+    /**
+     * Generates the array for csv export
+     */
+    public function makeCsvData()
+    {
+        $sql = "SELECT p.nickname AS nickname, p.account AS account, p.vvvo AS vvvo, REPLACE(p.name, '\r\n', ' ') AS name, p.email AS email, CONCAT(adr.street, ', ', adr.zip, ' ', adr.city) AS postaladdress FROM person AS p LEFT JOIN address AS adr ON adr.person_id = p.id AND adr.label = 'billing' WHERE enabled = 1 ORDER BY p.nickname";
+        return R::getAll($sql);
     }
 
     /**

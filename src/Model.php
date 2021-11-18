@@ -20,17 +20,17 @@ class Model extends RedBean_SimpleModel
     /**
      * Defines the validation mode to throw an exception.
      */
-    const VALIDATION_MODE_EXCEPTION = 1;
+    public const VALIDATION_MODE_EXCEPTION = 1;
 
     /**
      * Defines the validation mode to store an valid or invalid state with the bean.
      */
-    const VALIDATION_MODE_IMPLICIT = 2;
+    public const VALIDATION_MODE_IMPLICIT = 2;
 
     /**
      * Defines the validation mode to simply return the result of a validation.
      */
-    const VALIDATION_MODE_EXPLICIT = 4;
+    public const VALIDATION_MODE_EXPLICIT = 4;
 
     /**
      * Container for the validators.
@@ -102,6 +102,16 @@ class Model extends RedBean_SimpleModel
     public function isModel()
     {
         return true;
+    }
+
+    /**
+     * Returns wether the model has a toolbar menu extension or not.
+     *
+     * @return bool
+     */
+    public function hasMenu()
+    {
+        return false;
     }
 
     /**

@@ -177,6 +177,16 @@ class Model_Person extends Model
     }
 
     /**
+     * Returns wether the model has a toolbar menu extension or not.
+     *
+     * @return bool
+     */
+    public function hasMenu()
+    {
+        return true;
+    }
+
+    /**
      * Dispense.
      */
     public function dispense()
