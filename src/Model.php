@@ -8,6 +8,21 @@
  * @version $Id$
  */
 
+ /**
+  * Defines the validation mode to throw an exception.
+  */
+ define('VALIDATION_MODE_EXCEPTION', 1);
+
+ /**
+  * Defines the validation mode to store an valid or invalid state with the bean.
+  */
+ define('VALIDATION_MODE_IMPLICIT', 2);
+
+ /**
+  * Defines the validation mode to simply return the result of a validation.
+  */
+ define('VALIDATION_MODE_EXPLICIT', 4);
+
 /**
  * Model.
  *
@@ -17,21 +32,6 @@
  */
 class Model extends RedBean_SimpleModel
 {
-    /**
-     * Defines the validation mode to throw an exception.
-     */
-    public const VALIDATION_MODE_EXCEPTION = 1;
-
-    /**
-     * Defines the validation mode to store an valid or invalid state with the bean.
-     */
-    public const VALIDATION_MODE_IMPLICIT = 2;
-
-    /**
-     * Defines the validation mode to simply return the result of a validation.
-     */
-    public const VALIDATION_MODE_EXPLICIT = 4;
-
     /**
      * Container for the validators.
      *
@@ -45,7 +45,7 @@ class Model extends RedBean_SimpleModel
      *
      * @var int
      */
-    protected static $validation_mode = self::VALIDATION_MODE_EXCEPTION;
+    protected static $validation_mode = VALIDATION_MODE_EXCEPTION;
 
     /**
      * Container for the converters.
@@ -590,10 +590,10 @@ SQL;
         }
         //validation failed, react according to validation mode
         switch (self::$validation_mode) {
-            case self::VALIDATION_MODE_EXCEPTION:
+            case VALIDATION_MODE_EXCEPTION:
                 throw new Exception_Validation("Invalid {$this->bean->getMeta('type')}#{$this->bean->getId()}");
                 break;
-            case self::VALIDATION_MODE_IMPLICIT:
+            case VALIDATION_MODE_IMPLICIT:
                 $this->bean->invalid = true;
                 break;
             default:

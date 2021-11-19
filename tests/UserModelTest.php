@@ -1,4 +1,5 @@
 <?php
+
 require __DIR__ . '/../vendor/autoload.php';
 Flight::path(__DIR__ . '/../../src');
 include 'setup.php';
@@ -42,7 +43,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
     public function testUserStoreInvalidBeanDefaultValidationModeExplicit()
     {
         $invalidUser = R::dispense('user');
-        $invalidUser->setValidationMode(Model::VALIDATION_MODE_EXPLICIT);
+        $invalidUser->setValidationMode(VALIDATION_MODE_EXPLICIT);
         $invalidUser->name = 'Donald Duck';
         $invalidUser->shortname = 'dd';
         $invalidUser->email = 'donaldexample.com'; //invalid email address
@@ -53,7 +54,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
     public function testUserStoreInvalidBeanDefaultValidationModeImplicit()
     {
         $invalidUser = R::dispense('user');
-        $invalidUser->setValidationMode(Model::VALIDATION_MODE_IMPLICIT);
+        $invalidUser->setValidationMode(VALIDATION_MODE_IMPLICIT);
         $invalidUser->name = 'Donald Duck';
         $invalidUser->shortname = 'dd';
         $invalidUser->email = 'donaldexample.com'; //invalid email address
@@ -70,7 +71,7 @@ class UserModelTest extends PHPUnit_Framework_TestCase
     public function testUserStoreInvalidBeanDefaultValidationModeException()
     {
         $invalidUser = R::dispense('user');
-        $invalidUser->setValidationMode(Model::VALIDATION_MODE_EXCEPTION);
+        $invalidUser->setValidationMode(VALIDATION_MODE_EXCEPTION);
         $invalidUser->name = 'Donald Duck';
         $invalidUser->shortname = 'dd';
         $invalidUser->email = 'donaldexample.com'; //invalid email address
