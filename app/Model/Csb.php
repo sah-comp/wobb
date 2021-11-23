@@ -595,14 +595,19 @@ SQL;
         if (! $aliasses) {
             return false;
         }
-        $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE earmark = :earmark AND csb_id = :csb_id";
+        $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE (vvvo = :vvvo OR earmark = :earmark) AND csb_id = :csb_id";
         foreach ($aliasses as $id => $alias) {
-            $new_earmark = strtoupper($alias->person->nickname . substr($alias->earmark, 2));
+            if ($alias->vvvo) {
+                $new_earmark = strtoupper($alias->person->nickname . substr($alias->vvvo, -4));
+            } else {
+                $new_earmark = strtoupper($alias->person->nickname . substr($alias->earmark, 2));
+            }
             R::exec($sql, array(
                 ':new_earmark' => $new_earmark,
                 ':new_pid' => $alias->person->getId(),
                 ':new_supplier' => strtoupper($alias->person->nickname),
                 ':earmark' => $alias->earmark,
+                ':vvvo' => $alias->vvvo,
                 ':csb_id' => $this->bean->getId()
             ));
         }

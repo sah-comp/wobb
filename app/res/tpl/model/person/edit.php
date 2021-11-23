@@ -741,6 +741,11 @@ $stats = $record->ownStat;
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_kidnap') ?></legend>
         <p class="info above"><?php echo I18n::__('person_info_kidnap') ?></p>
+        <div class="row">
+            <div class="span3">&nbsp;</div>
+            <div class="span3"><label><?php echo I18n::__('kidnap_label_vvvo') ?></label></div>
+            <div class="span3"><label><?php echo I18n::__('kidnap_label_earmark') ?></label></div>
+        </div>
         <div
             id="person-<?php echo $record->getId() ?>-kidnap-container"
             class="container attachable detachable sortable">

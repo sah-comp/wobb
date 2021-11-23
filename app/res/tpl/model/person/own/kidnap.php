@@ -36,16 +36,23 @@
         name="dialog[ownKidnap][<?php echo $index ?>][id]"
         value="<?php echo $_kidnap->getId() ?>" />
 </div>
-<div class="row <?php echo ($_kidnap->hasError('earmark')) ? 'error' : ''; ?>">
-    <label
-        for="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-earmark">
-        <?php echo I18n::__('kidnap_label_earmark') ?>
-    </label>
-    <input
-        id="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-earmark"
-        type="text"
-        name="dialog[ownKidnap][<?php echo $index ?>][earmark]"
-        value="<?php echo htmlspecialchars($_kidnap->earmark) ?>" />
+
+<div class="row">
+	<div class="span3">&nbsp;</div>
+    <div class="span3">
+        <input
+            id="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-vvvo"
+            type="text"
+            name="dialog[ownKidnap][<?php echo $index ?>][vvvo]"
+            value="<?php echo htmlspecialchars($_kidnap->vvvo) ?>" />
+    </div>
+    <div class="span3">
+        <input
+            id="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-earmark"
+            type="text"
+            name="dialog[ownKidnap][<?php echo $index ?>][earmark]"
+            value="<?php echo htmlspecialchars($_kidnap->earmark) ?>" />
+    </div>
 </div>
 </fieldset>
 <!-- /kidnap edit subform -->
