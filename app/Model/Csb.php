@@ -591,17 +591,13 @@ SQL;
      */
     public function checkAliasses()
     {
-        $aliasses = R::findAll('kidnap');
+        $aliasses = R::findAll('kidnap', " ORDER BY earmark DESC, vvvo DESC");
         if (! $aliasses) {
             return false;
         }
-        $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE (vvvo = :vvvo OR earmark = :earmark) AND csb_id = :csb_id";
+        $sql = "UPDATE stock SET earmark = :new_earmark, person_id = :new_pid, supplier = :new_supplier WHERE (vvvo = :vvvo AND earmark = :earmark) AND csb_id = :csb_id";
         foreach ($aliasses as $id => $alias) {
-            if ($alias->vvvo) {
-                $new_earmark = strtoupper($alias->person->nickname . substr($alias->vvvo, -4));
-            } else {
-                $new_earmark = strtoupper($alias->person->nickname . substr($alias->earmark, 2));
-            }
+            $new_earmark = strtoupper($alias->person->nickname . substr($alias->earmark, 2));
             R::exec($sql, array(
                 ':new_earmark' => $new_earmark,
                 ':new_pid' => $alias->person->getId(),
