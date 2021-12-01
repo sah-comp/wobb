@@ -554,7 +554,7 @@ SQL;
                 if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
                     $stock->itw = true; // this stock is qualified to be paid additional amount ITW
                     $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
-                    if ($stockman = R::findOne('stockman', "earmark = ? LIMIT 1", [$stock->earmark])) {
+                    if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$stock->earmark, $stock->vvvo])) {
                         // there is a special price defined for this sub deliverer
                         $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
                     } else {
