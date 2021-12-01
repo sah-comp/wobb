@@ -44,7 +44,6 @@
             id="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-vvvo"
             type="text"
             name="dialog[ownKidnap][<?php echo $index ?>][vvvo]"
-            required="required"
             value="<?php echo htmlspecialchars($_kidnap->vvvo) ?>" />
     </div>
     <div class="span3">
@@ -52,7 +51,6 @@
             id="person-<?php echo $record->getId() ?>-kidnap-<?php echo $index ?>-earmark"
             type="text"
             name="dialog[ownKidnap][<?php echo $index ?>][earmark]"
-            required="required"
             value="<?php echo htmlspecialchars($_kidnap->earmark) ?>" />
     </div>
 </div>
