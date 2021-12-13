@@ -27,12 +27,12 @@ class Model_Lanuv extends Model
     /**
       * Define the lower margin for stock.
       */
-    public const LOWER_MARGIN = 80.0;
+    const LOWER_MARGIN = 80.0;
 
     /**
       * Define the upper margin for stock.
       */
-    public const UPPER_MARGIN = 110.0;
+    const UPPER_MARGIN = 110.0;
 
     /**
      * Holds the qualities (Handelsklasse) of stock to pick up in a summary.
