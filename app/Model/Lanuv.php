@@ -27,12 +27,12 @@ class Model_Lanuv extends Model
     /**
       * Define the lower margin for stock.
       */
-    const LOWER_MARGIN = 80.0;
+    public const LOWER_MARGIN = 80.0;
 
     /**
       * Define the upper margin for stock.
       */
-    const UPPER_MARGIN = 110.0;
+    public const UPPER_MARGIN = 110.0;
 
     /**
      * Holds the qualities (Handelsklasse) of stock to pick up in a summary.
@@ -97,6 +97,38 @@ class Model_Lanuv extends Model
                     'tag' => 'date'
                 )
             )
+        );
+    }
+
+    /**
+     * Returns the csv filename.
+     *
+     * @return string
+     */
+    public function getCsvFilename()
+    {
+        return I18n::__(
+            'lanuv_csv_filename',
+            null,
+            array(
+            $this->bean->company->region,
+            $this->bean->weekOfYear())
+        );
+    }
+
+    /**
+     * Returns the csv docname.
+     *
+     * @return string
+     */
+    public function getCsvDocname()
+    {
+        return I18n::__(
+            'lanuv_csv_docname',
+            null,
+            array(
+            $this->bean->company->region,
+            $this->bean->weekOfYear())
         );
     }
 
@@ -166,18 +198,6 @@ SQL;
             $summary = $this->getSummaryQuality($quality, $lowerMargin, $upperMargin); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
             $this->copyFromSummary($quality, $lanuvitem, $summary, $this->bean->piggery);
-            /*
-            $lanuvitem->quality = $quality;
-            $lanuvitem->piggery = $summary['piggery'];
-            $lanuvitem->sumweight = $summary['sumweight'];
-            $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
-            $lanuvitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
-            $lanuvitem->avgmfa = $summary['avgmfa'];
-            $lanuvitem->avgprice = $summary['avgprice'];
-            $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
-            $lanuvitem->avgweight = $summary['avgweight'];
-            $lanuvitem->avgdprice = $summary['avgdprice'];
-            */
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
         // Non-Qualities without weight margins
@@ -185,18 +205,6 @@ SQL;
             $summary = $this->getSummaryNonQuality($quality); // totals and averages of the stock
             $lanuvitem = R::dispense('lanuvitem');
             $this->copyFromSummary($quality, $lanuvitem, $summary, $this->bean->piggery);
-            /*
-            $lanuvitem->quality = $quality;
-            $lanuvitem->piggery = $summary['piggery'];
-            $lanuvitem->sumweight = $summary['sumweight'];
-            $lanuvitem->sumtotallanuvprice = $summary['sumtotallanuvprice'];
-            $lanuvitem->sumtotaldprice = $summary['sumtotaldprice'];
-            $lanuvitem->avgmfa = $summary['avgmfa'];
-            $lanuvitem->avgprice = $summary['avgprice'];
-            $lanuvitem->avgpricelanuv = $summary['avgpricelanuv'];
-            $lanuvitem->avgweight = $summary['avgweight'];
-            $lanuvitem->avgdprice = $summary['avgdprice'];
-            */
             $this->bean->ownLanuvitem[] = $lanuvitem;
         }
         $this->markAsReportedNoWeight($this->nonQualities);

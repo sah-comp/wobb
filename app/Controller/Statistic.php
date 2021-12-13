@@ -174,8 +174,8 @@ class Controller_Statistic extends Controller
     public function mail()
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
-        $filename = I18n::__('lanuv_csv_filename', null, array($this->record->weekOfYear()));
-        $docname = I18n::__('lanuv_csv_docname', null, array($this->record->weekOfYear()));
+        $filename = $this->record->getCsvFilename();
+        $docname = $this->record->getCsvDocname();
 
         $csv = $this->record->exportAsCsv();
         $csv->save(Flight::get('upload_dir') . '/' . $filename);
@@ -197,7 +197,7 @@ class Controller_Statistic extends Controller
     public function download()
     {
         Permission::check(Flight::get('user'), 'statistic', 'edit');
-        $filename = I18n::__('lanuv_csv_filename', null, array($this->record->weekOfYear()));
+        $filename = $this->record->getCsvFilename();
         $csv = $this->record->exportAsCsv();
         $csv->output($filename);
         exit;
