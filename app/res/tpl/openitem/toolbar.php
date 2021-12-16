@@ -16,6 +16,7 @@
 			<?php echo I18n::__('action_list_nav') ?>
 		</a>
 	</li>
+    <?php if ($hasRecords): ?>
     <li>
 		<a
 			href="<?php echo Url::build("/openitem/csv") ?>">
@@ -29,4 +30,5 @@
 			<?php echo I18n::__('openitem_action_pdf') ?>
 		</a>
 	</li>
+    <?php endif; ?>
 </ul>

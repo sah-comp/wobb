@@ -16,6 +16,7 @@
 			<?php echo I18n::__('action_list_nav') ?>
 		</a>
 	</li>
+    <?php if ($hasRecords): ?>
 	<li>
 		<a
 			href="<?php echo Url::build("/invoice/pdf") ?>"
@@ -23,4 +24,5 @@
 			<?php echo I18n::__('invoice_action_pdf') ?>
 		</a>
 	</li>
+    <?php endif; ?>
 </ul>

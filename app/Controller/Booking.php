@@ -203,6 +203,10 @@ class Controller_Booking extends Controller
     public function pdflist()
     {
         $this->getCollection('ASC');
+        if (!count($this->records)) {
+            Flight::get('user')->notify(I18n::__('booking_no_records'), 'warning');
+            $this->redirect($this->base_url);
+        }
         $this->record = reset($this->records);
         $fy = $_SESSION['booking']['fy'];
         $lo = $_SESSION['booking']['lo'];
@@ -245,6 +249,17 @@ class Controller_Booking extends Controller
     public function pdfbooking()
     {
         $this->getCollection('ASC');
+        if (!count($this->records)) {
+            Flight::get('user')->notify(I18n::__('booking_no_records'), 'warning');
+            $this->redirect($this->base_url);
+        }
+
+        Flight::get('user')->protocol(I18n::__('booking_pdf_snippet_download', null, [
+            $_SESSION['booking']['fy'],
+            $_SESSION['booking']['lo'],
+            $_SESSION['booking']['hi']
+        ]));
+
         $this->record = reset($this->records);
         $filename = I18n::__('booking_filename', null, array(
             $_SESSION['booking']['fy'],
@@ -289,6 +304,7 @@ class Controller_Booking extends Controller
         Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('booking/toolbar', array(
+            'hasRecords' => count($this->records)
         ), 'toolbar');
         Flight::render('shared/header', array(), 'header');
         Flight::render('shared/footer', array(), 'footer');

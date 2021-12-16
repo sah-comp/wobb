@@ -16,6 +16,7 @@
 			<?php echo I18n::__('action_list_nav') ?>
 		</a>
 	</li>
+    <?php if ($hasRecords): ?>
 	<li>
 		<a
 			href="<?php echo Url::build("/booking/pdflist") ?>"
@@ -30,4 +31,5 @@
 			<?php echo I18n::__('booking_action_pdfbooking') ?>
 		</a>
 	</li>
+    <?php endif; ?>
 </ul>

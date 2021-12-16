@@ -178,6 +178,10 @@ class Controller_Openitem extends Controller
     public function pdf()
     {
         $this->getCollection('ASC');
+        if (!count($this->records)) {
+            Flight::get('user')->notify(I18n::__('openitem_no_records'), 'warning');
+            $this->redirect($this->base_url);
+        }
         $this->record = reset($this->records);
         $fy = $_SESSION['openitem']['fy'];
         $nickname = $_SESSION['openitem']['nickname'];
@@ -240,6 +244,7 @@ class Controller_Openitem extends Controller
         $csv->heading = true;
         $csv->data = $this->getInvoices();
         $csv->output($filename);
+        exit;
     }
 
     /**
@@ -292,6 +297,7 @@ SQL;
         Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
         Flight::render('openitem/toolbar', array(
+            'hasRecords' => count($this->records)
         ), 'toolbar');
         Flight::render('shared/header', array(), 'header');
         Flight::render('shared/footer', array(), 'footer');
