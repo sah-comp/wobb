@@ -175,6 +175,21 @@ class Model_User extends Model
     }
 
     /**
+     * Adds a entry to protocol, logging what user has done.
+     *
+     * @param string $payload Describes the action
+     * @return void
+     */
+    public function protocol($payload)
+    {
+        $activity = R::dispense('activity');
+        $activity->username = $this->bean->getName();
+        $activity->stamp = date('Y-m-d H:i:s');
+        $activity->message = $payload;
+        R::store($activity);
+    }
+
+    /**
      * Returns an array with unread notification(s) of this user.
      *
      * If optional parameter is set to false the notifcations are not
