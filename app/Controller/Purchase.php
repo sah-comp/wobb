@@ -142,6 +142,11 @@ class Controller_Purchase extends Controller
                 $this->record->checkAliasses();
                 $this->record->makeDeliverer();
                 R::store($this->record);
+
+                Flight::get('user')->protocol(I18n::__('purchase_day_add_success_activity', null, [
+                    $this->record->pubdate
+                ]));
+
                 R::commit();
                 Flight::get('user')->notify(I18n::__('purchase_day_add_success'));
                 $this->redirect(sprintf('/purchase/calculation/%d', $this->record->getId()));

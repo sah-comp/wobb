@@ -30,7 +30,7 @@ class Controller_Login extends Controller
     public function index()
     {
         session_start();
-        if ( ! isset($_SESSION['login_id'])) {
+        if (! isset($_SESSION['login_id'])) {
             $_SESSION['login_id'] = 0;
         }
         $login = R::load('login', $_SESSION['login_id']);
@@ -42,10 +42,11 @@ class Controller_Login extends Controller
                     $_SESSION['backend']['language'] = Flight::get('language');
                     $login->user->sid = session_id();
                     R::store($login);
-					$goto = Flight::request()->data->goto;
-					if ( ! $goto || empty($goto) || $goto == '') {
-						$goto = '/';
-					}
+                    $goto = Flight::request()->data->goto;
+                    if (! $goto || empty($goto) || $goto == '') {
+                        $goto = '/';
+                    }
+                    $login->user->protocol(I18n::__('login_successfully'));
                     $this->redirect($goto, $raw = true);
                 }
                 $this->message = I18n::__('login_failed');

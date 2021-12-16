@@ -24,6 +24,7 @@ class Controller_Logout extends Controller
     {
         session_start();
         Auth::check();
+        Flight::get('user')->protocol(I18n::__('logout_successfully'));
         Flight::get('user')->logout();
         R::store(Flight::get('user'));
         unset($_SESSION);
