@@ -71,9 +71,9 @@
                 <th width="9%"><?php echo I18n::__('analysis_label_quality') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
-                <th width="5%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
+                <th width="7%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
                 <th width="15%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
-                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
+                <th width="18%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
                 <th width="11%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
@@ -149,9 +149,9 @@
                 <th width="9%"><?php echo I18n::__('analysis_label_supplier') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
-                <th width="5%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
+                <th width="7%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
                 <th width="15%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
-                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
+                <th width="18%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
                 <th width="11%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
@@ -206,9 +206,9 @@
                 <th width="9%"><?php echo I18n::__('analysis_label_quality') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
-                <th width="5%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
+                <th width="7%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
                 <th width="15%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
-                <th width="20%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
+                <th width="18%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
                 <th width="11%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
