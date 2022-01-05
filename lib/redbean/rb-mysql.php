@@ -819,7 +819,11 @@ class RPDO implements Driver
 					$this->resultArray = array();
 					return $statement;
 				}
-				$this->resultArray = $statement->fetchAll( $fetchStyle );
+				if ( is_null( $fetchStyle) ) {
+					$this->resultArray = $statement->fetchAll();
+				} else {
+					$this->resultArray = $statement->fetchAll( $fetchStyle );
+				}
 				if ( $this->loggingEnabled && $this->logger ) {
 					$this->logger->log( 'resultset: ' . count( $this->resultArray ) . ' rows' );
 				}
@@ -1142,7 +1146,7 @@ class RPDO implements Driver
 		if ( isset($options['runInitCode']) )   $runInitCode   = $options['runInitCode'];
 		if ( isset($options['stringFetch']) )   $stringFetch   = $options['stringFetch'];
 
-		if ($connected) $this->connected = $connected;
+		if ($connected) $this->isConnected = $connected;
 		if ($setEncoding) $this->setEncoding();
 		if ($setAttributes) {
 			$this->pdo->setAttribute( \PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION );
@@ -2059,6 +2063,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return ArrayIterator
 	 */
+	 #[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \ArrayIterator( $this->properties );
@@ -3052,6 +3057,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return void
 	 */
+	 #[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value )
 	{
 		$this->__set( $offset, $value );
@@ -3069,6 +3075,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return boolean
 	 */
+	 #[\ReturnTypeWillChange]
 	public function offsetExists( $offset )
 	{
 		return $this->__isset( $offset );
@@ -3087,6 +3094,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return void
 	 */
+	 #[\ReturnTypeWillChange]
 	public function offsetUnset( $offset )
 	{
 		$this->__unset( $offset );
@@ -3105,6 +3113,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return mixed
 	 */
+	 #[\ReturnTypeWillChange]
 	public function &offsetGet( $offset )
 	{
 		return $this->__get( $offset );
@@ -3245,6 +3254,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return integer
 	 */
+	 #[\ReturnTypeWillChange]
 	public function count()
 	{
 		return count( $this->properties );
@@ -3821,12 +3831,14 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 * the flavour label attachec to the $coffee bean. This illustrates
 	 * how to use equals() with RedBeanPHP-style enums.
 	 *
-	 * @param OODBBean $bean other bean
+	 * @param OODBBean|null $bean other bean
 	 *
 	 * @return boolean
 	 */
 	public function equals(OODBBean $bean)
 	{
+		if ( is_null($bean) ) return false;
+
 		return (bool) (
 			   ( (string) $this->properties['id'] === (string) $bean->properties['id'] )
 			&& ( (string) $this->__info['type']   === (string) $bean->__info['type']   )
@@ -3850,6 +3862,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 *
 	 * @return array
 	 */
+	 #[\ReturnTypeWillChange]
 	public function jsonSerialize()
 	{
 		$json = $this->__call( '@__jsonSerialize', array( ) );
@@ -4688,19 +4701,26 @@ class BeanCollection
 	protected $type = NULL;
 
 	/**
+	 * @var string
+	 */
+	protected $mask = NULL;
+
+	/**
 	 * Constructor, creates a new instance of the BeanCollection.
 	 *
 	 * @param string     $type       type of beans in this collection
 	 * @param Repository $repository repository to use to generate bean objects
 	 * @param Cursor     $cursor     cursor object to use
+	 * @param string     $mask       meta mask to apply (optional)
 	 *
 	 * @return void
 	 */
-	public function __construct( $type, Repository $repository, Cursor $cursor )
+	public function __construct( $type, Repository $repository, Cursor $cursor, $mask = '__meta' )
 	{
 		$this->type = $type;
 		$this->cursor = $cursor;
 		$this->repository = $repository;
+		$this->mask = $mask;
 	}
 
 	/**
@@ -4715,7 +4735,7 @@ class BeanCollection
 	{
 		$row = $this->cursor->getNextItem();
 		if ( $row ) {
-			$beans = $this->repository->convertToBeans( $this->type, array( $row ) );
+			$beans = $this->repository->convertToBeans( $this->type, array( $row ), $this->mask );
 			return reset( $beans );
 		}
 		return NULL;
@@ -5417,8 +5437,10 @@ abstract class AQueryWriter
 	 * For instance to add  ROW_FORMAT=DYNAMIC to all MySQL tables
 	 * upon creation:
 	 *
+	 * <code>
 	 * $sql = $writer->getDDLTemplate( 'createTable', '*' );
 	 * $writer->setDDLTemplate( 'createTable', '*', $sql . '  ROW_FORMAT=DYNAMIC ' );
+	 * </code>
 	 *
 	 * For property-specific templates set $beanType to:
 	 * account.username -- then the template will only be applied to SQL statements relating
@@ -5553,13 +5575,32 @@ abstract class AQueryWriter
 	 * Globally available service method for RedBeanPHP.
 	 * Converts a camel cased string to a snake cased string.
 	 *
-	 * @param string $camel camelCased string to converty to snake case
+	 * @param string $camel camelCased string to convert to snake case
 	 *
 	 * @return string
 	 */
 	public static function camelsSnake( $camel )
 	{
 		return strtolower( preg_replace( '/(?<=[a-z])([A-Z])|([A-Z])(?=[a-z])/', '_$1$2', $camel ) );
+	}
+
+	/**
+	 * Globally available service method for RedBeanPHP.
+	 * Converts a snake cased string to a camel cased string.
+	 *
+	 * @param string  $snake   snake_cased string to convert to camelCase
+	 * @param boolean $dolphin exception for Ids - (bookId -> bookID)
+	 *                         too complicated for the human mind, only dolphins can understand this
+	 *
+	 * @return string
+	 */
+	public static function snakeCamel( $snake, $dolphinMode = false )
+	{
+		$camel = lcfirst( str_replace(' ', '', ucwords( str_replace('_', ' ', $snake ) ) ) );
+		if ( $dolphinMode ) {
+			$camel = preg_replace( '/(\w)Id$/', '$1ID', $camel );
+		}
+		return $camel;
 	}
 
 	/**
@@ -9306,7 +9347,7 @@ class OODB extends Observable
 	 * this is not the case.
 	 *
 	 * You can also pass an array containing a selection of frozen types.
-	 * Let's call this chilly mode, it's just like fluid mode except that
+	 * Let's call this chill mode, it's just like fluid mode except that
 	 * certain types (i.e. tables) aren't touched.
 	 *
 	 * @param boolean|array $toggle TRUE if you want to use OODB instance in frozen mode
@@ -10050,7 +10091,7 @@ class Finder
 	 *    R::genSlots( $users,
 	 *       'SELECT country.* FROM country WHERE id IN ( %s )' ),
 	 *    array_column( $users, 'country_id' ),
-	 *    [Finder::onmap('country', $gebruikers)]
+	 *    [Finder::onmap('country', $users)]
 	 * );
 	 * </code>
 	 *
@@ -11769,7 +11810,7 @@ use RedBeanPHP\Util\Feature;
  * RedBean Facade
  *
  * Version Information
- * RedBean Version @version 5.6
+ * RedBean Version @version 5.7
  *
  * This class hides the object landscape of
  * RedBeanPHP behind a single letter class providing
@@ -11789,7 +11830,7 @@ class Facade
 	/**
 	 * RedBeanPHP version constant.
 	 */
-	const C_REDBEANPHP_VERSION = '5.6';
+	const C_REDBEANPHP_VERSION = '5.7';
 
 	/**
 	 * @var ToolBox
@@ -12549,7 +12590,7 @@ class Facade
 	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
 	 * @param array  $bindings array of values to be bound to parameters in query
 	 *
-	 * @return array
+	 * @return OODBBean|NULL
 	 */
 	public static function findOneForUpdate( $type, $sql = NULL, $bindings = array() )
 	{
@@ -12724,6 +12765,9 @@ class Facade
 	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
 	 * @param array  $bindings array of values to be bound to parameters in query
 	 * @param string $snippet  SQL snippet to include in query (for example: FOR UPDATE)
+	 *
+	 * @phpstan-param literal-string|null $sql
+	 * @psalm-param   literal-string|null $sql
 	 *
 	 * @return array
 	 */
@@ -13104,7 +13148,7 @@ class Facade
 	 * @param boolean  $pid     for internal usage
 	 * @param array    $filters white list filter with bean types to duplicate
 	 *
-	 * @return array
+	 * @return OODBBean
 	 */
 	public static function dup( $bean, $trail = array(), $pid = FALSE, $filters = array() )
 	{
@@ -13134,7 +13178,7 @@ class Facade
 	 * @param OODBBean $bean  bean to be copied
 	 * @param array    $white white list filter with bean types to duplicate
 	 *
-	 * @return array
+	 * @return OODBBean
 	 */
 	public static function duplicate( $bean, $filters = array() )
 	{
@@ -15023,6 +15067,58 @@ class Facade
 	}
 
 	/**
+	 * Globally available service method for RedBeanPHP.
+	 * Converts a snake cased string to a camel cased string.
+	 * If the parameter is an array, the keys will be converted.
+	 *
+	 * @param string|array $snake snake_cased string to convert to camelCase
+	 * @param boolean $dolphin exception for Ids - (bookId -> bookID)
+	 *                         too complicated for the human mind, only dolphins can understand this
+	 *
+	 * @return string|array
+	 */
+	public static function camelfy( $snake, $dolphin = false )
+	{
+		if ( is_array( $snake ) ) {
+			$newArray = array();
+			foreach( $snake as $key => $value ) {
+				$newKey = self::camelfy( $key, $dolphin );
+				if ( is_array( $value ) ) {
+					$value = self::camelfy( $value, $dolphin );
+				}
+				$newArray[ $newKey ] = $value;
+			}
+			return $newArray;
+		}
+		return AQueryWriter::snakeCamel( $snake, $dolphin );
+	}
+
+	/**
+	 * Globally available service method for RedBeanPHP.
+	 * Converts a camel cased string to a snake cased string.
+	 * If the parameter is an array, the keys will be converted.
+	 *
+	 * @param string|array $camel camelCased string to convert to snake case
+	 *
+	 * @return string|array
+	 */
+	public static function uncamelfy( $camel )
+	{
+		if ( is_array( $camel ) ) {
+			$newArray = array();
+			foreach( $camel as $key => $value ) {
+				$newKey = self::uncamelfy( $key );
+				if ( is_array( $value ) ) {
+					$value = self::uncamelfy( $value );
+				}
+				$newArray[ $newKey ] = $value;
+			}
+			return $newArray;
+		}
+		return AQueryWriter::camelsSnake( $camel );
+	}
+
+	/**
 	 * Selects the feature set you want as specified by
 	 * the label.
 	 *
@@ -15368,7 +15464,7 @@ class DuplicationManager
 	public function camelfy( $array, $dolphinMode = FALSE ) {
 		$newArray = array();
 		foreach( $array as $key => $element ) {
-			$newKey = preg_replace_callback( '/_(\w)/', function( &$matches ){
+			$newKey = preg_replace_callback( '/_(\w)/', function( $matches ){
 				return strtoupper( $matches[1] );
 			}, $key);
 
@@ -16827,7 +16923,7 @@ class Feature
 			case self::C_FEATURE_NOVICE_LATEST:
 			case self::C_FEATURE_NOVICE_5_4:
 			case self::C_FEATURE_NOVICE_5_5:
-				OODBBean::useFluidCount( FALSE );
+				OODBBean::useFluidCount( TRUE );
 				R::noNuke( TRUE );
 				R::setAllowHybridMode( FALSE );
 				R::useISNULLConditions( TRUE );
@@ -16835,7 +16931,7 @@ class Feature
 			case self::C_FEATURE_LATEST:
 			case self::C_FEATURE_5_4:
 			case self::C_FEATURE_5_5:
-				OODBBean::useFluidCount( FALSE );
+				OODBBean::useFluidCount( TRUE );
 				R::noNuke( FALSE );
 				R::setAllowHybridMode( TRUE );
 				R::useISNULLConditions( TRUE );
@@ -16979,5 +17075,41 @@ if ( !function_exists( 'array_flatten' ) ) {
 	}
 }
 
+/**
+ * Function pstr() generates [ $value, \PDO::PARAM_STR ]
+ * Ensures that your parameter is being treated as a string.
+ *
+ * Usage:
+ *
+ * <code>
+ * R::find('book', 'title = ?', [ pstr('1') ]);
+ * </code>
+ */
+if ( !function_exists( 'pstr' ) ) {
+
+	function pstr( $value )
+	{
+		return array( strval( $value ) , \PDO::PARAM_STR );
+	}
+}
+
+
+/**
+ * Function pint() generates [ $value, \PDO::PARAM_INT ]
+ * Ensures that your parameter is being treated as an integer.
+ *
+ * Usage:
+ *
+ * <code>
+ * R::find('book', ' pages > ? ', [ pint(2) ] );
+ * </code>
+ */
+if ( !function_exists( 'pint' ) ) {
+
+	function pint( $value )
+	{
+		return array( intval( $value ) , \PDO::PARAM_INT );
+	}
+}
 
 }
