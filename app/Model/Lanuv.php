@@ -27,12 +27,12 @@ class Model_Lanuv extends Model
     /**
       * Define the lower margin for stock.
       */
-    const LOWER_MARGIN = 80.0;
+    public const LOWER_MARGIN = 80.0;
 
     /**
       * Define the upper margin for stock.
       */
-    const UPPER_MARGIN = 110.0;
+    public const UPPER_MARGIN = 110.0;
 
     /**
      * Holds the qualities (Handelsklasse) of stock to pick up in a summary.
@@ -221,7 +221,7 @@ SQL;
      * @param int $total
      * @return void
      */
-    public function copyFromSummary($quality = '', $bean, array $summary = array(), $total)
+    public function copyFromSummary($quality = '', $bean = null, array $summary = array(), $total)
     {
         //$bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
