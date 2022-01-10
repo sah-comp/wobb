@@ -85,7 +85,7 @@
         <table width="100%">
             <tr>
                 <td style="vertical-align: top; width: 120px;">
-                    <img src="/img/<?php echo Flight::setting()->logo ?>" width="<?php echo Flight::setting()->logowidth ?>px" height="<?php echo Flight::setting()->logoheight ?>px" alt="" />
+                    <img src="img/<?php echo Flight::setting()->logo ?>" width="<?php echo Flight::setting()->logowidth ?>px" height="<?php echo Flight::setting()->logoheight ?>px" alt="" />
                 </td>
                 <td style="vertical-align: top;">
                     <table class="pageheader" width="100%">
