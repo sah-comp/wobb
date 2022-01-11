@@ -3,6 +3,7 @@
  */
 body {
     background-color: rgb(249, 249, 249);
+    text-rendering: optimizeLegibility;
 }
 
 .not-yet-implemented {
