@@ -221,7 +221,7 @@ SQL;
      * @param int $total
      * @return void
      */
-    public function copyFromSummary($quality = '', $bean = null, array $summary = array(), $total)
+    public function copyFromSummary($quality = '', $bean = null, array $summary = array(), $total = 0)
     {
         //$bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;

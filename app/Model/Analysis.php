@@ -239,7 +239,7 @@ SQL;
      * @param int $total
      * @return void
      */
-    public function copyFromSummary($quality = '', $bean = null, array $summary = array(), $total)
+    public function copyFromSummary($quality = '', $bean = null, array $summary = array(), $total = 0)
     {
         $bean->kind = 0; //this is a quality entry
         $bean->quality = $quality;
@@ -275,7 +275,7 @@ SQL;
      * @param int $total
      * @return void
      */
-    public function copyFromSummaryDamage($damage = '', $bean = null, array $summary = array(), $total)
+    public function copyFromSummaryDamage($damage = '', $bean = null, array $summary = array(), $total = 0)
     {
         $bean->kind = 1; //this is a damage entry
         $bean->damage = $damage;
