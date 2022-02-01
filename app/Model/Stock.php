@@ -219,6 +219,7 @@ class Model_Stock extends Model
 
         $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
         $this->bean->totaldpricenetitw = $this->bean->totaldpricenet + $this->bean->tierwohlnetperstock;
+        $this->bean->totallanuvprice = $this->bean->totaldpricenetitw;
 
         return null;
     }
@@ -244,7 +245,7 @@ class Model_Stock extends Model
         //$this->bean->totalspriceitw = $this->bean->totalsprice + $this->bean->tierwohlnetperstock;
         //$this->bean->totaldpriceitw = $this->bean->totaldprice + $this->bean->tierwohlnetperstock;
 
-        $this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
+        //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         return null;
     }
 
@@ -277,7 +278,7 @@ class Model_Stock extends Model
 
         $this->calculateFixedpriceCost($fixedPrice);
 
-        $this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
+        //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         return true;
     }
 
@@ -325,7 +326,7 @@ class Model_Stock extends Model
         $this->calculateFixedpriceCost($fixedPrice);
 
         if (! $fixedPrice->doesnotaffectlanuv) {
-            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
+            //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
         return true;
@@ -373,7 +374,7 @@ class Model_Stock extends Model
         $this->calculateFixedpriceCost($fixedPrice);
 
         if (! $fixedPrice->doesnotaffectlanuv) {
-            $this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
+            //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
         return true;
