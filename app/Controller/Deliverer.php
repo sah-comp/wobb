@@ -172,7 +172,7 @@ class Controller_Deliverer extends Controller
      */
     public function csv()
     {
-        $company = R::load('company', 1);
+        $company = R::load('company', WOBB_COMPANY_ID);
         $filename = I18n::__('person_filename_csv', null, [$company->legalname]);
         $csv = new \ParseCsv\Csv();
         $csv->encoding('UTF-8', 'UTF-8');
