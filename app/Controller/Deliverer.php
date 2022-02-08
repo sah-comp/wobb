@@ -185,7 +185,9 @@ class Controller_Deliverer extends Controller
             I18n::__('person_csv_vvvo'),
             I18n::__('person_csv_name'),
             I18n::__('person_csv_email'),
-            I18n::__('person_csv_postaladdress')
+            I18n::__('person_csv_postaladdress'),
+            I18n::__('person_csv_relsprice'),
+            I18n::__('person_csv_reldprice')
         ];
         $csv->heading = true;
         $csv->data = $this->makeCsvData();
@@ -197,7 +199,7 @@ class Controller_Deliverer extends Controller
      */
     public function makeCsvData()
     {
-        $sql = "SELECT p.nickname AS nickname, p.account AS account, p.vvvo AS vvvo, REPLACE(p.name, '\r\n', ' ') AS name, p.email AS email, CONCAT(adr.street, ', ', adr.zip, ' ', adr.city) AS postaladdress FROM person AS p LEFT JOIN address AS adr ON adr.person_id = p.id AND adr.label = 'billing' WHERE enabled = 1 ORDER BY p.nickname";
+        $sql = "SELECT p.nickname AS nickname, p.account AS account, p.vvvo AS vvvo, REPLACE(p.name, '\r\n', ' ') AS name, p.email AS email, CONCAT(adr.street, ', ', adr.zip, ' ', adr.city) AS postaladdress, FORMAT(relsprice, 3, 'de_DE') AS relsprice, FORMAT(reldprice, 3, 'de_DE') AS reldprice FROM person AS p LEFT JOIN address AS adr ON adr.person_id = p.id AND adr.label = 'billing' WHERE enabled = 1 ORDER BY p.nickname";
         return R::getAll($sql);
     }
 
