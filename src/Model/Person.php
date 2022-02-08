@@ -125,6 +125,32 @@ class Model_Person extends Model
                 'width' => '5rem'
             ),
             array(
+                'name' => 'relsprice',
+                'sort' => array(
+                    'name' => 'person.relsprice'
+                ),
+                'callback' => array(
+                    'name' => 'decimal'
+                ),
+                'filter' => array(
+                    'tag' => 'number'
+                ),
+                'width' => '5rem'
+            ),
+            array(
+                'name' => 'reldprice',
+                'sort' => array(
+                    'name' => 'person.relsprice'
+                ),
+                'callback' => array(
+                    'name' => 'decimal'
+                ),
+                'filter' => array(
+                    'tag' => 'number'
+                ),
+                'width' => '5rem'
+            ),
+            array(
                 'name' => 'enabled',
                 'sort' => array(
                     'name' => 'person.enabled'
