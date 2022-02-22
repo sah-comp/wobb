@@ -15,7 +15,7 @@
         <!-- form details -->
         <fieldset class="tab">
             <legend class="verbose"><?php echo I18n::__('purchase_stock_legend') ?></legend>
-            
+
             <!-- row with labels -->
             <div class="row">
                 <div class="span4">
@@ -38,10 +38,10 @@
                 </div>
             </div>
             <!-- end of row with labels -->
-            
+
             <?php foreach ($records as $_stock_id => $_stock): ?>
-                
-            <div>                
+
+            <div>
                 <input type="hidden" name="dialog[stock][<?php echo $_stock_id ?>][type]" value="stock" />
                 <input type="hidden" name="dialog[stock][<?php echo $_stock_id ?>][id]" value="<?php echo $_stock->getId() ?>" />
                 <input
@@ -49,16 +49,16 @@
                     name="dialog[stock][<?php echo $_stock_id ?>][supplier]"
                     value="<?php echo htmlspecialchars($_stock->supplier) ?>" />
             </div>
-                
+
             <div class="row">
-                
+
                 <div class="span4">
                     <?php echo htmlspecialchars($_stock->getPersonBySupplier()->name) ?>
                     <div class="deliverer-info">
                         <?php echo $_stock->supplier . ', ' . $_stock->earmark ?>
                     </div>
                 </div>
-                
+
                 <div class="span2">
                     <input
                         type="text"
@@ -66,7 +66,7 @@
                         value="<?php echo htmlspecialchars($_stock->name) ?>"
                         required="required" />
                 </div>
-                
+
                 <div class="span1">
                     <input
                         type="text"
@@ -74,7 +74,7 @@
                         value="<?php echo htmlspecialchars($_stock->quality) ?>"
                         required="required" />
                 </div>
-                
+
                 <div class="span1">
                     <input
                         type="text"
@@ -83,16 +83,15 @@
                         value="<?php echo htmlspecialchars($_stock->decimal('weight', 2)) ?>"
                         required="required" />
                 </div>
-                
+
                 <div class="span1">
                     <input
                         type="text"
                         class="number"
                         name="dialog[stock][<?php echo $_stock_id ?>][mfa]"
-                        value="<?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?>"
-                        required="required" />
+                        value="<?php echo htmlspecialchars($_stock->decimal('mfa', 2)) ?>" />
                 </div>
-                
+
                 <div class="span3">
                     <select
                         name="dialog[stock][<?php echo $_stock_id ?>][damage1]">
@@ -108,12 +107,12 @@
                 </div>
 
             </div>
-                
+
             <?php endforeach ?>
-            
+
         </fieldset>
         <!-- end of form details -->
-        
+
         <!-- Purchase buttons -->
         <div class="buttons">
             <input
