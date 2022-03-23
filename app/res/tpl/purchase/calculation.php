@@ -180,7 +180,7 @@
 
                 <div class="row">
                     <div class="span3">
-                        <span class="subdeliverer-earmark">
+                        <span class="subdeliverer-earmark <?php echo $_sub->hasITW() ?>">
                             <?php echo htmlspecialchars($_sub->earmark) ?>
                         </span>
                     </div>

@@ -180,6 +180,19 @@ class Model_Deliverer extends Model
     }
 
     /**
+     * Returns the string 'itw' if there are itw stock.
+     *
+     * @return string
+     */
+    public function hasITW()
+    {
+        if ($this->bean->itwpiggery > 0) {
+            return 'itw';
+        }
+        return '';
+    }
+
+    /**
      * Returns notes about the determination of the base price.
      *
      * @return bool
@@ -210,11 +223,16 @@ class Model_Deliverer extends Model
         if (! $this->bean->person->pricing) {
             return I18n::__('deliverer_person_pricemask_not_set');
         }
+        $itw = '';
+        if ($this->bean->itwpiggery > 0) {
+            $itw = $this->bean->itwpiggery . ' ' . I18n::__('deliverer_label_itw');
+        }
         return I18n::__('deliverer_information_mask', null, array(
             $this->bean->person->account,
             $this->bean->person->nickname,
             $this->bean->person->pricing->name,
-            $this->bean->person->vat->name
+            $this->bean->person->vat->name,
+            $itw
         ));
     }
 
