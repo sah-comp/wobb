@@ -94,7 +94,7 @@ class Controller_Deliverer extends Controller
         );
         $this->record->pdfStateDealer++;
         R::store($this->record);
-        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf = $this->generatePDF($docname);
         $mpdf->Output($filename, 'D');
         exit;
         //$this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
@@ -123,7 +123,7 @@ class Controller_Deliverer extends Controller
                 $this->record->invoice->name
             )
         );
-        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf = $this->generatePDF($docname);
         if ($this->sendMail($filename, $docname, $mpdf)) {
             $this->record->sent = true;
             Flight::get('user')->notify(I18n::__('deliverer_send_mail_success'));
@@ -160,7 +160,7 @@ class Controller_Deliverer extends Controller
         );
         $this->record->pdfStateInternal++;
         R::store($this->record);
-        $mpdf = $this->generatePDF($filename, $docname);
+        $mpdf = $this->generatePDF($docname);
         $mpdf->Output($filename, 'D');
         exit;
     }
@@ -285,6 +285,7 @@ class Controller_Deliverer extends Controller
     /**
      * Generates an PDF using mPDF library and return the mPDF object.
      *
+     * @param string $filename
      * @param string $docname defaults to 'invoice'
      * @return mPDF $mpdf
      */
