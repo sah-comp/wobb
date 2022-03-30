@@ -11,9 +11,8 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=7.2",
 		"mikecao/flight": "dev-master",
-		"ircmaxell/password-compat": "dev-master",
 		"gabordemooij/redbean": "dev-master",
         "netcarver/textile": "v3.6.*",
         "phpmailer/phpmailer": "dev-master",
@@ -22,8 +21,6 @@
         "parsecsv/php-parsecsv": "v1.2.*"
 	},
 	"suggest": {
-	    "swiftmailer/swiftmailer": "Comprehensive mailing tools for PHP",
-	    "phpmailer/phpmailer": "dev-master",
         "intervention/image": "dev-master"
 	},
 	"autoload": {
