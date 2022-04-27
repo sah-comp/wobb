@@ -253,6 +253,85 @@ class Controller_Invoice extends Controller
     }
 
     /**
+     * Export the Open Item list as .csv file
+     *
+     * @return void
+     */
+    public function csv()
+    {
+        $filename = I18n::__('invoice_filename_csv', null, [
+            $_SESSION['invoice']['fy'],
+            $_SESSION['invoice']['lo'],
+            $_SESSION['invoice']['hi']
+        ]);
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding('UTF-8', 'UTF-8');
+        $csv->delimiter = ";";
+        $csv->output_delimiter = ";";
+        $csv->linefeed = "\r\n";
+        $csv->titles = [
+            I18n::__('openitem_invoice_name'), //Gutschrift
+            I18n::__('openitem_invoice_dateofslaughter'), //Schlachtdatum
+            I18n::__('openitem_invoice_deliverer_account'), //Konto Lieferant
+            I18n::__('openitem_invoice_deliverer_name'), //NameLieferant
+            I18n::__('openitem_invoice_totalnet'), //Warenwert
+            I18n::__('openitem_invoice_bonusnet'), //Bonus
+            I18n::__('openitem_invoice_costnet'), //Kosten
+            I18n::__('openitem_invoice_subtotalnet'), //Netto
+            I18n::__('openitem_invoice_vat'), //UST in Prozent
+            I18n::__('openitem_invoice_vatvalue'), //Steuerwert
+            I18n::__('openitem_invoice_totalnetitw'), //ITW Netto
+            I18n::__('openitem_invoice_vatvalueitw'), //ITW UST 19 Wert
+            I18n::__('openitem_invoice_totalgros') //Brutto
+        ];
+        $csv->heading = true;
+        $csv->data = $this->getInvoices();
+        $csv->output($filename);
+        exit;
+    }
+
+    /**
+     * Returns an array of all stock within the lanuv time periode.
+     *
+     * @return array
+     */
+    public function getInvoices()
+    {
+        $sql = <<<SQL
+        SELECT
+            invoice.name,
+            invoice.dateofslaughter AS dateofslaughter,
+            person.account,
+            REPLACE(person.name, "\r\n", " "),
+            FORMAT(invoice.totalnet, 2, 'de_DE') AS totalnet,
+            FORMAT(invoice.bonusnet, 2, 'de_DE') AS bonusnet,
+            FORMAT(invoice.costnet, 2, 'de_DE') AS costnet,
+            FORMAT(invoice.subtotalnet, 2, 'de_DE') AS subtotalnet,
+            FORMAT(vat.value, 2, 'de_DE') AS vat,
+            FORMAT(invoice.vatvalue, 2, 'de_DE') AS vatvalue,
+            FORMAT(invoice.totalnetitw, 2, 'de_DE') AS totalnetitw,
+            FORMAT(invoice.vatvalueitw, 2, 'de_DE') AS vatvalueitw,
+            FORMAT(invoice.totalgros, 2, 'de_DE') AS totalgros
+        FROM
+            invoice
+        LEFT JOIN
+            person ON person.id = invoice.person_id
+        LEFT JOIN
+            vat ON vat.id = invoice.vat_id
+        WHERE
+            invoice.fy = :fy AND
+            invoice.name >= :lo AND invoice.name <= :hi
+        ORDER BY
+            invoice.name ASC
+SQL;
+        return R::getAll($sql, array(
+            ':fy' => $_SESSION['invoice']['fy'],
+            ':lo' => $_SESSION['invoice']['lo'],
+            ':hi' => $_SESSION['invoice']['hi']
+        ));
+    }
+
+    /**
      * Renders the current layout.
      */
     protected function render()
