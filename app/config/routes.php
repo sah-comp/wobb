@@ -386,6 +386,20 @@ Flight::route('(/[a-z]{2})/analysis(/@method:[a-z]+(/@id:[0-9]+))', function ($m
 });
 
 /**
+ * Route to the piggery controller.
+ */
+Flight::route('(/[a-z]{2})/piggery(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+    if ($method === null) {
+        $method = 'index';
+    }
+    if ($id === null) {
+        $id = 0;
+    }
+    $controller = new Controller_Piggery($id);
+    $controller->$method();
+});
+
+/**
  * Route to the planning controller.
  */
 Flight::route('(/[a-z]{2})/planning(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {

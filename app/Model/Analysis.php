@@ -111,7 +111,7 @@ class Model_Analysis extends Model
 		    {$fields}
 		FROM
 		    {$this->bean->getMeta('type')}
-		LEFT JOIN company ON company.id = lanuv.company_id
+		LEFT JOIN company ON company.id = analysis.company_id
 		WHERE
 		    {$where}
 SQL;
