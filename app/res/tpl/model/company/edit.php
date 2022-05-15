@@ -545,6 +545,18 @@
  	            <?php endforeach ?>
  	        </select>
  		</div>
+        <div class="row <?php echo ($record->hasError('wsdl')) ? 'error' : ''; ?>">
+            <label
+                for="company-wsdl">
+                <?php echo I18n::__('company_label_wsdl') ?>
+            </label>
+            <input
+                id="company-wsdl"
+                type="text"
+                name="dialog[wsdl]"
+                value="<?php echo htmlspecialchars($record->wsdl) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_wsdl') ?></p>
+        </div>
 	</fieldset>
 </div>
 <!-- end of company edit form -->

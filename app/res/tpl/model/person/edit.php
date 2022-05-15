@@ -496,6 +496,18 @@ $stats = $record->ownStat;
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_baseprice_tab') ?></legend>
+        <div class="row <?php echo ($record->hasError('noterelprice')) ? 'error' : ''; ?>">
+            <label
+                for="person-noterelprice">
+                <?php echo I18n::__('person_label_noterelprice') ?>
+            </label>
+            <textarea
+                id="person-noterelprice"
+                name="dialog[noterelprice]"
+                rows="3"
+                cols="60"><?php echo htmlspecialchars($record->noterelprice) ?></textarea>
+            <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
+        </div>
         <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
 		    <input
 		        type="hidden"
@@ -513,76 +525,150 @@ $stats = $record->ownStat;
 		        <?php echo I18n::__('person_label_nextweekprice') ?>
 		    </label>
 		</div>
-        <div class="row <?php echo ($record->hasError('relsprice')) ? 'error' : ''; ?>">
-            <label
-                for="person-relsprice">
-                <?php echo I18n::__('person_label_relsprice') ?>
-            </label>
-            <input
-                id="person-relsprice"
-                type="text"
-                class="number"
-                name="dialog[relsprice]"
-                value="<?php echo htmlspecialchars($record->decimal('relsprice', 3)) ?>" />
-            <p class="info"><?php echo I18n::__('person_info_relsprice') ?></p>
+        <div class="row nomargins">
+            <div class="span3">
+                &nbsp;
+            </div>
+            <div class="span2 number">
+                <label
+                    for="person-relsprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_service_price') ?>
+                </label>
+            </div>
+            <div class="span2 number">
+                <label
+                    for="person-itwrelsprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_service_itwprice') ?>
+                </label>
+            </div>
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span2 number">
+                <label
+                    for="person-fixsprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_fixsprice') ?>
+                </label>
+            </div>
         </div>
-        <div class="row <?php echo ($record->hasError('reldprice')) ? 'error' : ''; ?>">
-            <label
-                for="person-reldprice">
-                <?php echo I18n::__('person_label_reldprice') ?>
-            </label>
-            <input
-                id="person-reldprice"
-                type="text"
-                class="number"
-                name="dialog[reldprice]"
-                value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
-            <p class="info"><?php echo I18n::__('person_info_reldprice') ?></p>
+        <div class="row">
+            <div class="span3 number">
+                <label
+                    for="person-relsprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_relsprice') ?>
+                </label>
+            </div>
+            <div class="span2">
+                <input
+                    id="person-relsprice"
+                    type="text"
+                    class="number"
+                    name="dialog[relsprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('relsprice', 3)) ?>" />
+            </div>
+            <div class="span2">
+                <input
+                    id="person-itwrelsprice"
+                    type="text"
+                    class="number"
+                    name="dialog[itwrelsprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('itwrelsprice', 3)) ?>" />
+            </div>
+            <div class="span1">
+                <p><?php echo I18n::__('or') ?></p>
+            </div>
+            <div class="span2">
+                <input
+                    id="person-fixsprice"
+                    type="text"
+                    class="number"
+                    name="dialog[fixsprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('fixsprice', 3)) ?>" />
+            </div>
         </div>
-        <div class="row <?php echo ($record->hasError('fixsprice')) ? 'error' : ''; ?>">
-            <label
-                for="person-fixsprice">
-                <?php echo I18n::__('person_label_fixsprice') ?>
-            </label>
-            <input
-                id="person-fixsprice"
-                type="text"
-                class="number"
-                name="dialog[fixsprice]"
-                value="<?php echo htmlspecialchars($record->decimal('fixsprice', 3)) ?>" />
-            <p class="info"><?php echo I18n::__('person_info_fixsprice') ?></p>
+        <div class="row nomargins">
+            <div class="span3">
+                &nbsp;
+            </div>
+            <div class="span2">
+                <label
+                    for="person-reldprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_dealer_price') ?>
+                </label>
+            </div>
+            <div class="span2 number">
+                <label
+                    for="person-itwreldprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_dealer_itwprice') ?>
+                </label>
+            </div>
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span2">
+                <label
+                    for="person-fixdprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_fixdprice') ?>
+                </label>
+            </div>
         </div>
-        <div class="row <?php echo ($record->hasError('fixdprice')) ? 'error' : ''; ?>">
-            <label
-                for="person-fixdprice">
-                <?php echo I18n::__('person_label_fixdprice') ?>
-            </label>
-            <input
-                id="person-fixdprice"
-                type="text"
-                class="number"
-                name="dialog[fixdprice]"
-                value="<?php echo htmlspecialchars($record->decimal('fixdprice', 3)) ?>" />
-            <p class="info"><?php echo I18n::__('person_info_fixdprice') ?></p>
+        <div class="row">
+            <div class="span3">
+                <label
+                    for="person-reldprice"
+                    class="number">
+                    <?php echo I18n::__('person_label_reldprice') ?>
+                </label>
+            </div>
+            <div class="span2">
+                <input
+                    id="person-reldprice"
+                    type="text"
+                    class="number"
+                    name="dialog[reldprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('reldprice', 3)) ?>" />
+            </div>
+            <div class="span2">
+                <input
+                    id="person-itwreldprice"
+                    type="text"
+                    class="number"
+                    name="dialog[itwreldprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('itwreldprice', 3)) ?>" />
+            </div>
+            <div class="span1">
+                <p><?php echo I18n::__('or') ?></p>
+            </div>
+            <div class="span2">
+                <input
+                    id="person-fixdprice"
+                    type="text"
+                    class="number"
+                    name="dialog[fixdprice]"
+                    value="<?php echo htmlspecialchars($record->decimal('fixdprice', 3)) ?>" />
+            </div>
         </div>
-        <div class="row <?php echo ($record->hasError('noterelprice')) ? 'error' : ''; ?>">
-            <label
-                for="person-noterelprice">
-                <?php echo I18n::__('person_label_noterelprice') ?>
-            </label>
-            <textarea
-                id="person-noterelprice"
-                name="dialog[noterelprice]"
-                rows="3"
-                cols="60"><?php echo htmlspecialchars($record->noterelprice) ?></textarea>
-            <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
+        <div class="row">
+            <div class="span3">
+                &nbsp;
+            </div>
+            <div class="span9">
+                <p class="info"><?php echo I18n::__('baseprice_info') ?></p>
+            </div>
         </div>
         <?php if (count($stats)): ?>
         <div class="row nomargins">
             <div class="span3">
                 <label><?php echo I18n::__('baseprice_history_headline') ?></label>
             </div>
-            <div class="span5">
+            <div class="span3">
                 <label><?php echo I18n::__('baseprice_history_date') ?></label>
             </div>
             <div class="span1">
@@ -590,6 +676,12 @@ $stats = $record->ownStat;
             </div>
             <div class="span1">
                 <label class="number"><?php echo I18n::__('baseprice_history_reldprice') ?></label>
+            </div>
+            <div class="span1">
+                <label class="number"><?php echo I18n::__('baseprice_history_itwrelsprice') ?></label>
+            </div>
+            <div class="span1">
+                <label class="number"><?php echo I18n::__('baseprice_history_itwreldprice') ?></label>
             </div>
             <div class="span1">
                 <label class="number"><?php echo I18n::__('baseprice_history_fixsprice') ?></label>
@@ -603,7 +695,7 @@ $stats = $record->ownStat;
             <div class="span3">
                 &nbsp;
             </div>
-            <div class="span5">
+            <div class="span3">
                 <input
                     type="text"
                     disabled="disabled"
@@ -622,6 +714,20 @@ $stats = $record->ownStat;
                     class="number"
                     disabled="disabled"
                     value="<?php echo htmlspecialchars($_stat->decimal('reldprice')) ?>" />
+            </div>
+            <div class="span1">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('itwrelsprice')) ?>" />
+            </div>
+            <div class="span1">
+                <input
+                    type="text"
+                    class="number"
+                    disabled="disabled"
+                    value="<?php echo htmlspecialchars($_stat->decimal('itwreldprice')) ?>" />
             </div>
             <div class="span1">
                 <input

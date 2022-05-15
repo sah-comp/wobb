@@ -142,7 +142,8 @@ class Controller_Purchase extends Controller
                 $this->record->checkAliasses();
                 $this->record->makeDeliverer();
                 R::store($this->record);
-
+                $this->record->checkQSITW();
+                R::store($this->record);
                 Flight::get('user')->protocol(I18n::__('purchase_day_add_success_activity', null, [
                     $this->record->pubdate
                 ]));
@@ -159,6 +160,11 @@ class Controller_Purchase extends Controller
                 error_log($e);
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('purchase_day_csbsupplier_unknown', null, [$e->getMessage()]), 'error');
+                $this->redirect('/purchase/add');
+            } catch (Exception_NonQS $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_day_nonqs', null, [$e->getMessage()]), 'error');
                 $this->redirect('/purchase/add');
             } catch (Exception $e) {
                 error_log($e);

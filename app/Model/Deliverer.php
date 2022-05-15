@@ -64,27 +64,69 @@ class Model_Deliverer extends Model
     /**
      * Set the dprice of a (sub)-deliverer if not already set.
      *
-     * If the dealer and service prices are not already set, they will be set based on the given csb bean baseprice or
-     * the nextweekprice, if the deliverer is set to use next weeks price. If a (sub)-deliverer has a special adjustment,
-     * that one is used instead of the overall adjustment to the baseprice.
+     * If the dealer and service prices are not already set, it is set
+     * with a fixed price (if any). If there the group is TW certified and the
+     * deliverer has a special price adjustment for itw it is applied.
+     *
      *
      * @param $csb
      * @return RedBean_OODBBean
      */
     public function setBaseprices($csb)
     {
+        // Is a price already set?
         if (! $this->bean->dprice) {
-            if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
+            // Is there a fixed dealer price for this deliverer (person)?
+            if ($this->bean->person->fixdprice) {
+                // Yes, set it and go on
+                $this->bean->dprice = $this->bean->person->fixdprice;
+            } else {
+                // No. Is this stock twCertification == true?
+                if ($this->bean->itw && $this->bean->person->itwreldprice) {
+                    // Yes. Does the deliverer get next week price and is there a next week price?
+                    if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
+                        // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
+                        $this->bean->dprice = $csb->nextweekprice + $this->bean->person->itwreldprice;
+                    } else {
+                        // No next week price
+                        $this->bean->dprice = $csb->baseprice + $this->bean->person->itwreldprice;
+                    }
+                } else {
+                    // No twCertification == true, set dealer price to parent price
+                    $this->bean->dprice = $this->bean->deliverer->dprice;
+                }
+                // Is there a special setting, based on the VVVO number?
+                if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
                 ':vvvo' => $this->bean->vvvo,
                 ':pid' => $this->bean->person->getId()
             ])) {
-                $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
-            } else {
-                $this->bean->dprice = $this->bean->deliverer->dprice;
+                    // yes, set the price relatively to the parent group
+                    $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
+                }
             }
         }
+        // do the same for service prices
         if (! $this->bean->sprice) {
-            $this->bean->sprice = $this->bean->deliverer->sprice;
+            // Is there a fixed service price for this deliverer (person)?
+            if ($this->bean->person->fixsprice) {
+                // Yes, set it and go on
+                $this->bean->sprice = $this->bean->person->fixsprice;
+            } else {
+                // No. Is this stock twCertification == true?
+                if ($this->bean->itw && $this->bean->person->itwrelsprice) {
+                    // Yes. Does the deliverer get next week price and is there a next week price?
+                    if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
+                        // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
+                        $this->bean->sprice = $csb->nextweekprice + $this->bean->person->itwrelsprice;
+                    } else {
+                        // No next week price
+                        $this->bean->sprice = $csb->baseprice + $this->bean->person->itwrelsprice;
+                    }
+                } else {
+                    // No twCertification == true, set dealer price to parent price
+                    $this->bean->sprice = $this->bean->deliverer->sprice;
+                }
+            }
         }
         return $this->bean;
     }
@@ -180,19 +222,6 @@ class Model_Deliverer extends Model
     }
 
     /**
-     * Returns the string 'itw' if there are itw stock.
-     *
-     * @return string
-     */
-    public function hasITW()
-    {
-        if ($this->bean->itwpiggery > 0) {
-            return 'itw';
-        }
-        return '';
-    }
-
-    /**
      * Returns notes about the determination of the base price.
      *
      * @return bool
@@ -216,6 +245,7 @@ class Model_Deliverer extends Model
     /**
      * Returns information about this deliverer.
      *
+     * @deprecated since 2022-05-07
      * @return string
      */
     public function getInformation()
@@ -223,17 +253,41 @@ class Model_Deliverer extends Model
         if (! $this->bean->person->pricing) {
             return I18n::__('deliverer_person_pricemask_not_set');
         }
-        $itw = '';
-        if ($this->bean->itwpiggery > 0) {
-            $itw = $this->bean->itwpiggery . ' ' . I18n::__('deliverer_label_itw');
-        }
         return I18n::__('deliverer_information_mask', null, array(
             $this->bean->person->account,
             $this->bean->person->nickname,
             $this->bean->person->pricing->name,
-            $this->bean->person->vat->name,
-            $itw
+            $this->bean->person->vat->name
         ));
+    }
+
+    /**
+     * Returns wether or not this deliverer is QS certified.
+     *
+     * @return bool true|false
+     */
+    public function hasQS(): bool
+    {
+        if (!$this->bean->qs) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns wether or not this deliverer is TW certified.
+     *
+     * @return bool true|false
+     */
+    public function hasTW(): bool
+    {
+        if ($this->bean->itwpiggery > 0) {
+            return true;
+        }
+        if (!$this->bean->itw) {
+            return false;
+        }
+        return true;
     }
 
     /**

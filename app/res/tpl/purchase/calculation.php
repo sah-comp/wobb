@@ -70,18 +70,30 @@
                         value="1" />
                 </div>
                 <div class="row">
-                    <div class="span3 cutoff">
-                        <a
-                            href="#toggle"
-                            class="toggle supplier-name"
-                            data-target="deliverer-<?php echo $_deliverer->getId() ?>-subdeliverer"
-                            title="<?php echo I18n::__('deliverer_toggle_subdeliverer') ?>">
-                            <?php echo htmlspecialchars($_deliverer->person->name) ?>
-                        </a>
-                        <div class="deliverer-info">
-                            <?php echo $_deliverer->getInformation() ?>
+                    <!-- Deliverer/Dealer information -->
+                    <div class="span3">
+                        <div class="row nomargins">
+                            <div class="span2">
+                                <?php echo htmlspecialchars($_deliverer->person->nickname) ?>
+                            </div>
+                            <div class="span8 cut-off">
+                                <a
+                                    href="#toggle"
+                                    class="toggle supplier-name"
+                                    data-target="deliverer-<?php echo $_deliverer->getId() ?>-subdeliverer"
+                                    title="<?php echo I18n::__('deliverer_toggle_subdeliverer') ?>">
+                                    <?php echo htmlspecialchars($_deliverer->person->name) ?>
+                                </a>
+                            </div>
+                            <div class="span1">
+                                <a class="ir link person" href="<?php echo Url::build(sprintf('/admin/person/edit/%d', $_deliverer->person->getId())) ?>" title="<?php echo I18n::__('action_link_person_title') ?>"><?php echo I18n::__('action_link_person') ?></a>
+                            </div>
+                            <div class="span1">
+                                <a class="ir link info" href="#info" title="<?php echo $_deliverer->getInformation() ?>"><?php echo I18n::__('action_link_deliverer_info') ?></a>
+                            </div>
                         </div>
                     </div>
+                    <!-- end of dealer information -->
                     <div class="span1">
                         <input
                             type="text"
@@ -180,9 +192,21 @@
 
                 <div class="row">
                     <div class="span3">
-                        <span class="subdeliverer-earmark <?php echo $_sub->hasITW() ?>">
-                            <?php echo htmlspecialchars($_sub->earmark) ?>
-                        </span>
+                        <!-- Subdeliverer earmark and information about QS and TW certifications -->
+                        <div class="row nomargins">
+                            <div class="span10">
+                                <span class="subdeliverer-earmark">
+                                    <?php echo htmlspecialchars($_sub->earmark) ?>
+                                </span>
+                            </div>
+                            <div class="span1">
+                                <span class="has qs"><?php echo $_sub->hasQS() ? 'QS' : '' ?></span>
+                            </div>
+                            <div class="span1">
+                                <span class="has itw"><?php echo $_sub->hasTW() ? 'ITW' : '' ?></span>
+                            </div>
+                        </div>
+                        <!-- end of QS and TW certifications -->
                     </div>
                     <div class="span1">
                         <input

@@ -226,6 +226,12 @@ class Model_Person extends Model
         $this->addConverter('reldprice', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('itwrelsprice', array(
+            new Converter_Decimal()
+        ));
+        $this->addConverter('itwreldprice', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('fixsprice', array(
             new Converter_Decimal()
         ));
@@ -284,11 +290,15 @@ class Model_Person extends Model
         // if the price has changed, we record it in our article statistics.
         if ($this->bean->relsprice != $this->bean->old('relsprice') ||
             $this->bean->reldprice != $this->bean->old('reldprice') ||
+            $this->bean->itwrelsprice != $this->bean->old('itwrelsprice') ||
+            $this->bean->itwreldprice != $this->bean->old('itwreldprice') ||
             $this->bean->fixsprice != $this->bean->old('fixsprice') ||
             $this->bean->fixdprice != $this->bean->old('fixdprice')) {
             $stat = R::dispense('stat');
             $stat->relsprice = $this->bean->old('relsprice');
             $stat->reldprice = $this->bean->old('reldprice');
+            $stat->itwrelsprice = $this->bean->old('itwrelsprice');
+            $stat->itwreldprice = $this->bean->old('itwreldprice');
             $stat->fixsprice = $this->bean->old('fixsprice');
             $stat->fixdprice = $this->bean->old('fixdprice');
             $this->bean->ownStat[] = $stat;

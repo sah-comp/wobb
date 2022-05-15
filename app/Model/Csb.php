@@ -627,10 +627,14 @@ SQL;
     {
         $sqlqsd = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND qs = 1";
         $sqlqss = "SELECT count(id) AS totalqs FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND qs = 1";
+
         $sqlitwd = "SELECT count(id) AS totalitw FROM stock WHERE csb_id = :csb_id AND supplier = :supplier AND itw = 1";
         $sqlitws = "SELECT count(id) AS totalitw FROM stock WHERE csb_id = :csb_id AND earmark = :earmark AND itw = 1";
+
         $stocks = R::getAll("SELECT count(id) AS total, supplier FROM stock WHERE csb_id = :csb_id GROUP BY supplier", array(':csb_id' => $this->bean->getId()));
+
         $nonqs = []; // container for eventually non QS earmarks.
+
         foreach ($stocks as $id => $stock) {
             // Deliverer owns one or more earmarks of an csb day
             $deliverer = R::dispense('deliverer');
@@ -661,10 +665,12 @@ SQL;
                 ':csb_id' => $this->bean->getId(),
                 ':supplier' => $deliverer->supplier
             ));
+
             $deliverer->itwpiggery = R::getCell($sqlitwd, array(
                 ':csb_id' => $this->bean->getId(),
                 ':supplier' => $deliverer->supplier
             ));
+
             // Subdeliverer is owned by deliverer bean
             $substocks = R::getAll("SELECT count(id) AS total, earmark, supplier, vvvo FROM stock WHERE csb_id = :csb_id AND supplier = :supplier GROUP BY earmark", array(':csb_id' => $this->bean->getId(), ':supplier' => $stock['supplier']));
             foreach ($substocks as $_sub_id => $substock) {
@@ -680,10 +686,12 @@ SQL;
                     ':csb_id' => $this->bean->getId(),
                     ':earmark' => $subdeliverer->earmark
                 ));
+
                 $subdeliverer->itwpiggery = R::getCell($sqlitws, array(
                     ':csb_id' => $this->bean->getId(),
                     ':earmark' => $subdeliverer->earmark
                 ));
+
                 $deliverer->ownDeliverer[] = $subdeliverer;
                 // Check if this earmark is non QS
                 if ($deliverer->isEarmarkNonQS($subdeliverer->earmark) > 0) {
@@ -696,6 +704,61 @@ SQL;
             //there are earmarks which are non QS in this batch. Add a notification
             $nonqs_flat = implode(", ", $nonqs); // flatten the earmarks nicely
             Flight::get('user')->notify(I18n::__('csb_has_nonqs', null, array($nonqs_flat)), 'error');
+        }
+        return true;
+    }
+
+    /**
+     * Checks the QS database for QS and TW qualification.
+     *
+     * @todo get rid of MAGIC numer 2001 (Schweinemast production type)
+     * @throws new Exception_NonQS when a deliverer is not QS certified
+     * @return mixed
+     */
+    public function checkQSITW(): mixed
+    {
+        if (!$this->bean->company->hastierwohl) {
+            return null;
+        }
+
+        if (!$this->bean->company->wsdl) {
+            return null;
+        }
+
+        $client = new SoapClient($this->bean->company->wsdl);
+        foreach ($this->bean->ownDeliverer as $id => $deliverer) {
+            $deliverer->itwpiggery = 0; //reset itw counter
+            foreach ($deliverer->ownDeliverer as $sub_id => $sub) {
+                $sub->itwpiggery = 0; //reset iwt counter
+                $response = $response = $client->selectQSTW([
+                    'locationId' => $sub->vvvo,
+                    'btartId' => '2001'
+                ]);
+                if ($response->certifications->qsCertification != 1) {
+                    throw new Exception_NonQS($sub->vvvo);
+                }
+                if ($response->certifications->twCertification) {
+                    // TW certified, add up as itwpiggery
+                    $sub->itw = true;
+                    $sub->itwpiggery = $sub->piggery;
+                    $deliverer->itwpiggery += $sub->piggery;
+                    // which tw bonus?
+                    $twbonus = $this->bean->company->tierwohlnetperstock;
+                    if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$sub->earmark, $sub->vvvo])) {
+                        // there is a special price defined for this sub deliverer
+                        $twbonus = $stockman->tierwohlnetperstock;
+                    }
+                    // update all stock
+                    $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
+                    R::exec($sql, [
+                        ':earmark' => $sub->earmark,
+                        ':csb_id' => $this->bean->getId(),
+                        ':twbonus' => $twbonus
+                    ]);
+                } else {
+                    // This subdeliverer is NOT TW certified
+                }
+            }
         }
         return true;
     }

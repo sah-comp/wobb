@@ -30,7 +30,39 @@
 }
 
 .cut-off {
-    overflow: hidden;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
 }
 
 .supplier-name {}
+
+.has {
+    font-size: small;
+}
+
+.qs,
+.itw {
+    color: green;
+}
+
+.link {
+    cursor: pointer;
+}
+
+.link.person {
+    width: 24px;
+    height: 24px;
+    background-image: url(/img/glyphicons/glyphicons_088_adress_book.png);
+    background-position: center center;
+    background-size: auto 16px;
+}
+
+.link.info {
+    width: 24px;
+    height: 24px;
+    background-image: url(/img/glyphicons/glyphicons_195_circle_info.png);
+    background-position: center center;
+    background-size: auto 16px;
+}
