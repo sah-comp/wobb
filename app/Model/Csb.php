@@ -724,39 +724,52 @@ SQL;
         if (!$this->bean->company->wsdl) {
             return null;
         }
-
+        // clear all stock from itw
+        $sql = "UPDATE stock SET itw = 0, tierwohlnetperstock = 0 WHERE csb_id = :csb_id";
+        R::exec($sql, [
+            ':csb_id' => $this->bean->getId()
+        ]);
         $client = new SoapClient($this->bean->company->wsdl);
         foreach ($this->bean->ownDeliverer as $id => $deliverer) {
             $deliverer->itwpiggery = 0; //reset itw counter
             foreach ($deliverer->ownDeliverer as $sub_id => $sub) {
                 $sub->itwpiggery = 0; //reset iwt counter
-                $response = $response = $client->selectQSTW([
-                    'locationId' => $sub->vvvo,
-                    'btartId' => '2001'
-                ]);
-                if ($response->certifications->qsCertification != 1) {
-                    throw new Exception_NonQS($sub->vvvo);
-                }
-                if ($response->certifications->twCertification) {
-                    // TW certified, add up as itwpiggery
-                    $sub->itw = true;
-                    $sub->itwpiggery = $sub->piggery;
-                    $deliverer->itwpiggery += $sub->piggery;
-                    // which tw bonus?
-                    $twbonus = $this->bean->company->tierwohlnetperstock;
-                    if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$sub->earmark, $sub->vvvo])) {
-                        // there is a special price defined for this sub deliverer
-                        $twbonus = $stockman->tierwohlnetperstock;
-                    }
-                    // update all stock
-                    $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
-                    R::exec($sql, [
-                        ':earmark' => $sub->earmark,
-                        ':csb_id' => $this->bean->getId(),
-                        ':twbonus' => $twbonus
+                try {
+                    $response = $response = $client->selectQSTW([
+                        'locationId' => $sub->vvvo,
+                        'btartId' => '2001'
                     ]);
-                } else {
-                    // This subdeliverer is NOT TW certified
+                    if (isset($response->certifications)) {
+                        if ($response->certifications->qsCertification != 1) {
+                            throw new Exception_NonQS($sub->vvvo);
+                        }
+                        if ($response->certifications->twCertification) {
+                            // TW certified, add up as itwpiggery
+                            $sub->itw = true;
+                            $sub->itwpiggery = $sub->piggery;
+                            $deliverer->itwpiggery += $sub->piggery;
+                            // which tw bonus?
+                            $twbonus = $this->bean->company->tierwohlnetperstock;
+                            if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$sub->earmark, $sub->vvvo])) {
+                                // there is a special price defined for this sub deliverer
+                                $twbonus = $stockman->tierwohlnetperstock;
+                            }
+                            // update all stock of the TW certified deliverer to be ITW
+                            $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
+                            R::exec($sql, [
+                                ':earmark' => $sub->earmark,
+                                ':csb_id' => $this->bean->getId(),
+                                ':twbonus' => $twbonus
+                            ]);
+                        } else {
+                            // This subdeliverer is NOT TW certified
+                            $sub->itw = false;
+                        }
+                    } else {
+                        $sub->itw = false;
+                    }
+                } catch (\Exception $e) {
+                    error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                 }
             }
         }

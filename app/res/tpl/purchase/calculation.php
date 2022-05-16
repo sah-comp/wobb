@@ -196,7 +196,7 @@
                         <div class="row nomargins">
                             <div class="span10">
                                 <span class="subdeliverer-earmark">
-                                    <?php echo htmlspecialchars($_sub->earmark) ?>
+                                    <?php echo htmlspecialchars($_sub->vvvo) ?>
                                 </span>
                             </div>
                             <div class="span1">
