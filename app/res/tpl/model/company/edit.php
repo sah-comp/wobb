@@ -268,6 +268,18 @@
                 name="dialog[vatid]"
                 value="<?php echo htmlspecialchars($record->vatid) ?>" />
         </div>
+        <div class="row <?php echo ($record->hasError('taxconsultantemail')) ? 'error' : ''; ?>">
+            <label
+                for="company-taxconsultantemail">
+                <?php echo I18n::__('company_label_taxconsultantemail') ?>
+            </label>
+            <input
+                id="company-taxconsultantemail"
+                type="email"
+                name="dialog[taxconsultantemail]"
+                value="<?php echo htmlspecialchars($record->taxconsultantemail) ?>" />
+            <p class="info"><?php echo I18n::__('company_info_taxconsultantemail') ?></p>
+        </div>
     </fieldset>
     <fieldset
         id="company-bankaccount"

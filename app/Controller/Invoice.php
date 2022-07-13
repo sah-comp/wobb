@@ -255,9 +255,10 @@ class Controller_Invoice extends Controller
     /**
      * Export the Open Item list as .csv file
      *
-     * @return void
+     * @param $flag_to_output bool defaults to true which will immediately output as csv else, return $csv
+     * @return mixed
      */
-    public function csv()
+    public function csv($flag_to_output = true)
     {
         $filename = I18n::__('invoice_filename_csv', null, [
             $_SESSION['invoice']['fy'],
@@ -286,9 +287,113 @@ class Controller_Invoice extends Controller
         ];
         $csv->heading = true;
         $csv->data = $this->getInvoices();
-        $csv->output($filename);
-        exit;
+        if ($flag_to_output) {
+            $csv->output($filename);
+            exit;
+        }
+        return $csv;
     }
+
+    /**
+     * Creates a CSV file as required for tax consultant and tries to send it to
+     * the taxconsultant email address which is defined in company.
+     */
+    public function mail()
+    {
+        Permission::check(Flight::get('user'), 'invoice', 'edit');
+
+        $csv = $this->csv(false);
+        $filename = I18n::__('taxconsultant_csv_filename', null, [
+            $_SESSION['invoice']['fy'],
+            $_SESSION['invoice']['lo'],
+            $_SESSION['invoice']['hi']
+        ]);
+        $csv->save(Flight::get('upload_dir') . '/' . $filename);
+
+        if ($this->sendMail($filename, $filename)) {
+            Flight::get('user')->notify(I18n::__('taxconsultant_send_mail_success'));
+        } else {
+            Flight::get('user')->notify(I18n::__('taxconsultant_send_mail_failed'), 'warning');
+        }
+        $this->redirect('/invoice/');
+    }
+
+    /**
+     * Sends an email to tax account email address with the selected invoice beans as CSV file attached.
+     *
+     * @param string $filename
+     * @param string $docname
+     */
+    public function sendMail($filename, $docname)
+    {
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        $company = R::load('company', WOBB_COMPANY_ID);
+        if ($smtp = $company->smtp()) {
+            $mail->SMTPDebug = 4; // Set debug mode, 1 = err/msg, 2 = msg
+            /**
+             * uncomment this block to get verbose error logging in your error log file
+             */
+            /*
+            $mail->Debugoutput = function($str, $level) {
+                error_log("debug level $level; message: $str");
+            };
+            */
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = $smtp['host'];                          // Specify main and backup server
+            if ($smtp['auth']) {
+                $mail->SMTPAuth = true;                           // Enable SMTP authentication
+            } else {
+                $mail->SMTPAuth = false;                          // Disable SMTP authentication
+            }
+            $mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Username = $smtp['user'];                      // SMTP username
+            $mail->Password = $smtp['password'];                  // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
+
+            /**
+             * @see https://stackoverflow.com/questions/30371910/phpmailer-generates-php-warning-stream-socket-enable-crypto-peer-certificate
+             */
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+        }
+
+        $mail->CharSet = 'UTF-8';
+        $mail->setFrom($company->emailnoreply, $company->legalname);
+        $mail->addReplyTo($company->email, $company->legalname);
+        $mail->addAddress($company->taxconsultantemail, I18n::__('taxconsultant_mail_name'));
+
+        $mail->WordWarp = 50;
+        $mail->isHTML(true);
+        $mail->Subject = $docname;
+
+        ob_start();
+        Flight::render('invoice/mail/html', array(
+            'company' => $company
+        ));
+        $html = ob_get_clean();
+        ob_start();
+        Flight::render('invoice/mail/text', array(
+            'company' => $company
+        ));
+        $text = ob_get_clean();
+        $mail->Body = $html;
+        $mail->AltBody = $text;
+
+        $mail->addAttachment(Flight::get('upload_dir') . '/' . $filename, $filename);
+
+        if ($mail->send()) {
+            return true;
+        } else {
+            error_log($mail->ErrorInfo);
+            return false;
+        }
+    }
+
 
     /**
      * Returns an array of all stock within the lanuv time periode.

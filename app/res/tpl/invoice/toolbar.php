@@ -18,6 +18,13 @@
 	</li>
     <?php if ($hasRecords): ?>
     <li>
+        <a
+            href="<?php echo Url::build('/invoice/mail/') ?>"
+            class="mail">
+            <?php echo I18n::__('taxconsultant_href_mail') ?>
+        </a>
+    </li>
+    <li>
 		<a
 			href="<?php echo Url::build("/invoice/csv") ?>">
 			<?php echo I18n::__('invoice_action_csv') ?>
