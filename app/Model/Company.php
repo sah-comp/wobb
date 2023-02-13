@@ -32,7 +32,7 @@ class Model_Company extends Model
             R::store($this->bean);
             return $nextbillingnumber;
         } catch (Exception $e) {
-            Cinnebar_Logger::instance()->log($e, 'exceptions');
+            error_log($e);
             return null;
         }
     }

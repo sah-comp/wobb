@@ -553,7 +553,7 @@ SQL;
                 throw new Exception_Csbfiledatemismatch('Date in CSB file does not match your csb date');
             }
 
-            // check for initiative tierwohl
+            // check for initiative tierwohl | check for itw
             if ($this->bean->company->hastierwohl) {
                 if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
                     $stock->itw = true; // this stock is qualified to be paid additional amount ITW
@@ -769,7 +769,8 @@ SQL;
                         $sub->itw = false;
                     }
                 } catch (\Exception $e) {
-                    error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
+                    throw new Exception_ITWUnreachable($sub->vvvo);
+                    //error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                 }
             }
         }

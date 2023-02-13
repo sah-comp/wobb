@@ -166,6 +166,11 @@ class Controller_Purchase extends Controller
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('purchase_day_nonqs', null, [$e->getMessage()]), 'error');
                 $this->redirect('/purchase/add');
+            } catch (Exception_ITWUnreachable $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_itw_unreachable', null, [$e->getMessage()]), 'error');
+                $this->redirect('/purchase/add');
             } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
