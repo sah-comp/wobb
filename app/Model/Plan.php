@@ -176,6 +176,7 @@ SQL;
             'end' => $this->bean->pubdate
         ];
         $this->bean->piggery = 0;
+        $this->bean->itwpiggery = 0;
         $piggery_nostockdatayet = 0;
         $this->bean->totalweight = 0;
         $this->bean->totalnet = 0;
@@ -230,6 +231,7 @@ SQL;
             $deliverer->totalnet = round($deliverer->meanweight * $deliverer->meandprice * $deliverer->piggery, 3);
 
             $this->bean->piggery += $deliverer->piggery;
+            $this->bean->itwpiggery += $deliverer->itwpiggery;
             $this->bean->totalweight += round($deliverer->piggery * $deliverer->meanweight, 3);
             $this->bean->totalnet += $deliverer->totalnet;
             $totalmfa += $deliverer->meanmfa;
@@ -261,6 +263,7 @@ SQL;
     public function dispense()
     {
         $this->bean->piggery = 0;
+        $this->bean->itwpiggery = 0;
         $this->bean->season = 0; // 0 = winter, 1 = summer
         $this->bean->pubdate = date('Y-m-d');
         $this->bean->period = 6; //weeks to look back for averages

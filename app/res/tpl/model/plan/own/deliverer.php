@@ -53,6 +53,14 @@
         </div>
         <div class="span1">
             <input
+                id="plan-deliverer-<?php echo $index ?>-itwpiggery"
+                class="autowidth number"
+                type="text"
+                name="dialog[ownDeliverer][<?php echo $index ?>][itwpiggery]"
+                value="<?php echo ($_deliverer->itwpiggery) ?>" />
+        </div>
+        <div class="span1">
+            <input
                 type="text"
                 class="number"
                 name="dialog[ownDeliverer][<?php echo $index ?>][dprice]"
@@ -68,7 +76,7 @@
                 
             />
 		</div>
-        <div class="span2">
+        <div class="span1">
             <input
                 type="text"
                 class="number"

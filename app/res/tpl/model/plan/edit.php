@@ -187,6 +187,11 @@
             </div>
             <div class="span1">
                 <label class="number">
+                    <?php echo I18n::__('plan_deliverer_label_itwpiggery') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label class="number">
                     <?php echo I18n::__('plan_deliverer_label_baseprice') ?>
                 </label>
             </div>
@@ -195,7 +200,7 @@
                     <?php echo I18n::__('plan_deliverer_label_desc') ?>
                 </label>
 			</div>
-			<div class="span2">
+			<div class="span1">
                 <label class="number">
                     <?php echo I18n::__('plan_deliverer_label_totalnet') ?>
                 </label>
@@ -255,10 +260,19 @@
 	                name="dialog[piggery]"
 	                value="<?php echo ($record->piggery) ?>" />
             </div>
-            <div class="span3">
+            <div class="span1">
+                <input
+                    id="plan-itwpiggery"
+                    class="autowidth number"
+                    type="text"
+                    readonly="readonly"
+                    name="dialog[itwpiggery]"
+                    value="<?php echo ($record->itwpiggery) ?>" />
+            </div>
+            <div class="span2">
                 &nbsp;
             </div>
-			<div class="span2">
+			<div class="span1">
 	            <input
 	                type="text"
 	                class="number"
