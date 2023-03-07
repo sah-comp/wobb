@@ -144,6 +144,7 @@ class Controller_Purchase extends Controller
                 R::store($this->record);
                 $this->record->checkQSITW();
                 R::store($this->record);
+                $this->record->checkPlan();
                 Flight::get('user')->protocol(I18n::__('purchase_day_add_success_activity', null, [
                     $this->record->pubdate
                 ]));

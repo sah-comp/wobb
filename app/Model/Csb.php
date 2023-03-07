@@ -709,6 +709,51 @@ SQL;
     }
 
     /**
+     * Checks the slaughter day data against the planned data of the slaughter day.
+     * 
+     * If there is no plan with the date given simply return, else check and compare things
+     * like piggery, itwpiggery and so on.
+     *
+     * @return void
+     */
+    public function checkPlan(): void
+    {
+        if (!$plan = R::findOne('plan', " pubdate = ?", [$this->bean->pubdate])) {
+            Flight::get('user')->notify(I18n::__('csb_no_plan_found'), 'warning');
+            return;
+        }
+        $results = [];
+        //Flight::get('user')->notify(I18n::__('csb_compared_to_plan_result'));
+        if ($this->bean->baseprice !== $plan->baseprice) {
+            $results[] = I18n::__('csb_plan_baseprice_differs');
+        }
+        if ($this->bean->nextweekprice && $this->bean->nextweekprice !== $plan->nextweekprice) {
+            $results[] = I18n::__('csb_plan_nextweekprice_differs');
+        }
+        if ($this->bean->piggery !== $plan->piggery) {
+            $results[] = I18n::__('csb_plan_piggery_differs');
+        }
+        $deliverers_plan = R::find('deliverer', " plan_id = ? ORDER BY supplier", [$plan->getId()]);
+        //$deliverers_csb = R::find('deliverer', " csb_id = ? ORDER BY supplier", [$this->bean->getId()]);
+        foreach ($deliverers_plan as $id => $deliverer_plan) {
+            $deliverer_csb = R::findOne('deliverer', " csb_id = ? AND supplier = ?", [$this->bean->getId(), $deliverer_plan->supplier]);
+            if ($deliverer_plan->piggery !== $deliverer_csb->piggery) {
+               $results[] = I18n::__('csb_plan_piggery_differs_deliverer', null, [$deliverer_csb->supplier]);
+            }
+            if ($deliverer_plan->itwpiggery !== $deliverer_csb->itwpiggery) {
+               $results[] = I18n::__('csb_plan_itwpiggery_differs_deliverer', null, [$deliverer_csb->supplier]);
+            }
+        }
+        if (count($results)) {
+            $result = implode(', ', $results);
+            Flight::get('user')->notify(I18n::__('csb_compared_to_plan_result_errors', null, [$result]), 'error');
+        } else {
+            Flight::get('user')->notify(I18n::__('csb_compared_to_plan_result_okay'));
+        }
+        return;
+    }
+
+    /**
      * Checks the QS database for QS and TW qualification.
      *
      * @todo get rid of MAGIC numer 2001 (Schweinemast production type)
