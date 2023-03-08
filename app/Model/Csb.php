@@ -722,15 +722,16 @@ SQL;
             Flight::get('user')->notify(I18n::__('csb_no_plan_found'), 'warning');
             return;
         }
+        //error_log('CSB ' . $this->bean->piggery . ' == PLAN ' . $plan->piggery);
         $results = [];
         //Flight::get('user')->notify(I18n::__('csb_compared_to_plan_result'));
-        if ($this->bean->baseprice !== $plan->baseprice) {
+        if ($this->bean->baseprice != $plan->baseprice) {
             $results[] = I18n::__('csb_plan_baseprice_differs');
         }
-        if ($this->bean->nextweekprice && $this->bean->nextweekprice !== $plan->nextweekprice) {
+        if ($this->bean->nextweekprice && $this->bean->nextweekprice != $plan->nextweekprice) {
             $results[] = I18n::__('csb_plan_nextweekprice_differs');
         }
-        if ($this->bean->piggery !== $plan->piggery) {
+        if ($this->bean->piggery != $plan->piggery) {
             $results[] = I18n::__('csb_plan_piggery_differs');
         }
         $deliverers_plan = R::find('deliverer', " plan_id = ? ORDER BY supplier", [$plan->getId()]);
