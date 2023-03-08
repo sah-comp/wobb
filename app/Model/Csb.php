@@ -736,13 +736,17 @@ SQL;
         $deliverers_plan = R::find('deliverer', " plan_id = ? ORDER BY supplier", [$plan->getId()]);
         //$deliverers_csb = R::find('deliverer', " csb_id = ? ORDER BY supplier", [$this->bean->getId()]);
         foreach ($deliverers_plan as $id => $deliverer_plan) {
-            $deliverer_csb = R::findOne('deliverer', " csb_id = ? AND supplier = ?", [$this->bean->getId(), $deliverer_plan->supplier]);
-            if ($deliverer_plan->piggery !== $deliverer_csb->piggery) {
-               $results[] = I18n::__('csb_plan_piggery_differs_deliverer', null, [$deliverer_csb->supplier]);
+            if ($deliverer_csb = R::findOne('deliverer', " csb_id = ? AND supplier = ?", [$this->bean->getId(), $deliverer_plan->supplier])) {
+                if ($deliverer_plan->piggery !== $deliverer_csb->piggery) {
+                    $results[] = I18n::__('csb_plan_piggery_differs_deliverer', null, [$deliverer_csb->supplier]);
+                }
+                if ($deliverer_plan->itwpiggery !== $deliverer_csb->itwpiggery) {
+                    $results[] = I18n::__('csb_plan_itwpiggery_differs_deliverer', null, [$deliverer_csb->supplier]);
+                }
+            } else {
+                // there is an unplanned deliverer, probably due to alias splitting of a main deliverer
             }
-            if ($deliverer_plan->itwpiggery !== $deliverer_csb->itwpiggery) {
-               $results[] = I18n::__('csb_plan_itwpiggery_differs_deliverer', null, [$deliverer_csb->supplier]);
-            }
+            
         }
         if (count($results)) {
             $result = implode(', ', $results);
