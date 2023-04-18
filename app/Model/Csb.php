@@ -710,7 +710,7 @@ SQL;
 
     /**
      * Checks the slaughter day data against the planned data of the slaughter day.
-     * 
+     *
      * If there is no plan with the date given simply return, else check and compare things
      * like piggery, itwpiggery and so on.
      *
@@ -747,7 +747,6 @@ SQL;
             } else {
                 // there is an unplanned deliverer, probably due to alias splitting of a main deliverer
             }
-            
         }
         if (count($results)) {
             $result = implode(', ', $results);
@@ -779,6 +778,7 @@ SQL;
         R::exec($sql, [
             ':csb_id' => $this->bean->getId()
         ]);
+        ini_set("default_socket_timeout", 60);
         $client = new SoapClient($this->bean->company->wsdl);
         foreach ($this->bean->ownDeliverer as $id => $deliverer) {
             $deliverer->itwpiggery = 0; //reset itw counter
@@ -807,9 +807,9 @@ SQL;
                             // update all stock of the TW certified deliverer to be ITW
                             $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
                             R::exec($sql, [
-                                ':earmark' => $sub->earmark,
-                                ':csb_id' => $this->bean->getId(),
-                                ':twbonus' => $twbonus
+                            ':earmark' => $sub->earmark,
+                            ':csb_id' => $this->bean->getId(),
+                            ':twbonus' => $twbonus
                             ]);
                         } else {
                             // This subdeliverer is NOT TW certified
@@ -818,9 +818,11 @@ SQL;
                     } else {
                         $sub->itw = false;
                     }
+                } catch (\Exception_NonQS $e) {
+                    throw new Exception_NonQS($sub->vvvo);
                 } catch (\Exception $e) {
+                    error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                     throw new Exception_ITWUnreachable($sub->vvvo);
-                    //error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                 }
             }
         }
@@ -837,8 +839,8 @@ SQL;
     public function calculation()
     {
         foreach ($this->bean
-                      ->withCondition(" enabled = 1 ORDER BY supplier ")
-                      ->ownDeliverer as $_id => $deliverer) {
+                  ->withCondition(" enabled = 1 ORDER BY supplier ")
+                  ->ownDeliverer as $_id => $deliverer) {
             $deliverer->totalnet = 0;
             $deliverer->totalnetitw = 0;
             $deliverer->totalnetsprice = 0;
@@ -937,8 +939,8 @@ SQL;
     public function billing()
     {
         foreach ($this->bean
-                      ->withCondition(" enabled = 1 ORDER BY supplier ")
-                      ->ownDeliverer as $id => $deliverer) {
+                  ->withCondition(" enabled = 1 ORDER BY supplier ")
+                  ->ownDeliverer as $id => $deliverer) {
             $deliverer->billing($this->bean);
         }
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
