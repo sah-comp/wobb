@@ -186,8 +186,17 @@ class Controller_Deliverer extends Controller
             I18n::__('person_csv_name'),
             I18n::__('person_csv_email'),
             I18n::__('person_csv_postaladdress'),
+            I18n::__('person_csv_pricing_name'),
+            I18n::__('person_csv_noterelprice'),
+            I18n::__('person_csv_nextweekprice'),
             I18n::__('person_csv_relsprice'),
-            I18n::__('person_csv_reldprice')
+            I18n::__('person_csv_reldprice'),
+            I18n::__('person_csv_itwrelsprice'),
+            I18n::__('person_csv_itwreldprice'),
+            I18n::__('person_csv_fixsprice'),
+            I18n::__('person_csv_fixdprice'),
+            I18n::__('person_csv_condition'),
+            I18n::__('person_csv_cost')
         ];
         $csv->heading = true;
         $csv->data = $this->makeCsvData();
@@ -199,7 +208,7 @@ class Controller_Deliverer extends Controller
      */
     public function makeCsvData()
     {
-        $sql = "SELECT p.nickname AS nickname, p.account AS account, p.vvvo AS vvvo, REPLACE(p.name, '\r\n', ' ') AS name, p.email AS email, CONCAT(adr.street, ', ', adr.zip, ' ', adr.city) AS postaladdress, FORMAT(relsprice, 3, 'de_DE') AS relsprice, FORMAT(reldprice, 3, 'de_DE') AS reldprice FROM person AS p LEFT JOIN address AS adr ON adr.person_id = p.id AND adr.label = 'billing' WHERE enabled = 1 ORDER BY p.nickname";
+        $sql = "SELECT p.nickname AS nickname, p.account AS account, p.vvvo AS vvvo, REPLACE(p.name, '\r\n', ' ') AS name, p.email AS email, CONCAT(adr.street, ', ', adr.zip, ' ', adr.city) AS postaladdress, pricing.name AS pricingname, REPLACE(p.noterelprice, '\r\n', ' ') AS pnote, IF(p.nextweekprice = 1, 'Mittwochspreis', '') AS pnextweekprice, FORMAT(relsprice, 3, 'de_DE') AS relsprice, FORMAT(reldprice, 3, 'de_DE') AS reldprice, FORMAT(itwrelsprice, 3, 'de_DE') AS itwrelsprice, FORMAT(itwreldprice, 3, 'de_DE') AS itwreldprice, FORMAT(fixsprice, 3, 'de_DE') AS fixsprice, FORMAT(fixdprice, 3, 'de_DE') AS fixdprice, (SELECT FORMAT(SUM(`condition`.value), 3, 'de_DE') FROM `condition` WHERE person_id = p.id) AS conditionvalue, (SELECT FORMAT(SUM(`cost`.value), 3, 'de_DE') FROM `cost` WHERE person_id = p.id) AS costvalue FROM person AS p LEFT JOIN address AS adr ON adr.person_id = p.id AND adr.label = 'billing' LEFT JOIN pricing ON pricing.id = p.pricing_id WHERE p.enabled = 1 ORDER BY p.nickname";
         return R::getAll($sql);
     }
 
@@ -231,7 +240,7 @@ class Controller_Deliverer extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
-            $mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Port = $smtp['port'];                          // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
