@@ -99,7 +99,7 @@ class Model_Deliverer extends Model
                 if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
                 ':vvvo' => $this->bean->vvvo,
                 ':pid' => $this->bean->person->getId()
-            ])) {
+                ])) {
                     // yes, set the price relatively to the parent group
                     $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
                 }
@@ -125,6 +125,14 @@ class Model_Deliverer extends Model
                 } else {
                     // No twCertification == true, set dealer price to parent price
                     $this->bean->sprice = $this->bean->deliverer->sprice;
+                }
+                // Is there a special setting, based on the VVVO number?
+                if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
+                ':vvvo' => $this->bean->vvvo,
+                ':pid' => $this->bean->person->getId()
+                ])) {
+                    // yes, set the price relatively to the parent group
+                    $this->bean->sprice = $this->bean->deliverer->sprice + $hasStockmanWithPriceAdjust->relsprice;
                 }
             }
         }
@@ -603,7 +611,6 @@ class Model_Deliverer extends Model
             $applyCondition = false;
 
             switch ($condition->label) {
-
                 case 'stockperitem':
                     if ($condition->precondition == '' || $condition->precondition == 'none') {
                         $appliedcondition->factor = $this->bean->piggery;

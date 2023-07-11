@@ -15,13 +15,13 @@ $stats = $record->ownStat;
 <div>
     <input type="hidden" name="dialog[type]" value="<?php echo $record->getMeta('type') ?>" />
     <input type="hidden" name="dialog[id]" value="<?php echo $record->getId() ?>" />
-    <?php if ($record->email): ?>
+    <?php if ($record->email) : ?>
     <img
-    	src="<?php echo Gravatar::src($record->email, 72) ?>"
-    	class="gravatar-account circular no-shadow"
-    	width="72"
-    	height="72"
-    	alt="<?php echo htmlspecialchars($record->name) ?>" />
+        src="<?php echo Gravatar::src($record->email, 72) ?>"
+        class="gravatar-account circular no-shadow"
+        width="72"
+        height="72"
+        alt="<?php echo htmlspecialchars($record->name) ?>" />
     <?php endif ?>
 </div>
 <fieldset>
@@ -69,7 +69,7 @@ $stats = $record->ownStat;
             <select
                 id="person-language"
                 name="dialog[language]">
-                <?php foreach (R::findAll('language') as $_lang_id => $_lang): ?>
+                <?php foreach (R::findAll('language') as $_lang_id => $_lang) : ?>
                 <option
                     value="<?php echo $_lang->iso ?>"
                     <?php echo ($record->language == $_lang->iso) ? 'selected="selected"' : '' ?>>
@@ -115,44 +115,44 @@ $stats = $record->ownStat;
         </label>
         </div>
         <div class="span3">
-	        <label
-	            for="person-vat">
-	            <?php echo I18n::__('person_label_vat') ?>
-	        </label>
+            <label
+                for="person-vat">
+                <?php echo I18n::__('person_label_vat') ?>
+            </label>
         </div>
     </div>
     <!-- end of grid based header -->
     <!-- grid based data -->
     <div class="row">
-		<div class="span3">&nbsp;</div>
-		<div class="span3">
-	        <select
-	            id="person-pricing"
-	            name="dialog[pricing_id]"
+        <div class="span3">&nbsp;</div>
+        <div class="span3">
+            <select
+                id="person-pricing"
+                name="dialog[pricing_id]"
                 required="required">
-	            <option value=""><?php echo I18n::__('person_pricing_please_select') ?></option>
-	            <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing): ?>
-	            <option
-	                value="<?php echo $_pricing->getId() ?>"
-	                <?php echo ($record->pricing_id == $_pricing->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_pricing->name) ?></option>
-	            <?php endforeach ?>
-	        </select>
-    	</div>
- 	   <div class="span3">
-	        <select
-	            id="person-vat"
-	            name="dialog[vat_id]"
+                <option value=""><?php echo I18n::__('person_pricing_please_select') ?></option>
+                <?php foreach (R::find('pricing', ' active = 1 ORDER BY name') as $_id => $_pricing) : ?>
+                <option
+                    value="<?php echo $_pricing->getId() ?>"
+                    <?php echo ($record->pricing_id == $_pricing->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_pricing->name) ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+       <div class="span3">
+            <select
+                id="person-vat"
+                name="dialog[vat_id]"
                 required="required">
-	            <option value=""><?php echo I18n::__('person_vat_please_select') ?></option>
-	            <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
-	            <option
-	                value="<?php echo $_vat->getId() ?>"
-	                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>
-	            <?php endforeach ?>
-	        </select>
-		</div>
-	</div>
-	<!-- end of grid based data -->
+                <option value=""><?php echo I18n::__('person_vat_please_select') ?></option>
+                <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat) : ?>
+                <option
+                    value="<?php echo $_vat->getId() ?>"
+                    <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+    <!-- end of grid based data -->
 </fieldset>
 <fieldset>
     <legend class="verbose"><?php echo I18n::__('person_legend_email') ?></legend>
@@ -343,7 +343,7 @@ $stats = $record->ownStat;
             'person-kidnap' => I18n::__('person_kidnap_tab'),
             'person-nonqs' => I18n::__('person_nonqs_tab')
         ),
-        'default_tab' => 'person-address'
+                   'default_tab' => 'person-address'
     )) ?>
     <fieldset
         id="person-address"
@@ -354,12 +354,12 @@ $stats = $record->ownStat;
                 id="person-<?php echo $record->getId() ?>-address-container"
                 class="container attachable detachable sortable">
                 <?php if (count($record->ownAddress) == 0) {
-        $record->ownAddress[] = R::dispense('address');
-    } ?>
+                    $record->ownAddress[] = R::dispense('address');
+                } ?>
                 <?php $index = 0 ?>
-                <?php foreach ($record->ownAddress as $_address_id => $_address): ?>
-                <?php $index++ ?>
-                <?php Flight::render('model/person/own/address', array(
+                <?php foreach ($record->ownAddress as $_address_id => $_address) : ?>
+                    <?php $index++ ?>
+                    <?php Flight::render('model/person/own/address', array(
                     'record' => $record,
                     '_address' => $_address,
                     'index' => $index
@@ -388,11 +388,11 @@ $stats = $record->ownStat;
             class="container attachable detachable sortable">
             <?php if (count($record->ownCondition) == 0) {
                     $record->ownCondition[] = R::dispense('condition');
-                } ?>
+            } ?>
             <?php $index = 0 ?>
-            <?php foreach ($record->ownCondition as $_condition_id => $_condition): ?>
-            <?php $index++ ?>
-            <?php Flight::render('model/person/own/condition', array(
+            <?php foreach ($record->ownCondition as $_condition_id => $_condition) : ?>
+                <?php $index++ ?>
+                <?php Flight::render('model/person/own/condition', array(
                 'record' => $record,
                 '_condition' => $_condition,
                 'index' => $index
@@ -412,9 +412,9 @@ $stats = $record->ownStat;
                 $record->ownCost[] = R::dispense('cost');
             } ?>
             <?php $index = 0 ?>
-            <?php foreach ($record->ownCost as $_cost_id => $_cost): ?>
-            <?php $index++ ?>
-            <?php Flight::render('model/person/own/cost', array(
+            <?php foreach ($record->ownCost as $_cost_id => $_cost) : ?>
+                <?php $index++ ?>
+                <?php Flight::render('model/person/own/cost', array(
                 'record' => $record,
                 '_cost' => $_cost,
                 'index' => $index
@@ -469,7 +469,7 @@ $stats = $record->ownStat;
             <select
                 id="person-billingtransport"
                 name="dialog[billingtransport]">
-                <?php foreach ($record->getBillingtransports() as $_kind): ?>
+                <?php foreach ($record->getBillingtransports() as $_kind) : ?>
                 <option
                     value="<?php echo $_kind ?>"
                     <?php echo ($record->billingtransport == $_kind) ? 'selected="selected"' : '' ?>>
@@ -509,22 +509,22 @@ $stats = $record->ownStat;
             <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
         </div>
         <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">
-		    <input
-		        type="hidden"
-		        name="dialog[nextweekprice]"
-		        value="0" />
-		    <input
-		        id="person-nextweekprice"
-		        type="checkbox"
-		        name="dialog[nextweekprice]"
-		        <?php echo ($record->nextweekprice) ? 'checked="checked"' : '' ?>
-		        value="1" />
-		    <label
-		        for="person-nextweekprice"
-		        class="cb">
-		        <?php echo I18n::__('person_label_nextweekprice') ?>
-		    </label>
-		</div>
+            <input
+                type="hidden"
+                name="dialog[nextweekprice]"
+                value="0" />
+            <input
+                id="person-nextweekprice"
+                type="checkbox"
+                name="dialog[nextweekprice]"
+                <?php echo ($record->nextweekprice) ? 'checked="checked"' : '' ?>
+                value="1" />
+            <label
+                for="person-nextweekprice"
+                class="cb">
+                <?php echo I18n::__('person_label_nextweekprice') ?>
+            </label>
+        </div>
         <div class="row nomargins">
             <div class="span3">
                 &nbsp;
@@ -663,7 +663,7 @@ $stats = $record->ownStat;
                 <p class="info"><?php echo I18n::__('baseprice_info') ?></p>
             </div>
         </div>
-        <?php if (count($stats)): ?>
+        <?php if (count($stats)) : ?>
         <div class="row nomargins">
             <div class="span3">
                 <label><?php echo I18n::__('baseprice_history_headline') ?></label>
@@ -690,7 +690,7 @@ $stats = $record->ownStat;
                 <label class="number"><?php echo I18n::__('baseprice_history_fixdprice') ?></label>
             </div>
         </div>
-        <?php foreach ($stats as $_id => $_stat): ?>
+            <?php foreach ($stats as $_id => $_stat) : ?>
         <div class="row nomargins">
             <div class="span3">
                 &nbsp;
@@ -744,7 +744,7 @@ $stats = $record->ownStat;
                     value="<?php echo htmlspecialchars($_stat->decimal('fixdprice')) ?>" />
             </div>
         </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
         <?php endif; ?>
     </fieldset>
     <fieldset
@@ -859,9 +859,9 @@ $stats = $record->ownStat;
                 $record->ownKidnap[] = R::dispense('kidnap');
             } ?>
             <?php $index = 0 ?>
-            <?php foreach ($record->ownKidnap as $_kidnap_id => $_kidnap): ?>
-            <?php $index++ ?>
-            <?php Flight::render('model/person/own/kidnap', array(
+            <?php foreach ($record->ownKidnap as $_kidnap_id => $_kidnap) : ?>
+                <?php $index++ ?>
+                <?php Flight::render('model/person/own/kidnap', array(
                 'record' => $record,
                 '_kidnap' => $_kidnap,
                 'index' => $index
@@ -874,14 +874,15 @@ $stats = $record->ownStat;
         class="tab"
         style="display: none;">
         <legend class="verbose"><?php echo I18n::__('person_legend_stockman') ?></legend>
-		<div class="row">
-			<div class="span3">&nbsp;</div>
-			<div class="span2"><label><?php echo I18n::__('stockman_label_earmark') ?></label></div>
-            <div class="span3"><label><?php echo I18n::__('stockman_label_name') ?></label></div>
-			<div class="span1"><label><?php echo I18n::__('stockman_label_reldprice') ?></label></div>
-			<div class="span1"><label><?php echo I18n::__('stockman_label_tierwohlnetperstock') ?></label></div>
-			<div class="span2"><label><?php echo I18n::__('stockman_label_vvvo') ?></label></div>
-		</div>
+        <div class="row">
+            <div class="span3">&nbsp;</div>
+            <div class="span2"><label><?php echo I18n::__('stockman_label_earmark') ?></label></div>
+            <div class="span2"><label><?php echo I18n::__('stockman_label_name') ?></label></div>
+            <div class="span1"><label><?php echo I18n::__('stockman_label_relsprice') ?></label></div>
+            <div class="span1"><label><?php echo I18n::__('stockman_label_reldprice') ?></label></div>
+            <div class="span1"><label><?php echo I18n::__('stockman_label_tierwohlnetperstock') ?></label></div>
+            <div class="span2"><label><?php echo I18n::__('stockman_label_vvvo') ?></label></div>
+        </div>
         <div
             id="person-<?php echo $record->getId() ?>-stockman-container"
             class="container attachable detachable sortable">
@@ -889,9 +890,9 @@ $stats = $record->ownStat;
                 $record->ownStockman[] = R::dispense('stockman');
             } ?>
             <?php $index = 0 ?>
-            <?php foreach ($record->ownStockman as $_stockman_id => $_stockman): ?>
-            <?php $index++ ?>
-            <?php Flight::render('model/person/own/stockman', array(
+            <?php foreach ($record->ownStockman as $_stockman_id => $_stockman) : ?>
+                <?php $index++ ?>
+                <?php Flight::render('model/person/own/stockman', array(
                 'record' => $record,
                 '_stockman' => $_stockman,
                 'index' => $index
@@ -912,9 +913,9 @@ $stats = $record->ownStat;
                 $record->ownNonqs[] = R::dispense('nonqs');
             } ?>
             <?php $index = 0 ?>
-            <?php foreach ($record->ownNonqs as $_nonqs_id => $_nonqs): ?>
-            <?php $index++ ?>
-            <?php Flight::render('model/person/own/nonqs', array(
+            <?php foreach ($record->ownNonqs as $_nonqs_id => $_nonqs) : ?>
+                <?php $index++ ?>
+                <?php Flight::render('model/person/own/nonqs', array(
                 'record' => $record,
                 '_nonqs' => $_nonqs,
                 'index' => $index

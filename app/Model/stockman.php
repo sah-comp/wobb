@@ -22,6 +22,9 @@ class Model_Stockman extends Model
      */
     public function dispense()
     {
+        $this->addConverter('relsprice', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('reldprice', array(
             new Converter_Decimal()
         ));
