@@ -56,10 +56,10 @@ Flight::route('(/[a-z]{2})/logout', function () {
 /**
  * Routes to the admin controller.
  */
-Flight::route('(/[a-z]{2})/admin(/index)', function () {
+ Flight::route('(/[a-z]{2})/admin(/index)', function () {
     $adminController = new Controller_Admin();
     $adminController->index();
-});
+ });
 
 
 /**
@@ -67,14 +67,14 @@ Flight::route('(/[a-z]{2})/admin(/index)', function () {
  *
  * These routes will handle all models in a basic CURD way.
  */
-Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/add(/@id:[0-9]+)(/@layout:[a-z]+)', function ($type, $id, $layout) {
+ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/add(/@id:[0-9]+)(/@layout:[a-z]+)', function ($type, $id, $layout) {
     if ($layout === null) {
         $layout = 'table';
     }
     $scaffoldController = new Controller_Scaffold('/admin', $type, $id);
     $scaffoldController->add($layout);
-});
-Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})(/@layout:[a-z]+)', function ($type, $id, $page, $order, $dir, $layout) {
+ });
+ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})(/@layout:[a-z]+)', function ($type, $id, $page, $order, $dir, $layout) {
     if ($layout === null) {
         $layout = 'table';
     }
@@ -89,8 +89,8 @@ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@o
     }
     $scaffoldController = new Controller_Scaffold('/admin', $type, $id);
     $scaffoldController->edit($page, $order, $dir, $layout);
-});
-Flight::route('(/[a-z]{2})/admin/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})', function ($type, $layout, $page, $order, $dir) {
+ });
+ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})', function ($type, $layout, $page, $order, $dir) {
     if ($layout === null) {
         $layout = 'table';
     }
@@ -105,98 +105,98 @@ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@
     }
     $scaffoldController = new Controller_Scaffold('/admin', $type);
     $scaffoldController->index($layout, $page, $order, $dir);
-});
-Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/detach/@subtype:[a-z]+(/@id:[0-9]+)', function ($type, $subtype, $id) {
+ });
+ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/detach/@subtype:[a-z]+(/@id:[0-9]+)', function ($type, $subtype, $id) {
     if ($id === null) {
         $id = 0;
     }
     $scaffoldController = new Controller_Scaffold('/admin', $type, $id);
     $scaffoldController->detach($subtype, $id);
-});
-Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/attach/@prefix:[a-z]+/@subtype:[a-z]+(/@id:[0-9]+)', function ($type, $prefix, $subtype, $id) {
+ });
+ Flight::route('(/[a-z]{2})/admin/@type:[a-z]+/attach/@prefix:[a-z]+/@subtype:[a-z]+(/@id:[0-9]+)', function ($type, $prefix, $subtype, $id) {
     if ($id === null) {
         $id = 0;
     }
     $scaffoldController = new Controller_Scaffold('/admin', $type, $id);
     $scaffoldController->attach($prefix, $subtype, $id);
-});
+ });
 
 /**
  * Routes to the cms controller.
  */
-Flight::route('(/[a-z]{2})/cms(/index)', function () {
+ Flight::route('(/[a-z]{2})/cms(/index)', function () {
     $cmsController = new Controller_Cms();
     $cmsController->index();
-});
+ });
 
-Flight::route('(/[a-z]{2})/cms/sitemap', function () {
+ Flight::route('(/[a-z]{2})/cms/sitemap', function () {
     $layout = 'table';
     $page = 1;
     $order = 0;
     $dir = 0;
     $scaffoldController = new Controller_Nested();
     $scaffoldController->index();
-});
+ });
 
 /**
  * Routes to the cms controller to add a new domain.
  */
-Flight::route('POST (/[a-z]{2})/cms/add/@type:[a-z]+', function ($type) {
+ Flight::route('POST (/[a-z]{2})/cms/add/@type:[a-z]+', function ($type) {
     $cmsController = new Controller_Cms();
     $cmsController->add($type);
-});
+ });
 
 /**
  * Routes to the cms controller to arrange (sort) beans.
  */
-Flight::route('(/[a-z]{2})/cms/sortable/@type:[a-z]+/@var:[a-z]+', function ($type, $var) {
+ Flight::route('(/[a-z]{2})/cms/sortable/@type:[a-z]+/@var:[a-z]+', function ($type, $var) {
     $cmsController = new Controller_Cms();
     $cmsController->sortable($type, $var);
-});
+ });
 
 /**
  * Routes to the cms controller to view a domain node.
  */
-Flight::route('(/[a-z]{2})/cms/node/@id:[0-9]+(/@page_id:[0-9]+)', function ($id, $page_id) {
+ Flight::route('(/[a-z]{2})/cms/node/@id:[0-9]+(/@page_id:[0-9]+)', function ($id, $page_id) {
     $cmsController = new Controller_Cms();
     $cmsController->node($id, $page_id);
-});
+ });
 
 /**
  * Routes to the cms controller to update the meta information of a page.
  */
-Flight::route('POST (/[a-z]{2})/cms/meta/@id:[0-9]+', function ($id) {
+ Flight::route('POST (/[a-z]{2})/cms/meta/@id:[0-9]+', function ($id) {
     $cmsController = new Controller_Cms();
     $cmsController->meta($id);
-});
+ });
 
 /**
  * Routes to the cms controller to view a page.
  */
-Flight::route('(/[a-z]{2})/cms/page/@id:[0-9]+', function ($id) {
+ Flight::route('(/[a-z]{2})/cms/page/@id:[0-9]+', function ($id) {
     $cmsController = new Controller_Cms();
     $cmsController->page($id);
-});
+ });
 
 /**
  * Routes to the cms controller to edit a slice.
  */
-Flight::route('(/[a-z]{2})/cms/slice/@id:[0-9]+', function ($id) {
+ Flight::route('(/[a-z]{2})/cms/slice/@id:[0-9]+', function ($id) {
     $cmsController = new Controller_Cms();
     $cmsController->slice($id);
-});
+ });
 
 /**
  * Routes to the scaffold controller for cms.
  */
-Flight::route('(/[a-z]{2})/cms/@type:[a-z]+/add(/@id:[0-9]+)(/@layout:[a-z]+)', function ($type, $id, $layout) {
+ Flight::route('(/[a-z]{2})/cms/@type:[a-z]+/add(/@id:[0-9]+)(/@layout:[a-z]+)', function ($type, $id, $layout) {
     if ($layout === null) {
         $layout = 'table';
     }
     $scaffoldController = new Controller_Scaffold('/cms', $type, $id);
     $scaffoldController->add($layout);
-});
-Flight::route('(/[a-z]{2})/cms/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})(/@layout:[a-z]+)', function ($type, $id, $page, $order, $dir, $layout) {
+ });
+ Flight::route('(/[a-z]{2})/cms/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})(/@layout:[a-z]+)', function ($type, $id, $page, $order, $dir, $layout) {
     if ($layout === null) {
         $layout = 'table';
     }
@@ -211,8 +211,8 @@ Flight::route('(/[a-z]{2})/cms/@type:[a-z]+/edit/@id:[0-9]+(/@page:[0-9]+)(/@ord
     }
     $scaffoldController = new Controller_Scaffold('/cms', $type, $id);
     $scaffoldController->edit($page, $order, $dir, $layout);
-});
-Flight::route('(/[a-z]{2})/cms/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})', function ($type, $layout, $page, $order, $dir) {
+ });
+ Flight::route('(/[a-z]{2})/cms/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@order:[0-9]+)(/@dir:[0-1]{1})', function ($type, $layout, $page, $order, $dir) {
     if ($layout === null) {
         $layout = 'table';
     }
@@ -227,56 +227,56 @@ Flight::route('(/[a-z]{2})/cms/@type:[a-z]+(/@layout:[a-z]+)(/@page:[0-9]+)(/@or
     }
     $scaffoldController = new Controller_Scaffold('/cms', $type);
     $scaffoldController->index($layout, $page, $order, $dir);
-});
+ });
 
 /**
  * Routes to the language controller.
  */
-Flight::route('POST (/[a-z]{2})/language/set', function () {
+ Flight::route('POST (/[a-z]{2})/language/set', function () {
     $languageController = new Controller_Language();
     $languageController->set();
-});
+ });
 
 /**
  * Route to the account controller.
  */
-Flight::route('(/[a-z]{2})/account', function () {
+ Flight::route('(/[a-z]{2})/account', function () {
     $accountController = new Controller_Account();
     $accountController->index();
-});
-Flight::route('(/[a-z]{2})/account/changepassword', function () {
+ });
+ Flight::route('(/[a-z]{2})/account/changepassword', function () {
     $accountController = new Controller_Account();
     $accountController->changepassword();
-});
-Flight::route('(/[a-z]{2})/account/lostpassword', function () {
+ });
+ Flight::route('(/[a-z]{2})/account/lostpassword', function () {
     $accountController = new Controller_Account();
     $accountController->lostpassword();
-});
+ });
 
 /**
  * Route to the install controller.
  */
-Flight::route('(/[a-z]{2})/install', function () {
+ Flight::route('(/[a-z]{2})/install', function () {
     $installController = new Controller_Install();
     $installController->index();
-});
+ });
 
 /**
  * Forbidden.
  */
-Flight::route('(/[a-z]{2})/forbidden', function () {
+ Flight::route('(/[a-z]{2})/forbidden', function () {
     Flight::render('403', array(), 'content');
     Flight::render('html5', array(
         'language' => Flight::get('language'),
         'title' => I18n::__('forbidden_head_title')
     ));
     Flight::stop(403);
-});
+ });
 
 /**
  * Route to the purchase controller.
  */
-Flight::route('(/[a-z]{2})/purchase(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/purchase(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -285,12 +285,12 @@ Flight::route('(/[a-z]{2})/purchase(/@method:[a-z]+(/@id:[0-9]+))', function ($m
     }
     $controller = new Controller_Purchase($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the adjustment controller.
  */
-Flight::route('(/[a-z]{2})/adjustment(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/adjustment(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -299,12 +299,12 @@ Flight::route('(/[a-z]{2})/adjustment(/@method:[a-z]+(/@id:[0-9]+))', function (
     }
     $controller = new Controller_Adjustment($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the adjustmentitem controller.
  */
-Flight::route('(/[a-z]{2})/adjustmentitem(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/adjustmentitem(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -313,12 +313,12 @@ Flight::route('(/[a-z]{2})/adjustmentitem(/@method:[a-z]+(/@id:[0-9]+))', functi
     }
     $controller = new Controller_Adjustmentitem($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the invoice controller.
  */
-Flight::route('(/[a-z]{2})/invoice(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/invoice(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -327,12 +327,12 @@ Flight::route('(/[a-z]{2})/invoice(/@method:[a-z]+(/@id:[0-9]+))', function ($me
     }
     $controller = new Controller_Invoice($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the booking controller.
  */
-Flight::route('(/[a-z]{2})/booking(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/booking(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -341,12 +341,12 @@ Flight::route('(/[a-z]{2})/booking(/@method:[a-z]+(/@id:[0-9]+))', function ($me
     }
     $controller = new Controller_Booking($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the openitem controller.
  */
-Flight::route('(/[a-z]{2})/openitem(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/openitem(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -355,12 +355,12 @@ Flight::route('(/[a-z]{2})/openitem(/@method:[a-z]+(/@id:[0-9]+))', function ($m
     }
     $controller = new Controller_Openitem($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the statistic controller.
  */
-Flight::route('(/[a-z]{2})/statistic(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/statistic(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -369,12 +369,12 @@ Flight::route('(/[a-z]{2})/statistic(/@method:[a-z]+(/@id:[0-9]+))', function ($
     }
     $controller = new Controller_Statistic($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the analysis controller.
  */
-Flight::route('(/[a-z]{2})/analysis(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/analysis(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -383,12 +383,12 @@ Flight::route('(/[a-z]{2})/analysis(/@method:[a-z]+(/@id:[0-9]+))', function ($m
     }
     $controller = new Controller_Analysis($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the piggery controller.
  */
-Flight::route('(/[a-z]{2})/piggery(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/piggery(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -397,12 +397,12 @@ Flight::route('(/[a-z]{2})/piggery(/@method:[a-z]+(/@id:[0-9]+))', function ($me
     }
     $controller = new Controller_Piggery($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the planning controller.
  */
-Flight::route('(/[a-z]{2})/planning(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/planning(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -411,12 +411,12 @@ Flight::route('(/[a-z]{2})/planning(/@method:[a-z]+(/@id:[0-9]+))', function ($m
     }
     $controller = new Controller_Planning($id);
     $controller->$method();
-});
+ });
 
 /**
  * Route to the deliverer controller.
  */
-Flight::route('(/[a-z]{2})/deliverer(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/deliverer(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'index';
     }
@@ -425,12 +425,26 @@ Flight::route('(/[a-z]{2})/deliverer(/@method:[a-z]+(/@id:[0-9]+))', function ($
     }
     $controller = new Controller_Deliverer($id);
     $controller->$method();
-});
+ });
+
+/**
+ * Route to the public controller.
+ */
+ Flight::route('(/[a-z]{2})/public(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+    if ($method === null) {
+        $method = 'index';
+    }
+    if ($id === null) {
+        $id = 0;
+    }
+    $controller = new Controller_Public($id);
+    $controller->$method();
+ });
 
 /**
  * Route to the pricing controller.
  */
-Flight::route('(/[a-z]{2})/pricing(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+ Flight::route('(/[a-z]{2})/pricing(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
     if ($method === null) {
         $method = 'internal';
     }
@@ -439,7 +453,7 @@ Flight::route('(/[a-z]{2})/pricing(/@method:[a-z]+(/@id:[0-9]+))', function ($me
     }
     $controller = new Controller_Pricing($id);
     $controller->$method();
-});
+ });
 
 /**
  * Show a 404 error page if no route has jumped in yet and the url can not be found in domain beans.
@@ -447,7 +461,7 @@ Flight::route('(/[a-z]{2})/pricing(/@method:[a-z]+(/@id:[0-9]+))', function ($me
  * This is the last resort, all other urls of your domain tree should have been covered by
  * routes before the notFound escape.
  */
-Flight::map('notFound', function () {
+ Flight::map('notFound', function () {
     $parsed = parse_url(Flight::request()->url);
     if ($domain = R::findOne('domain', ' url = ? ', array(trim($parsed['path'], '/')))) {
         $cmsController = new Controller_Cms();
@@ -455,9 +469,9 @@ Flight::map('notFound', function () {
     } else {
         Flight::render('404', array(), 'content');
         Flight::render('html5', array(
-            'language' => Flight::get('language'),
-            'title' => I18n::__('notfound_head_title')
+          'language' => Flight::get('language'),
+          'title' => I18n::__('notfound_head_title')
         ));
         Flight::stop(404);
     }
-});
+ });

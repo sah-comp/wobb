@@ -66,7 +66,16 @@ class Controller_Deliverer extends Controller
     {
         //Permission::check(Flight::get('user'), 'deliverer', 'index');
         $this->layout = 'index';
-        $this->render();
+        Flight::render('deliverer/'.$this->layout, array(
+            'record' => $this->record,
+            'records' => $this->records
+        ), 'content');
+        Flight::render('html5', array(
+            'title' => I18n::__("deliverer_head_title"),
+            'language' => Flight::get('language'),
+            'stylesheets' => array('custom', 'default', 'tk'),
+            'javascripts' => $this->javascripts
+        ));
     }
 
     /**
