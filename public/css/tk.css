@@ -278,4 +278,81 @@ ul.action li:last-child a {
     color: #54b646;
 }
 
+section.decay {
+    padding: 2rem 0.5rem;
+}
+
+table.decay {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.decay h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+table.decay caption p {
+    font-family: 'Arial', sans-serif;
+    font-size: 0.8rem;
+}
+
+table.decay th,
+table.decay td {
+    padding: 0.444rem 0.666rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table.decay tr {
+    border-bottom: 1px solid rgb(45, 45, 45);
+}
+
+th.nickname {
+    width: 3rem;
+}
+
+th.account {
+    width: 3rem;
+}
+
+th.name {
+    width: 12rem;
+}
+
+th.pricemask {
+    width: 8rem;
+}
+
+th.maxagio {
+    width: 5rem;
+    text-align: right;
+}
+
+th.price {
+    width: 5rem;
+    text-align: right;
+}
+
+th.reldprice {
+    width: 5rem;
+    text-align: right;
+}
+
+th.cost {
+    width: 5rem;
+    text-align: right;
+}
+
+th.bonus {
+    width: 5rem;
+    text-align: right;
+}
+
+.numval {
+    text-align: right;
+}
+
 @media print {}
