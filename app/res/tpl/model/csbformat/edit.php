@@ -44,5 +44,17 @@
             <?php echo I18n::__('csbformat_label_active') ?>
         </label>
     </div>
+        <div class="row <?php echo ($record->hasError('method')) ? 'error' : ''; ?>">
+        <label
+            for="csbformat-method">
+            <?php echo I18n::__('csbformat_label_method') ?>
+        </label>
+        <input
+            id="csbformat-method"
+            type="text"
+            name="dialog[method]"
+            value="<?php echo htmlspecialchars($record->method) ?>"
+            required="required" />
+    </div>
 </fieldset>
 <!-- end of csbformat edit form -->

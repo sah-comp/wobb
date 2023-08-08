@@ -137,7 +137,7 @@ class Controller_Purchase extends Controller
             R::begin();
             try {
                 R::store($this->record);
-                $this->record->importFromCsb();
+                $this->record->importStock();
                 R::store($this->record);
                 $this->record->checkAliasses();
                 $this->record->makeDeliverer();
@@ -320,7 +320,7 @@ class Controller_Purchase extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
-            $mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Port = $smtp['port'];                          // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted

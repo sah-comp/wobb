@@ -524,6 +524,29 @@ SQL;
     }
 
     /**
+     * Dispatches the import depending on the choosen import method and source.
+     *
+     * @return mixed
+     */
+    public function importStock():mixed
+    {
+        if (!$this->bean->csbformat) {
+            throw new Exception('No import method selected');
+        }
+        return $this->{$this->bean->csbformat->method}(); //call the method defined in the choosen bean
+    }
+
+    /**
+     * Read the data from a csv that derived from an Excel file.
+     *
+     * This method was build quick and dirty to fix the missing .csb import file from
+     * slaughter day 2023-08-07 when the server broke down.
+     */
+    public function importFromCsvExcel($value = '')
+    {
+    }
+
+    /**
      * Reads the file and tries to import stock from the given file.
      *
      * @todo Implement a test on imported. Already imported CSB file have to be rejected
