@@ -530,7 +530,7 @@ SQL;
      */
     public function importStock():mixed
     {
-        if (!$this->bean->csbformat) {
+        if (! $this->bean->csbformat) {
             throw new Exception('No import method selected');
         }
         return $this->{$this->bean->csbformat->method}(); //call the method defined in the choosen bean
@@ -544,6 +544,71 @@ SQL;
      */
     public function importFromCsvExcel($value = '')
     {
+        $this->bean->piggery = 0;
+        $this->bean->ownStock = [];
+
+        $file = Flight::get('upload_dir') . '/' . $this->bean->file;
+        $csv = new \ParseCsv\Csv();
+        $csv->encoding('UTF-8', 'UTF-8');
+        $csv->delimiter = ";";
+        $csv->heading = false;
+        $csv->parse($file);
+        foreach ($csv->data as $key => $row) {
+            /*
+            foreach ($row as $i => $value) {
+                error_log($i . ': ' . $value);
+            }
+            */
+            //error_log('Käufer ' . $row[1]);
+            if ($row[1] != $this->bean->company->buyer) {
+                continue; // not the required buyer code
+            }
+            //error_log('Values ' . implode(';', $row));
+            $stock = R::dispense('stock');
+            $stock->buyer = $this->bean->company->buyer;
+            $stock->pubdate = $this->bean->pubdate;
+            $stock->name = (int)$row[0];
+            $stock->earmark = strtoupper($row[2]);
+            $stock->supplier = trim(substr($stock->earmark, 0, 2));
+            $stock->quality = $row[9];
+            $stock->weight = $this->bean->csbformat->makeFloatFromCSBFloat($row[7]);
+            $stock->mfa = $this->bean->csbformat->makeFloatFromCSBFloat($row[8]);
+            $stock->qs = true;
+            $stock->vvvo = $row[3];
+            if (trim($row[10])) {
+                $stock->damage1 = sprintf('%02d', trim($row[10]));
+            }
+
+            if (strtolower($stock->quality) == 'z') {
+                $stock->mfa = 0;
+            }
+
+            // check for initiative tierwohl | check for itw
+            if ($this->bean->company->hastierwohl) {
+                if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
+                    $stock->itw = true; // this stock is qualified to be paid additional amount ITW
+                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
+                    if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$stock->earmark, $stock->vvvo])) {
+                        // there is a special price defined for this sub deliverer
+                        $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
+                    } else {
+                        // no special price, use the usual price
+                        $stock->tierwohlnetperstock = $this->bean->company->tierwohlnetperstock;
+                    }
+                }
+            }
+
+            $stock->lanuvreported = 0;
+            $stock->billnumber = 0;
+            $stock->person = $stock->getPersonBySupplier();
+            if (!$stock->person->getId()) {
+                throw new Exception_UnknownSupplier($stock->supplier);
+            }
+
+            $this->bean->ownStock[] = $stock;
+            $this->bean->piggery++;
+        }
+        return true;
     }
 
     /**
