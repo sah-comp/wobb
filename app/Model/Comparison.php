@@ -248,6 +248,7 @@ SQL;
             }
             //error_log('Comparing deliverer #' . $deliverer->getId() . ' Net ' . $deliverer->totalnet . ' - ' . $this->bean->totalnet);
             $deliverer->diff = round($deliverer->totalnet, 2) - round($this->bean->totalnet, 2);
+            $deliverer->avgprice = $deliverer->totalnet / $this->bean->totalweight;
             $deliverer->deliverer = null;
         }
         return true;

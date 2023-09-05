@@ -106,7 +106,9 @@
             </label>
         </div>
         <div class="span1 <?php echo ($record->hasError('diff')) ? 'error' : ''; ?>">
-            &nbsp;
+            <label class="number">
+                <?php echo I18n::__('comparison_label_avgprice') ?>
+            </label>
         </div>
     </div>
     <div class="row">
@@ -167,7 +169,12 @@
                 value="<?php echo htmlspecialchars($record->decimal('totalnet', 2)) ?>" />
         </div>
         <div class="span1 number">
-            &nbsp;
+            <input
+                type="text"
+                class="number autowidth"
+                name="dialog[avgprice]"
+                readonly="readonly"
+                value="<?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?>" />
         </div>
     </div>
 </fieldset>
@@ -193,7 +200,12 @@
                     <?php echo I18n::__('comparison_deliverer_label_person') ?>
                 </label>
             </div>
-            <div class="span5">&nbsp;</div>
+            <div class="span4">&nbsp;</div>
+            <div class="span1">
+                <label class="number">
+                <?php echo I18n::__('comparison_label_diff') ?>
+                </label>
+            </div>
             <div class="span2">
                 <label class="number">
                 <?php echo I18n::__('comparison_label_totalnet') ?>
@@ -201,7 +213,7 @@
             </div>
             <div class="span1">
                 <label class="number">
-                <?php echo I18n::__('comparison_label_diff') ?>
+                <?php echo I18n::__('comparison_label_avgprice') ?>
                 </label>
             </div>
         </div>

@@ -44,7 +44,15 @@
                 <?php endforeach ?>
             </select>
         </div>
-        <div class="span5">&nbsp;</div>
+        <div class="span4">&nbsp;</div>
+        <div class="span1">
+            <input
+                type="text"
+                class="number autowidth"
+                name="dialog[ownDeliverer][<?php echo $index ?>][diff]"
+                readonly="readonly"
+                value="<?php echo htmlspecialchars($_deliverer->decimal('diff', 2)) ?>" />
+        </div>
         <div class="span2">
             <input
                 type="text"
@@ -57,9 +65,9 @@
             <input
                 type="text"
                 class="number autowidth"
-                name="dialog[ownDeliverer][<?php echo $index ?>][diff]"
+                name="dialog[ownDeliverer][<?php echo $index ?>][avgprice]"
                 readonly="readonly"
-                value="<?php echo htmlspecialchars($_deliverer->decimal('diff', 2)) ?>" />
+                value="<?php echo htmlspecialchars($_deliverer->decimal('avgprice', 3)) ?>" />
         </div>
     </div>
 
