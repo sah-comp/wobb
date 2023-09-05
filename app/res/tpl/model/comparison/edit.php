@@ -106,9 +106,7 @@
             </label>
         </div>
         <div class="span1 <?php echo ($record->hasError('diff')) ? 'error' : ''; ?>">
-            <label class="number">
-                <?php echo I18n::__('comparison_label_diff') ?>
-            </label>
+            &nbsp;
         </div>
     </div>
     <div class="row">
@@ -169,12 +167,7 @@
                 value="<?php echo htmlspecialchars($record->decimal('totalnet', 2)) ?>" />
         </div>
         <div class="span1 number">
-            <input
-                type="text"
-                class="number autowidth"
-                name="dialog[diff]"
-                readonly="readonly"
-                value="<?php echo htmlspecialchars($record->decimal('diff', 2)) ?>" />
+            &nbsp;
         </div>
     </div>
 </fieldset>
@@ -201,8 +194,16 @@
                 </label>
             </div>
             <div class="span5">&nbsp;</div>
-            <div class="span2">&nbsp;</div>
-            <div class="span1">&nbsp;</div>
+            <div class="span2">
+                <label class="number">
+                <?php echo I18n::__('comparison_label_totalnet') ?>
+                </label>
+            </div>
+            <div class="span1">
+                <label class="number">
+                <?php echo I18n::__('comparison_label_diff') ?>
+                </label>
+            </div>
         </div>
         <!-- end of grid based header -->
         <!-- grid based data -->

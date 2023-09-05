@@ -59,7 +59,7 @@ Flight::setlocale();
                             <?php echo strftime("%V", $ts) ?>
                         </div>
                         <div class="span2">
-                            hm
+                            <?php echo htmlspecialchars($_record->person->nickname) ?>
                         </div>
                         <div class="span2">
                             <?php echo strftime("%a, %e. %b", $ts) ?>
@@ -74,7 +74,7 @@ Flight::setlocale();
                             <?php echo $_record->decimal('baseprice', 3) ?>
                         </div>
                         <div class="span1">
-                            <span class="plan-info">Info</span>
+                            <span class="plan-info">&nbsp;</span>
                         </div>
                         <div class="span1 number">
                             <?php if ($_record->wasCalculated()) : ?>

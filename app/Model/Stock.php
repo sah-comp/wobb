@@ -204,24 +204,59 @@ class Model_Stock extends Model
      *
      * @param $deliverer
      * @param $pricing
+     * @param $comparison_mode (optional) defaults to false
      * @return void
      */
-    public function calculation($deliverer, $pricing)
+    public function calculation($deliverer, $pricing, $comparison_mode = false)
     {
+        $old_totaldpricenet = $this->bean->old('totaldpricenet');
+
         $this->bean->agio = 0;
         $this->bean->disagio = 0;
         $lanuv_tax = $deliverer->calculate($this->bean);
-        if (! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
-            $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
-        }
-        $this->calculateDamage1Price($deliverer, $lanuv_tax);
-        $this->calculateDamage2Price($deliverer, $lanuv_tax);
 
-        $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
-        $this->bean->totaldpricenetitw = $this->bean->totaldpricenet + $this->bean->tierwohlnetperstock;
-        $this->bean->totallanuvprice = $this->bean->totaldpricenetitw;
+        if ($comparison_mode) {
+            if ($this->bean->damage1 != '' || $this->bean->damage2 != '' || $this->hadFixedPrice()) {
+                // use the calculated damage price as it is fixed and may have complications, aka costs and such
+            } else {
+                //error_log('calculate for comparison');
+                $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
+                $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
+            }
+            /*
+            $diff = $old_totaldpricenet - $this->bean->totaldpricenet;
+            if ($diff != 0) {
+                error_log($diff . ' = ' . $old_totaldpricenet . ' - ' . $this->bean->totaldpricenet . ' in stock price on stock id ' . $this->bean->getId());
+                $this->bean->totaldpricenet = $old_totaldpricenet;
+            }
+            */
+        } else {
+            // usual calculation, not comparison mode
+            if (! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
+                $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
+            }
+            $this->calculateDamage1Price($deliverer, $lanuv_tax);
+            $this->calculateDamage2Price($deliverer, $lanuv_tax);
+
+            $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
+
+            $this->bean->totaldpricenetitw = $this->bean->totaldpricenet + $this->bean->tierwohlnetperstock;
+            $this->bean->totallanuvprice = $this->bean->totaldpricenetitw;
+        }
 
         return null;
+    }
+
+    /**
+     * Checks if the stock was calculated with a fixed price or not.
+     * @return bool
+     */
+    public function hadFixedPrice():bool
+    {
+        if ($var = R::findOne('var', " kind = 'quality' AND name = :quality ", [':quality' => $this->bean->quality])) {
+            return true;
+        }
+        return false;
     }
 
     /**

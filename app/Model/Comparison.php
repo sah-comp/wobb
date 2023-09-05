@@ -175,8 +175,8 @@ SQL;
         $this->bean->totalweight = $summary['sumweight'];
         $this->bean->meanmfa = $summary['avgmfa'];
         $this->bean->meanweight = $summary['avgweight'];
-        $this->bean->totalnet = $summary['sumtotalpricenetitw'];
-        $this->bean->avgprice = $summary['avgpricenetitw'];
+        $this->bean->totalnet = $summary['sumtotalpricenet'];
+        $this->bean->avgprice = $summary['avgpricenet'];
         $this->bean->diff = 0; // no difference to the original calculation possible
         // now do the calculation of these stock with conditions of the deliverers to be compared to
         $this->calculation();
@@ -243,10 +243,11 @@ SQL;
             foreach ($stocks as $id => $stock) {
                 //$count++;
                 //error_log($count . ' Compare ' . $deliverer->person->nickname . ' stock ' . $stock->name);
-                $stock->calculation($deliverer, $pricing);
-                $deliverer->totalnet = round($deliverer->totalnet + $stock->totaldpricenetitw, 3);
+                $stock->calculation($deliverer, $pricing, true);
+                $deliverer->totalnet += $stock->totaldpricenet;
             }
-            $deliverer->diff = round($deliverer->totalnet - $this->bean->totalnet, 3);
+            //error_log('Comparing deliverer #' . $deliverer->getId() . ' Net ' . $deliverer->totalnet . ' - ' . $this->bean->totalnet);
+            $deliverer->diff = round($deliverer->totalnet, 2) - round($this->bean->totalnet, 2);
             $deliverer->deliverer = null;
         }
         return true;
@@ -342,6 +343,6 @@ SQL;
      */
     public function getDeliverers()
     {
-        return $this->bean->with(' ORDER BY supplier, earmark ')->ownDeliverer;
+        return $this->bean->with(' ORDER BY @person.nickname ')->ownDeliverer;
     }
 }
