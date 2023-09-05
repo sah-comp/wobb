@@ -216,12 +216,15 @@ class Model_Stock extends Model
         $lanuv_tax = $deliverer->calculate($this->bean);
 
         if ($comparison_mode) {
-            if ($this->bean->damage1 != '' || $this->bean->damage2 != '' || $this->hadFixedPrice()) {
+            if ($this->bean->damage1 != '' || $this->hadFixedPrice()) {
                 // use the calculated damage price as it is fixed and may have complications, aka costs and such
             } else {
                 //error_log('calculate for comparison');
                 $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
                 $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
+                if ($this->bean->damage2 == 'L' || $this->bean->damage2 == 'LP' || $this->bean->damage2 == 'LPB') {
+                    $this->bean->totaldpricenet -= 1.02;
+                }
             }
             /*
             $diff = $old_totaldpricenet - $this->bean->totaldpricenet;
