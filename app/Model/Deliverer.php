@@ -44,6 +44,9 @@ class Model_Deliverer extends Model
         $this->addConverter('totalnet', array(
             new Converter_Decimal()
         ));
+        $this->addConverter('diff', array(
+            new Converter_Decimal()
+        ));
         $this->addConverter('totalnetitw', array(
             new Converter_Decimal()
         ));

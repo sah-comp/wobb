@@ -414,6 +414,20 @@ Flight::route('(/[a-z]{2})/logout', function () {
  });
 
 /**
+ * Route to the comparison controller.
+ */
+ Flight::route('(/[a-z]{2})/comparison(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
+    if ($method === null) {
+        $method = 'index';
+    }
+    if ($id === null) {
+        $id = 0;
+    }
+    $controller = new Controller_Comparison($id);
+    $controller->$method();
+ });
+
+/**
  * Route to the deliverer controller.
  */
  Flight::route('(/[a-z]{2})/deliverer(/@method:[a-z]+(/@id:[0-9]+))', function ($method, $id) {
