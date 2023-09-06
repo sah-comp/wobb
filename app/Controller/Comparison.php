@@ -168,12 +168,10 @@ class Controller_Comparison extends Controller
     public function pdf()
     {
         $layout = 'print';
-        if (Flight::request()->query['layout'] == 'prices') {
-            $layout = 'print_price';
-        }
-        $pubdate = $this->record->localizedDate('pubdate');
-        $filename = I18n::__('comparison_filename', null, [$pubdate]);
-        $title = I18n::__('comparison_docname', null, [$pubdate]);
+        $startdate = $this->record->localizedDate('startdate');
+        $enddate = $this->record->localizedDate('enddate');
+        $filename = I18n::__('comparison_filename', null, [$startdate]);
+        $title = I18n::__('comparison_docname', null, [$startdate]);
         $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
@@ -182,7 +180,8 @@ class Controller_Comparison extends Controller
         Flight::render('comparison/' . $layout, [
             'language' => Flight::get('language'),
             'record' => $this->record,
-            'pubdate' => $pubdate
+            'startdate' => $startdate,
+            'enddate' => $enddate
         ]);
         $html = ob_get_contents();
         ob_end_clean();
