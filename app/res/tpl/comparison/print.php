@@ -58,7 +58,7 @@
         <table width="100%">
             <tr>
                 <td width="60%" style="text-align: left;"><?php echo htmlspecialchars($record->company->legalname) ?></td>
-                <td width="40%" style="text-align: right;"><?php echo I18n::__('comparison_text_header', null, [$startdate, $enddate]) ?></td>
+                <td width="40%" style="text-align: right;"><?php echo I18n::__('comparison_text_header', null, [$startdate, $record->person->nickname]) ?></td>
             </tr>
         </table>
     </htmlpageheader>
@@ -99,6 +99,9 @@
                 <td class="bb number">&nbsp;</td>
                 <td class="bb number"><?php echo htmlspecialchars($record->decimal('totalnet', 2)) ?></td>
                 <td class="bb number"><?php echo htmlspecialchars($record->decimal('avgprice', 3)) ?></td>
+            </tr>
+            <tr>
+                <td class="bb" colspan="8">&nbsp;</td>
             </tr>
         <?php $_deliverers = $record->getDeliverers() ?>
         <?php foreach ($_deliverers as $_id => $_deliverer) : ?>

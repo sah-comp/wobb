@@ -170,7 +170,7 @@ class Controller_Comparison extends Controller
         $layout = 'print';
         $startdate = $this->record->localizedDate('startdate');
         $enddate = $this->record->localizedDate('enddate');
-        $filename = I18n::__('comparison_filename', null, [$startdate]);
+        $filename = I18n::__('comparison_filename', null, [$this->record->person->nickname, $startdate]);
         $title = I18n::__('comparison_docname', null, [$startdate]);
         $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
