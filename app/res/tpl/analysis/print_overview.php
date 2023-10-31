@@ -82,16 +82,15 @@
         </caption>
         <thead>
             <tr>
-                <th width="8%"><?php echo I18n::__('analysis_label_supplier') ?></th>
-                <th width="9%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
-                <th width="9%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
-                <th width="7%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
-                <th width="8%" class="number"><?php echo I18n::__('analysis_label_itwpiggerypercentage') ?></th>
-                <th width="14%" class="number"><?php echo I18n::__('analysis_label_sumweight') ?></th>
-                <th width="17%" class="number"><?php echo I18n::__('analysis_label_sumtotalpricenet') ?></th>
-                <th width="9%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
+                <th width="10%"><?php echo I18n::__('analysis_label_supplier') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggery') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_piggerypercentage') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_itwpiggery') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_itwpiggerypercentage') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgmfa') ?></th>
                 <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgweight') ?></th>
-                <th width="9%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
+                <th width="10%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet') ?></th>
+                <th width="20%" class="number"><?php echo I18n::__('analysis_label_avgdpricenet_wo_itw') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -122,25 +121,21 @@
                     endif;
                     ?>
                 </td>
-                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumweight', 3)) ?></td>
-                <td class="number"><?php echo htmlspecialchars($_analysis->decimal('sumtotalpricenetitw', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgmfa', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgweight', 3)) ?></td>
                 <td class="number"><?php echo htmlspecialchars($_analysis->decimal('avgpricenetitw', 3)) ?></td>
+                <td class="number">
+                <?php
+                if ($_analysis->itwpiggery != 0) :
+                    $fake_totalnet_without_itw = $_analysis->sumtotalpricenetitw - ($_analysis->itwpiggery * $record->company->tierwohlnetperstock);
+                    $fake_avgprice_without_itw = $fake_totalnet_without_itw / $_analysis->sumweight;
+                    echo htmlspecialchars(number_format($fake_avgprice_without_itw, 3, ',', '.'));
+                else :
+                    ?>
+                    &nbsp;
+                <?php endif ?>   
+                </td>
             </tr>
-            <?php
-            if ($_analysis->itwpiggery != 0) :
-                $fake_totalnet_without_itw = $_analysis->sumtotalpricenetitw - ($_analysis->itwpiggery * $record->company->tierwohlnetperstock);
-                $fake_avgprice_without_itw = $fake_totalnet_without_itw / $_analysis->sumweight;
-                ?>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="5" class="number notemphasized"><?php echo I18n::__('analysis_without_itw') ?></td>
-                <td class="number"><?php echo htmlspecialchars(number_format($fake_totalnet_without_itw, 3, ',', '.')) ?></td>
-                <td colspan="2">&nbsp;</td>
-                <td class="number"><?php echo htmlspecialchars(number_format($fake_avgprice_without_itw, 3, ',', '.')) ?></td>
-            </tr>
-            <?php endif ?>
         <?php endforeach ?>
             <tr>
                 <td class="bt bb emphasize"><?php echo I18n::__('analysis_label_total') ?></td>
@@ -158,15 +153,10 @@
                     endif;
                     ?>
                 </td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumweight', 3)) ?></td>
-                <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('sumtotalpricenetitw', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgmfa', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgweight', 3)) ?></td>
                 <td class="bt bb number"><?php echo htmlspecialchars($record->decimal('avgpricenetitw', 3)) ?></td>
-            </tr>
-            <tr>
-                <td colspan="6">&nbsp;</td>
-                <td class="bt notemphasized number" colspan="4"><?php echo I18n::__('analysis_text_footer_overview') ?></td>
+                <td class="bt bb number">&mdash;</td>
             </tr>
         </tbody>
     </table>
