@@ -222,7 +222,7 @@ class Model_Stock extends Model
                 //error_log('calculate for comparison');
                 $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
                 $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
-                if ($this->bean->damage2 == 'L' || $this->bean->damage2 == 'LP' || $this->bean->damage2 == 'LPB') {
+                if (strpos($this->bean->damage2, 'L') !== false) { // any L in damage2 represents a liver damage
                     $this->bean->totaldpricenet -= 1.02;
                 }
             }
