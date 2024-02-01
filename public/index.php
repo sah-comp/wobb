@@ -19,6 +19,12 @@ require __DIR__ . '/../lib/redbean/Plugin/Cooker.php';
  * Autoloader.
  */
 require __DIR__ . '/../vendor/autoload.php';
+
+/**
+ * Bootstrap.
+ */
+require __DIR__ . '/../app/config/bootstrap.php';
+
 /**
  * Configuration.
  */

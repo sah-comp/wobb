@@ -249,13 +249,11 @@ class Model_Csb extends Model
      * These are frontmost those stock beans which have damage1 equal to '06' as the code
      * for being vorlaeufig.
      *
-     * @todo Get rid of magic code "06" and allow defining codes outside of this function
-     *
      * @return array
      */
     public function getStockThatNeedsAttention()
     {
-        return R::find('stock', " csb_id = ? AND damage1 IN (?) ORDER BY name", array($this->bean->getId(), "06"));
+        return R::find('stock', " csb_id = ? AND damage1 IN (?) ORDER BY name", array($this->bean->getId(), DAMAGE_CODE_A_UNSUITABLE));
     }
 
     /**
@@ -660,13 +658,10 @@ SQL;
             if (trim($row[12])) {
                 $stock->damage1 = strtoupper(trim($row[12]));
             }
+
             if (trim($row[13])) {
                 $befund = strtoupper(trim($row[13]));
-                if (strpos($befund, 'LPB')) {
-                    $stock->damage2 = 'LPB';
-                } elseif (strpos($befund, 'LP')) {
-                    $stock->damage2 = 'LP';
-                } elseif (strpos($befund, 'L')) {
+                if (strpos($befund, DAMAGE_CODE_B_LIVER_GT5)) {
                     $stock->damage2 = 'L';
                 } else {
                     $stock->damage2 = '';
