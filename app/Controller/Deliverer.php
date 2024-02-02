@@ -110,6 +110,37 @@ class Controller_Deliverer extends Controller
     }
 
     /**
+     * Generates the weightlist PDF for dealer audience.
+     *
+     * @uses generatePDF()
+     * @return void
+     */
+    public function weightlist()
+    {
+        $this->layout = 'weightlist';
+        $filename = I18n::__(
+            'deliverer_dealer_weightlist_filename',
+            null,
+            array(
+                $this->record->invoice->name
+            )
+        );
+        $docname = I18n::__(
+            'deliverer_dealer_weightlist_docname',
+            null,
+            array(
+                $this->record->invoice->name
+            )
+        );
+        //$this->record->pdfStateDealer++;
+        R::store($this->record);
+        $mpdf = $this->generatePDF($docname);
+        $mpdf->Output($filename, 'D');
+        exit;
+        //$this->redirect(sprintf('/purchase/calculation/%d/#deli-%d', $this->record->csb->getId(), $this->record->getId()));
+    }
+
+    /**
      * Generates the invoice PDF for dealer audience and mails it.
      *
      * @uses generatePDF()

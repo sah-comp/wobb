@@ -222,11 +222,16 @@ ul.action li:last-child a {
 .voucher-dealer,
 .voucher-dealer-mail,
 .voucher-internal,
+.voucher-weightlist,
 .adjustmentitem-internal,
 .adjustmentitem-mail {
     width: 24px;
     height: 26px;
     position: relative;
+}
+
+.voucher-weightlist {
+    background-image: url(/img/glyphicons/glyphicons_029_notes_2.png);
 }
 
 .voucher-dealer {

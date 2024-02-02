@@ -52,7 +52,7 @@
                 $_n = 0;
                 $_m = 0;
             ?>
-            <?php foreach ($record->with(' ORDER BY supplier, earmark ')->ownDeliverer as $_id => $_deliverer): ?>
+            <?php foreach ($record->with(' ORDER BY supplier, earmark ')->ownDeliverer as $_id => $_deliverer) : ?>
             <fieldset id="deli-<?php echo $_deliverer->getId() ?>">
                 <legend class="verbose"><?php echo I18n::__('purchase_deliverer_sub_legend') ?></legend>
                 <div>
@@ -146,8 +146,14 @@
 
                     </div>
                     <div class="span2">
-                        <?php if ($_deliverer->wasBilled()): ?>
+                        <?php if ($_deliverer->wasBilled()) : ?>
                         <ul class="action">
+                            <li>
+                                <a
+                                    class="ir voucher-weightlist"
+                                    title="<?php echo I18n::__('invoice_link_weiggtlist_title') ?>"
+                                    href="<?php echo Url::build('/deliverer/weightlist/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_weightlist') ?></a>
+                            </li>
                             <li>
                                 <a
                                     class="ir voucher-internal <?php echo $_deliverer->genPdfInternal() ?>"
@@ -160,7 +166,7 @@
                                     title="<?php echo I18n::__('invoice_link_dealer_title') ?>"
                                     href="<?php echo Url::build('/deliverer/dealer/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_dealer') ?></a>
                             </li>
-                            <?php if ($_deliverer->wantsInvoiceAsEmail()): ?>
+                            <?php if ($_deliverer->wantsInvoiceAsEmail()) : ?>
                             <li>
                                 <a
                                     class="ir voucher-dealer-mail <?php echo $_deliverer->wasSent() ?>"
@@ -169,7 +175,7 @@
                             </li>
                             <?php endif ?>
                         </ul>
-                        <?php else: ?>
+                        <?php else : ?>
                         &nbsp;
                         <?php endif ?>
                     </div>
@@ -178,7 +184,7 @@
                 <div
                     id="deliverer-<?php echo $_deliverer->getId() ?>-subdeliverer"
                     class="subdeliverer-container">
-                <?php foreach ($_deliverer->with(' ORDER BY earmark ')->ownDeliverer as $_sub_id => $_sub): ?>
+                <?php foreach ($_deliverer->with(' ORDER BY earmark ')->ownDeliverer as $_sub_id => $_sub) : ?>
                 <div>
                     <input
                         type="hidden"
@@ -251,10 +257,10 @@
 
                 <?php endforeach ?>
 
-                <?php if ($_sprices = $_deliverer->getSpecialPrices()): ?>
+                <?php if ($_sprices = $_deliverer->getSpecialPrices()) : ?>
                 <div>
-                    <?php foreach ($_sprices as $_sprice_id => $_sprice): ?>
-                    <?php $_n++; ?>
+                    <?php foreach ($_sprices as $_sprice_id => $_sprice) : ?>
+                        <?php $_n++; ?>
                     <div>
                         <input
                             type="hidden"
@@ -318,8 +324,8 @@
                             />
                         </div>
                     </div>
-                    <?php foreach ($_sprice->ownScost as $_scost_id => $_scost): ?>
-                    <?php $_m++ ?>
+                        <?php foreach ($_sprice->ownScost as $_scost_id => $_scost) : ?>
+                            <?php $_m++ ?>
                     <div>
                         <input
                             type="hidden"
@@ -342,7 +348,7 @@
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][ownScost][<?php echo $_m ?>][value]"
                             value="<?php echo htmlspecialchars($_scost->value) ?>" />
                     </div>
-                    <?php endforeach ?>
+                        <?php endforeach ?>
                     <?php endforeach ?>
                 </div>
                 <?php endif ?>
