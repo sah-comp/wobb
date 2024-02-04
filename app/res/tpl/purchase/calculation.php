@@ -151,7 +151,7 @@
                             <li>
                                 <a
                                     class="ir voucher-weightlist"
-                                    title="<?php echo I18n::__('invoice_link_weiggtlist_title') ?>"
+                                    title="<?php echo I18n::__('invoice_link_weightlist_title') ?>"
                                     href="<?php echo Url::build('/deliverer/weightlist/' . $_deliverer->getId()) ?>"><?php echo I18n::__('invoice_link_weightlist') ?></a>
                             </li>
                             <li>
