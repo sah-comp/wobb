@@ -644,6 +644,8 @@ SQL;
                 throw new Exception_Csbfiledatemismatch('Date in file does not match your slaughterdate');
             }
             
+            $stock->damage1 = ''; //set to empty string
+            $stock->damage2 = ''; //set to empty string, null causes trouble
             $stock->name = (int)$row[1];
             $stock->earmark = strtoupper($row[4]);
             $stock->supplier = strtoupper($row[3]);
@@ -664,6 +666,16 @@ SQL;
                 $befund = strtoupper(trim($row[13]));
                 if (strpos($befund, DAMAGE_CODE_B_LIVER_GT5)) {
                     $stock->damage2 = 'L';
+                } else {
+                    $stock->damage2 = '';
+                }
+            }
+
+            // check for 05 and books them as 06
+            if (trim($row[13])) {
+                $befund = strtoupper(trim($row[13]));
+                if (strpos($befund, DAMAGE_CODE_UNSUITABLE)) {
+                    $stock->damage1 = DAMAGE_CODE_PRELIMINARY;
                 } else {
                     $stock->damage2 = '';
                 }
