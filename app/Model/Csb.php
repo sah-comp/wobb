@@ -674,7 +674,7 @@ SQL;
             // check for 05 and books them as 06
             if (trim($row[13])) {
                 $befund = strtoupper(trim($row[13]));
-                if (strpos($befund, DAMAGE_CODE_UNSUITABLE)) {
+                if (strpos($befund, DAMAGE_CODE_UNSUITABLE) && $stock->damage1 != DAMAGE_CODE_UNSUITABLE) {
                     $stock->damage1 = DAMAGE_CODE_PRELIMINARY;
                 } else {
                     $stock->damage2 = '';
