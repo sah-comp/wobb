@@ -889,6 +889,40 @@ SQL;
     }
 
     /**
+     * Some data integrity checks.
+     *
+     * Q1: Are there no L damage2 for this day? Something might be wrong. How to handle the case that there
+     * really is no liver damage on that day?
+     *
+     * Q2: Is there stock weighing less than 10 kilograms?
+     *
+     * What else could be checked?
+     *
+     * @return bool
+     */
+    public function checkData($value = '')
+    {
+        // Q1
+        $countDamage1 = R::getCell('SELECT count(*) AS livers FROM stock WHERE damage1 = ? AND csb_id = ?', [
+            DAMAGE_CODE_B_LIVER_GT5,
+            $this->bean->getId()
+        ]);
+        if ($countDamage1 == 0) {
+            Flight::get('user')->notify(I18n::__('csb_has_no_liverdamages'), 'warning');
+        }
+
+        // Q2
+        $countLowWeight = R::getCell('SELECT count(*) AS lowweight FROM stock WHERE weight < ? AND csb_id = ?', [
+            10,
+            $this->bean->getId()
+        ]);
+        if ($countLowWeight > 0) {
+            Flight::get('user')->notify(I18n::__('csb_has_very_lowweight_stock'), 'warning');
+        }
+        return true;
+    }
+
+    /**
      * Checks the slaughter day data against the planned data of the slaughter day.
      *
      * If there is no plan with the date given simply return, else check and compare things
