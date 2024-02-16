@@ -9,7 +9,7 @@
  */
 
 /**
- * Csbfiledatemismatch Exception.
+ * UnknownSupplier Exception.
  *
  * @package Cinnebar
  * @subpackage Exception

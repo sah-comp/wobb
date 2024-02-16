@@ -9,7 +9,7 @@
  */
 
 /**
- * Csbfiledatemismatch Exception.
+ * NonQS Exception.
  *
  * @package Cinnebar
  * @subpackage Exception
