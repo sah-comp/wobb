@@ -664,7 +664,8 @@ SQL;
             // check for liver damages
             if (trim($row[13])) {
                 $befund = strtoupper(trim($row[13]));
-                if (strpos($befund, DAMAGE_CODE_B_LIVER_GT5)) {
+                error_log($befund);
+                if (strpos($befund, DAMAGE_CODE_B_LIVER_GT5) !== false) {
                     $stock->damage2 = 'L';
                 } else {
                     $stock->damage2 = '';
@@ -903,8 +904,8 @@ SQL;
     public function checkData($value = '')
     {
         // Q1
-        $countDamage1 = R::getCell('SELECT count(*) AS livers FROM stock WHERE damage1 = ? AND csb_id = ?', [
-            DAMAGE_CODE_B_LIVER_GT5,
+        $countDamage1 = R::getCell('SELECT count(*) AS livers FROM stock WHERE damage2 = ? AND csb_id = ?', [
+            'L',
             $this->bean->getId()
         ]);
         if ($countDamage1 == 0) {
@@ -912,7 +913,7 @@ SQL;
         }
 
         // Q2
-        $countLowWeight = R::getCell('SELECT count(*) AS lowweight FROM stock WHERE weight < ? AND csb_id = ?', [
+        $countLowWeight = R::getCell('SELECT count(*) as lowweight FROM stock WHERE weight < ? and csb_id = ?', [
             10,
             $this->bean->getId()
         ]);
