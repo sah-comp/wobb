@@ -27,7 +27,7 @@
             step="10"
             max="99999999"
             name="dialog[sequence]"
-            value="<?php echo htmlspecialchars($record->sequence) ?>" />
+            value="<?php echo ($record->sequence) ?>" />
         <p class="info"><?php echo I18n::__('quality_info_sequence') ?></p>
     </div>
     <div class="row <?php echo ($record->hasError('name')) ? 'error' : ''; ?>">

@@ -51,6 +51,7 @@ class Model_Login extends Model
      */
     public function dispense()
     {
+        $this->bean->uname = '';
         $this->bean->stamp = time();
         $this->bean->attempt = 0;
         $this->bean->ipaddr = ip2long(Flight::request()->ip);

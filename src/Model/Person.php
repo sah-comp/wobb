@@ -217,6 +217,31 @@ class Model_Person extends Model
      */
     public function dispense()
     {
+        $this->bean->vvvo = '';
+        $this->bean->attention = '';
+        $this->bean->title = '';
+        $this->bean->suffix = '';
+        $this->bean->organization = '';
+        $this->bean->jobtitle = '';
+        $this->bean->department = '';
+        $this->bean->phone = '';
+        $this->bean->fax = '';
+        $this->bean->url = '';
+        $this->bean->email = '';
+        $this->bean->account = '';
+        $this->bean->nickname = '';
+        $this->bean->lastname = '';
+        $this->bean->firstname = '';
+
+        $this->bean->bankname = '';
+        $this->bean->bankcode = '';
+        $this->bean->bankaccount = '';
+        $this->bean->bic = '';
+        $this->bean->iban = '';
+        $this->bean->taxoffice = '';
+        $this->bean->taxid = '';
+        $this->bean->vatid = '';
+
         $this->autoTag(true);
         $this->autoInfo(true);
         $this->timeforpay = 0;

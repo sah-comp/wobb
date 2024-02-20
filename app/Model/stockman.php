@@ -22,6 +22,9 @@ class Model_Stockman extends Model
      */
     public function dispense()
     {
+        $this->bean->earmark = '';
+        $this->bean->vvvo = '';
+        $this->bean->name = '';
         $this->addConverter('relsprice', array(
             new Converter_Decimal()
         ));

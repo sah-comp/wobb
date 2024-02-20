@@ -94,6 +94,13 @@ class Pagination
 	 * @var bool
 	 */
 	public $page_links = true;
+
+	/**
+	 * Holds the name of the layout aka. template.
+	 * 
+	 * @var string
+	 */
+	public $layout = '';
 	
 	/**
 	 * Constructor.

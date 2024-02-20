@@ -25,6 +25,7 @@ class Model_Deliverer extends Model
      */
     public function dispense()
     {
+        $this->bean->desc = '';
         $this->bean->enabled = true;
         $this->bean->pdfStateDealer = 0;
         $this->bean->pdfStateInternal = 0;

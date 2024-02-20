@@ -181,6 +181,7 @@ class Model_Adjustmentitem extends Model
      */
     public function dispense()
     {
+        $this->bean->delinv = '';
         $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
         $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
 		$this->bean->deldate = NULL;//'0000-00-00 00:00:00';

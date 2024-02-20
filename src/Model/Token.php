@@ -88,6 +88,8 @@ SQL;
      */
     public function dispense()
     {
+        $this->bean->name = '';
+        $this->bean->desc = '';
         $this->addValidator('name', array(
             new Validator_HasValue(),
             new Validator_IsUnique(array('bean' => $this->bean, 'attribute' => 'name'))

@@ -171,8 +171,10 @@ class Model_Media extends Model
      */
     public function update()
     {
-        $files = reset(Flight::request()->files);
-        $file = reset($files);
+        //$files = reset(Flight::request()->files);
+        $filesArray = (array) Flight::request()->files;
+        $file = reset($filesArray);
+        $file = reset($file);
         if ($this->bean->getId() && (empty($file) || $file['error'] == 4)) {
             
         }

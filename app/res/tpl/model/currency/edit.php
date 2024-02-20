@@ -87,7 +87,7 @@
             id="currency-numbertobasic"
             type="number"
             name="dialog[numbertobasic]"
-            value="<?php echo htmlspecialchars($record->numbertobasic) ?>" />
+            value="<?php echo ($record->numbertobasic) ?>" />
     </div>
     <div class="row <?php echo ($record->hasError('exchangerate')) ? 'error' : ''; ?>">
         <label

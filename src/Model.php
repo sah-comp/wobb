@@ -181,7 +181,8 @@ class Model extends RedBean_SimpleModel
             return $this->bean->{$attribute};
         }
         $templates = Flight::get('templates');
-        return strftime($templates['datetime'], strtotime($this->bean->{$attribute}));
+        //return strftime($templates['datetime'], strtotime($this->bean->{$attribute}));
+        return date('d.m.Y H:i:s', strtotime($this->bean->{$attribute}));
     }
 
     /**
@@ -196,7 +197,8 @@ class Model extends RedBean_SimpleModel
             return $this->bean->{$attribute};
         }
         $templates = Flight::get('templates');
-        return strftime($templates['date'], strtotime($this->bean->{$attribute}));
+        //return strftime($templates['date'], strtotime($this->bean->{$attribute}));
+        return date('d.m.Y', strtotime($this->bean->{$attribute}));
     }
 
     /**
@@ -211,7 +213,8 @@ class Model extends RedBean_SimpleModel
             return $this->bean->{$attribute};
         }
         $templates = Flight::get('templates');
-        return strftime($templates['time'], strtotime($this->bean->{$attribute}));
+        //return strftime($templates['time'], strtotime($this->bean->{$attribute}));
+        return date('H:i:s', strtotime($this->bean->{$attribute}));
     }
 
     /**

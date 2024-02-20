@@ -47,7 +47,8 @@ class Model_Plan extends Model
     public function getDateOfSlaughter()
     {
         Flight::setlocale();
-        return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
+        //return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
+        return date("d.m.Y", strtotime($this->bean->pubdate));
     }
 
 

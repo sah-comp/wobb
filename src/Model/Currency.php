@@ -139,6 +139,11 @@ class Model_Currency extends Model
      */
     public function dispense()
     {
+        $this->bean->iso = '';
+        $this->bean->name = '';
+        $this->bean->sign = '';
+        $this->bean->fractionalunit = '';
+        $this->bean->exchangerate = 1;
         $this->addValidator('iso', array(
             new Validator_HasValue(),
             new Validator_IsUnique(array('bean' => $this->bean, 'attribute' => 'iso'))

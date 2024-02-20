@@ -87,6 +87,8 @@ class Model_Country extends Model
      */
     public function dispense()
     {
+        $this->bean->iso = '';
+        $this->bean->name = '';
         $this->addValidator('iso', array(
             new Validator_HasValue(),
             new Validator_IsUnique(array('bean' => $this->bean, 'attribute' => 'iso'))

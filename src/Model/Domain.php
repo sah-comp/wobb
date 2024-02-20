@@ -299,6 +299,8 @@ SQL;
      */
     public function dispense()
     {
+        $this->bean->name = '';
+        $this->bean->url = '';
         $this->bean->invisible = false;
         //$this->bean->blessed = false;
         $this->bean->sequence = 0;

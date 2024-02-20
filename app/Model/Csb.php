@@ -106,7 +106,8 @@ class Model_Csb extends Model
     public function getDateOfSlaughter()
     {
         Flight::setlocale();
-        return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
+        //return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->pubdate));
+        return date("d.m.Y", strtotime($this->bean->pubdate));
     }
 
     /**
@@ -453,6 +454,10 @@ SQL;
      */
     public function dispense()
     {
+        $this->bean->extension = '';
+        $this->bean->size = 0;
+        $this->bean->mime = '';
+        $this->bean->file = '';
         $this->bean->piggery = 0;
         $this->bean->calcdate = null;
         $this->bean->pubdate = date('Y-m-d');
@@ -488,15 +493,22 @@ SQL;
      */
     public function update()
     {
-        $files = reset(Flight::request()->files);
-        $file = reset($files);
-        if ($this->bean->getId() || (empty($file) || $file['error'] == 4)) {
+        //$files = reset(Flight::request()->files);
+        //$file = reset($files);
+        $filesArray = (array) Flight::request()->files;
+        $file = reset($filesArray);
+        $file = reset($file);
+        //error_log('Type ' . gettype($file));
+        //$file = (array) $file;
+        if ($this->bean->getId() || (empty($file) || (isset($file['error']) && $file['error'] == 4))) {
             // do not handle the file a second time
         } else {
-            if ($file['error']) {
+            if (isset($file['error']) && $file['error']) {
                 $this->addError($file['error'], 'file');
                 throw new Exception('fileupload error');
             }
+            $json = json_encode($file);
+            //error_log('Upload ' . $json);
             $file_parts = pathinfo($file['name']);
             $this->bean->sanename = $this->sanitizeFilename($file_parts['filename']);
             $this->bean->extension = strtolower($file_parts['extension']);

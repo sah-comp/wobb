@@ -169,6 +169,9 @@ class Model_Var extends Model
      */
     public function dispense()
     {
+        $this->bean->name = '';
+        $this->bean->supplier = '';
+        $this->bean->note = '';
         $this->addValidator('name', array(
             new Validator_HasValue()
         ));

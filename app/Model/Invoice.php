@@ -280,6 +280,7 @@ class Model_Invoice extends Model
      */
     public function dispense()
     {
+        $this->bean->name = 0;
         $this->bean->paid = false;
         $this->bean->instructed = false;
         $this->addConverter('bookingdate', array(

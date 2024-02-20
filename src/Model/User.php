@@ -276,6 +276,10 @@ class Model_User extends Model
      */
     public function dispense()
     {
+        $this->bean->email = '';
+        $this->bean->name = '';
+        $this->bean->shortname = '';
+        $this->bean->pw = '';
         $this->bean->screenname = 'shortname';
         $this->bean->maxlifetime = MAX_SESSION_LIFETIME;
         $this->autoInfo(true);

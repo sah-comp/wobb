@@ -52,10 +52,16 @@ Flight::setlocale();
                     href="<?php echo Url::build(sprintf('/purchase/calculation/%d', $_record->getId())) ?>">
                     <div class="row">
                         <div class="span1">
-                            <?php echo strftime("%V", $ts) ?>
+                            <?php 
+                            //echo strftime("%V", $ts) 
+                            echo date("W", $ts) 
+                            ?>
                         </div>
                         <div class="span2">
-                            <?php echo strftime("%a, %e. %b", $ts) ?>
+                            <?php 
+                            //echo strftime("%a, %e. %b", $ts) 
+                            echo date("d.m.Y", $ts) 
+                            ?>
                         </div>
                         <div class="span1 number">
                             <?php echo $_record->piggery ?>

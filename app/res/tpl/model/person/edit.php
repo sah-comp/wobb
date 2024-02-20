@@ -165,7 +165,7 @@ $stats = $record->ownStat;
             id="person-vvvo"
             type="text"
             name="dialog[vvvo]"
-            value="<?php echo htmlspecialchars($record->vvvo) ?>" />
+            value="<?php echo htmlspecialchars(($record->vvvo === NULL ? '' : $record->vvvo)) ?>" />
     </div>
     <div class="row <?php echo ($record->hasError('email')) ? 'error' : ''; ?>">
         <label
@@ -505,7 +505,7 @@ $stats = $record->ownStat;
                 id="person-noterelprice"
                 name="dialog[noterelprice]"
                 rows="3"
-                cols="60"><?php echo htmlspecialchars($record->noterelprice) ?></textarea>
+                cols="60"><?php echo htmlspecialchars(($record->noterelprice === NULL ? '' : $record->noterelprice)) ?></textarea>
             <p class="info"><?php echo I18n::__('person_info_noterelprice') ?></p>
         </div>
         <div class="row <?php echo ($record->hasError('nextweekprice')) ? 'error' : ''; ?>">

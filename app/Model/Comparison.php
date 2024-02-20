@@ -47,7 +47,8 @@ class Model_Comparison extends Model
     public function getDateOfSlaughter()
     {
         Flight::setlocale();
-        return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->startdate));
+        //return strftime("%A, %e. %B %Y <span class=\"week\">Woche %V</span>", strtotime($this->bean->startdate));
+        return date("m.d.Y", strtotime($this->bean->startdate));
     }
 
 

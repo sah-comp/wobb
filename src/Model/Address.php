@@ -48,6 +48,18 @@ class Model_Address extends Model
         $this->bean->formattedaddress = $this->getFormattedAddress();
         parent::update();
 	}
+
+	/**
+	 * dispense.
+	 */
+	public function dispense()
+	{
+		$this->bean->street = '';
+		$this->bean->zip = '';
+		$this->bean->city = '';
+		$this->bean->county = '';
+		$this->bean->label = '';
+	}
     
     /**
 	 * Returns a formatted address based on the country of the address.

@@ -208,6 +208,7 @@ class Model_Pricing extends Model
      */
     public function dispense()
     {
+        $this->bean->name = '';
         $this->addValidator('name', array(
             new Validator_HasValue()
         ));

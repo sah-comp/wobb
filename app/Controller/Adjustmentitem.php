@@ -234,7 +234,7 @@ class Controller_Adjustmentitem extends Controller
             'records' => $this->records,
             'total' => $total,
             'bookingdate' => $this->record->invoice->localizedDate('bookingdate'),
-            'bookingslot' => strftime($templates['date'], strtotime('next monday', strtotime($this->record->adjustment->pubdate))),
+            'bookingslot' => date($templates['strftime'], strtotime('next monday', strtotime($this->record->adjustment->pubdate))),
             'title' => I18n::__("deliverer_head_title"),
             'language' => Flight::get('language'),
             'stylesheets' => array('custom', 'default', 'tk'),

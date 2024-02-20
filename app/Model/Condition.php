@@ -64,6 +64,7 @@ class Model_Condition extends Model
      */
     public function dispense()
     {
+        $this->bean->content = '';
         $this->addValidator('content', array(
             new Validator_HasValue()
         ));

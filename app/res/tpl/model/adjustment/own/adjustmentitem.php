@@ -38,7 +38,7 @@
                 <?php foreach (R::find('person', " enabled = 1 ORDER BY name") as $_person_id => $_person): ?>
                 <option
                     value="<?php echo $_person->getId() ?>"
-                    <?php echo ($_adjustmentitem->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' – ' . $_person->name) ?></option>   
+                    <?php echo ($_adjustmentitem->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo ($_person->nickname . ' – ' . $_person->name) ?></option>   
                 <?php endforeach ?>
             </select>
         </div>
@@ -50,7 +50,7 @@
                 <?php foreach (R::find('vat', " ORDER BY name") as $_vat_id => $_vat): ?>
                 <option
                     value="<?php echo $_vat->getId() ?>"
-                    <?php echo ($_adjustmentitem->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+                    <?php echo ($_adjustmentitem->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo ($_vat->name) ?></option>   
                 <?php endforeach ?>
             </select>
         </div>
@@ -63,7 +63,7 @@
 		                type="date"
 						placeholder="yyyy-mm-dd"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][deldate]"
-		                value="<?php echo htmlspecialchars($_adjustmentitem->deldate) ?>" />
+		                value="<?php echo ($_adjustmentitem->deldate) ?>" />
 		        </div>
 		        <div class="span6">
 		            <input
@@ -71,7 +71,7 @@
 		                class="autowidth"
 		                type="text"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][delinv]"
-		                value="<?php echo htmlspecialchars($_adjustmentitem->delinv) ?>" />
+		                value="<?php echo ($_adjustmentitem->delinv) ?>" />
 		        </div>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 		                class="autowidth number"
 		                type="text"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][net]"
-		                value="<?php echo htmlspecialchars($_adjustmentitem->decimal('net', 2)) ?>" />
+		                value="<?php echo ($_adjustmentitem->decimal('net', 2)) ?>" />
 		        </div>
 		        <div class="span4">
 		            <input
@@ -92,7 +92,7 @@
 		                type="text"
 		                readonly="readonly"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][vatvalue]"
-		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('vatvalue', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
+		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? ($_adjustmentitem->decimal('vatvalue', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
 		        </div>
 		        <div class="span4">
 		            <input
@@ -101,7 +101,7 @@
 		                type="text"
 		                readonly="readonly"
 		                name="dialog[ownAdjustmentitem][<?php echo $index ?>][gros]"
-		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? htmlspecialchars($_adjustmentitem->decimal('gros', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
+		                value="<?php echo ($_adjustmentitem->wasCalculated()) ? ($_adjustmentitem->decimal('gros', 2)) : I18n::__('adjustmentitem_not_yet_calculated')  ?>" />
 		        </div>
 			</div>
 		</div>
@@ -112,7 +112,7 @@
                 type="text"
                 name="stash_invoice_name"
                 readonly="readonly"
-                value="<?php echo ($_adjustmentitem->wasBilled()) ? htmlspecialchars($_adjustmentitem->invoice()->name) : I18n::__('adjustmentitem_not_yet_billed')  ?>" />
+                value="<?php echo ($_adjustmentitem->wasBilled()) ? ($_adjustmentitem->invoice()->name) : I18n::__('adjustmentitem_not_yet_billed')  ?>" />
         </div>
 		<div class="span1">
 			<?php if ($_adjustmentitem->wasBilled() && $delivererChanged): ?>			
