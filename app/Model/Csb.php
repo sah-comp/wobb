@@ -910,10 +910,15 @@ SQL;
         ]);
         if ($countDamage1 == 0) {
             Flight::get('user')->notify(I18n::__('csb_has_no_liverdamages'), 'warning');
+        } else {
+            if ($this->bean->piggery != 0) {
+                $percentage = $countDamage1 * 100 / $this->bean->piggery;
+                Flight::get('user')->notify(I18n::__('csb_has_liverdamages', null, [$percentage]), 'info');
+            }
         }
 
         // Q2
-        $countLowWeight = R::getCell('SELECT count(*) as lowweight FROM stock WHERE weight < ? and csb_id = ?', [
+        $countLowWeight = R::getCell('SELECT count(*) as lowweight FROM stock WHERE weight <= ? and csb_id = ?', [
             10,
             $this->bean->getId()
         ]);
