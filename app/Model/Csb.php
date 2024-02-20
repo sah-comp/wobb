@@ -664,7 +664,7 @@ SQL;
             // check for liver damages
             if (trim($row[13])) {
                 $befund = strtoupper(trim($row[13]));
-                error_log($befund);
+                //error_log($befund);
                 if (strpos($befund, DAMAGE_CODE_B_LIVER_GT5) !== false) {
                     $stock->damage2 = 'L';
                 } else {
