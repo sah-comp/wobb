@@ -26,8 +26,8 @@ class Converter_Decimal extends Converter
      */
     public function convert($num)
     {
-        if ($num === NULL) {
-            return 0;
+        if ($num === null) {
+            return floatval(0);
         }
         $dotPos = strrpos($num, '.');
         $commaPos = strrpos($num, ',');
