@@ -90,10 +90,10 @@ class Model_Deliverer extends Model
                     // Yes. Does the deliverer get next week price and is there a next week price?
                     if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
                         // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
-                        $this->bean->dprice = $csb->nextweekprice + $this->bean->person->itwreldprice;
+                        $this->bean->dprice = (float)$csb->nextweekprice + (float)$this->bean->person->itwreldprice;
                     } else {
                         // No next week price
-                        $this->bean->dprice = $csb->baseprice + $this->bean->person->itwreldprice;
+                        $this->bean->dprice = (float)$csb->baseprice + (float)$this->bean->person->itwreldprice;
                     }
                 } else {
                     // No twCertification == true, set dealer price to parent price
@@ -105,7 +105,7 @@ class Model_Deliverer extends Model
                 ':pid' => $this->bean->person->getId()
                 ])) {
                     // yes, set the price relatively to the parent group
-                    $this->bean->dprice = $this->bean->deliverer->dprice + $hasStockmanWithPriceAdjust->reldprice;
+                    $this->bean->dprice = (float)$this->bean->deliverer->dprice + (float)$hasStockmanWithPriceAdjust->reldprice;
                 }
             }
         }
@@ -121,10 +121,10 @@ class Model_Deliverer extends Model
                     // Yes. Does the deliverer get next week price and is there a next week price?
                     if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
                         // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
-                        $this->bean->sprice = $csb->nextweekprice + $this->bean->person->itwrelsprice;
+                        $this->bean->sprice = (float)$csb->nextweekprice + (float)$this->bean->person->itwrelsprice;
                     } else {
                         // No next week price
-                        $this->bean->sprice = $csb->baseprice + $this->bean->person->itwrelsprice;
+                        $this->bean->sprice = (float)$csb->baseprice + (float)$this->bean->person->itwrelsprice;
                     }
                 } else {
                     // No twCertification == true, set dealer price to parent price
@@ -136,7 +136,7 @@ class Model_Deliverer extends Model
                 ':pid' => $this->bean->person->getId()
                 ])) {
                     // yes, set the price relatively to the parent group
-                    $this->bean->sprice = $this->bean->deliverer->sprice + $hasStockmanWithPriceAdjust->relsprice;
+                    $this->bean->sprice = (float)$this->bean->deliverer->sprice + (float)$hasStockmanWithPriceAdjust->relsprice;
                 }
             }
         }
