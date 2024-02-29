@@ -125,7 +125,7 @@ class Model_Person extends Model
                 'width' => '5rem'
             ),
             array(
-                'name' => 'relsprice',
+                'name' => 'reldprice',
                 'sort' => array(
                     'name' => 'person.relsprice'
                 ),
@@ -138,9 +138,9 @@ class Model_Person extends Model
                 'width' => '5rem'
             ),
             array(
-                'name' => 'reldprice',
+                'name' => 'fixdprice',
                 'sort' => array(
-                    'name' => 'person.relsprice'
+                    'name' => 'person.fixdprice'
                 ),
                 'callback' => array(
                     'name' => 'decimal'

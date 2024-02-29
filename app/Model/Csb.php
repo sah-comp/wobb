@@ -638,12 +638,6 @@ SQL;
         $csv->heading = false;
         $csv->parse($file);
         foreach ($csv->data as $key => $row) {
-            /*
-            foreach ($row as $i => $value) {
-                error_log($i . ': ' . $value);
-            }
-            */
-            //error_log('Käufer ' . $row[1]);
             if ($row[2] != $this->bean->company->buyer) {
                 continue; // not the required buyer code
             }
@@ -925,7 +919,7 @@ SQL;
         } else {
             if ($this->bean->piggery != 0) {
                 $percentage = $countDamage1 * 100 / $this->bean->piggery;
-                Flight::get('user')->notify(I18n::__('csb_has_liverdamages', null, [$percentage]), 'info');
+                Flight::get('user')->notify(I18n::__('csb_has_liverdamages', null, [$percentage, $countDamage1, $this->bean->piggery]), 'info');
             }
         }
 
