@@ -61,6 +61,14 @@ Flight::route('(/[a-z]{2})/logout', function () {
     $adminController->index();
  });
 
+  /**
+  * Routes to the housekeeping controller.
+  */
+ Flight::route('GET (/[a-z]{2})/housekeeping/@method:[a-z]+', function ($method = 'index') {
+     $housekeepingController = new Controller_Housekeeping();
+     $housekeepingController->{$method}();
+ });
+
 
 /**
  * Routes to the scaffold controller.
