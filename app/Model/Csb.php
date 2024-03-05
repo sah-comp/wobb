@@ -1011,11 +1011,13 @@ SQL;
             foreach ($deliverer->ownDeliverer as $sub_id => $sub) {
                 $sub->itwpiggery = 0; //reset iwt counter
                 try {
-                    $response = $response = $client->selectQSTW([
+                    //error_log($sub->vvvo . " auf ITW/QS prüfen … ");
+                    $response = $client->selectQSTW([
                         'locationId' => $sub->vvvo,
                         'btartId' => '2001'
                     ]);
                     if (isset($response->certifications)) {
+                        //error_log(" response->certifications->qsCertification is " . $response->certifications->qsCertification);
                         if ($response->certifications->qsCertification != 1) {
                             throw new Exception_NonQS($sub->vvvo);
                         }
@@ -1042,7 +1044,10 @@ SQL;
                             $sub->itw = false;
                         }
                     } else {
-                        $sub->itw = false;
+                        // at least non QS, which disqualifies the badge from purchasing
+                        throw new Exception_NonQS($sub->vvvo);
+                        //error_log(" … ist ohne ITW/QS");
+                        //$sub->itw = false;
                     }
                 } catch (\Exception_NonQS $e) {
                     throw new Exception_NonQS($sub->vvvo);
