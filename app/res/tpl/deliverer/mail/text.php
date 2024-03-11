@@ -10,4 +10,4 @@
 <?php echo htmlspecialchars($record->invoice->company->zip) ?> <?php echo htmlspecialchars($record->invoice->company->city) ?>
 Telefon <?php echo htmlspecialchars($record->invoice->company->phone) ?>
 Fax <?php echo htmlspecialchars($record->invoice->company->fax) ?>
-Email <?php echo htmlspecialchars($record->invoice->company->emailnoreply) ?>
+Email <?php echo htmlspecialchars($record->invoice->company->email) ?>

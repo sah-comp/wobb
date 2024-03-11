@@ -10,5 +10,5 @@
 <?php echo htmlspecialchars($record->invoice->company->zip) ?> <?php echo htmlspecialchars($record->invoice->company->city) ?><br />
 Telefon <?php echo htmlspecialchars($record->invoice->company->phone) ?><br />
 Fax <?php echo htmlspecialchars($record->invoice->company->fax) ?><br />
-Email <a href="mailto:<?php echo $record->invoice->company->emailnoreply ?>"><?php echo htmlspecialchars($record->invoice->company->emailnoreply) ?></a>
+Email <a href="mailto:<?php echo $record->invoice->company->email ?>"><?php echo htmlspecialchars($record->invoice->company->email) ?></a>
 </p>
