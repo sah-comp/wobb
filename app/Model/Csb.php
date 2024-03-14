@@ -1050,7 +1050,8 @@ SQL;
                         //$sub->itw = false;
                     }
                 } catch (\Exception_NonQS $e) {
-                    throw new Exception_NonQS($sub->vvvo);
+                    //throw new Exception_NonQS($sub->vvvo);
+                    Flight::get('user')->notify(I18n::__('qs_check_deliverer_notqs', null, [$sub->earmark, $sub->vvvo]), 'warning');
                 } catch (\Exception $e) {
                     error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                     throw new Exception_ITWUnreachable($sub->vvvo);
