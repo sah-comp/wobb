@@ -1019,7 +1019,7 @@ SQL;
                     if (isset($response->certifications)) {
                         //error_log(" response->certifications->qsCertification is " . $response->certifications->qsCertification);
                         if ($response->certifications->qsCertification != 1) {
-                            throw new \Exception_NonQS($sub->vvvo);
+                            throw new Exception_NonQS($sub->vvvo);
                         }
                         if ($response->certifications->twCertification) {
                             // TW certified, add up as itwpiggery
@@ -1045,16 +1045,16 @@ SQL;
                         }
                     } else {
                         // at least non QS, which disqualifies the badge from purchasing
-                        throw new \Exception_NonQS($sub->vvvo);
+                        throw new Exception_NonQS($sub->vvvo);
                         //error_log(" … ist ohne ITW/QS");
                         //$sub->itw = false;
                     }
-                } catch (\Exception_NonQS $e) {
+                } catch (Exception_NonQS $e) {
                     //throw new Exception_NonQS($sub->vvvo);
                     Flight::get('user')->notify(I18n::__('qs_check_deliverer_notqs', null, [$sub->earmark, $sub->vvvo]), 'warning');
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
-                    throw new \Exception_ITWUnreachable($sub->vvvo);
+                    throw new Exception_ITWUnreachable($sub->vvvo);
                 }
             }
         }
