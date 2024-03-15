@@ -268,11 +268,11 @@ class Controller_Deliverer extends Controller
             /**
              * uncomment this block to get verbose error logging in your error log file
              */
-            /*
-            $mail->Debugoutput = function($str, $level) {
+            
+            $mail->Debugoutput = function ($str, $level) {
                 error_log("debug level $level; message: $str");
             };
-            */
+            
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
             if ($smtp['auth']) {
