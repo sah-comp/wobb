@@ -264,15 +264,15 @@ class Controller_Deliverer extends Controller
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 
         if ($smtp = $this->record->invoice->company->smtp()) {
-            $mail->SMTPDebug = 1;                                 // Set debug mode, 1 = err/msg, 2 = msg
+            $mail->SMTPDebug = 4;                                 // Set debug mode, 1 = err/msg, 2 = msg
             /**
              * uncomment this block to get verbose error logging in your error log file
              */
-            
+            /*
             $mail->Debugoutput = function ($str, $level) {
                 error_log("debug level $level; message: $str");
             };
-            
+            */
             $mail->isSMTP();                                      // Set mailer to use SMTP
             $mail->Host = $smtp['host'];                          // Specify main and backup server
             if ($smtp['auth']) {
