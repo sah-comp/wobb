@@ -34,8 +34,8 @@ DirectoryIndex index.php index.html
 #
 RewriteEngine On
 RewriteBase /
-#RewriteCond %{HTTPS} !on
-#RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R]
+RewriteCond %{HTTPS} !on
+RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [L,R]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
