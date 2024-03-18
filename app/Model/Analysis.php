@@ -659,6 +659,8 @@ SQL;
         $this->bean->dirty = false;
         $this->bean->itwpiggery = 0;
         $this->bean->itwdamagepiggery = 0;
+        $this->bean->startdate = date('Y-m-d');
+        $this->bean->enddate = date('Y-m-d');
         $this->addConverter('startdate', array(
             new Converter_Mysqldate()
         ));
