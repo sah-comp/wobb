@@ -343,7 +343,7 @@ class Controller_Purchase extends Controller
         $mail->addReplyTo($this->record->company->email, $this->record->company->legalname);
         $mail->addAddress($this->record->company->iqagraremail, I18n::__('iqagrar_mail_name'));
 
-        $mail->WordWarp = 50;
+        //$mail->WordWarp = 50;
         $mail->isHTML(true);
         $mail->Subject = $docname;
 

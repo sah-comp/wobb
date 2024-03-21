@@ -82,7 +82,7 @@ class Controller_Housekeeping extends Controller
         $mail->addReplyTo($this->company->email, $this->company->legalname);
         //$mail->addAddress($this->record->person->email, $this->record->person->name);
         $mail->addAddress('info@sah-company.com', 'Stephan Hombergs');
-        $mail->WordWarp = 50;
+        //$mail->WordWarp = 50;
         $mail->isHTML(true);
         $mail->Subject = 'Housekeeeeeeeping';
         /*

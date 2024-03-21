@@ -152,7 +152,7 @@ class Controller_Adjustmentitem extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
-            $mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Port = $smtp['port'];                          // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
@@ -175,7 +175,7 @@ class Controller_Adjustmentitem extends Controller
         $mail->setFrom($this->record->adjustment->company->emailnoreply, $this->record->adjustment->company->legalname);
         $mail->addReplyTo($this->record->adjustment->company->email, $this->record->adjustment->company->legalname);
         $mail->addAddress($this->record->person->email, $this->record->person->name);
-        $mail->WordWarp = 50;
+        //$mail->WordWarp = 50;
         $mail->isHTML(true);
         $mail->Subject = $docname;
 

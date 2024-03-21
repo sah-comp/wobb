@@ -303,7 +303,7 @@ class Controller_Deliverer extends Controller
         $mail->setFrom($this->record->invoice->company->emailnoreply, $this->record->invoice->company->legalname);
         $mail->addReplyTo($this->record->invoice->company->email, $this->record->invoice->company->legalname);
         $mail->addAddress($this->record->person->email, $this->record->person->name);
-        $mail->WordWarp = 50;
+        //$mail->WordWarp = 50;
         $mail->isHTML(true);
         $mail->Subject = $docname;
 

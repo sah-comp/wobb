@@ -345,7 +345,7 @@ class Controller_Invoice extends Controller
             } else {
                 $mail->SMTPAuth = false;                          // Disable SMTP authentication
             }
-            $mail->Port = $smtp['port'];						  // SMTP port
+            $mail->Port = $smtp['port'];                          // SMTP port
             $mail->Username = $smtp['user'];                      // SMTP username
             $mail->Password = $smtp['password'];                  // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable encryption, 'ssl' also accepted
@@ -367,7 +367,7 @@ class Controller_Invoice extends Controller
         $mail->addReplyTo($company->email, $company->legalname);
         $mail->addAddress($company->taxconsultantemail, I18n::__('taxconsultant_mail_name'));
 
-        $mail->WordWarp = 50;
+        //$mail->WordWarp = 50;
         $mail->isHTML(true);
         $mail->Subject = $docname;
 
