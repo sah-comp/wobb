@@ -649,6 +649,10 @@ SQL;
             if ($stock->pubdate != $this->bean->pubdate) {
                 throw new Exception_Csbfiledatemismatch('Date in file does not match your slaughterdate');
             }
+            if (substr(strtoupper($row[4]), 0, 2) != strtoupper($row[3])) {
+                throw new Exception_UnknownSupplier(substr(strtoupper($row[4]), 0, 2) . ' ' . strtoupper($row[3]));
+            }
+
             
             $stock->damage1 = ''; //set to empty string
             $stock->damage2 = ''; //set to empty string, null causes trouble

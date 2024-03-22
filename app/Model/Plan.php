@@ -268,6 +268,7 @@ SQL;
         $this->bean->season = 0; // 0 = winter, 1 = summer
         $this->bean->pubdate = date('Y-m-d');
         $this->bean->period = 6; //weeks to look back for averages
+        $this->bean->desc = '';
         $this->addConverter(
             'pubdate',
             new Converter_Mysqldate()
