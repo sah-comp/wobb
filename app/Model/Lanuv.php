@@ -618,6 +618,8 @@ SQL;
     public function dispense()
     {
         $this->bean->dirty = false;
+        $this->bean->startdate = date('Y-m-d');
+        $this->bean->enddate = date('Y-m-d');
         $this->addConverter('startdate', array(
             new Converter_Mysqldate()
         ));
