@@ -23,9 +23,9 @@ class Model_Comparison extends Model
      *
      * @var array
      */
-    protected $extensions = array(
-        'txt' => 'text/plain'
-    );
+    protected $extensions = [
+        'txt' => 'text/plain',
+    ];
 
     /**
      * Returns the media file name.
@@ -51,7 +51,6 @@ class Model_Comparison extends Model
         return date("m.d.Y", strtotime($this->bean->startdate));
     }
 
-
     /**
      * Returns the latest comparison bean.
      *
@@ -59,7 +58,7 @@ class Model_Comparison extends Model
      */
     public function getLatest()
     {
-        if (! $latest = R::findOne('comparison', " ORDER BY startdate DESC LIMIT 1 ")) {
+        if ( ! $latest = R::findOne('comparison', " ORDER BY startdate DESC LIMIT 1 ")) {
             $latest = R::dispense('comparison');
         }
         return $latest;
@@ -84,43 +83,43 @@ class Model_Comparison extends Model
      */
     public function getAttributes($layout = 'table')
     {
-        return array(
-            array(
-                'name' => 'startdate',
-                'sort' => array(
-                    'name' => 'comparison.startdate'
-                ),
-                'callback' => array(
-                    'name' => 'localizedDate'
-                ),
-                'filter' => array(
-                    'tag' => 'date'
-                )
-            ),
-            array(
-                'name' => 'baseprice',
-                'sort' => array(
-                    'name' => 'baseprice'
-                ),
-                'callback' => array(
-                    'name' => 'decimal'
-                ),
-                'class' => 'number',
-                'filter' => array(
-                    'tag' => 'number'
-                )
-            ),
-            array(
-                'name' => 'piggery',
-                'sort' => array(
-                    'name' => 'comparison.piggery'
-                ),
-                'class' => 'number',
-                'filter' => array(
-                    'tag' => 'number'
-                )
-            )
-        );
+        return [
+            [
+                'name'     => 'startdate',
+                'sort'     => [
+                    'name' => 'comparison.startdate',
+                ],
+                'callback' => [
+                    'name' => 'localizedDate',
+                ],
+                'filter'   => [
+                    'tag' => 'date',
+                ],
+            ],
+            [
+                'name'     => 'baseprice',
+                'sort'     => [
+                    'name' => 'baseprice',
+                ],
+                'callback' => [
+                    'name' => 'decimal',
+                ],
+                'class'    => 'number',
+                'filter'   => [
+                    'tag' => 'number',
+                ],
+            ],
+            [
+                'name'   => 'piggery',
+                'sort'   => [
+                    'name' => 'comparison.piggery',
+                ],
+                'class'  => 'number',
+                'filter' => [
+                    'tag' => 'number',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -172,13 +171,16 @@ SQL;
     public function compare()
     {
         $summary = $this->getSummary($this->bean->person);
-        $this->bean->piggery = $summary['piggery'];
+        if ($summary['piggery'] == 0) {
+            throw new Exception(I18n::__('comparison_error_no_pigs'));
+        }
+        $this->bean->piggery     = $summary['piggery'];
         $this->bean->totalweight = $summary['sumweight'];
-        $this->bean->meanmfa = $summary['avgmfa'];
-        $this->bean->meanweight = $summary['avgweight'];
-        $this->bean->totalnet = $summary['sumtotalpricenet'];
-        $this->bean->avgprice = $summary['avgpricenet'];
-        $this->bean->diff = 0; // no difference to the original calculation possible
+        $this->bean->meanmfa     = $summary['avgmfa'];
+        $this->bean->meanweight  = $summary['avgweight'];
+        $this->bean->totalnet    = $summary['sumtotalpricenet'];
+        $this->bean->avgprice    = $summary['avgpricenet'];
+        $this->bean->diff        = 0; // no difference to the original calculation possible
         // now do the calculation of these stock with conditions of the deliverers to be compared to
         $this->calculation();
         return true;
@@ -215,12 +217,12 @@ SQL;
             (pubdate >= :startdate AND pubdate <= :enddate) AND
             csb_id IS NOT NULL
 SQL;
-        return R::getRow($sql, array(
-            ':buyer' => $this->bean->company->buyer,
-            ':pid' => $person->getId(),
+        return R::getRow($sql, [
+            ':buyer'     => $this->bean->company->buyer,
+            ':pid'       => $person->getId(),
             ':startdate' => $this->bean->startdate,
-            ':enddate' => $this->bean->enddate
-        ));
+            ':enddate'   => $this->bean->enddate,
+        ]);
     }
 
     /**
@@ -232,15 +234,15 @@ SQL;
     {
         $stocks = R::find('stock', " (pubdate >= :startdate AND pubdate <= :enddate) AND person_id = :pid AND csb_id IS NOT NULL", [
             ':startdate' => $this->bean->startdate,
-            ':enddate' => $this->bean->enddate,
-            ':pid' => $this->bean->person->getId()
+            ':enddate'   => $this->bean->enddate,
+            ':pid'       => $this->bean->person->getId(),
         ]);
         foreach ($this->bean->ownDeliverer as $id => $deliverer) {
-            $count = 0;
-            $deliverer->totalnet = 0;
+            $count                = 0;
+            $deliverer->totalnet  = 0;
             $deliverer->deliverer = $deliverer; // funny, but stock calculation needs a parent
-            $deliverer->sprice = $deliverer->dprice = $this->bean->baseprice + $deliverer->person->reldprice;
-            $pricing = $deliverer->person->pricing;
+            $deliverer->sprice    = $deliverer->dprice    = $this->bean->baseprice + $deliverer->person->reldprice;
+            $pricing              = $deliverer->person->pricing;
             foreach ($stocks as $id => $stock) {
                 //$count++;
                 //error_log($count . ' Compare ' . $deliverer->person->nickname . ' stock ' . $stock->name);
@@ -248,8 +250,8 @@ SQL;
                 $deliverer->totalnet += $stock->totaldpricenet;
             }
             //error_log('Comparing deliverer #' . $deliverer->getId() . ' Net ' . $deliverer->totalnet . ' - ' . $this->bean->totalnet);
-            $deliverer->diff = round($deliverer->totalnet, 2) - round($this->bean->totalnet, 2);
-            $deliverer->avgprice = $deliverer->totalnet / $this->bean->totalweight;
+            $deliverer->diff      = round($deliverer->totalnet, 2) - round($this->bean->totalnet, 2);
+            $deliverer->avgprice  = $deliverer->totalnet / $this->bean->totalweight;
             $deliverer->deliverer = null;
         }
         return true;
@@ -260,12 +262,12 @@ SQL;
      */
     public function dispense()
     {
-        $this->bean->piggery = 0;
+        $this->bean->piggery    = 0;
         $this->bean->itwpiggery = 0;
-        $this->bean->diff = 0;
-        $this->bean->season = 0; // 0 = winter, 1 = summer
-        $this->bean->startdate = date('Y-m-d');
-        $this->bean->enddate = date('Y-m-d');
+        $this->bean->diff       = 0;
+        $this->bean->season     = 0; // 0 = winter, 1 = summer
+        $this->bean->startdate  = date('Y-m-d');
+        $this->bean->enddate    = date('Y-m-d');
         $this->addConverter(
             'startdate',
             new Converter_Mysqldate()
@@ -274,39 +276,39 @@ SQL;
             'enddate',
             new Converter_Mysqldate()
         );
-        $this->addConverter('baseprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalweight', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalnet', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('avgprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meanweight', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meandprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meanmfa', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('diff', array(
-            new Converter_Decimal()
-        ));
-        $this->addValidator('startdate', array(
-            new Validator_HasValue()
-        ));
-        $this->addValidator('enddate', array(
-            new Validator_HasValue()
-        ));
-        $this->addValidator('company_id', array(
-            new Validator_HasValue()
-        ));
+        $this->addConverter('baseprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalweight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalnet', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('avgprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meanweight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meandprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meanmfa', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('diff', [
+            new Converter_Decimal(),
+        ]);
+        $this->addValidator('startdate', [
+            new Validator_HasValue(),
+        ]);
+        $this->addValidator('enddate', [
+            new Validator_HasValue(),
+        ]);
+        $this->addValidator('company_id', [
+            new Validator_HasValue(),
+        ]);
     }
 
     /**
@@ -317,10 +319,10 @@ SQL;
      */
     public function whichSeason()
     {
-        $ts = strtotime($this->bean->startdate);
-        $seasons = Flight::get('seasons');
+        $ts           = strtotime($this->bean->startdate);
+        $seasons      = Flight::get('seasons');
         $summer_start = strtotime(date('Y', $ts) . '-' . $seasons['summer']['start']);
-        $summer_end = strtotime(date('Y', $ts) . '-' . $seasons['summer']['end']);
+        $summer_end   = strtotime(date('Y', $ts) . '-' . $seasons['summer']['end']);
         if (($ts >= $summer_start) && ($ts <= $summer_end)) {
             return 1; //summer
         }

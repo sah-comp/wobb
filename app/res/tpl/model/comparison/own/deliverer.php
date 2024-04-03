@@ -1,12 +1,12 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <!-- deliverer of comparison edit subform -->
 <fieldset
@@ -35,13 +35,14 @@
             <input type="hidden" name="dialog[ownDeliverer][<?php echo $index ?>][calcdate]" value="<?php echo $_deliverer->calcdate ?>" />
             <select
                 id="comparison-deliverer-<?php echo $index ?>-person"
-                name="dialog[ownDeliverer][<?php echo $index ?>][person_id]">
+                name="dialog[ownDeliverer][<?php echo $index ?>][person_id]"
+                required="required">
                 <option value=""><?php echo I18n::__('deliverer_label_select') ?></option>
-                <?php foreach (R::find('person', " enabled = 1 ORDER BY name") as $_person_id => $_person) : ?>
+                <?php foreach (R::find('person', " enabled = 1 ORDER BY name") as $_person_id => $_person): ?>
                 <option
                     value="<?php echo $_person->getId() ?>"
-                    <?php echo ($_deliverer->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' – ' . $_person->name) ?></option>   
-                <?php endforeach ?>
+                    <?php echo ($_deliverer->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' – ' . $_person->name) ?></option>
+                <?php endforeach?>
             </select>
         </div>
         <div class="span4">&nbsp;</div>

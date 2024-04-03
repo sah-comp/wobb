@@ -18,13 +18,13 @@
 class Controller_Comparison extends Controller
 {
     /**
-      * Container for javascripts to load.
-      *
-      * @var array
-      */
-    public $javascripts = array(
-        '/js/tk'
-    );
+     * Container for javascripts to load.
+     *
+     * @var array
+     */
+    public $javascripts = [
+        '/js/tk',
+    ];
 
     /**
      * Holds the layout to render.
@@ -54,7 +54,6 @@ class Controller_Comparison extends Controller
      */
     public $fiscalyear;
 
-
     /**
      * Constructs a new Comparison controller.
      *
@@ -64,7 +63,7 @@ class Controller_Comparison extends Controller
     {
         session_start();
         Auth::check();
-        $this->record = R::load('comparison', $id);
+        $this->record     = R::load('comparison', $id);
         $this->fiscalyear = Flight::setting()->fiscalyear;
     }
 
@@ -74,10 +73,10 @@ class Controller_Comparison extends Controller
     public function index()
     {
         Permission::check(Flight::get('user'), 'comparison', 'index');
-        $this->layout = 'index';
-        $this->records = R::findAll('comparison', ' YEAR(startdate) = :fy ORDER BY startdate DESC', array(
-            ':fy' => $this->fiscalyear
-        ));
+        $this->layout  = 'index';
+        $this->records = R::findAll('comparison', ' YEAR(startdate) = :fy ORDER BY startdate DESC', [
+            ':fy' => $this->fiscalyear,
+        ]);
         $this->render();
     }
 
@@ -151,7 +150,8 @@ class Controller_Comparison extends Controller
             } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
-                Flight::get('user')->notify(I18n::__('comparison_day_add_error'), 'error');
+                Flight::get('user')->notify(I18n::__('comparison_day_add_error', null, [$e->getMessage()]), 'error');
+                $this->redirect('/comparison/add');
             }
         }
         $this->render();
@@ -167,21 +167,21 @@ class Controller_Comparison extends Controller
      */
     public function pdf()
     {
-        $layout = 'print';
+        $layout    = 'print';
         $startdate = $this->record->localizedDate('startdate');
-        $enddate = $this->record->localizedDate('enddate');
-        $filename = I18n::__('comparison_filename', null, [$this->record->person->nickname, $startdate]);
-        $title = I18n::__('comparison_docname', null, [$startdate]);
-        $mpdf = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
+        $enddate   = $this->record->localizedDate('enddate');
+        $filename  = I18n::__('comparison_filename', null, [$this->record->person->nickname, $startdate]);
+        $title     = I18n::__('comparison_docname', null, [$startdate]);
+        $mpdf      = new \Mpdf\Mpdf(['mode' => 'c', 'format' => 'A4']);
         $mpdf->SetTitle($title);
         $mpdf->SetAuthor($this->record->company->legalname);
         $mpdf->SetDisplayMode('fullpage');
         ob_start();
         Flight::render('comparison/' . $layout, [
-            'language' => Flight::get('language'),
-            'record' => $this->record,
+            'language'  => Flight::get('language'),
+            'record'    => $this->record,
             'startdate' => $startdate,
-            'enddate' => $enddate
+            'enddate'   => $enddate,
         ]);
         $html = ob_get_contents();
         ob_end_clean();
@@ -195,26 +195,26 @@ class Controller_Comparison extends Controller
      */
     protected function render()
     {
-        Flight::render('shared/notification', array(), 'notification');
+        Flight::render('shared/notification', [], 'notification');
         //
-        Flight::render('shared/navigation/account', array(), 'navigation_account');
-        Flight::render('shared/navigation/main', array(), 'navigation_main');
-        Flight::render('shared/navigation', array(), 'navigation');
-        Flight::render('comparison/toolbar', array(
-            'record' => $this->record
-        ), 'toolbar');
-        Flight::render('shared/header', array(), 'header');
-        Flight::render('shared/footer', array(), 'footer');
-        Flight::render('comparison/'.$this->layout, array(
+        Flight::render('shared/navigation/account', [], 'navigation_account');
+        Flight::render('shared/navigation/main', [], 'navigation_main');
+        Flight::render('shared/navigation', [], 'navigation');
+        Flight::render('comparison/toolbar', [
             'record' => $this->record,
-            'records' => $this->records,
-            'fiscalyear' => $this->fiscalyear
-        ), 'content');
-        Flight::render('html5', array(
-            'title' => I18n::__("comparison_head_title"),
-            'language' => Flight::get('language'),
-            'stylesheets' => array('custom', 'default', 'tk'),
-            'javascripts' => $this->javascripts
-        ));
+        ], 'toolbar');
+        Flight::render('shared/header', [], 'header');
+        Flight::render('shared/footer', [], 'footer');
+        Flight::render('comparison/' . $this->layout, [
+            'record'     => $this->record,
+            'records'    => $this->records,
+            'fiscalyear' => $this->fiscalyear,
+        ], 'content');
+        Flight::render('html5', [
+            'title'       => I18n::__("comparison_head_title"),
+            'language'    => Flight::get('language'),
+            'stylesheets' => ['custom', 'default', 'tk'],
+            'javascripts' => $this->javascripts,
+        ]);
     }
 }
