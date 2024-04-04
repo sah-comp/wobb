@@ -29,131 +29,131 @@ class Model_Stock extends Model
      */
     public function getAttributes($layout = 'table')
     {
-        return array(
-            array(
-                'name' => 'vvvo',
-                'sort' => array(
-                    'name' => 'vvvo'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'buyer',
-                'sort' => array(
-                    'name' => 'buyer'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'pubdate',
-                'sort' => array(
-                    'name' => 'pubdate'
-                ),
-                'callback' => array(
-                    'name' => 'localizedDate'
-                ),
-                'filter' => array(
-                    'tag' => 'date'
-                )
-            ),
-            array(
-                'name' => 'supplier',
-                'sort' => array(
-                    'name' => 'supplier'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'earmark',
-                'sort' => array(
-                    'name' => 'earmark'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'name',
-                'sort' => array(
-                    'name' => 'name'
-                ),
-                'class' => 'number',
-                'filter' => array(
-                    'tag' => 'number'
-                )
-            ),
-            array(
-                'name' => 'quality',
-                'sort' => array(
-                    'name' => 'quality'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'weight',
-                'sort' => array(
-                    'name' => 'weight'
-                ),
-                'callback' => array(
-                    'name' => 'decimal'
-                ),
-                'class' => 'number',
-                'filter' => array(
-                    'tag' => 'number'
-                )
-            ),
-            array(
-                'name' => 'mfa',
-                'sort' => array(
-                    'name' => 'mfa'
-                ),
-                'callback' => array(
-                    'name' => 'decimal'
-                ),
-                'class' => 'number',
-                'filter' => array(
-                    'tag' => 'number'
-                )
-            ),
-            array(
-                'name' => 'damage1',
-                'sort' => array(
-                    'name' => 'damage1'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'damage2',
-                'sort' => array(
-                    'name' => 'damage2'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'qs',
-                'sort' => array(
-                    'name' => 'qs'
-                ),
-                'callback' => array(
-                    'name' => 'boolean'
-                ),
-                'filter' => array(
-                    'tag' => 'bool'
-                )
-            )
-        );
+        return [
+            [
+                'name'   => 'vvvo',
+                'sort'   => [
+                    'name' => 'vvvo',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'   => 'buyer',
+                'sort'   => [
+                    'name' => 'buyer',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'     => 'pubdate',
+                'sort'     => [
+                    'name' => 'pubdate',
+                ],
+                'callback' => [
+                    'name' => 'localizedDate',
+                ],
+                'filter'   => [
+                    'tag' => 'date',
+                ],
+            ],
+            [
+                'name'   => 'supplier',
+                'sort'   => [
+                    'name' => 'supplier',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'   => 'earmark',
+                'sort'   => [
+                    'name' => 'earmark',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'   => 'name',
+                'sort'   => [
+                    'name' => 'name',
+                ],
+                'class'  => 'number',
+                'filter' => [
+                    'tag' => 'number',
+                ],
+            ],
+            [
+                'name'   => 'quality',
+                'sort'   => [
+                    'name' => 'quality',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'     => 'weight',
+                'sort'     => [
+                    'name' => 'weight',
+                ],
+                'callback' => [
+                    'name' => 'decimal',
+                ],
+                'class'    => 'number',
+                'filter'   => [
+                    'tag' => 'number',
+                ],
+            ],
+            [
+                'name'     => 'mfa',
+                'sort'     => [
+                    'name' => 'mfa',
+                ],
+                'callback' => [
+                    'name' => 'decimal',
+                ],
+                'class'    => 'number',
+                'filter'   => [
+                    'tag' => 'number',
+                ],
+            ],
+            [
+                'name'   => 'damage1',
+                'sort'   => [
+                    'name' => 'damage1',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'   => 'damage2',
+                'sort'   => [
+                    'name' => 'damage2',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'     => 'qs',
+                'sort'     => [
+                    'name' => 'qs',
+                ],
+                'callback' => [
+                    'name' => 'boolean',
+                ],
+                'filter'   => [
+                    'tag' => 'bool',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -166,8 +166,8 @@ class Model_Stock extends Model
      */
     public function getPersonBySupplier()
     {
-        if (! $person = R::findOne('person', " nickname = ? ", array($this->bean->supplier))) {
-            $person = R::dispense('person');
+        if ( ! $person = R::findOne('person', " nickname = ? ", [$this->bean->supplier])) {
+            $person       = R::dispense('person');
             $person->name = I18n::__('person_name_unknown');
         }
         return $person;
@@ -180,7 +180,7 @@ class Model_Stock extends Model
      */
     public function getDamageAsText()
     {
-        if (! $this->bean->damage1 && ! $this->bean->damage2) {
+        if ( ! $this->bean->damage1 && ! $this->bean->damage2) {
             return '';
         }
         return trim($this->bean->damage1 . ' ' . $this->bean->damage2);
@@ -193,7 +193,7 @@ class Model_Stock extends Model
      */
     public function getQsAsText()
     {
-        if (! $this->bean->qs) {
+        if ( ! $this->bean->qs) {
             return '';
         }
         return 'QS';
@@ -211,9 +211,9 @@ class Model_Stock extends Model
     {
         $old_totaldpricenet = $this->bean->old('totaldpricenet');
 
-        $this->bean->agio = 0;
+        $this->bean->agio    = 0;
         $this->bean->disagio = 0;
-        $lanuv_tax = $deliverer->calculate($this->bean);
+        $lanuv_tax           = $deliverer->calculate($this->bean);
 
         if ($comparison_mode) {
             if ($this->bean->damage1 != '' || $this->hadFixedPrice()) {
@@ -235,7 +235,7 @@ class Model_Stock extends Model
             */
         } else {
             // usual calculation, not comparison mode
-            if (! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
+            if ( ! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
                 $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
             }
             $this->calculateDamage1Price($deliverer, $lanuv_tax);
@@ -244,7 +244,7 @@ class Model_Stock extends Model
             $this->bean->totaldpricenet = $this->bean->totaldprice - $this->bean->cost + $this->bean->bonus;
 
             $this->bean->totaldpricenetitw = $this->bean->totaldpricenet + $this->bean->tierwohlnetperstock;
-            $this->bean->totallanuvprice = $this->bean->totaldpricenetitw;
+            $this->bean->totallanuvprice   = $this->bean->totaldpricenetitw;
         }
 
         return null;
@@ -254,7 +254,7 @@ class Model_Stock extends Model
      * Checks if the stock was calculated with a fixed price or not.
      * @return bool
      */
-    public function hadFixedPrice():bool
+    public function hadFixedPrice(): bool
     {
         if ($var = R::findOne('var', " kind = 'quality' AND name = :quality ", [':quality' => $this->bean->quality])) {
             return true;
@@ -298,14 +298,14 @@ class Model_Stock extends Model
      */
     public function calculateFixedPrice($deliverer, $tax)
     {
-        if (! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", array(
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", [
             ':quality' => $this->bean->quality,
-            ':del_id' => $deliverer->deliverer->getId()
-        ))) {
+            ':del_id'  => $deliverer->deliverer->getId(),
+        ])) {
             return false;
         }
 
-        $this->bean->agio = 0;
+        $this->bean->agio    = 0;
         $this->bean->disagio = 0;
         //$this->bean->bonus = 0;
         $this->bean->sprice = $fixedPrice->sprice;
@@ -338,19 +338,19 @@ class Model_Stock extends Model
             return false;
         }
 
-        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", array(
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", [
             ':damage1' => $this->bean->damage1,
-            ':del_id' => $deliverer->deliverer->getId()
-        ))) {
+            ':del_id'  => $deliverer->deliverer->getId(),
+        ])) {
             return false;
         }
 
         if ($fixedPrice->condition == 'fixed') {
-            $this->bean->agio = 0;
+            $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
-            $this->bean->sprice = $fixedPrice->sprice;
-            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->sprice      = $fixedPrice->sprice;
+            $this->bean->dprice      = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
         } elseif ($fixedPrice->condition == 'disagio') {
@@ -363,7 +363,7 @@ class Model_Stock extends Model
 
         $this->calculateFixedpriceCost($fixedPrice);
 
-        if (! $fixedPrice->doesnotaffectlanuv) {
+        if ( ! $fixedPrice->doesnotaffectlanuv) {
             //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
@@ -385,23 +385,28 @@ class Model_Stock extends Model
             return false;
         }
 
-        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", array(
+        if ($this->bean->damage1 == DAMAGE_CODE_UNSUITABLE) {
+            // this stock is already calculated as unsuitable an should not receice more eventual disagio
+            return false;
+        }
+
+        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", [
             ':damage2' => $this->bean->damage2,
-            ':del_id' => $deliverer->deliverer->getId()
-        ))) {
+            ':del_id'  => $deliverer->deliverer->getId(),
+        ])) {
             return false;
         }
 
         if ($fixedPrice->condition == 'fixed') {
-            $this->bean->agio = 0;
+            $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
-            $this->bean->sprice = $fixedPrice->sprice;
-            $this->bean->dprice = $fixedPrice->dprice;
+            $this->bean->sprice      = $fixedPrice->sprice;
+            $this->bean->dprice      = $fixedPrice->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
         } elseif ($fixedPrice->condition == 'disagio') {
-            // e.g. damag2 = L and condition is "Abzug" 1,02 euro is subtracted from the total price
+            // e.g. damage2 = L and condition is "Abzug" 1,02 euro is subtracted from the total price
             $this->bean->totalsprice -= $fixedPrice->sprice;
             $this->bean->totaldprice -= $fixedPrice->dprice;
         } elseif ($fixedPrice->condition == 'agio') {
@@ -411,7 +416,7 @@ class Model_Stock extends Model
 
         $this->calculateFixedpriceCost($fixedPrice);
 
-        if (! $fixedPrice->doesnotaffectlanuv) {
+        if ( ! $fixedPrice->doesnotaffectlanuv) {
             //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
@@ -426,7 +431,7 @@ class Model_Stock extends Model
      */
     public function calculateFixedpriceCost($fixedprice)
     {
-        if (! $fixedprice->ownScost) {
+        if ( ! $fixedprice->ownScost) {
             return false;
         }
         $sum = 0;
@@ -461,66 +466,66 @@ class Model_Stock extends Model
      */
     public function dispense()
     {
-        $this->bean->itw = false; // initiative Tierwahl flag
+        $this->bean->itw                 = false; // initiative Tierwahl flag
         $this->bean->tierwohlnetperstock = 0;
-        $this->addConverter('pubdate', array(
-            new Converter_Mysqldate()
-        ));
-        $this->addConverter('weight', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('mfa', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('flesh', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('speck', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('tare', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('sprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('dprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalsprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totaldprice', array(
-            new Converter_Decimal()
-        ));
+        $this->addConverter('pubdate', [
+            new Converter_Mysqldate(),
+        ]);
+        $this->addConverter('weight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('mfa', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('flesh', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('speck', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('tare', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('sprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('dprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalsprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totaldprice', [
+            new Converter_Decimal(),
+        ]);
         // ITW
-        $this->addConverter('tierwohlnetperstock', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totaldpricenetitw', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('bonus', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('bonusitem', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('bonusweight', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('cost', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('costitem', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('costweight', array(
-            new Converter_Decimal()
-        ));
-        $this->addValidator('name', array(
-            new Validator_HasValue()
-        ));
+        $this->addConverter('tierwohlnetperstock', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totaldpricenetitw', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('bonus', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('bonusitem', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('bonusweight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('cost', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('costitem', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('costweight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addValidator('name', [
+            new Validator_HasValue(),
+        ]);
     }
 
     /**
