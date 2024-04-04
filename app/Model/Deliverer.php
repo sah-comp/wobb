@@ -25,44 +25,45 @@ class Model_Deliverer extends Model
      */
     public function dispense()
     {
-        $this->bean->desc = '';
-        $this->bean->enabled = true;
-        $this->bean->pdfStateDealer = 0;
+        $this->bean->desc             = '';
+        $this->bean->enabled          = true;
+        $this->bean->pdfStateDealer   = 0;
         $this->bean->pdfStateInternal = 0;
-        $this->bean->qspiggery = 0;
-        $this->bean->itwpiggery = 0;
-        $this->bean->sent = false;
-        $this->bean->calcdate = null;//'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
-        $this->addConverter('sprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('dprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meandprice', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalnet', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('diff', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalnetitw', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('totalnetlanuv', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meanmfa', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('meanweight', array(
-            new Converter_Decimal()
-        ));
-        $this->addConverter('calcdate', array(
-            new Converter_Mysqldatetime()
-        ));
+        $this->bean->piggery          = 0;
+        $this->bean->qspiggery        = 0;
+        $this->bean->itwpiggery       = 0;
+        $this->bean->sent             = false;
+        $this->bean->calcdate         = null; //'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
+        $this->addConverter('sprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('dprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meandprice', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalnet', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('diff', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalnetitw', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('totalnetlanuv', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meanmfa', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('meanweight', [
+            new Converter_Decimal(),
+        ]);
+        $this->addConverter('calcdate', [
+            new Converter_Mysqldatetime(),
+        ]);
     }
 
     /**
@@ -79,7 +80,7 @@ class Model_Deliverer extends Model
     public function setBaseprices($csb)
     {
         // Is a price already set?
-        if (! $this->bean->dprice) {
+        if ( ! $this->bean->dprice) {
             // Is there a fixed dealer price for this deliverer (person)?
             if ($this->bean->person->fixdprice) {
                 // Yes, set it and go on
@@ -90,10 +91,10 @@ class Model_Deliverer extends Model
                     // Yes. Does the deliverer get next week price and is there a next week price?
                     if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
                         // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
-                        $this->bean->dprice = (float)$csb->nextweekprice + (float)$this->bean->person->itwreldprice;
+                        $this->bean->dprice = (float) $csb->nextweekprice + (float) $this->bean->person->itwreldprice;
                     } else {
                         // No next week price
-                        $this->bean->dprice = (float)$csb->baseprice + (float)$this->bean->person->itwreldprice;
+                        $this->bean->dprice = (float) $csb->baseprice + (float) $this->bean->person->itwreldprice;
                     }
                 } else {
                     // No twCertification == true, set dealer price to parent price
@@ -101,16 +102,16 @@ class Model_Deliverer extends Model
                 }
                 // Is there a special setting, based on the VVVO number?
                 if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
-                ':vvvo' => $this->bean->vvvo,
-                ':pid' => $this->bean->person->getId()
+                    ':vvvo' => $this->bean->vvvo,
+                    ':pid'  => $this->bean->person->getId(),
                 ])) {
                     // yes, set the price relatively to the parent group
-                    $this->bean->dprice = (float)$this->bean->deliverer->dprice + (float)$hasStockmanWithPriceAdjust->reldprice;
+                    $this->bean->dprice = (float) $this->bean->deliverer->dprice + (float) $hasStockmanWithPriceAdjust->reldprice;
                 }
             }
         }
         // do the same for service prices
-        if (! $this->bean->sprice) {
+        if ( ! $this->bean->sprice) {
             // Is there a fixed service price for this deliverer (person)?
             if ($this->bean->person->fixsprice) {
                 // Yes, set it and go on
@@ -121,10 +122,10 @@ class Model_Deliverer extends Model
                     // Yes. Does the deliverer get next week price and is there a next week price?
                     if ($this->bean->person->nextweekprice && $csb->nextweekprice) {
                         // Yes. Set this deliverers group prices according to ITW prices of deliverer (person)
-                        $this->bean->sprice = (float)$csb->nextweekprice + (float)$this->bean->person->itwrelsprice;
+                        $this->bean->sprice = (float) $csb->nextweekprice + (float) $this->bean->person->itwrelsprice;
                     } else {
                         // No next week price
-                        $this->bean->sprice = (float)$csb->baseprice + (float)$this->bean->person->itwrelsprice;
+                        $this->bean->sprice = (float) $csb->baseprice + (float) $this->bean->person->itwrelsprice;
                     }
                 } else {
                     // No twCertification == true, set dealer price to parent price
@@ -132,11 +133,11 @@ class Model_Deliverer extends Model
                 }
                 // Is there a special setting, based on the VVVO number?
                 if ($hasStockmanWithPriceAdjust = R::findOne("stockman", " vvvo = :vvvo AND person_id = :pid LIMIT 1", [
-                ':vvvo' => $this->bean->vvvo,
-                ':pid' => $this->bean->person->getId()
+                    ':vvvo' => $this->bean->vvvo,
+                    ':pid'  => $this->bean->person->getId(),
                 ])) {
                     // yes, set the price relatively to the parent group
-                    $this->bean->sprice = (float)$this->bean->deliverer->sprice + (float)$hasStockmanWithPriceAdjust->relsprice;
+                    $this->bean->sprice = (float) $this->bean->deliverer->sprice + (float) $hasStockmanWithPriceAdjust->relsprice;
                 }
             }
         }
@@ -240,6 +241,9 @@ class Model_Deliverer extends Model
      */
     public function getInfoAboutDealerPrice()
     {
+        if ( ! $this->bean->person) {
+            return '';
+        }
         return $this->bean->person->noterelprice;
     }
 
@@ -262,15 +266,15 @@ class Model_Deliverer extends Model
      */
     public function getInformation()
     {
-        if (! $this->bean->person->pricing) {
+        if ( ! $this->bean->person->pricing) {
             return I18n::__('deliverer_person_pricemask_not_set');
         }
-        return I18n::__('deliverer_information_mask', null, array(
+        return I18n::__('deliverer_information_mask', null, [
             $this->bean->person->account,
             $this->bean->person->nickname,
             $this->bean->person->pricing->name,
-            $this->bean->person->vat->name
-        ));
+            $this->bean->person->vat->name,
+        ]);
     }
 
     /**
@@ -280,7 +284,7 @@ class Model_Deliverer extends Model
      */
     public function hasQS(): bool
     {
-        if (!$this->bean->qs) {
+        if ( ! $this->bean->qs) {
             return false;
         }
         return true;
@@ -296,7 +300,7 @@ class Model_Deliverer extends Model
         if ($this->bean->itwpiggery > 0) {
             return true;
         }
-        if (!$this->bean->itw) {
+        if ( ! $this->bean->itw) {
             return false;
         }
         return true;
@@ -311,7 +315,7 @@ class Model_Deliverer extends Model
      */
     public function wasBilled()
     {
-        if (! $this->bean->invoice()->getId()) {
+        if ( ! $this->bean->invoice()->getId()) {
             return false;
         }
         return true;
@@ -324,7 +328,7 @@ class Model_Deliverer extends Model
      */
     public function invoice()
     {
-        if (! $this->bean->invoice) {
+        if ( ! $this->bean->invoice) {
             $this->bean->invoice = R::dispense('invoice');
         }
         return $this->bean->invoice;
@@ -350,7 +354,7 @@ class Model_Deliverer extends Model
      */
     public function calcVat()
     {
-        $this->bean->vatvalue = $this->bean->subtotalnet * $this->bean->person->vat->value / 100;
+        $this->bean->vatvalue  = $this->bean->subtotalnet * $this->bean->person->vat->value / 100;
         $this->bean->totalgros = $this->bean->subtotalnet + $this->bean->vatvalue;
         return true;
     }
@@ -363,13 +367,13 @@ class Model_Deliverer extends Model
      */
     public function calculate($stock)
     {
-        if (! $this->bean->person) {
-            return (float)0;
+        if ( ! $this->bean->person) {
+            return (float) 0;
         }
         $mix = 0;
         $mix += $this->calculateCondition($stock);
         $mix += $this->calculateCost($stock);
-        return (float)$mix;
+        return (float) $mix;
     }
 
     /**
@@ -380,12 +384,12 @@ class Model_Deliverer extends Model
      */
     protected function calculateCondition($stock)
     {
-        $conditions = $this->bean->person->ownCondition; // fetch it from the person
-        $bonus = 0;
-        $stock->bonusitem = 0;
+        $conditions         = $this->bean->person->ownCondition; // fetch it from the person
+        $bonus              = 0;
+        $stock->bonusitem   = 0;
         $stock->bonusweight = 0;
         if (count($conditions) == 0) {
-            return (float)0.00;
+            return (float) 0.00;
         }
         foreach ($conditions as $id => $condition) {
             $applyCondition = false;
@@ -454,7 +458,7 @@ class Model_Deliverer extends Model
             }
         }
         $stock->bonus = $bonus;
-        return (float)$bonus;
+        return (float) $bonus;
     }
 
     /**
@@ -465,12 +469,12 @@ class Model_Deliverer extends Model
      */
     protected function calculateCost($stock)
     {
-        $costs = $this->bean->person->ownCost; // fetch it from the person
-        $cost_sum = 0;
-        $stock->costitem = 0;
+        $costs             = $this->bean->person->ownCost; // fetch it from the person
+        $cost_sum          = 0;
+        $stock->costitem   = 0;
         $stock->costweight = 0;
         if (count($costs) == 0) {
-            return (float)0.00;
+            return (float) 0.00;
         }
         foreach ($costs as $id => $cost) {
             switch ($cost->label) {
@@ -490,7 +494,7 @@ class Model_Deliverer extends Model
             }
         }
         $stock->cost = $cost_sum;
-        return (float)$cost_sum;
+        return (float) $cost_sum;
     }
 
     /**
@@ -506,26 +510,26 @@ class Model_Deliverer extends Model
      */
     public function getSpecialPrices()
     {
-        if (! $this->bean->ownSpecialprice) {
+        if ( ! $this->bean->ownSpecialprice) {
             // damage1
-            $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", array($this->bean->csb->getId(), $this->bean->supplier));
+            $stocks = R::getAll("SELECT COUNT(id) AS total, damage1 FROM stock WHERE csb_id = ? AND supplier = ? AND damage1 !='' GROUP BY damage1 ORDER BY damage1 ", [$this->bean->csb->getId(), $this->bean->supplier]);
             foreach ($stocks as $id => $stock) {
-                if (! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", array(
-                    ':damage1' => $stock['damage1'],
-                    ':supplier' => $this->bean->supplier
-                ))) {
+                if ( ! $var = R::findOne('var', " (( name = :damage1 AND supplier = :supplier ) OR ( name = :damage1 AND supplier = '')) AND kind = 'damage1' ORDER BY supplier DESC LIMIT 1 ", [
+                    ':damage1'  => $stock['damage1'],
+                    ':supplier' => $this->bean->supplier,
+                ])) {
                     $var = R::dispense('var');
                 }
 
-                $price = R::dispense('specialprice');
-                $price->piggery = $stock['total'];
+                $price                     = R::dispense('specialprice');
+                $price->piggery            = $stock['total'];
                 $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
-                $price->kind = $var->kind;
-                $price->sprice = $var->sprice;
-                $price->dprice = $var->dprice;
-                $price->name = $var->name;
-                $price->note = $var->note;
-                $price->condition = $var->condition;
+                $price->kind               = $var->kind;
+                $price->sprice             = $var->sprice;
+                $price->dprice             = $var->dprice;
+                $price->name               = $var->name;
+                $price->note               = $var->note;
+                $price->condition          = $var->condition;
                 foreach ($var->ownCost as $id => $cost) {
                     $scost = R::dispense('scost');
                     $scost->import($cost->export(), 'label,content,value');
@@ -535,24 +539,24 @@ class Model_Deliverer extends Model
             }
 
             // damage2
-            $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", array($this->bean->csb->getId(), $this->bean->supplier));
+            $stocks = R::getAll("SELECT COUNT(id) AS total, damage2 FROM stock WHERE csb_id = ? AND supplier = ? AND damage2 !='' GROUP BY damage2 ORDER BY damage2 ", [$this->bean->csb->getId(), $this->bean->supplier]);
             foreach ($stocks as $id => $stock) {
-                if (! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", array(
-                    ':damage2' => $stock['damage2'],
-                    ':supplier' => $this->bean->supplier
-                ))) {
+                if ( ! $var = R::findOne('var', " (( name = :damage2 AND supplier = :supplier ) OR ( name = :damage2 AND supplier = '')) AND kind = 'damage2' ORDER BY supplier DESC LIMIT 1 ", [
+                    ':damage2'  => $stock['damage2'],
+                    ':supplier' => $this->bean->supplier,
+                ])) {
                     $var = R::dispense('var');
                 }
 
-                $price = R::dispense('specialprice');
-                $price->piggery = $stock['total'];
+                $price                     = R::dispense('specialprice');
+                $price->piggery            = $stock['total'];
                 $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
-                $price->kind = $var->kind;
-                $price->sprice = $var->sprice;
-                $price->dprice = $var->dprice;
-                $price->name = $var->name;
-                $price->note = $var->note;
-                $price->condition = $var->condition;
+                $price->kind               = $var->kind;
+                $price->sprice             = $var->sprice;
+                $price->dprice             = $var->dprice;
+                $price->name               = $var->name;
+                $price->note               = $var->note;
+                $price->condition          = $var->condition;
                 foreach ($var->ownCost as $id => $cost) {
                     $scost = R::dispense('scost');
                     $scost->import($cost->export(), 'label,content,value');
@@ -564,24 +568,24 @@ class Model_Deliverer extends Model
             $qualities = R::find('var', " kind='quality' AND supplier = ''");
             foreach ($qualities as $id => $quality) {
                 // quality
-                $stocks = R::getAll("SELECT COUNT(id) AS total, quality FROM stock WHERE csb_id = ? AND supplier = ? AND quality = ? GROUP BY quality ORDER BY quality ", array($this->bean->csb->getId(), $this->bean->supplier, $quality->name));
+                $stocks = R::getAll("SELECT COUNT(id) AS total, quality FROM stock WHERE csb_id = ? AND supplier = ? AND quality = ? GROUP BY quality ORDER BY quality ", [$this->bean->csb->getId(), $this->bean->supplier, $quality->name]);
                 foreach ($stocks as $id => $stock) {
-                    if (! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' ORDER BY supplier DESC LIMIT 1 ", array(
-                        ':quality' => $stock['quality'],
-                        ':supplier' => $this->bean->supplier
-                    ))) {
+                    if ( ! $var = R::findOne('var', " (( name = :quality AND supplier = :supplier ) OR ( name = :quality AND supplier = '')) AND kind = 'quality' ORDER BY supplier DESC LIMIT 1 ", [
+                        ':quality'  => $stock['quality'],
+                        ':supplier' => $this->bean->supplier,
+                    ])) {
                         $var = R::dispense('var');
                     }
 
-                    $price = R::dispense('specialprice');
-                    $price->piggery = $stock['total'];
+                    $price                     = R::dispense('specialprice');
+                    $price->piggery            = $stock['total'];
                     $price->doesnotaffectlanuv = $var->doesnotaffectlanuv;
-                    $price->kind = $var->kind;
-                    $price->sprice = $var->sprice;
-                    $price->dprice = $var->dprice;
-                    $price->name = $var->name;
-                    $price->note = $var->note;
-                    $price->condition = $var->condition;
+                    $price->kind               = $var->kind;
+                    $price->sprice             = $var->sprice;
+                    $price->dprice             = $var->dprice;
+                    $price->name               = $var->name;
+                    $price->note               = $var->note;
+                    $price->condition          = $var->condition;
                     foreach ($var->ownCost as $id => $cost) {
                         $scost = R::dispense('scost');
                         $scost->import($cost->export(), 'label,content,value');
@@ -603,14 +607,14 @@ class Model_Deliverer extends Model
     public function applyConditions($csb)
     {
         $this->bean->ownAppliedcondition = []; //clear this (sub-)deliveres applied conditions
-        $conditions = $this->bean->person->withCondition('doesnotaffectinvoice = 0')->ownCondition;
+        $conditions                      = $this->bean->person->withCondition('doesnotaffectinvoice = 0')->ownCondition;
         if (count($conditions) == 0) {
             return false;
         }
         foreach ($conditions as $id => $condition) {
-            $appliedcondition = R::dispense('appliedcondition');
+            $appliedcondition          = R::dispense('appliedcondition');
             $appliedcondition->content = $condition->content;
-            $appliedcondition->value = $condition->value;
+            $appliedcondition->value   = $condition->value;
 
             $applyCondition = false;
 
@@ -618,7 +622,7 @@ class Model_Deliverer extends Model
                 case 'stockperitem':
                     if ($condition->precondition == '' || $condition->precondition == 'none') {
                         $appliedcondition->factor = $this->bean->piggery;
-                        $applyCondition = true;
+                        $applyCondition           = true;
                     } else {
                         if ($condition->precondition == 'weight') {
                             if ($condition->comparison == 'gt') {
@@ -636,7 +640,7 @@ class Model_Deliverer extends Model
                         $appliedcondition->factor = R::count('stock', 'csb_id = ? AND supplier = ? AND ' . $sql, [
                             $csb->getId(),
                             $this->bean->supplier,
-                            $condition->cvalue
+                            $condition->cvalue,
                         ]);
                         if ($appliedcondition->factor > 0) {
                             $applyCondition = true;
@@ -647,7 +651,7 @@ class Model_Deliverer extends Model
                 case 'stockperweight':
                     if ($condition->precondition == '' || $condition->precondition == 'none') {
                         $appliedcondition->factor = $this->bean->totalweight;
-                        $applyCondition = true;
+                        $applyCondition           = true;
                     } else {
                         if ($condition->precondition == 'weight') {
                             if ($condition->comparison == 'gt') {
@@ -665,7 +669,7 @@ class Model_Deliverer extends Model
                         $appliedcondition->factor = R::getCell('SELECT SUM(weight) AS sumweight FROM stock WHERE csb_id = ? AND supplier = ? AND ' . $sql, [
                             $csb->getId(),
                             $this->bean->supplier,
-                            $condition->cvalue
+                            $condition->cvalue,
                         ]);
                         if ($appliedcondition->factor > 0) {
                             $applyCondition = true;
@@ -679,7 +683,7 @@ class Model_Deliverer extends Model
             }
 
             if ($applyCondition) {
-                $appliedcondition->net = $appliedcondition->factor * $appliedcondition->value;
+                $appliedcondition->net             = $appliedcondition->factor * $appliedcondition->value;
                 $this->bean->ownAppliedcondition[] = $appliedcondition;
             }
         }
@@ -695,26 +699,26 @@ class Model_Deliverer extends Model
      */
     public function billing($csb)
     {
-        if (! $this->bean->invoice()->name) {
-            if (! $nextbillingnumber = $csb->company->nextBillingnumber()) {
+        if ( ! $this->bean->invoice()->name) {
+            if ( ! $nextbillingnumber = $csb->company->nextBillingnumber()) {
                 throw new Exception();
             }
-            $this->bean->invoice->name = $nextbillingnumber;
-            $this->bean->invoice->fy = Flight::setting()->fiscalyear;
+            $this->bean->invoice->name        = $nextbillingnumber;
+            $this->bean->invoice->fy          = Flight::setting()->fiscalyear;
             $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
-            $this->bean->invoice->canceled = false;//storno
-            $this->bean->invoice->duedate = date('Y-m-d', strtotime(
+            $this->bean->invoice->canceled    = false; //storno
+            $this->bean->invoice->duedate     = date('Y-m-d', strtotime(
                 $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
             ));
         }
-        $this->bean->invoice->paid = false;//not yet paid
-        $this->bean->invoice->instructed = false;//instructed to pay
-        $this->bean->invoice->company = $csb->company;
-        $this->bean->invoice->person = $this->bean->person;
-        $this->bean->invoice->vat = $this->bean->person->vat;
-        $this->bean->invoice->totalnet = $this->bean->totalnet;
+        $this->bean->invoice->paid        = false; //not yet paid
+        $this->bean->invoice->instructed  = false; //instructed to pay
+        $this->bean->invoice->company     = $csb->company;
+        $this->bean->invoice->person      = $this->bean->person;
+        $this->bean->invoice->vat         = $this->bean->person->vat;
+        $this->bean->invoice->totalnet    = $this->bean->totalnet;
         $this->bean->invoice->totalnetitw = $this->bean->totalnetitw;
-        $bonusnet = 0;
+        $bonusnet                         = 0;
         foreach ($this->bean->ownAppliedcondition as $id => $appliedcondition) {
             $bonusnet += $appliedcondition->net;
         }
@@ -730,8 +734,8 @@ class Model_Deliverer extends Model
             }
         }
         // bonus
-        $this->bean->invoice->bonusnet = $bonusnet;
-        $this->bean->invoice->costnet = $costnet;
+        $this->bean->invoice->bonusnet    = $bonusnet;
+        $this->bean->invoice->costnet     = $costnet;
         $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet;
         $this->bean->invoice->subtotalnet += $this->bean->invoice->bonusnet;
         $this->bean->invoice->subtotalnet -= $this->bean->invoice->costnet;
@@ -739,26 +743,26 @@ class Model_Deliverer extends Model
         if ($this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetnormal = 0;
-            $this->bean->invoice->totalnetother = 0;
+            $this->bean->invoice->totalnetother  = 0;
         } elseif ($this->bean->invoice->vat->getId() == Flight::setting()->vatnormal) {
             $this->bean->invoice->totalnetfarmer = 0;
             $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
-            $this->bean->invoice->totalnetother = 0;
+            $this->bean->invoice->totalnetother  = 0;
         } else {
             $this->bean->invoice->totalnetfarmer = 0;
             $this->bean->invoice->totalnetnormal = 0;
-            $this->bean->invoice->totalnetother = $this->bean->invoice->subtotalnet;
+            $this->bean->invoice->totalnetother  = $this->bean->invoice->subtotalnet;
         }
         // calc vat value for total net (warenwert - cost + bonus)
         $this->bean->invoice->vatvalue =
-                round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
+            round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
         // calc vat valut for itw total
         $this->bean->invoice->vatvalueitw =
-                round($this->bean->invoice->totalnetitw * $this->bean->csb->company->vat->value / 100, 2);
+            round($this->bean->invoice->totalnetitw * $this->bean->csb->company->vat->value / 100, 2);
         $this->bean->invoice->totalgros =
-                $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue + $this->bean->invoice->totalnetitw + $this->bean->invoice->vatvalueitw;
+        $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue + $this->bean->invoice->totalnetitw + $this->bean->invoice->vatvalueitw;
 
-        $this->bean->invoice->kind = 0;//depends on the kind of invoice. 0 = Slaughter, 1 = other
+        $this->bean->invoice->kind            = 0; //depends on the kind of invoice. 0 = Slaughter, 1 = other
         $this->bean->invoice->dateofslaughter = $csb->pubdate;
         // end of establishing a new invoice
         $this->dispatchBillingNumberToStock($csb);
@@ -774,11 +778,11 @@ class Model_Deliverer extends Model
     public function dispatchBillingNumberToStock($csb)
     {
         $sql = "UPDATE stock SET billnumber = :billnumber WHERE supplier = :supplier AND csb_id = :csb_id";
-        R::exec($sql, array(
+        R::exec($sql, [
             ':billnumber' => $this->bean->invoice->name,
-            ':supplier' => $this->bean->supplier,
-            ':csb_id' => $csb->getId()
-        ));
+            ':supplier'   => $this->bean->supplier,
+            ':csb_id'     => $csb->getId(),
+        ]);
         return null;
     }
 
@@ -791,23 +795,23 @@ class Model_Deliverer extends Model
      */
     public function calculation($csb)
     {
-        $stocks = R::find('stock', " csb_id = ? AND earmark = ? ORDER BY weight ", array(
+        $stocks = R::find('stock', " csb_id = ? AND earmark = ? ORDER BY weight ", [
             $csb->getId(),
-            $this->bean->earmark
-        ));
-        if (! $pricing = $this->bean->person->pricing) {
+            $this->bean->earmark,
+        ]);
+        if ( ! $pricing = $this->bean->person->pricing) {
             throw new Exception_Missingpricemask($this->bean->supplier);
         }
-        $ret = array(
-            'totalnet' => 0,
-            'totalnetitw' => 0,
+        $ret = [
+            'totalnet'       => 0,
+            'totalnetitw'    => 0,
             'totalnetsprice' => 0,
-            'totalnetlanuv' => 0,
-            'totalweight' => 0,
-            'totalmfa' => 0,
-            'hasmfacount' => 0,
-            'piggery' => 0
-        );
+            'totalnetlanuv'  => 0,
+            'totalweight'    => 0,
+            'totalmfa'       => 0,
+            'hasmfacount'    => 0,
+            'piggery'        => 0,
+        ];
         foreach ($stocks as $id => $stock) {
             $stock->calculation($this->bean, $pricing);
             $ret['totalnet'] += $stock->totaldprice;
