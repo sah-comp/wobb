@@ -1,5 +1,5 @@
 <?php
-Flight::setlocale();
+    Flight::setlocale();
 ?>
 <article class="main">
     <header id="header-toolbar" class="fixable">
@@ -44,55 +44,55 @@ Flight::setlocale();
                 </div>
             </div>
             <?php foreach ($records as $_id => $_record):
-                $ts = strtotime($_record->pubdate);
-            ?>
-            <fieldset>
-                <legend class="verbose"><?php echo I18n::__('purchase_history_item_legend') ?></legend>
-                <a
-                    href="<?php echo Url::build(sprintf('/purchase/calculation/%d', $_record->getId())) ?>">
-                    <div class="row">
-                        <div class="span1">
-                            <?php 
-                            //echo strftime("%V", $ts) 
-                            echo date("W", $ts) 
-                            ?>
-                        </div>
-                        <div class="span2">
-                            <?php 
-                            //echo strftime("%a, %e. %b", $ts) 
-                            echo date("d.m.Y", $ts) 
-                            ?>
-                        </div>
-                        <div class="span1 number">
-                            <?php echo $_record->piggery ?>
-                        </div>
-                        <div class="span1 number">
-                            <?php echo $_record->decimal('baseprice', 2) ?>
-                        </div>
-                        <div class="span1 number">
-                            <?php echo $_record->decimal('nextweekprice', 2) ?>&nbsp;
-                        </div>
-                        <div class="span3">
-                            <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
-                        </div>
-                        <div class="span2">
-                            <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, array(htmlspecialchars($_record->hasStockThatNeedsAttention()))) : "&nbsp;" ?>
-                        </div>
-                        <div class="span1 number">
-                            <?php if ($_record->wasCalculated()): ?>
-                                &nbsp;
-                            <?php else: ?>
+                    $ts = strtotime($_record->pubdate);
+                ?>
+			            <fieldset>
+			                <legend class="verbose"><?php echo I18n::__('purchase_history_item_legend') ?></legend>
+			                <a
+			                    href="<?php echo Url::build(sprintf('/purchase/calculation/%d', $_record->getId())) ?>">
+			                    <div class="row">
+			                        <div class="span1">
+			                            <?php
+                                                //echo strftime("%V", $ts)
+                                                echo date("W", $ts)
+                                            ?>
+			                        </div>
+			                        <div class="span2">
+			                            <?php
+                                                //echo strftime("%a, %e. %b", $ts)
+                                                echo date("d.m.Y D", $ts)
+                                            ?>
+			                        </div>
+			                        <div class="span1 number">
+			                            <?php echo $_record->piggery ?>
+			                        </div>
+			                        <div class="span1 number">
+			                            <?php echo $_record->decimal('baseprice', 2) ?>
+			                        </div>
+			                        <div class="span1 number">
+			                            <?php echo $_record->decimal('nextweekprice', 2) ?>&nbsp;
+			                        </div>
+			                        <div class="span3">
+			                            <?php echo ($_record->wasCalculated()) ? htmlspecialchars($_record->localizedDate('calcdate')) : I18n::__('purchase_not_yet_calculated') ?>
+			                        </div>
+			                        <div class="span2">
+			                            <?php echo ($_record->hasStockThatNeedsAttention()) ? I18n::__('purchase_needs_your_attention', null, [htmlspecialchars($_record->hasStockThatNeedsAttention())]) : "&nbsp;" ?>
+			                        </div>
+			                        <div class="span1 number">
+			                            <?php if ($_record->wasCalculated()): ?>
+			                                &nbsp;
+			                            <?php else: ?>
                                 <a
                                     href="<?php echo Url::build(sprintf('/purchase/drop/%d', $_record->getId())) ?>"
                                     class="ir delete ask"
                                     data-question="<?php echo I18n::__('purchase_confirm_delete') ?>"
                                     title="<?php echo I18n::__('purchase_title_delete_csb') ?>"><?php echo I18n::__('purchase_link_delete_csb') ?></a>
-                            <?php endif ?>
+                            <?php endif?>
                         </div>
                     </div>
                 </a>
             </fieldset>
-            <?php endforeach ?>
+            <?php endforeach?>
         </fieldset>
         <!-- end of form details -->
 
