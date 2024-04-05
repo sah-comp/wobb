@@ -1,19 +1,19 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <form
     id="form-page-<?php echo $page->getId() ?>-meta"
     data-container="content-container"
     class="panel inline page-meta"
     method="POST"
-    action="<?php echo Url::build('/cms/meta/%d/', array($page->getId())) ?>"
+    action="<?php echo Url::build('/cms/meta/%d/', [$page->getId()]) ?>"
     accept-charset="utf-8"
     enctype="multipart/form-data">
     <div>
@@ -25,7 +25,7 @@
     </div>
     <fieldset>
         <legend class="verbose"><?php echo I18n::__('page_legend_meta') ?></legend>
-        <div class="row <?php echo ($page->hasError('name')) ? 'error' : ''; ?>">
+        <div class="row                        <?php echo ($page->hasError('name')) ? 'error' : ''; ?>">
             <label
                 for="page-name">
                 <?php echo I18n::__('page_label_name') ?>
@@ -34,10 +34,10 @@
                 id="page-name"
                 type="text"
                 name="dialog[name]"
-                value="<?php echo htmlspecialchars($page->name) ?>"
+                value="<?php echo htmlspecialchars($page->name ?? '') ?>"
                 required="required" />
         </div>
-        <div class="row <?php echo ($page->hasError('template_id')) ? 'error' : ''; ?>">
+        <div class="row                        <?php echo ($page->hasError('template_id')) ? 'error' : ''; ?>">
             <label
                 for="page-template">
                 <?php echo I18n::__('page_label_template') ?>
@@ -50,11 +50,11 @@
                 <?php foreach (R::findAll('template') as $_id => $_template): ?>
                 <option
                     value="<?php echo $_template->getId() ?>"
-                    <?php echo ($page->template_id == $_template->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_template->name) ?></option>   
-                <?php endforeach ?>
+                    <?php echo ($page->template_id == $_template->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_template->name ?? '') ?></option>
+                <?php endforeach?>
             </select>
         </div>
-        <div class="row <?php echo ($page->hasError('invisible')) ? 'error' : ''; ?>">
+        <div class="row                        <?php echo ($page->hasError('invisible')) ? 'error' : ''; ?>">
             <input
                 type="hidden"
                 name="dialog[invisible]"
@@ -82,7 +82,7 @@
                 class="scaleable"
                 name="dialog[keywords]"
                 cols="60"
-                rows="2"><?php echo htmlspecialchars($page->keywords) ?></textarea>
+                rows="2"><?php echo htmlspecialchars($page->keywords ?? '') ?></textarea>
         </div>
         <div class="row">
             <label
@@ -95,7 +95,7 @@
                 class="scaleable"
                 name="dialog[desc]"
                 cols="60"
-                rows="8"><?php echo htmlspecialchars($page->desc) ?></textarea>
+                rows="8"><?php echo htmlspecialchars($page->desc ?? '') ?></textarea>
         </div>
     </fieldset>
     <div class="buttons">

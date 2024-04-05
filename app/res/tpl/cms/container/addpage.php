@@ -1,12 +1,12 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <form
     id="form-page-add"
@@ -35,8 +35,8 @@
                 <option value=""><?php echo I18n::__('cms_addpage_w_template') ?></option>
                 <?php foreach (R::findAll('template') as $_id => $_template): ?>
                 <option
-                    value="<?php echo $_template->getId() ?>"><?php echo htmlspecialchars($_template->name) ?></option>   
-                <?php endforeach ?>
+                    value="<?php echo $_template->getId() ?>"><?php echo htmlspecialchars($_template->name ?? '') ?></option>
+                <?php endforeach?>
             </select>
         </div>
     </fieldset>

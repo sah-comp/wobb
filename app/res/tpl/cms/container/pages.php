@@ -1,12 +1,12 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <div
     id="pages-list"
@@ -15,18 +15,24 @@
     data-container="pages-list"
     data-variable="page">
 <?php foreach ($pages as $_id => $_page): ?>
-    <?php $_classes = array() ?>
-    <?php if ($page->getId() == $_page->getId()) $_classes[] = 'active' ?>
-    <?php if ($_page->invisible) $_classes[] = 'unpublished' ?>
+<?php $_classes = []?>
+<?php if ($page->getId() == $_page->getId()) {
+        $_classes[] = 'active';
+    }
+?>
+<?php if ($_page->invisible) {
+        $_classes[] = 'unpublished';
+    }
+?>
     <div
         id="page-<?php echo $_page->getId() ?>">
         <a
-            href="<?php echo Url::build('/cms/page/%d', array($_page->getId())) ?>"
+            href="<?php echo Url::build('/cms/page/%d', [$_page->getId()]) ?>"
             class="<?php echo implode(' ', $_classes) ?>">
-            <?php echo htmlspecialchars($_page->name) ?>
+            <?php echo htmlspecialchars($_page->name ?? '') ?>
         </a>
     </div>
-<?php endforeach ?>
+<?php endforeach?>
 </div>
 <!-- js to make the pages-list sortable -->
 <script>
@@ -44,7 +50,7 @@
             var container = $(this).attr("data-container");
             var sequence = $("#"+container).sortable("serialize");
             $.get(url + "?" + sequence);
-        } 
+        }
     });
 </script>
 <!-- end of js for sortable pages -->

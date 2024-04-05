@@ -1,19 +1,19 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <form
     id="<?php echo $record->getMeta('type') ?>-<?php echo $record->getId() ?>-form"
     data-container="slice-<?php echo $record->getId() ?>"
     class="inline"
     method="POST"
-    action="<?php echo Url::build('/cms/slice/%d/', array($record->getId())) ?>"
+    action="<?php echo Url::build('/cms/slice/%d/', [$record->getId()]) ?>"
     accept-charset="utf-8"
     enctype="multipart/form-data">
     <div>
@@ -31,7 +31,7 @@
             href="#toggle"
             class="toggle-options"
             onclick="$('#slice-<?php echo $record->getId() ?>-options').toggle(); $(this).toggleClass('active'); return false;">
-            <?php echo I18n::__('module_'.$record->module) ?>
+            <?php echo I18n::__('module_' . $record->module) ?>
         </a>
         <div
             id="slice-<?php echo $record->getId() ?>-options"
@@ -47,7 +47,7 @@
                     type="text"
                     name="dialog[tag]"
                     placeholder="<?php echo I18n::__('slice_placeholder_tag') ?>"
-                    value="<?php echo htmlspecialchars($record->tag) ?>" />
+                    value="<?php echo htmlspecialchars($record->tag ?? '') ?>" />
             </div>
             <div class="row">
                 <label
@@ -59,7 +59,7 @@
                     type="text"
                     name="dialog[class]"
                     placeholder="<?php echo I18n::__('slice_placeholder_class') ?>"
-                    value="<?php echo htmlspecialchars($record->class) ?>" />
+                    value="<?php echo htmlspecialchars($record->class ?? '') ?>" />
             </div>
             <div class="row">
                 <label
@@ -71,7 +71,7 @@
                     type="text"
                     name="dialog[css]"
                     placeholder="<?php echo I18n::__('slice_placeholder_css') ?>"
-                    value="<?php echo htmlspecialchars($record->css) ?>" />
+                    value="<?php echo htmlspecialchars($record->css ?? '') ?>" />
             </div>
         </div>
     </fieldset>
@@ -83,24 +83,24 @@
     data-href="<?php echo Url::build('/cms/sortable/media/media/') ?>"
     data-container="gallery-<?php echo $record->getId() ?>"
     data-variable="media">
-<?php $_i = 0 ?>
+<?php $_i = 0?>
 <?php
-foreach ($record->getMedias() as $_media_id => $_media):
-    if ( is_file(Flight::get('upload_dir').'/'.$_media->file)):
-    list($width, $height, $type, $attr) = getimagesize(Flight::get('upload_dir').'/'.$_media->file);
-    $_i++; ?>
-    <li id="media-<?php echo $_media_id ?>" style="display: inline; float: left;">
-        <img
-            src="<?php echo Flight::get('media_path').'/'.$_media->file ?>"
-            alt="<?php echo htmlspecialchars($_media->desc) ?>"
-            title="<?php echo htmlspecialchars($_media->desc) ?>"
-            style="width: 80px; height: auto;" />
-    </li>
-<?php
-    endif;
-endforeach;
-$_i++;
-?>
+    foreach ($record->getMedias() as $_media_id => $_media):
+        if (is_file(Flight::get('upload_dir') . '/' . $_media->file)):
+            list($width, $height, $type, $attr) = getimagesize(Flight::get('upload_dir') . '/' . $_media->file);
+        $_i++;?>
+		    <li id="media-<?php echo $_media_id ?>" style="display: inline; float: left;">
+		        <img
+		            src="<?php echo Flight::get('media_path') . '/' . $_media->file ?>"
+		            alt="<?php echo htmlspecialchars($_media->desc ?? '') ?>"
+		            title="<?php echo htmlspecialchars($_media->desc ?? '') ?>"
+		            style="width: 80px; height: auto;" />
+		    </li>
+		<?php
+                endif;
+            endforeach;
+            $_i++;
+        ?>
 </ul>
 <!-- end of media container -->
 <script>
@@ -117,7 +117,7 @@ $_i++;
             var container = $(this).attr("data-container");
             var sequence = $("#"+container).sortable("serialize");
             $.get(url + "?" + sequence);
-        } 
+        }
     });
 </script>
     <div class="buttons">
@@ -125,7 +125,7 @@ $_i++;
             id="slice-<?php echo $record->getId() ?>-update"
             type="submit"
             name="submit"
-            value="<?php echo I18n::__('module_submit') ?>" />            
+            value="<?php echo I18n::__('module_submit') ?>" />
         <!-- Ajax does not send the submit button value, so we transport with hidden field -->
         <input
             id="slice-<?php echo $record->getId() ?>-delete"

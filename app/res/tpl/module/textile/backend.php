@@ -1,19 +1,19 @@
 <?php
-/**
- * Cinnebar.
- *
- * @package Cinnebar
- * @subpackage Template
- * @author $Author$
- * @version $Id$
- */
+    /**
+     * Cinnebar.
+     *
+     * @package Cinnebar
+     * @subpackage Template
+     * @author $Author$
+     * @version $Id$
+     */
 ?>
 <form
     id="<?php echo $record->getMeta('type') ?>-<?php echo $record->getId() ?>-form"
     data-container="slice-<?php echo $record->getId() ?>"
     class="inline"
     method="POST"
-    action="<?php echo Url::build('/cms/slice/%d/', array($record->getId())) ?>"
+    action="<?php echo Url::build('/cms/slice/%d/', [$record->getId()]) ?>"
     accept-charset="utf-8"
     enctype="multipart/form-data">
     <div>
@@ -31,7 +31,7 @@
             href="#toggle"
             class="toggle-options"
             onclick="$('#slice-<?php echo $record->getId() ?>-options').toggle(); $(this).toggleClass('active'); return false;">
-            <?php echo I18n::__('module_'.$record->module) ?>
+            <?php echo I18n::__('module_' . $record->module) ?>
         </a>
         <div
             id="slice-<?php echo $record->getId() ?>-options"
@@ -47,7 +47,7 @@
                     type="text"
                     name="dialog[tag]"
                     placeholder="<?php echo I18n::__('slice_placeholder_tag') ?>"
-                    value="<?php echo htmlspecialchars($record->tag) ?>" />
+                    value="<?php echo htmlspecialchars($record->tag ?? '') ?>" />
             </div>
             <div class="row">
                 <label
@@ -59,7 +59,7 @@
                     type="text"
                     name="dialog[class]"
                     placeholder="<?php echo I18n::__('slice_placeholder_class') ?>"
-                    value="<?php echo htmlspecialchars($record->class) ?>" />
+                    value="<?php echo htmlspecialchars($record->class ?? '') ?>" />
             </div>
             <div class="row">
                 <label
@@ -71,7 +71,7 @@
                     type="text"
                     name="dialog[css]"
                     placeholder="<?php echo I18n::__('slice_placeholder_css') ?>"
-                    value="<?php echo htmlspecialchars($record->css) ?>" />
+                    value="<?php echo htmlspecialchars($record->css ?? '') ?>" />
             </div>
         </div>
     </fieldset>
@@ -82,7 +82,7 @@
                 name="dialog[content]"
                 rows="8"
                 cols="60"
-                placeholder="<?php echo I18n::__('module_textile_placeholder_content') ?>"><?php echo htmlspecialchars($record->content) ?></textarea>
+                placeholder="<?php echo I18n::__('module_textile_placeholder_content') ?>"><?php echo htmlspecialchars($record->content ?? '') ?></textarea>
         </div>
     </fieldset>
     <div class="buttons">
@@ -90,7 +90,7 @@
             id="slice-<?php echo $record->getId() ?>-update"
             type="submit"
             name="submit"
-            value="<?php echo I18n::__('module_submit') ?>" />            
+            value="<?php echo I18n::__('module_submit') ?>" />
         <!-- Ajax does not send the submit button value, so we transport with hidden field -->
         <input
             id="slice-<?php echo $record->getId() ?>-delete"
