@@ -31,14 +31,14 @@ class Model_Pricing extends Model
         //$stock->agio = 0;
         //$stock->disagio = 0;
         $optimalWeightMargin = $this->getOptimalMargin('weight');
-        $mfaMarginKind = 'mfa'; // use mfa kind for mfa margins
+        $mfaMarginKind       = 'mfa'; // use mfa kind for mfa margins
         if (($stock->weight >= $optimalWeightMargin->lo and
-              $stock->weight <= $optimalWeightMargin->hi)) {
+            $stock->weight <= $optimalWeightMargin->hi)) {
             // optimal weight
         } elseif ($stock->weight < $optimalWeightMargin->lo) {
             // underweight
             $mfaMarginKind = 'mfasub'; // we have a underweight stock, use mfasub
-            $lowerWeights = $this->getLowerMargins('weight', $optimalWeightMargin);
+            $lowerWeights  = $this->getLowerMargins('weight', $optimalWeightMargin);
             foreach ($lowerWeights as $id => $lowerWeight) {
                 $this->calculateAgioDisagoLo('weight', $stock, $lowerWeight);
             }
@@ -51,8 +51,9 @@ class Model_Pricing extends Model
         }
         // calculate mfa margins, using either mfa or mfasub if the stock is underweight
         $optimalMfaMargin = $this->getOptimalMargin($mfaMarginKind); // can be 'mfa' or 'mfasub'
+        error_log('Optimal Margin ' . $optimalMfaMargin->lo);
         if (($stock->mfa >= $optimalMfaMargin->lo and
-              $stock->mfa <= $optimalMfaMargin->hi)) {
+            $stock->mfa <= $optimalMfaMargin->hi)) {
             // optimal mfa
         } elseif ($stock->mfa < $optimalMfaMargin->lo) {
             // mfa lower than optimal
@@ -96,7 +97,7 @@ class Model_Pricing extends Model
             }
             $stock->agio += $diff * $margin->value;
         }
-        return (float)$diff;
+        return (float) $diff;
     }
 
     /**
@@ -125,9 +126,8 @@ class Model_Pricing extends Model
             }
             $stock->agio += $diff * $margin->value;
         }
-        return (float)$diff;
+        return (float) $diff;
     }
-
 
     /**
      * Returns a margin bean which holds the values for a optimal mfa stock.
@@ -137,22 +137,22 @@ class Model_Pricing extends Model
      */
     public function getOptimalMargin($kind = 'mfa')
     {
-        $margins = $this->bean->withCondition(" kind = ? AND op = '=' ", array(
-            $kind
-        ))->ownMargin;
+        $margins = $this->bean->withCondition(" kind = ? AND op = '=' ", [
+            $kind,
+        ])->ownMargin;
         return reset($margins);
     }
 
     /**
      * Returns an array with margin beans that have lower mfa compared to given optimal mfa margin.
-      *
-      * @param string $kind defaults to 'mfa'
-      * @param $optimalMargin
-      * @return array
-      */
+     *
+     * @param string $kind defaults to 'mfa'
+     * @param $optimalMargin
+     * @return array
+     */
     public function getLowerMargins($kind, $optimalMargin)
     {
-        $margins = $this->bean->withCondition(" kind = ? AND lo < ? AND op != '=' ORDER BY lo DESC ", array($kind, $optimalMargin->lo))->ownMargin;
+        $margins = $this->bean->withCondition(" kind = ? AND lo < ? AND op != '=' ORDER BY lo DESC ", [$kind, $optimalMargin->lo])->ownMargin;
         return $margins;
     }
 
@@ -165,7 +165,7 @@ class Model_Pricing extends Model
      */
     public function getOverMargins($kind, $optimalMargin)
     {
-        $margins = $this->bean->withCondition(" kind = ? AND hi > ? AND op != '=' ORDER BY lo ASC ", array($kind, $optimalMargin->hi))->ownMargin;
+        $margins = $this->bean->withCondition(" kind = ? AND hi > ? AND op != '=' ORDER BY lo ASC ", [$kind, $optimalMargin->hi])->ownMargin;
         return $margins;
     }
 
@@ -177,30 +177,30 @@ class Model_Pricing extends Model
      */
     public function getAttributes($layout = 'table')
     {
-        return array(
-            array(
-                'name' => 'name',
-                'sort' => array(
-                    'name' => 'name'
-                ),
-                'filter' => array(
-                    'tag' => 'text'
-                )
-            ),
-            array(
-                'name' => 'active',
-                'sort' => array(
-                    'name' => 'pricing.active'
-                ),
-                'callback' => array(
-                    'name' => 'boolean'
-                ),
-                'filter' => array(
-                    'tag' => 'bool'
-                ),
-                'width' => '5rem'
-            )
-        );
+        return [
+            [
+                'name'   => 'name',
+                'sort'   => [
+                    'name' => 'name',
+                ],
+                'filter' => [
+                    'tag' => 'text',
+                ],
+            ],
+            [
+                'name'     => 'active',
+                'sort'     => [
+                    'name' => 'pricing.active',
+                ],
+                'callback' => [
+                    'name' => 'boolean',
+                ],
+                'filter'   => [
+                    'tag' => 'bool',
+                ],
+                'width'    => '5rem',
+            ],
+        ];
     }
 
     /**
@@ -209,8 +209,8 @@ class Model_Pricing extends Model
     public function dispense()
     {
         $this->bean->name = '';
-        $this->addValidator('name', array(
-            new Validator_HasValue()
-        ));
+        $this->addValidator('name', [
+            new Validator_HasValue(),
+        ]);
     }
 }
