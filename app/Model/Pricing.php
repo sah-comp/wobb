@@ -51,7 +51,6 @@ class Model_Pricing extends Model
         }
         // calculate mfa margins, using either mfa or mfasub if the stock is underweight
         $optimalMfaMargin = $this->getOptimalMargin($mfaMarginKind); // can be 'mfa' or 'mfasub'
-        error_log('Optimal Margin ' . $optimalMfaMargin->lo);
         if (($stock->mfa >= $optimalMfaMargin->lo and
             $stock->mfa <= $optimalMfaMargin->hi)) {
             // optimal mfa
