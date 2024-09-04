@@ -176,7 +176,7 @@ class Controller_Purchase extends Controller
             } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
-                Flight::get('user')->notify(I18n::__('purchase_day_add_error'), 'error');
+                Flight::get('user')->notify(I18n::__('purchase_day_add_error', null, [$e->getMessage()]), 'error');
                 $this->redirect('/purchase/add');
             }
         }

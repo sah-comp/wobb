@@ -273,23 +273,23 @@
                         <input
                             type="hidden"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][note]"
-                            value="<?php echo htmlspecialchars($_sprice->note) ?>" />
+                            value="<?php echo htmlspecialchars($_sprice->note ?? '') ?>" />
                         <input
                             type="hidden"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][name]"
-                            value="<?php echo htmlspecialchars($_sprice->name) ?>" />
+                            value="<?php echo htmlspecialchars($_sprice->name ?? '') ?>" />
                         <input
                             type="hidden"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][condition]"
-                            value="<?php echo htmlspecialchars($_sprice->condition) ?>" />
+                            value="<?php echo htmlspecialchars($_sprice->condition ?? '') ?>" />
                         <input
                             type="hidden"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][kind]"
-                            value="<?php echo htmlspecialchars($_sprice->kind) ?>" />
+                            value="<?php echo htmlspecialchars($_sprice->kind ?? '') ?>" />
                         <input
                             type="hidden"
                             name="dialog[ownDeliverer][<?php echo $_id ?>][ownSpecialprice][<?php echo $_n ?>][doesnotaffectlanuv]"
-                            value="<?php echo htmlspecialchars($_sprice->doesnotaffectlanuv) ?>" />
+                            value="<?php echo htmlspecialchars($_sprice->doesnotaffectlanuv ?? '') ?>" />
                     </div>
 
                     <div class="row">

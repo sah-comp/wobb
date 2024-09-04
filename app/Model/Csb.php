@@ -669,6 +669,9 @@ SQL;
             $stock->vvvo = $row[5];
             if (trim($row[12])) {
                 $stock->damage1 = strtoupper(trim($row[12]));
+                if (! $damage1 = R::findOne('var', " kind = 'damage1' AND name = ? LIMIT 1", [$stock->damage1])) {
+                    throw new Exception('Schadencode nicht vorhanden ' . $stock->damage1);
+                }
             }
 
             // check for liver damages
