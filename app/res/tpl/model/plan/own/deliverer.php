@@ -48,7 +48,8 @@
             <input
                 id="plan-deliverer-<?php echo $index ?>-piggery"
                 class="autowidth number"
-                type="text"
+                type="number"
+                required="required"
                 name="dialog[ownDeliverer][<?php echo $index ?>][piggery]"
                 value="<?php echo ($_deliverer->piggery) ?>" />
         </div>
@@ -56,7 +57,8 @@
             <input
                 id="plan-deliverer-<?php echo $index ?>-itwpiggery"
                 class="autowidth number"
-                type="text"
+                type="number"
+                required="required"
                 name="dialog[ownDeliverer][<?php echo $index ?>][itwpiggery]"
                 value="<?php echo ($_deliverer->itwpiggery) ?>" />
         </div>
