@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cinnebar.
  *
@@ -11,6 +12,14 @@
 /**
  * Define constants and stuff here.
  */
+
+/**
+ * Version number for the calculation and planning process
+ * 
+ * This number is added to the csb bean. When there is an attempat to recalculate a day with an incompatible
+ * version the system may block that attempt.
+ */
+define('APP_VERSION', '1');
 
 /**
  * Magic codes.

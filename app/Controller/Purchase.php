@@ -249,6 +249,7 @@ class Controller_Purchase extends Controller
             $this->record = R::graph(Flight::request()->data->dialog, true);
             R::begin();
             try {
+                $this->record->version = APP_VERSION;
                 R::store($this->record); //must do this, because otherwise prices dont copy!!
                 $this->record->calculation();
                 R::store($this->record);
