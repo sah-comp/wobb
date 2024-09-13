@@ -1,57 +1,71 @@
 <!DOCTYPE html>
 <html lang="<?php echo $language ?>" class="no-js">
+
 <head>
     <meta charset="utf-8">
     <style>
         body {
             font-family: sans-serif;
-	        font-size: 10pt;
+            font-size: 10pt;
         }
+
         table.planning {
             font-size: 13pt;
         }
-		.notemphasized {
-			font-weight: normal;
-			font-size: 7pt;
-			color: #666666;
-		}
-		.gap {
-			padding-top: 10mm;
-		}
+
+        .notemphasized {
+            font-weight: normal;
+            font-size: 7pt;
+            color: #666666;
+        }
+
+        .gap {
+            padding-top: 10mm;
+        }
+
         .emphasize {
             font-weight: bold;
             font-size: 15pt;
         }
+
         .uberemphasize {
             font-size: 18pt;
             font-weight: bold;
         }
+
         table {
             border-collapse: collapse;
         }
+
         caption {
             font-weight: bold;
             padding-bottom: 3mm;
         }
+
         th {
             text-align: left;
         }
+
         td.bt {
             border-top: 0.1mm solid #000000;
         }
+
         td.br {
             border-right: 0.1mm solid #000000;
         }
+
         th,
         td.bb {
             border-bottom: 0.1mm solid #000000;
         }
+
         th.number,
         td.number {
             text-align: right;
         }
     </style>
 </head>
+
 <body>
     <!--mpdf
     <htmlpageheader name="tkheader" style="display: none;">
@@ -88,48 +102,58 @@
             </tr>
         </thead>
         <tbody>
-		<?php $_deliverers = $record->getDeliverers() ?>
-        <?php foreach ($_deliverers as $_id => $_deliverer): ?>
+            <?php $_deliverers = $record->getDeliverers() ?>
+            <?php foreach ($_deliverers as $_id => $_deliverer): ?>
+                <tr>
+                    <td class="bb" style="white-space: nowrap;"><?php echo htmlspecialchars($_deliverer->person->nickname . ' ' . $_deliverer->person->name) ?></td>
+                    <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('piggery', 0)) ?></td>
+                    <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('itwpiggery', 0)) ?></td>
+                    <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?></td>
+                    <td class="bb text">&nbsp;</td>
+                    <td class="bb text"><?php echo htmlspecialchars($_deliverer->desc) ?></td>
+                </tr>
+            <?php endforeach ?>
             <tr>
-                <td class="bb" style="white-space: nowrap;"><?php echo htmlspecialchars($_deliverer->person->nickname . ' ' . $_deliverer->person->name) ?></td>
-                <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('piggery', 0)) ?></td>
-                <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('itwpiggery', 0)) ?></td>
-                <td class="bb number"><?php echo htmlspecialchars($_deliverer->decimal('dprice', 3)) ?></td>
-                <td class="bb text">&nbsp;</td>
-                <td class="bb text"><?php echo htmlspecialchars($_deliverer->desc) ?></td>
-            </tr>
-        <?php endforeach ?>
-			<tr>
-		        <td class="bt bb emphasize"><?php echo I18n::__('plan_label_total') ?></td>
-				<td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
+                <td class="bt bb emphasize"><?php echo I18n::__('plan_label_total') ?></td>
+                <td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('piggery', 0)) ?></td>
                 <td class="bt bb number emphasize"><?php echo htmlspecialchars($record->decimal('itwpiggery', 0)) ?></td>
-				<td class="bt bb" colspan="3"></td>
-			</tr>
-			<tr>
-				<td class="gap" colspan="6"></td>
-			</tr>
-			<tr>
-				<td class="text" colspan="3"><?php echo I18n::__('plan_label_baseprice') ?></td>
-				<td class="number"><?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?></td>
-				<td colspan="2"></td>
-			</tr>
-			<tr>
-				<td class="text" colspan="3"><?php echo I18n::__('plan_label_nextweekprice') ?></td>
-				<td class="number"><?php echo htmlspecialchars($record->decimal('nextweekprice', 3)) ?></td>
-				<td colspan="2"></td>
-			</tr>
-			<tr>
-				<td class="text" colspan="3"><?php echo I18n::__('plan_label_sowprice') ?></td>
-				<td class="number"><?php echo htmlspecialchars($record->decimal('sowprice', 3)) ?></td>
-				<td colspan="2"></td>
-			</tr>
-			<tr>
-				<td class="text" colspan="3"><?php echo I18n::__('plan_label_damageprice') ?></td>
-				<td class="number"><?php echo htmlspecialchars($record->decimal('damageprice', 3)) ?></td>
-				<td colspan="2"></td>
-			</tr>
+                <td class="bt bb" colspan="3"></td>
+            </tr>
+            <tr>
+                <td class="gap" colspan="6"></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <?php echo htmlspecialchars($record->desc) ?>
+                </td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="gap" colspan="6"></td>
+            </tr>
+            <tr>
+                <td class="text" colspan="3"><?php echo I18n::__('plan_label_baseprice') ?></td>
+                <td class="number"><?php echo htmlspecialchars($record->decimal('baseprice', 3)) ?></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="text" colspan="3"><?php echo I18n::__('plan_label_nextweekprice') ?></td>
+                <td class="number"><?php echo htmlspecialchars($record->decimal('nextweekprice', 3)) ?></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="text" colspan="3"><?php echo I18n::__('plan_label_sowprice') ?></td>
+                <td class="number"><?php echo htmlspecialchars($record->decimal('sowprice', 3)) ?></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td class="text" colspan="3"><?php echo I18n::__('plan_label_damageprice') ?></td>
+                <td class="number"><?php echo htmlspecialchars($record->decimal('damageprice', 3)) ?></td>
+                <td colspan="2"></td>
+            </tr>
         </tbody>
     </table>
 
 </body>
+
 </html>
