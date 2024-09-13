@@ -179,6 +179,7 @@ SQL;
         $this->bean->piggery = 0;
         $this->bean->itwpiggery = 0;
         $piggery_nostockdatayet = 0;
+        $itwpiggery_nostockdatayet = 0;
         $this->bean->totalweight = 0;
         $this->bean->totalnet = 0;
         $this->bean->meanweight = 0;
@@ -212,6 +213,7 @@ SQL;
                     $deliverer->desc = trim($deliverer->desc . ' ' . I18n::__('planning_no_stock_yet'));
                 }
                 $piggery_nostockdatayet += $deliverer->piggery;
+                $itwpiggery_nostockdatayet += $deliverer->itwpiggery;
                 continue; // there are no averages, so we just leave deliverer standing in the rain.
             }
 
@@ -243,6 +245,7 @@ SQL;
             $this->bean->meanmfa = round($totalmfa / $count, 3);
         }
         $this->bean->piggery += $piggery_nostockdatayet;
+        $this->bean->itwpiggery += $itwpiggery_nostockdatayet;
         return true;
     }
 
