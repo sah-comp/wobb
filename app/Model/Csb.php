@@ -955,6 +955,10 @@ SQL;
         if (!$plan = R::findOne('plan', " pubdate = ?", [$this->bean->pubdate])) {
             Flight::get('user')->notify(I18n::__('csb_no_plan_found'), 'warning');
             return;
+        } else {
+            if ($plan->desc) {
+                Flight::get('user')->notify($plan->desc, 'info');
+            }
         }
         //error_log('CSB ' . $this->bean->piggery . ' == PLAN ' . $plan->piggery);
         $results = [];
