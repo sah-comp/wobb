@@ -163,10 +163,15 @@ class Controller_Purchase extends Controller
                 R::rollback();
                 Flight::get('user')->notify(I18n::__('purchase_day_csbsupplier_unknown', null, [$e->getMessage()]), 'error');
                 $this->redirect('/purchase/add');
-            } catch (Exception_NonQS $e) {
+            } catch (Exception_NonQS2001 $e) {
                 error_log($e);
                 R::rollback();
-                Flight::get('user')->notify(I18n::__('purchase_day_nonqs', null, [$e->getMessage()]), 'error');
+                Flight::get('user')->notify(I18n::__('purchase_day_nonqs2001', null, [$e->getMessage()]), 'error');
+                $this->redirect('/purchase/add');
+            } catch (Exception_NonQS2004 $e) {
+                error_log($e);
+                R::rollback();
+                Flight::get('user')->notify(I18n::__('purchase_day_nonqs2004', null, [$e->getMessage()]), 'error');
                 $this->redirect('/purchase/add');
             } catch (Exception_ITWUnreachable $e) {
                 error_log($e);

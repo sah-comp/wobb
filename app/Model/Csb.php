@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cinnebar.
  *
@@ -211,10 +212,10 @@ class Model_Csb extends Model
     public function hasDamageCode($code)
     {
         return $this->bean
-                    ->withCondition(' ( damage1 = :code OR damage2 = :code ) ', array(
-                        ':code' => $code
-                    ))
-                    ->countOwn('stock');
+            ->withCondition(' ( damage1 = :code OR damage2 = :code ) ', array(
+                ':code' => $code
+            ))
+            ->countOwn('stock');
     }
 
     /**
@@ -225,10 +226,10 @@ class Model_Csb extends Model
     public function hasStockThatNeedsAttention()
     {
         return $this->bean
-                    ->withCondition(" damage1 IN (?) ORDER BY supplier, name", array(
-                        '06'
-                    ))
-                    ->countOwn('stock');
+            ->withCondition(" damage1 IN (?) ORDER BY supplier, name", array(
+                '06'
+            ))
+            ->countOwn('stock');
     }
 
     /**
@@ -267,10 +268,10 @@ class Model_Csb extends Model
     {
         //R::debug(true);
         return $this->bean
-                    ->withCondition(' ( damage1 = :code OR damage2 = :code ) ORDER by supplier ', array(
-                        ':code' => $code
-                    ))
-                    ->ownStock;
+            ->withCondition(' ( damage1 = :code OR damage2 = :code ) ORDER by supplier ', array(
+                ':code' => $code
+            ))
+            ->ownStock;
     }
 
     /**
@@ -445,7 +446,7 @@ SQL;
      */
     public function sanitizeFilename($string = '', $is_filename = false)
     {
-        $string = preg_replace('/[^\w\-'. ($is_filename ? '~_\.' : ''). ']+/u', '-', $string);
+        $string = preg_replace('/[^\w\-' . ($is_filename ? '~_\.' : '') . ']+/u', '-', $string);
         return mb_strtolower(preg_replace('/--+/u', '-', $string));
     }
 
@@ -512,7 +513,7 @@ SQL;
             $file_parts = pathinfo($file['name']);
             $this->bean->sanename = $this->sanitizeFilename($file_parts['filename']);
             $this->bean->extension = strtolower($file_parts['extension']);
-            $this->bean->file = $this->bean->sanename.'.'.$this->bean->extension;
+            $this->bean->file = $this->bean->sanename . '.' . $this->bean->extension;
             if (! move_uploaded_file($file['tmp_name'], Flight::get('upload_dir') . '/' . $this->bean->file)) {
                 $this->addError('move_upload_file_failed', 'file');
                 throw new Exception('move_upload_file_failed');
@@ -538,7 +539,7 @@ SQL;
      *
      * @return mixed
      */
-    public function importStock():mixed
+    public function importStock(): mixed
     {
         if (! $this->bean->csbformat) {
             throw new Exception('No import method selected');
@@ -597,7 +598,7 @@ SQL;
             if ($this->bean->company->hastierwohl) {
                 if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
                     $stock->itw = true; // this stock is qualified to be paid additional amount ITW
-                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
+                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark) - 1);
                     if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$stock->earmark, $stock->vvvo])) {
                         // there is a special price defined for this sub deliverer
                         $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
@@ -653,7 +654,7 @@ SQL;
                 throw new Exception_UnknownSupplier(substr(strtoupper($row[4]), 0, 2) . ' ' . strtoupper($row[3]));
             }
 
-            
+
             $stock->damage1 = ''; //set to empty string
             $stock->damage2 = ''; //set to empty string, null causes trouble
             $stock->name = (int)$row[1];
@@ -693,7 +694,7 @@ SQL;
             if ($this->bean->company->hastierwohl) {
                 if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
                     $stock->itw = true; // this stock is qualified to be paid additional amount ITW
-                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
+                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark) - 1);
                     if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$stock->earmark, $stock->vvvo])) {
                         // there is a special price defined for this sub deliverer
                         $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
@@ -751,7 +752,7 @@ SQL;
             if ($this->bean->company->hastierwohl) {
                 if (substr($stock->earmark, -strlen($this->bean->company->tierwohlflag)) === $this->bean->company->tierwohlflag) {
                     $stock->itw = true; // this stock is qualified to be paid additional amount ITW
-                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark)-1);
+                    $stock->earmark = substr($stock->earmark, 0, strlen($stock->earmark) - 1);
                     if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$stock->earmark, $stock->vvvo])) {
                         // there is a special price defined for this sub deliverer
                         $stock->tierwohlnetperstock = $stockman->tierwohlnetperstock;
@@ -1026,39 +1027,38 @@ SQL;
                     if (isset($response->certifications)) {
                         //error_log(" response->certifications->qsCertification is " . $response->certifications->qsCertification);
                         if ($response->certifications->qsCertification != 1) {
-                            throw new Exception_NonQS($sub->vvvo);
+                            throw new Exception_NonQS2001($sub->vvvo);
                         }
                         if ($response->certifications->twCertification) {
-                            // TW certified, add up as itwpiggery
-                            $sub->itw = true;
-                            $sub->itwpiggery = $sub->piggery;
-                            $deliverer->itwpiggery += $sub->piggery;
-                            // which tw bonus?
-                            $twbonus = $this->bean->company->tierwohlnetperstock;
-                            if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$sub->earmark, $sub->vvvo])) {
-                                // there is a special price defined for this sub deliverer
-                                $twbonus = $stockman->tierwohlnetperstock;
-                            }
-                            // update all stock of the TW certified deliverer to be ITW
-                            $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
-                            R::exec($sql, [
-                            ':earmark' => $sub->earmark,
-                            ':csb_id' => $this->bean->getId(),
-                            ':twbonus' => $twbonus
-                            ]);
+                            // mark as ITW via 2001
+                            $this->markAsITW($sub, $deliverer);
                         } else {
                             // This subdeliverer is NOT TW certified
                             $sub->itw = false;
                         }
                     } else {
-                        // at least non QS, which disqualifies the badge from purchasing
-                        throw new Exception_NonQS($sub->vvvo);
+                        // at least non QS Betriebsart 2001, which disqualifies the badge from purchasing
+                        throw new Exception_NonQS2001($sub->vvvo);
                         //error_log(" … ist ohne ITW/QS");
                         //$sub->itw = false;
                     }
-                } catch (Exception_NonQS $e) {
-                    //throw new Exception_NonQS($sub->vvvo);
-                    Flight::get('user')->notify(I18n::__('qs_check_deliverer_notqs', null, [$sub->earmark, $sub->vvvo]), 'warning');
+                } catch (Exception_NonQS2001 $e) {
+                    // QS 2001 failed, we will also check QS 2004
+                    $response = $client->selectQSTW([
+                        'locationId' => $sub->vvvo,
+                        'btartId' => '2004'
+                    ]);
+                    if (isset($response->certifications)) {
+                        if ($response->certifications->twCertification) {
+                            // mark as ITW via 2001
+                            $this->markAsITW($sub, $deliverer);
+                        } else {
+                            // This subdeliverer is NOT TW certified
+                            $sub->itw = false;
+                        }
+                    } else {
+                        Flight::get('user')->notify(I18n::__('qs_check_deliverer_notqs', null, [$sub->earmark, $sub->vvvo]), 'warning');
+                    }
                 } catch (Exception $e) {
                     error_log('Check VVVO ' . $sub->vvvo . ' failed with ' . $e);
                     throw new Exception_ITWUnreachable($sub->vvvo);
@@ -1066,6 +1066,33 @@ SQL;
             }
         }
         return true;
+    }
+
+    /**
+     * Mark a subdeliverer as ITW and add up to the parent deliverer
+     * 
+     * @param $sub the sub deliverer reference
+     * @param $deliverer the parent deliverer reference
+     */
+    public function markAsITW(&$sub, &$deliverer)
+    {
+        // TW certified, add up as itwpiggery
+        $sub->itw = true;
+        $sub->itwpiggery = $sub->piggery;
+        $deliverer->itwpiggery += $sub->piggery;
+        // which tw bonus?
+        $twbonus = $this->bean->company->tierwohlnetperstock;
+        if ($stockman = R::findOne('stockman', "earmark = ? AND vvvo = ? AND tierwohlnetperstock <> 0 LIMIT 1", [$sub->earmark, $sub->vvvo])) {
+            // there is a special price defined for this sub deliverer
+            $twbonus = $stockman->tierwohlnetperstock;
+        }
+        // update all stock of the TW certified deliverer to be ITW
+        $sql = "UPDATE stock SET itw = 1, tierwohlnetperstock = :twbonus WHERE earmark = :earmark AND csb_id = :csb_id";
+        R::exec($sql, [
+            ':earmark' => $sub->earmark,
+            ':csb_id' => $this->bean->getId(),
+            ':twbonus' => $twbonus
+        ]);
     }
 
     /**
@@ -1077,9 +1104,11 @@ SQL;
      */
     public function calculation()
     {
-        foreach ($this->bean
-                  ->withCondition(" enabled = 1 ORDER BY supplier ")
-                  ->ownDeliverer as $_id => $deliverer) {
+        foreach (
+            $this->bean
+                ->withCondition(" enabled = 1 ORDER BY supplier ")
+                ->ownDeliverer as $_id => $deliverer
+        ) {
             $deliverer->totalnet = 0;
             $deliverer->totalnetitw = 0;
             $deliverer->totalnetsprice = 0;
@@ -1177,9 +1206,11 @@ SQL;
      */
     public function billing()
     {
-        foreach ($this->bean
-                  ->withCondition(" enabled = 1 ORDER BY supplier ")
-                  ->ownDeliverer as $id => $deliverer) {
+        foreach (
+            $this->bean
+                ->withCondition(" enabled = 1 ORDER BY supplier ")
+                ->ownDeliverer as $id => $deliverer
+        ) {
             $deliverer->billing($this->bean);
         }
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have billed the csb bean
@@ -1194,8 +1225,8 @@ SQL;
      */
     public function after_delete()
     {
-        if (is_file(Flight::get('upload_dir').'/'.$this->bean->file)) {
-            unlink(Flight::get('upload_dir').'/'.$this->bean->file);
+        if (is_file(Flight::get('upload_dir') . '/' . $this->bean->file)) {
+            unlink(Flight::get('upload_dir') . '/' . $this->bean->file);
         }
     }
 }

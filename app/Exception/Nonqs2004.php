@@ -9,12 +9,12 @@
  */
 
 /**
- * NonQS Exception.
+ * NonQS2004 Exception.
  *
  * @package Cinnebar
  * @subpackage Exception
  * @version $Id$
  */
-class Exception_NonQS extends Exception
+class Exception_NonQS2004 extends Exception
 {
 }
