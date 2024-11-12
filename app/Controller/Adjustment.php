@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cinnebar.
  *
@@ -18,10 +19,10 @@
 class Controller_Adjustment extends Controller
 {
     /**
-      * Container for javascripts to load.
-      *
-      * @var array
-      */
+     * Container for javascripts to load.
+     *
+     * @var array
+     */
     public $javascripts = array(
         '/js/tk'
     );
@@ -98,7 +99,8 @@ class Controller_Adjustment extends Controller
                 R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('adjustment_day_add_success'));
-                $this->redirect('/adjustment/index');
+                $this->redirect(sprintf('/adjustment/edit/%d', $this->record->getId()));
+                //$this->redirect('/adjustment/index');
             } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
@@ -126,8 +128,8 @@ class Controller_Adjustment extends Controller
                 R::store($this->record);
                 R::commit();
                 Flight::get('user')->notify(I18n::__('adjustment_day_edit_success'));
-                //$this->redirect(sprintf('/adjustment/edit/%d', $this->record->getId()));
-                $this->redirect('/adjustment/index');
+                $this->redirect(sprintf('/adjustment/edit/%d', $this->record->getId()));
+                //$this->redirect('/adjustment/index');
             } catch (Exception $e) {
                 error_log($e);
                 R::rollback();
@@ -174,11 +176,10 @@ class Controller_Adjustment extends Controller
         Flight::render('shared/navigation/account', array(), 'navigation_account');
         Flight::render('shared/navigation/main', array(), 'navigation_main');
         Flight::render('shared/navigation', array(), 'navigation');
-        Flight::render('adjustment/toolbar', array(
-        ), 'toolbar');
+        Flight::render('adjustment/toolbar', array(), 'toolbar');
         Flight::render('shared/header', array(), 'header');
         Flight::render('shared/footer', array(), 'footer');
-        Flight::render('adjustment/'.$this->layout, array(
+        Flight::render('adjustment/' . $this->layout, array(
             'record' => $this->record,
             'records' => $this->records,
             'fiscalyear' => $this->fiscalyear

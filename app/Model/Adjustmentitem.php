@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cinnebar.
  *
@@ -25,8 +26,7 @@ class Model_Adjustmentitem extends Model
      */
     public function getAttributes($layout = 'table')
     {
-        return array(
-        );
+        return array();
     }
 
     /**
@@ -37,7 +37,7 @@ class Model_Adjustmentitem extends Model
      */
     public function calculation($adjustment)
     {
-        if ( ! $this->bean->vat || ! $this->bean->vat->getId() ) {
+        if (! $this->bean->vat || ! $this->bean->vat->getId()) {
             $this->bean->vat = $this->bean->person->vat;
         }
         $this->bean->vatvalue = $this->bean->net * $this->bean->vat->value / 100;
@@ -52,8 +52,8 @@ class Model_Adjustmentitem extends Model
      */
     public function wasCalculated()
     {
-      if ( $this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00' ) return FALSE;
-      return TRUE;
+        if ($this->bean->calcdate === NULL || $this->bean->calcdate == '0000-00-00 00:00:00') return FALSE;
+        return TRUE;
     }
 
     /**
@@ -64,20 +64,20 @@ class Model_Adjustmentitem extends Model
      */
     public function billing($adjustment)
     {
-        if ( ! $this->bean->invoice()->name ) {
-            if ( ! $nextbillingnumber = $adjustment->company->nextBillingnumber() ) {
+        if (! $this->bean->invoice()->name) {
+            if (! $nextbillingnumber = $adjustment->company->nextBillingnumber()) {
                 throw new Exception();
             }
             $this->bean->invoice->name = $nextbillingnumber;
             $this->bean->invoice->fy = Flight::setting()->fiscalyear;
             $this->bean->invoice->bookingdate = date('Y-m-d H:i:s');
-            $this->bean->invoice->canceled = false;//storno
+            $this->bean->invoice->canceled = false; //storno
             $this->bean->invoice->duedate = date('Y-m-d', strtotime(
                 $this->bean->invoice->bookingdate . ' +' . $this->bean->person->timeforpay . 'days'
             ));
         }
-        $this->bean->invoice->paid = false;//not yet paid
-        $this->bean->invoice->instructed = false;//instructed to pay
+        $this->bean->invoice->paid = false; //not yet paid
+        $this->bean->invoice->instructed = false; //instructed to pay
         $this->bean->invoice->company = $adjustment->company;
         $this->bean->invoice->person = $this->bean->person;
         $this->bean->invoice->vat = $this->bean->vat;
@@ -86,11 +86,11 @@ class Model_Adjustmentitem extends Model
         $this->bean->invoice->costnet = 0;
         $this->bean->invoice->subtotalnet = $this->bean->invoice->totalnet;
         // set special net value attributes according to vat setting
-        if ( $this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer ) {
+        if ($this->bean->invoice->vat->getId() == Flight::setting()->vatfarmer) {
             $this->bean->invoice->totalnetfarmer = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetnormal = 0;
             $this->bean->invoice->totalnetother = 0;
-        } elseif ( $this->bean->invoice->vat->getId() == Flight::setting()->vatnormal ) {
+        } elseif ($this->bean->invoice->vat->getId() == Flight::setting()->vatnormal) {
             $this->bean->invoice->totalnetfarmer = 0;
             $this->bean->invoice->totalnetnormal = $this->bean->invoice->subtotalnet;
             $this->bean->invoice->totalnetother = 0;
@@ -101,7 +101,7 @@ class Model_Adjustmentitem extends Model
         }
         $this->bean->invoice->vatvalue = $this->bean->vatvalue;
         $this->bean->invoice->totalgros = $this->bean->gros;
-        $this->bean->invoice->kind = 1;//depends on the kind of invoice. 0 = Slaughter, 1 = other
+        $this->bean->invoice->kind = 1; //depends on the kind of invoice. 0 = Slaughter, 1 = other
         $this->bean->invoice->dateofslaughter = $adjustment->pubdate;
         $this->bean->billingdate = date('Y-m-d H:i:s'); //stamp that we have calculated this bean
         return array(
@@ -110,8 +110,8 @@ class Model_Adjustmentitem extends Model
             'gros' => $this->bean->invoice->totalgros
         );
     }
-	
-	
+
+
     /**
      * Returns 'mailed' when sent flag is true, otherwise an empty string is returned.
      *
@@ -119,7 +119,7 @@ class Model_Adjustmentitem extends Model
      */
     public function wasSent()
     {
-        if ( $this->bean->sent ) return 'mailed';
+        if ($this->bean->sent) return 'mailed';
         return '';
     }
 
@@ -130,10 +130,10 @@ class Model_Adjustmentitem extends Model
      */
     public function wasBilled()
     {
-      if ( $this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00' ) return FALSE;
-      return TRUE;
+        if ($this->bean->billingdate === NULL || $this->bean->billingdate == '0000-00-00 00:00:00') return FALSE;
+        return TRUE;
     }
-	
+
     /**
      * Returns true when this beans person has either billingtransport set to email or both.
      *
@@ -141,7 +141,7 @@ class Model_Adjustmentitem extends Model
      */
     public function wantsInvoiceAsEmail()
     {
-        if ( $this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both' ) return true;
+        if ($this->bean->person->billingtransport == 'email' || $this->bean->person->billingtransport == 'both') return true;
         return false;
     }
 
@@ -152,7 +152,7 @@ class Model_Adjustmentitem extends Model
      */
     public function invoice()
     {
-        if ( ! $this->bean->invoice ) {
+        if (! $this->bean->invoice) {
             $this->bean->invoice = R::dispense('invoice');
         }
         return $this->bean->invoice;
@@ -182,17 +182,20 @@ class Model_Adjustmentitem extends Model
     public function dispense()
     {
         $this->bean->delinv = '';
-        $this->bean->billingdate = NULL;//'0000-00-00 00:00:00';
-        $this->bean->calcdate = NULL;//'0000-00-00 00:00:00';
-		$this->bean->deldate = NULL;//'0000-00-00 00:00:00';
-		$this->bean->person = R::dispense('person');
-        $this->addConverter('billingdate',
+        $this->bean->billingdate = NULL; //'0000-00-00 00:00:00';
+        $this->bean->calcdate = NULL; //'0000-00-00 00:00:00';
+        $this->bean->deldate = NULL; //'0000-00-00 00:00:00';
+        $this->bean->person = R::dispense('person');
+        $this->addConverter(
+            'billingdate',
             new Converter_Mysqldate()
         );
-        $this->addConverter('deldate',
+        $this->addConverter(
+            'deldate',
             new Converter_Mysqldate()
         );
-        $this->addConverter('calcdate',
+        $this->addConverter(
+            'calcdate',
             new Converter_Mysqldate()
         );
         $this->addConverter('net', array(
