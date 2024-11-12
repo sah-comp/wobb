@@ -19,7 +19,7 @@
  * This number is added to the csb bean. When there is an attempat to recalculate a day with an incompatible
  * version the system may block that attempt.
  */
-define('APP_VERSION', '1.0.1');
+define('APP_VERSION', '101');
 
 /**
  * Magic codes.
