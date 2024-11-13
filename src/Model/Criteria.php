@@ -46,7 +46,7 @@ class Model_Criteria extends Model
      * @var array
      */
     public $operators = array(
-        'text' => array('bw', 'ew', 'eq', 'neq', 'like', 'notlike'),
+        'text' => array('like', 'ew', 'eq', 'neq', 'bw', 'notlike'),
         'number' => array('eq', 'gt', 'lt', 'neq'),
         'date' => array('eq', 'gt', 'lt', 'neq'),
         'time' => array('eq', 'gt', 'lt', 'neq'),
