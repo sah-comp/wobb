@@ -757,8 +757,8 @@ class Model_Deliverer extends Model
         $this->bean->invoice->vatvalue =
             round($this->bean->invoice->subtotalnet * $this->bean->invoice->vat->value / 100, 2);
         // calc vat valut for itw total
-        $this->bean->invoice->vatvalueitw =
-            round($this->bean->invoice->totalnetitw * $this->bean->csb->company->vat->value / 100, 2);
+        //$this->bean->invoice->vatvalueitw = round($this->bean->invoice->totalnetitw * $this->bean->csb->company->vat->value / 100, 2);
+        $this->bean->invoice->vatvalueitw = round($this->bean->invoice->totalnetitw * $this->bean->invoice->vat->value / 100, 2);
         $this->bean->invoice->totalgros =
         $this->bean->invoice->subtotalnet + $this->bean->invoice->vatvalue + $this->bean->invoice->totalnetitw + $this->bean->invoice->vatvalueitw;
 

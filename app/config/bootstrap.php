@@ -16,10 +16,10 @@
 /**
  * Version number for the calculation and planning process
  * 
- * This number is added to the csb bean. When there is an attempat to recalculate a day with an incompatible
+ * This number is added to the csb bean. When there is an attempt to recalculate a day with an incompatible
  * version the system may block that attempt.
  */
-define('APP_VERSION', '101');
+define('APP_VERSION', '102');
 
 /**
  * Magic codes.

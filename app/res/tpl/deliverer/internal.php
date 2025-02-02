@@ -437,7 +437,7 @@
                         <td width="50%" class="bb number"><?php echo $record->invoice->decimal('totalnetitw', 2) ?></td>
                     </tr>
                     <tr>
-                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->company->vat->name) ?></td>
+                        <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->person->vat->name) ?></td>
                         <td width="50%" class="bt bb number"><?php echo htmlspecialchars($record->invoice->decimal('vatvalueitw', 2)) ?></td>
                     </tr>
                     <?php endif ?>
