@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cinnebar.
  *
@@ -166,7 +167,7 @@ class Model_Stock extends Model
      */
     public function getPersonBySupplier()
     {
-        if ( ! $person = R::findOne('person', " nickname = ? ", [$this->bean->supplier])) {
+        if (! $person = R::findOne('person', " nickname = ? ", [$this->bean->supplier])) {
             $person       = R::dispense('person');
             $person->name = I18n::__('person_name_unknown');
         }
@@ -180,7 +181,7 @@ class Model_Stock extends Model
      */
     public function getDamageAsText()
     {
-        if ( ! $this->bean->damage1 && ! $this->bean->damage2) {
+        if (! $this->bean->damage1 && ! $this->bean->damage2) {
             return '';
         }
         return trim($this->bean->damage1 . ' ' . $this->bean->damage2);
@@ -193,7 +194,7 @@ class Model_Stock extends Model
      */
     public function getQsAsText()
     {
-        if ( ! $this->bean->qs) {
+        if (! $this->bean->qs) {
             return '';
         }
         return 'QS';
@@ -235,7 +236,7 @@ class Model_Stock extends Model
             */
         } else {
             // usual calculation, not comparison mode
-            if ( ! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
+            if (! $this->calculateFixedPrice($deliverer, $lanuv_tax)) {
                 $this->calculatePrice($deliverer, $pricing, $lanuv_tax);
             }
             $this->calculateDamage1Price($deliverer, $lanuv_tax);
@@ -298,22 +299,31 @@ class Model_Stock extends Model
      */
     public function calculateFixedPrice($deliverer, $tax)
     {
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", [
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :quality AND deliverer_id = :del_id ) AND kind = 'quality' LIMIT 1 ", [
             ':quality' => $this->bean->quality,
             ':del_id'  => $deliverer->deliverer->getId(),
         ])) {
             return false;
         }
 
-        $this->bean->agio    = 0;
-        $this->bean->disagio = 0;
-        //$this->bean->bonus = 0;
-        $this->bean->sprice = $fixedPrice->sprice;
-        $this->bean->dprice = $fixedPrice->dprice;
+        if ($fixedPrice->condition == 'fixedlikedeliverer') {
+            $this->bean->agio    = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->sprice      = $deliverer->sprice;
+            $this->bean->dprice      = $deliverer->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } else {
+            $this->bean->agio    = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->sprice = $fixedPrice->sprice;
+            $this->bean->dprice = $fixedPrice->dprice;
 
-        $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
-        $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        }
         $this->calculateFixedpriceCost($fixedPrice);
 
         //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
@@ -338,7 +348,7 @@ class Model_Stock extends Model
             return false;
         }
 
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", [
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage1 AND deliverer_id = :del_id ) AND kind = 'damage1' LIMIT 1 ", [
             ':damage1' => $this->bean->damage1,
             ':del_id'  => $deliverer->deliverer->getId(),
         ])) {
@@ -349,10 +359,11 @@ class Model_Stock extends Model
             $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
+            $this->bean->sprice      = $deliverer->sprice;
+            $this->bean->dprice      = $deliverer->dprice;
             $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
             $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
-        }
-        elseif ($fixedPrice->condition == 'fixed') {
+        } elseif ($fixedPrice->condition == 'fixed') {
             $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
@@ -370,7 +381,7 @@ class Model_Stock extends Model
 
         $this->calculateFixedpriceCost($fixedPrice);
 
-        if ( ! $fixedPrice->doesnotaffectlanuv) {
+        if (! $fixedPrice->doesnotaffectlanuv) {
             //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
@@ -397,14 +408,22 @@ class Model_Stock extends Model
             return false;
         }
 
-        if ( ! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", [
+        if (! $fixedPrice = R::findOne('specialprice', " ( name = :damage2 AND deliverer_id = :del_id ) AND kind = 'damage2' LIMIT 1 ", [
             ':damage2' => $this->bean->damage2,
             ':del_id'  => $deliverer->deliverer->getId(),
         ])) {
             return false;
         }
 
-        if ($fixedPrice->condition == 'fixed') {
+        if ($fixedPrice->condition == 'fixedlikedeliverer') {
+            $this->bean->agio    = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->sprice      = $deliverer->sprice;
+            $this->bean->dprice      = $deliverer->dprice;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        } elseif ($fixedPrice->condition == 'fixed') {
             $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;
@@ -423,7 +442,7 @@ class Model_Stock extends Model
 
         $this->calculateFixedpriceCost($fixedPrice);
 
-        if ( ! $fixedPrice->doesnotaffectlanuv) {
+        if (! $fixedPrice->doesnotaffectlanuv) {
             //$this->bean->totallanuvprice = $this->bean->totaldprice + $tax + $this->bean->tierwohlnetperstock;
         }
 
@@ -438,7 +457,7 @@ class Model_Stock extends Model
      */
     public function calculateFixedpriceCost($fixedprice)
     {
-        if ( ! $fixedprice->ownScost) {
+        if (! $fixedprice->ownScost) {
             return false;
         }
         $sum = 0;
