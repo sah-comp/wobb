@@ -345,7 +345,14 @@ class Model_Stock extends Model
             return false;
         }
 
-        if ($fixedPrice->condition == 'fixed') {
+        if ($fixedPrice->condition == 'fixedlikedeliverer') {
+            $this->bean->agio    = 0;
+            $this->bean->disagio = 0;
+            //$this->bean->bonus = 0;
+            $this->bean->totalsprice = $this->bean->sprice * $this->bean->weight;
+            $this->bean->totaldprice = $this->bean->dprice * $this->bean->weight;
+        }
+        elseif ($fixedPrice->condition == 'fixed') {
             $this->bean->agio    = 0;
             $this->bean->disagio = 0;
             //$this->bean->bonus = 0;

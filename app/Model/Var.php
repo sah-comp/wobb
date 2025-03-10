@@ -141,7 +141,8 @@ class Model_Var extends Model
             'fixed',
             'disagio',
             'agio',
-            'skip'
+            'skip',
+            'fixedlikedeliverer'
         );
     }
     
