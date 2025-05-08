@@ -726,6 +726,10 @@ textarea {
     color: #222;
 }
 
+input {
+    border-width: 1px;
+}
+
 a {
     color: #333;
 }
