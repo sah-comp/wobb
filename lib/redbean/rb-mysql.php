@@ -1173,7 +1173,10 @@ class RPDO implements Driver
 	public function GetAll( $sql, $bindings = array() )
 	{
 		$this->runQuery( $sql, $bindings );
-		return $this->resultArray;
+
+		$result_array = $this->resultArray;
+		$this->resultArray = null;
+		return $result_array;
 	}
 
 	/**
@@ -1185,7 +1188,9 @@ class RPDO implements Driver
 				'fetchStyle' => \PDO::FETCH_ASSOC
 			)
 		);
-		return $this->resultArray;
+		$result_array = $this->resultArray;
+		$this->resultArray = null;
+		return $result_array;
 	}
 
 	/**
@@ -1193,18 +1198,32 @@ class RPDO implements Driver
 	 */
 	public function GetCol( $sql, $bindings = array() )
 	{
-		$rows = $this->GetAll( $sql, $bindings );
+		if (!defined('PDO::FETCH_COLUMN')) { //PHP 5.3
+			$rows = $this->GetAll( $sql, $bindings );
+			if ( empty( $rows ) || !is_array( $rows ) ) {
+				return array();
+			}
+			$cols = array();
+			foreach ( $rows as $row ) {
+				   $cols[] = reset( $row );
+			}
 
-		if ( empty( $rows ) || !is_array( $rows ) ) {
-			return array();
+			$result_array = $cols;
+			$this->resultArray = null;
+		} else {
+			$this->runQuery( $sql, $bindings, array(
+					'fetchStyle' => \PDO::FETCH_COLUMN
+				)
+			);
+			$result_array = $this->resultArray;
+			$this->resultArray = null;
+
+			if ( empty( $result_array ) || !is_array( $result_array ) ) {
+				return array();
+			}
 		}
 
-		$cols = array();
-		foreach ( $rows as $row ) {
-			$cols[] = reset( $row );
-		}
-
-		return $cols;
+		return $result_array;
 	}
 
 	/**
@@ -2228,8 +2247,8 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 * </code>
 	 *
 	 * The example above exports all bean properties to an array
-	 * called $bookData including its meta data, parent objects but without
-	 * any beans of type 'author'.
+	 * called $bookData including its meta data, parent objects and includes only
+	 * beans of type 'author'.
 	 *
 	 * @param boolean $meta    set to TRUE if you want to export meta data as well
 	 * @param boolean $parents set to TRUE if you want to export parents as well
@@ -5506,6 +5525,11 @@ abstract class AQueryWriter
 	protected static $noNuke = false;
 
 	/**
+	 * @var bool
+	 */
+	protected static $treatFalseAsInt = FALSE;
+
+	/**
 	 * Sets a data definition template to change the data
 	 * creation statements per type.
 	 *
@@ -5609,6 +5633,21 @@ abstract class AQueryWriter
 	}
 
 	/**
+	 * If set to TRUE, this will cause SQL bindings with an
+	 * explicit FALSE value to convert to 0 instead of ''.
+	 * Returns the old flag value.
+	 *
+	 * @param boolean $flag TRUE or FALSE
+	 *
+	 * @return boolean
+	 */
+	public static function treatFalseBindingsAsInt( $flag ) {
+		$old = self::$treatFalseAsInt;
+		self::$treatFalseAsInt = (bool) $flag;
+		return $old;
+	}
+
+	/**
 	 * Checks whether a number can be treated like an int.
 	 *
 	 * @param  string $value string representation of a certain value
@@ -5617,7 +5656,7 @@ abstract class AQueryWriter
 	 */
 	public static function canBeTreatedAsInt( $value )
 	{
-		return (bool) ( strval( $value ) === strval( intval( $value ) ) );
+		return (bool) ( strval( ($value === FALSE && self::$treatFalseAsInt) ? 0 : $value ) === strval( intval( $value ) ) );
 	}
 
 	/**
@@ -8094,7 +8133,7 @@ abstract class Repository
 	 * addition, deleted 'trash can' or residue. Next, the different groups
 	 * of beans will be processed accordingly and the reference bean (i.e.
 	 * the one that was passed to the method as an argument) will be stored.
-	 * Each type of list (own/shared) has 3 bean processors: 
+	 * Each type of list (own/shared) has 3 bean processors:
 	 *
 	 * - trashCanProcessor : removes the bean or breaks its association with the current bean
 	 * - additionProcessor : associates the bean with the current one
@@ -8111,13 +8150,13 @@ abstract class Repository
 	{
 		$sharedAdditions = $sharedTrashcan = $sharedresidue = $sharedItems = $ownAdditions = $ownTrashcan = $ownresidue = $embeddedBeans = array(); //Define groups
 		foreach ( $bean as $property => $value ) {
-			$value = ( $value instanceof SimpleModel ) ? $value->unbox() : $value;
+			$value = ( $value instanceof SimpleModelInterface ) ? $value->unbox() : $value;
 			if ( $value instanceof OODBBean ) {
 				$this->processEmbeddedBean( $embeddedBeans, $bean, $property, $value );
 				$bean->setMeta("sys.typeof.{$property}", $value->getMeta('type'));
 			} elseif ( is_array( $value ) ) {
 				foreach($value as &$item) {
-					$item = ( $item instanceof SimpleModel ) ? $item->unbox() : $item;
+					$item = ( $item instanceof SimpleModelInterface ) ? $item->unbox() : $item;
 				}
 				$originals = $bean->moveMeta( 'sys.shadow.' . $property, array() );
 				if ( strpos( $property, 'own' ) === 0 ) {
@@ -8516,7 +8555,7 @@ abstract class Repository
 	 * explicit casts instead of functions to preserve performance
 	 * (0.13 vs 0.28 for 10000 iterations on Core i3).
 	 *
-	 * @param OODBBean|SimpleModel $bean bean to store
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean bean to store
 	 *
 	 * @return integer|string
 	 */
@@ -8681,7 +8720,7 @@ abstract class Repository
 	 * This function will remove the specified OODBBean
 	 * Bean Object from the database.
 	 *
-	 * @param OODBBean|SimpleModel $bean bean you want to remove from database
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean bean you want to remove from database
 	 *
 	 * @return int
 	 */
@@ -9357,13 +9396,13 @@ class OODB extends Observable
 	 * Unboxes a bean from a FUSE model if needed and checks whether the bean is
 	 * an instance of OODBBean.
 	 *
-	 * @param OODBBean|SimpleModel $bean bean you wish to unbox
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean bean you wish to unbox
 	 *
 	 * @return OODBBean
 	 */
 	protected function unboxIfNeeded( $bean )
 	{
-		if ( $bean instanceof SimpleModel ) {
+		if ( $bean instanceof SimpleModelInterface ) {
 			$bean = $bean->unbox();
 		}
 		if ( !( $bean instanceof OODBBean ) ) {
@@ -9626,7 +9665,7 @@ class OODB extends Observable
 	 * explicit casts instead of functions to preserve performance
 	 * (0.13 vs 0.28 for 10000 iterations on Core i3).
 	 *
-	 * @param OODBBean|SimpleModel $bean bean to store
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean bean to store
 	 *
 	 * @return integer|string
 	 */
@@ -9672,7 +9711,7 @@ class OODB extends Observable
 	 * This function will remove the specified OODBBean
 	 * Bean Object from the database.
 	 *
-	 * @param OODBBean|SimpleModel $bean bean you want to remove from database
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean bean you want to remove from database
 	 *
 	 * @return int
 	 */
@@ -10994,7 +11033,7 @@ interface BeanHelper
 	 *
 	 * @param OODBBean $bean bean to obtain the corresponding model of
 	 *
-	 * @return SimpleModel|CustomModel|NULL
+	 * @return SimpleModel|SimpleModelInterface|NULL
 	 */
 	public function getModelForBean( OODBBean $bean );
 }
@@ -11005,7 +11044,9 @@ namespace RedBeanPHP\BeanHelper {
 use RedBeanPHP\BeanHelper as BeanHelper;
 use RedBeanPHP\Facade as Facade;
 use RedBeanPHP\OODBBean as OODBBean;
+use RedBeanPHP\SimpleModel;
 use RedBeanPHP\SimpleModelHelper as SimpleModelHelper;
+use RedBeanPHP\SimpleModelInterface;
 
 /**
  * Bean Helper.
@@ -11038,7 +11079,7 @@ class SimpleFacadeBeanHelper implements BeanHelper
 	 *
 	 * @param string $modelClassName name of the class
 	 *
-	 * @return SimpleModel
+	 * @return SimpleModel|SimpleModelInterface
 	 */
 	public static function factory( $modelClassName )
 	{
@@ -11090,7 +11131,7 @@ class SimpleFacadeBeanHelper implements BeanHelper
 	 * @param string   $model  Type name
 	 * @param OODBBean $bean   Bean to resolve model for
 	 *
-	 * @return SimpleModel|CustomModel|NULL
+	 * @return SimpleModel|SimpleModelInterface|NULL
 	 */
 	protected function resolveModel($prefix, $model, $bean) {
 
@@ -11209,7 +11250,7 @@ use RedBeanPHP\OODBBean as OODBBean;
  * This source file is subject to the BSD/GPLv2 License that is bundled
  * with this source code in the file license.txt.
  */
-class SimpleModel
+class SimpleModel implements SimpleModelInterface
 {
 	/**
 	 * @var OODBBean
@@ -11288,7 +11329,7 @@ class SimpleModel
 	 * OODBBean you should always unbox the model to a bean. Models are meant to
 	 * expose only domain logic added by the developer (business logic, no ORM logic).
 	 *
-	 * @return SimpleModel
+	 * @return SimpleModel|SimpleModelInterface
 	 */
 	public function box()
 	{
@@ -11312,6 +11353,109 @@ class SimpleModel
 	{
 		return $this->bean;
 	}
+}
+}
+
+namespace RedBeanPHP {
+
+
+/**
+ * SimpleModelInterface
+ * Interface For All RedBeanPHP Models using FUSE.
+ *
+ * RedBeanPHP FUSE is a mechanism to connect beans to posthoc
+ * models. Models are connected to beans by naming conventions.
+ * Actions on beans will result in actions on models.
+ *
+ * @file       RedBeanPHP/SimpleModelInterface.php
+ * @author     Gabor de Mooij and the RedBeanPHP Team
+ * @license    BSD/GPLv2
+ *
+ * @copyright
+ * copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+ * This source file is subject to the BSD/GPLv2 License that is bundled
+ * with this source code in the file license.txt.
+ */
+interface SimpleModelInterface
+{
+    /**
+     * Used by FUSE: the ModelHelper class to connect a bean to a model.
+     * This method loads a bean in the model.
+     *
+     * @param OODBBean $bean bean to load
+     *
+     * @return void
+     */
+    public function loadBean(OODBBean $bean);
+
+    /**
+     * Magic Getter to make the bean properties available from
+     * the $this-scope.
+     *
+     * @note this method returns a value, not a reference!
+     *       To obtain a reference unbox the bean first!
+     *
+     * @param string $prop property to get
+     *
+     * @return mixed
+     */
+    public function __get($prop);
+
+    /**
+     * Magic Setter.
+     * Sets the value directly as a bean property.
+     *
+     * @param string $prop property to set value of
+     * @param mixed $value value to set
+     *
+     * @return void
+     */
+    public function __set($prop, $value);
+
+    /**
+     * Isset implementation.
+     * Implements the isset function for array-like access.
+     *
+     * @param string $key key to check
+     *
+     * @return boolean
+     */
+    public function __isset($key);
+
+    /**
+     * Box the bean using the current model.
+     * This method wraps the current bean in this model.
+     * This method can be reached using FUSE through a simple
+     * OODBBean. The method returns a RedBeanPHP Simple Model.
+     * This is useful if you would like to rely on PHP type hinting.
+     * You can box your beans before passing them to functions or methods
+     * with typed parameters.
+     *
+     * Note about beans vs models:
+     * Use unbox to obtain the bean powering the model. If you want to use bean functionality,
+     * you should -always- unbox first. While some functionality (like magic get/set) is
+     * available in the model, this is just read-only. To use a model as a typical RedBean
+     * OODBBean you should always unbox the model to a bean. Models are meant to
+     * expose only domain logic added by the developer (business logic, no ORM logic).
+     *
+     * @return SimpleModel|SimpleModelInterface
+     */
+    public function box();
+
+    /**
+     * Unbox the bean from the model.
+     * This method returns the bean inside the model.
+     *
+     * Note about beans vs models:
+     * Use unbox to obtain the bean powering the model. If you want to use bean functionality,
+     * you should -always- unbox first. While some functionality (like magic get/set) is
+     * available in the model, this is just read-only. To use a model as a typical RedBean
+     * OODBBean you should always unbox the model to a bean. Models are meant to
+     * expose only domain logic added by the developer (business logic, no ORM logic).
+     *
+     * @return OODBBean
+     */
+    public function unbox();
 }
 }
 
@@ -12176,6 +12320,34 @@ class Facade
 	}
 
 	/**
+	 * Tests the database connection.
+	 * Returns TRUE if connection has been established and
+	 * FALSE otherwise. Suppresses any warnings that may
+	 * occur during the testing process and catches all
+	 * exceptions that might be thrown during the test.
+	 *
+	 * @param boolean   $autoReconnect   if the function attempts to reconnect to the server on failure
+	 * @param string    $sql             the sql you want to execute to test the connection
+	 *
+	 * @return boolean
+	 */
+	public static function testConnectionSQL( $autoReconnect = FALSE, $sql = 'SELECT 1' )
+	{
+		if ( !isset( self::$adapter ) ) return FALSE;
+
+		$database = self::$adapter->getDatabase();
+		try {
+			$database->getPDO()->query( $sql );
+		} catch ( \Exception $e ) {
+			if ( !$autoReconnect ) return FALSE;
+			$database->close();
+			$database->connect();
+			return self::testConnectionSQL( FALSE, $sql );
+		}
+		return TRUE;
+	}
+
+	/**
 	 * Kickstarts redbean for you. This method should be called before you start using
 	 * RedBeanPHP. The Setup() method can be called without any arguments, in this case it will
 	 * try to create a SQLite database in /tmp called red.db (this only works on UNIX-like systems).
@@ -12594,7 +12766,7 @@ class Facade
 	 * will automatically temporarily switch to fluid mode to attempt to store the
 	 * bean in case of an SQLException.
 	 *
-	 * @param OODBBean|SimpleModel $bean             bean to store
+	 * @param OODBBean|SimpleModel|SimpleModelInterface $bean             bean to store
 	 * @param boolean              $unfreezeIfNeeded retries in fluid mode in hybrid mode
 	 *
 	 * @return integer|string
@@ -12797,7 +12969,7 @@ class Facade
 	 * key ID $id assigned by the database. We can now use this
 	 * ID to load the bean from the database again and delete it.
 	 *
-	 * @param string|OODBBean|SimpleModel $beanOrType bean you want to remove from database
+	 * @param string|OODBBean|SimpleModel|SimpleModelInterface $beanOrType bean you want to remove from database
 	 * @param integer                     $id         ID if the bean to trash (optional, type-id variant only)
 	 *
 	 * @return int
@@ -13159,7 +13331,7 @@ class Facade
 	 */
 	public static function exec( $sql, $bindings = array() )
 	{
-		return self::query( 'exec', $sql, $bindings );
+		return intval( self::query( 'exec', $sql, $bindings ) );
 	}
 
 	/**
@@ -16004,7 +16176,7 @@ class DispenseHelper
 	public static function checkType( $type )
 	{
 		if ( !preg_match( '/^[a-z0-9]+$/', $type ) ) {
-			throw new RedException( 'Invalid type: ' . $type );
+			throw new RedException( 'Invalid bean type: ' . $type );
 		}
 	}
 
