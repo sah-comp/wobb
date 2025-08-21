@@ -81,7 +81,7 @@
             type="date"
 			placeholder="yyyy-mm-dd"
             name="dialog[bookingdate]"
-            value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record->bookingdate)) ?? '') ?>"
+            value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record->bookingdate ?? '')) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('dateofslaughter')) ? 'error' : ''; ?>">
