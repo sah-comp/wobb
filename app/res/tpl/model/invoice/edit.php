@@ -26,7 +26,7 @@
             <?php foreach (R::find('company', ' ORDER BY name') as $_id => $_company): ?>
             <option
                 value="<?php echo $_company->getId() ?>"
-                <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name) ?></option>   
+                <?php echo ($record->company_id == $_company->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_company->name ?? '') ?></option>   
             <?php endforeach ?>
         </select>
     </div>
@@ -54,7 +54,7 @@
             id="invoice-fy"
             type="text"
             name="dialog[fy]"
-            value="<?php echo htmlspecialchars($record->fy) ?>"
+            value="<?php echo htmlspecialchars($record->fy ?? '') ?>"
             required="required"
             readonly="readonly" />
     </div>
@@ -67,7 +67,7 @@
             id="invoice-name"
             type="text"
             name="dialog[name]"
-            value="<?php echo htmlspecialchars($record->name) ?>"
+            value="<?php echo htmlspecialchars($record->name ?? '') ?>"
             required="required"
             readonly="readonly" />
     </div>
@@ -81,7 +81,7 @@
             type="date"
 			placeholder="yyyy-mm-dd"
             name="dialog[bookingdate]"
-            value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record->bookingdate))) ?>"
+            value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record->bookingdate)) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('dateofslaughter')) ? 'error' : ''; ?>">
@@ -94,7 +94,7 @@
             type="date"
 			placeholder="yyyy-mm-dd"
             name="dialog[dateofslaughter]"
-            value="<?php echo htmlspecialchars($record->dateofslaughter) ?>"
+            value="<?php echo htmlspecialchars($record->dateofslaughter ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('person_id')) ? 'error' : ''; ?>">
@@ -108,7 +108,7 @@
             <?php foreach (R::find('person', ' ORDER BY name') as $_id => $_person): ?>
             <option
                 value="<?php echo $_person->getId() ?>"
-                <?php echo ($record->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->name) ?></option>   
+                <?php echo ($record->person_id == $_person->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->name ?? '') ?></option>   
             <?php endforeach ?>
         </select>
     </div>
@@ -121,7 +121,7 @@
             id="invoice-totalnet"
             type="text"
             name="dialog[totalnet]"
-            value="<?php echo htmlspecialchars($record->decimal('totalnet', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('totalnet', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('bonusnet')) ? 'error' : ''; ?>">
@@ -133,7 +133,7 @@
             id="invoice-bonusnet"
             type="text"
             name="dialog[bonusnet]"
-            value="<?php echo htmlspecialchars($record->decimal('bonusnet', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('bonusnet', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('costnet')) ? 'error' : ''; ?>">
@@ -145,7 +145,7 @@
             id="invoice-costnet"
             type="text"
             name="dialog[costnet]"
-            value="<?php echo htmlspecialchars($record->decimal('costnet', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('costnet', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('subtotalnet')) ? 'error' : ''; ?>">
@@ -157,7 +157,7 @@
             id="invoice-subtotalnet"
             type="text"
             name="dialog[subtotalnet]"
-            value="<?php echo htmlspecialchars($record->decimal('subtotalnet', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('subtotalnet', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('vat_id')) ? 'error' : ''; ?>">
@@ -171,7 +171,7 @@
             <?php foreach (R::find('vat', ' ORDER BY name') as $_id => $_vat): ?>
             <option
                 value="<?php echo $_vat->getId() ?>"
-                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name) ?></option>   
+                <?php echo ($record->vat_id == $_vat->getId()) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_vat->name ?? '') ?></option>   
             <?php endforeach ?>
         </select>
     </div>
@@ -184,7 +184,7 @@
             id="invoice-vatvalue"
             type="text"
             name="dialog[vatvalue]"
-            value="<?php echo htmlspecialchars($record->decimal('vatvalue', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('vatvalue', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('totalgros')) ? 'error' : ''; ?>">
@@ -196,7 +196,7 @@
             id="invoice-totalgros"
             type="text"
             name="dialog[totalgros]"
-            value="<?php echo htmlspecialchars($record->decimal('totalgros', 3)) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('totalgros', 3) ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('duedate')) ? 'error' : ''; ?>">
@@ -209,7 +209,7 @@
             type="date"
 			placeholder="yyyy-mm-dd"
             name="dialog[duedate]"
-            value="<?php echo htmlspecialchars($record->duedate) ?>"
+            value="<?php echo htmlspecialchars($record->duedate ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('paid')) ? 'error' : ''; ?>">

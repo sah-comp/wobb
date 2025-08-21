@@ -23,7 +23,7 @@
                     id="openitem-fy"
                     type="text"
                     name="dialog[fy]"
-                    value="<?php echo htmlspecialchars($_SESSION['openitem']['fy']) ?>"
+                    value="<?php echo htmlspecialchars($_SESSION['openitem']['fy'] ?? '') ?>"
                     required="required" />
             </div>
             <div class="row">
@@ -37,8 +37,8 @@
                     <option value=""><?php echo I18n::__( 'openitem_all_deliverers' ) ?></option>
                     <?php foreach ( R::findAll( 'person', " ORDER BY name ") as $_id => $_person): ?>
                     <option 
-                        value="<?php echo htmlspecialchars($_person->nickname) ?>"
-                        <?php echo ( $_SESSION['openitem']['nickname'] == $_person->nickname ) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars($_person->nickname . ' - ' . $_person->name ) ?></option>
+                        value="<?php echo htmlspecialchars($_person->nickname ?? '') ?>"
+                        <?php echo ( $_SESSION['openitem']['nickname'] == $_person->nickname ) ? 'selected="selected"' : '' ?>><?php echo htmlspecialchars(($_person->nickname . ' - ' . $_person->name) ?? '' ) ?></option>
                     <?php endforeach ?>
                 </select>
             </div>
@@ -101,22 +101,22 @@
                         id="openitem-<?php echo $_record->getId() ?>"
                         class="row openitem-kind-<?php echo $_record->kind ?> openitem-cancel-<?php echo $_record->canceled ?>">
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->name) ?>
+                            <?php echo htmlspecialchars($_record->name ?? '') ?>
                         </div>
                         <div class="span2">
-                            <?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?>
+                            <?php echo htmlspecialchars($_record->localizedDate('dateofslaughter') ?? '') ?>
                         </div>
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->person->account) ?>
+                            <?php echo htmlspecialchars($_record->person->account ?? '') ?>
                         </div>
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->person->nickname) ?>
+                            <?php echo htmlspecialchars($_record->person->nickname ?? '') ?>
                         </div>
                         <div class="span3">
-                            <?php echo htmlspecialchars($_record->person->name) ?>
+                            <?php echo htmlspecialchars($_record->person->name ?? '') ?>
                         </div>
                         <div class="span2 number">
-                            <?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?>
+                            <?php echo htmlspecialchars($_record->decimal('totalgros', 2) ?? '') ?>
                         </div>
                         <div class="span1">
                             <button 

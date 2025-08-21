@@ -24,7 +24,7 @@
             id="stock-buyer"
             type="text"
             name="dialog[buyer]"
-            value="<?php echo htmlspecialchars($record->buyer) ?>"
+            value="<?php echo htmlspecialchars($record->buyer ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('pubdate')) ? 'error' : ''; ?>">
@@ -37,7 +37,7 @@
             type="date"
 			placeholder="yyyy-mm-dd"
             name="dialog[pubdate]"
-            value="<?php echo htmlspecialchars($record->pubdate) ?>"
+            value="<?php echo htmlspecialchars($record->pubdate ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('name')) ? 'error' : ''; ?>">
@@ -49,7 +49,7 @@
             id="stock-name"
             type="text"
             name="dialog[name]"
-            value="<?php echo htmlspecialchars($record->name) ?>"
+            value="<?php echo htmlspecialchars($record->name ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('supplier')) ? 'error' : ''; ?>">
@@ -61,7 +61,7 @@
             id="stock-supplier"
             type="text"
             name="dialog[supplier]"
-            value="<?php echo htmlspecialchars($record->supplier) ?>"
+            value="<?php echo htmlspecialchars($record->supplier ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('earmark')) ? 'error' : ''; ?>">
@@ -73,7 +73,7 @@
             id="stock-earmark"
             type="text"
             name="dialog[earmark]"
-            value="<?php echo htmlspecialchars($record->earmark) ?>"
+            value="<?php echo htmlspecialchars($record->earmark ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('quality')) ? 'error' : ''; ?>">
@@ -85,7 +85,7 @@
             id="stock-quality"
             type="text"
             name="dialog[quality]"
-            value="<?php echo htmlspecialchars($record->quality) ?>"
+            value="<?php echo htmlspecialchars($record->quality ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('weight')) ? 'error' : ''; ?>">
@@ -97,7 +97,7 @@
             id="stock-weight"
             type="text"
             name="dialog[weight]"
-            value="<?php echo htmlspecialchars($record->decimal('weight')) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('weight') ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('mfa')) ? 'error' : ''; ?>">
@@ -109,7 +109,7 @@
             id="stock-mfa"
             type="text"
             name="dialog[mfa]"
-            value="<?php echo htmlspecialchars($record->decimal('mfa')) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('mfa') ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('flesh')) ? 'error' : ''; ?>">
@@ -121,7 +121,7 @@
             id="stock-flesh"
             type="text"
             name="dialog[flesh]"
-            value="<?php echo htmlspecialchars($record->decimal('flesh')) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('flesh') ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('speck')) ? 'error' : ''; ?>">
@@ -133,7 +133,7 @@
             id="stock-speck"
             type="text"
             name="dialog[speck]"
-            value="<?php echo htmlspecialchars($record->decimal('speck')) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('speck') ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('tare')) ? 'error' : ''; ?>">
@@ -145,7 +145,7 @@
             id="stock-tare"
             type="text"
             name="dialog[tare]"
-            value="<?php echo htmlspecialchars($record->decimal('tare')) ?>"
+            value="<?php echo htmlspecialchars($record->decimal('tare') ?? '') ?>"
             required="required" />
     </div>
     <div class="row <?php echo ($record->hasError('damage1')) ? 'error' : ''; ?>">
@@ -157,7 +157,7 @@
             id="stock-damage1"
             type="text"
             name="dialog[damage1]"
-            value="<?php echo htmlspecialchars($record->damage1) ?>" />
+            value="<?php echo htmlspecialchars($record->damage1 ?? '') ?>" />
     </div>
     <div class="row <?php echo ($record->hasError('damage2')) ? 'error' : ''; ?>">
         <label
@@ -168,7 +168,7 @@
             id="stock-damage2"
             type="text"
             name="dialog[damage2]"
-            value="<?php echo htmlspecialchars($record->damage2) ?>" />
+            value="<?php echo htmlspecialchars($record->damage2 ?? '') ?>" />
     </div>
     <div class="row <?php echo ($record->hasError('qs')) ? 'error' : ''; ?>">
         <input
