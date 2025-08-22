@@ -109,22 +109,22 @@
                         id="invoice-<?php echo $_record->getId() ?>"
                         class="row invoice-kind-<?php echo $_record->kind ?>">
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->name ?? '') ?>
+                            <?php echo htmlspecialchars($_record->name) ?>
                         </div>
                         <div class="span2">
-                            <?php echo htmlspecialchars($_record->localizedDate('dateofslaughter') ?? '') ?>
+                            <?php echo htmlspecialchars($_record->localizedDate('dateofslaughter')) ?>
                         </div>
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->person->account ?? '') ?>
+                            <?php echo htmlspecialchars($_record->person->account) ?>
                         </div>
                         <div class="span1">
-                            <?php echo htmlspecialchars($_record->person->nickname ?? '') ?>
+                            <?php echo htmlspecialchars($_record->person->nickname) ?>
                         </div>
                         <div class="span3">
-                            <?php echo htmlspecialchars($_record->person->name ?? '') ?>
+                            <?php echo htmlspecialchars($_record->person->name) ?>
                         </div>
                         <div class="span2 number">
-                            <?php echo htmlspecialchars($_record->decimal('totalgros', 2) ?? '') ?>
+                            <?php echo htmlspecialchars($_record->decimal('totalgros', 2)) ?>
                         </div>
                         <div class="span1">
                             <button 
