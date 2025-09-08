@@ -1006,10 +1006,11 @@ SQL;
      */
     public function checkQSITW(): mixed
     {
+        // no tierwohl initiative, nothing to do here
         if (!$this->bean->company->hastierwohl) {
             return null;
         }
-
+        // there is no service to query
         if (!$this->bean->company->wsdl) {
             return null;
         }
@@ -1024,6 +1025,7 @@ SQL;
             $deliverer->itwpiggery = 0; //reset itw counter
             foreach ($deliverer->ownDeliverer as $sub_id => $sub) {
                 $sub->itwpiggery = 0; //reset iwt counter
+                $sub->qscerts = ''; // reset certifications flag
                 try {
                     //error_log($sub->vvvo . " auf ITW/QS prüfen … ");
                     $response = $client->selectQSTW([
@@ -1037,7 +1039,7 @@ SQL;
                         }
                         if ($response->certifications->twCertification) {
                             // mark as ITW via 2001
-                            $this->markAsITW($sub, $deliverer);
+                            $this->markAsITW($sub, $deliverer, '2001');
                         } else {
                             // This subdeliverer is NOT TW certified
                             $sub->itw = false;
@@ -1056,8 +1058,8 @@ SQL;
                     ]);
                     if (isset($response->certifications)) {
                         if ($response->certifications->twCertification) {
-                            // mark as ITW via 2001
-                            $this->markAsITW($sub, $deliverer);
+                            // mark as ITW via 2004
+                            $this->markAsITW($sub, $deliverer, '2004');
                         } else {
                             // This subdeliverer is NOT TW certified
                             $sub->itw = false;
@@ -1079,10 +1081,12 @@ SQL;
      * 
      * @param $sub the sub deliverer reference
      * @param $deliverer the parent deliverer reference
+     * @param $source the source of the ITW certification
      */
-    public function markAsITW(&$sub, &$deliverer)
+    public function markAsITW(&$sub, &$deliverer, $source)
     {
         // TW certified, add up as itwpiggery
+        $sub->qscerts .= $source . ',';
         $sub->itw = true;
         $sub->itwpiggery = $sub->piggery;
         $deliverer->itwpiggery += $sub->piggery;

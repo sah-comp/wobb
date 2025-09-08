@@ -32,6 +32,7 @@ class Model_Deliverer extends Model
         $this->bean->piggery          = 0;
         $this->bean->qspiggery        = 0;
         $this->bean->itwpiggery       = 0;
+        $this->bean->qscerts          = '';
         $this->bean->sent             = false;
         $this->bean->calcdate         = null; //'1970-01-01 08:00:00';//date('Y-m-d H:i:s');
         $this->addConverter('sprice', [
