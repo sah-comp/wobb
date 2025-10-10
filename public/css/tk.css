@@ -84,8 +84,6 @@ a.delete {
     background-image: url(/img/glyphicons/glyphicons_191_circle_minus.png);
 }
 
-.subdeliverer-container .subdeliverer-earmark {}
-
 h2.date-slaughter {
     font-weight: normal;
     position: absolute;
@@ -122,10 +120,6 @@ input[type=submit] {
     -moz-border-radius: 0.5em;
     -o-border-radius: 0.5em;
     border-radius: 0.5em;
-}
-
-:focus {
-    /*outline: none;*/
 }
 
 input[readonly=readonly],
