@@ -9,6 +9,9 @@
         "email": "info@sah-company.com",
         "homepage": "http://sah-company.com"
     }],
+    "require-dev": {
+        "behat/behat": "^3.13"
+    },
     "require":
     {
         "php": ">=7.2",

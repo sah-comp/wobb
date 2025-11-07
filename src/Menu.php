@@ -88,7 +88,7 @@ class Menu
      * @param string (optional) $id
      * @return $this
      */
-    public function add($title, $url, $class = null, Menu $sub = null, $id = null)
+    public function add($title, $url, $class = null, $sub = null, $id = null)
     {
         $this->items[] = array(
             'id' => $id,
@@ -108,7 +108,7 @@ class Menu
 	 * @param array $items the parent item's array, only used internally
 	 * @return string HTML unordered list
 	 */
-	public function render(array $attrs = null, $current = null, array $items = null)
+	public function render(array $attrs = [], $current = null, array $items = [])
 	{
 		static $i;
 		
@@ -138,7 +138,7 @@ class Menu
 			$id = null;
 			if (isset($item['id']) && $item['id']) $id = ' id="'.$item['id'].'"';
 			$menu .= sprintf($this->templates['item-open'], $id, $classes, $item['url'], $item['title']);
-			$menu .= $has_children ? $this->render(null, $current, $item['children']) : null;
+			$menu .= $has_children ? $this->render([], $current, $item['children']) : null;
 			$menu .= $this->templates['item-close'];
 		}
 		

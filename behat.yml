@@ -1,0 +1,10 @@
+default:
+  suites:
+    default:
+      paths:
+        - specs/features
+      contexts:
+        - AutoprecalcContext
+  autoload:
+    '': specs/bootstrap
+  extensions:
