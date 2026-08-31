@@ -34,6 +34,7 @@ class Controller_Login extends Controller
             $_SESSION['login_id'] = 0;
         }
         $login = R::load('login', $_SESSION['login_id']);
+        
         if (Flight::request()->method == 'POST') {
             try {
                 $login = R::graph(Flight::request()->data->dialog, true);

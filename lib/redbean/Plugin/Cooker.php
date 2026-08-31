@@ -64,7 +64,7 @@ class Cooker
 	 */
 	public static function setUseNullFlagSt( $yesNo )
 	{
-		self::$useNULLForEmptyString = (boolean) $yesNo;
+		self::$useNULLForEmptyString = (bool) $yesNo;
 	}
 
 	/**

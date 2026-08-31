@@ -10,3 +10,4 @@ app/res/tpl/cache/
 docs/
 public/.htaccess
 cli/backup.sh
+.vscode/

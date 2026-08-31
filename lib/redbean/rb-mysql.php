@@ -432,7 +432,7 @@ class Debug extends RDefault implements Logger
 	 */
 	public function setUseStringOnlyBinding( $yesNo = false )
 	{
-		$this->flagUseStringOnlyBinding = (boolean) $yesNo;
+		$this->flagUseStringOnlyBinding = (bool) $yesNo;
 		return $this;
 	}
 }
@@ -856,7 +856,7 @@ class RPDO implements Driver
 		if ($driver === 'mysql') {
 			$charset = $this->hasCap( 'utf8mb4' ) ? 'utf8mb4' : 'utf8';
 			$collate = $this->hasCap( 'utf8mb4_520' ) ? '_unicode_520_ci' : '_unicode_ci';
-			$this->pdo->setAttribute(\PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES '. $charset ); //on every re-connect
+			$this->pdo->setAttribute(RB_PDO_MYSQL_ATTR_INIT_COMMAND, 'SET NAMES '. $charset ); //on every re-connect
 			/* #624 removed space before SET NAMES because it causes trouble with ProxySQL */
 			$this->pdo->exec('SET NAMES '. $charset); //also for current connection
 			$this->mysqlCharset = $charset;
@@ -1026,7 +1026,7 @@ class RPDO implements Driver
 	 */
 	public function setUseStringOnlyBinding( $yesNo )
 	{
-		$this->flagUseStringOnlyBinding = (boolean) $yesNo;
+		$this->flagUseStringOnlyBinding = (bool) $yesNo;
 		if ( $this->loggingEnabled && $this->logger && method_exists($this->logger,'setUseStringOnlyBinding')) {
 			$this->logger->setUseStringOnlyBinding( $this->flagUseStringOnlyBinding );
 		}
@@ -1517,7 +1517,7 @@ class RPDO implements Driver
 	 */
 	public function setEnableLogging( $enable )
 	{
-		$this->loggingEnabled = (boolean) $enable;
+		$this->loggingEnabled = (bool) $enable;
 		return $this;
 	}
 
@@ -1777,7 +1777,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 */
 	 public static function setEnforceUTF8encoding( $toggle )
 	 {
-		 self::$enforceUTF8encoding = (boolean) $toggle;
+		 self::$enforceUTF8encoding = (bool) $toggle;
 	 }
 
 	/**
@@ -2722,7 +2722,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		$differentAlias = ($hasAlias && $isOwn && isset($this->__info['sys.alias.'.$listName])) ?
 									($this->__info['sys.alias.'.$listName] !== $this->aliasName) : FALSE;
 		$hasSQL         = ($this->withSql !== '' || $this->via !== NULL);
-		$hasAll         = (boolean) ($this->all);
+		$hasAll         = (bool) ($this->all);
 
 		//If exists and no list or exits and list not changed, bail out.
 		if ( $exists && ((!$isOwn && !$isShared ) || (!$hasSQL && !$differentAlias && !$hasAll)) ) {
@@ -3831,7 +3831,7 @@ class OODBBean implements \IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 			$count = $redbean->getAssociationManager()->relatedCount( $this, $type, $this->withSql, $this->withParams );
 		}
 		$this->clearModifiers();
-		return (integer) $count;
+		return (int) $count;
 	}
 
 	/**
@@ -5035,7 +5035,7 @@ interface QueryWriter
 	public function getColumns( $type );
 
 	/**
-	 * Returns the Column Type Code (integer) that corresponds
+	 * Returns the Column Type Code (int) that corresponds
 	 * to the given value type. This method is used to determine the minimum
 	 * column type required to represent the given value. There are two modes of
 	 * operation: with or without special types. Scanning without special types
@@ -5656,7 +5656,15 @@ abstract class AQueryWriter
 	 */
 	public static function canBeTreatedAsInt( $value )
 	{
-		return (bool) ( strval( ($value === FALSE && self::$treatFalseAsInt) ? 0 : $value ) === strval( intval( $value ) ) );
+		// boolean handling
+		if ($value === FALSE && self::$treatFalseAsInt) return true; // FALSE -> 0 / ''
+		if ($value === TRUE) return true; // TRUE -> 1
+		if ($value === INF) return false;
+		// Fix for PHP 8.x: avoid intval() on strings that look like scientific notation
+		// (e.g., MD5 hashes starting with "3e08...", UUIDs, etc.)
+		// PHP 8 throws "float-string not representable as int" for these values
+		// See: https://github.com/gabordemooij/redbean/issues/967
+		return (filter_var($value, FILTER_VALIDATE_INT)!==false);
 	}
 
 	/**
@@ -5750,7 +5758,7 @@ abstract class AQueryWriter
 	 */
 	public static function setNarrowFieldMode( $narrowField )
 	{
-		self::$flagNarrowFieldMode = (boolean) $narrowField;
+		self::$flagNarrowFieldMode = (bool) $narrowField;
 	}
 
 	/**
@@ -5790,7 +5798,7 @@ abstract class AQueryWriter
 	 */
 	public static function setSQLFilters( $sqlFilters, $safeMode = FALSE )
 	{
-		self::$flagSQLFilterSafeMode = (boolean) $safeMode;
+		self::$flagSQLFilterSafeMode = (bool) $safeMode;
 		self::$sqlFilters = $sqlFilters;
 	}
 
@@ -7306,7 +7314,7 @@ class MySQL extends AQueryWriter implements QueryWriter
 		if (!isset($options['noInitcode']))
 		$this->adapter->setInitCode(function($version) use(&$me) {
 			try {
-				if (strpos($version, 'maria')===FALSE && intval($version)>=8) {
+				if (strpos(strtolower($version), 'maria')===FALSE && intval($version)>=8) {
 						$me->useFeature('ignoreDisplayWidth');
 				}
 			} catch( \Exception $e ){}
@@ -7550,6 +7558,7 @@ class MySQL extends AQueryWriter implements QueryWriter
 	 */
 	public function sqlStateIn( $state, $list, $extraDriverDetails = array() )
 	{
+		if (is_null($state)) $state = 'NULL';
 		$stateMap = array(
 			'42S02' => QueryWriter::C_SQLSTATE_NO_SUCH_TABLE,
 			'42S22' => QueryWriter::C_SQLSTATE_NO_SUCH_COLUMN,
@@ -9389,7 +9398,7 @@ class OODB extends Observable
 	 */
 	public static function autoClearHistoryAfterStore( $autoClear = TRUE )
 	{
-		self::$autoClearHistoryAfterStore = (boolean) $autoClear;
+		self::$autoClearHistoryAfterStore = (bool) $autoClear;
 	}
 
 	/**
@@ -9475,7 +9484,7 @@ class OODB extends Observable
 			$this->chillList = $toggle;
 			$this->isFrozen  = FALSE;
 		} else {
-			$this->isFrozen = (boolean) $toggle;
+			$this->isFrozen = (bool) $toggle;
 		}
 
 		if ( $this->isFrozen ) {
@@ -9526,7 +9535,7 @@ class OODB extends Observable
 	 */
 	public function isChilled( $type )
 	{
-		return (boolean) ( in_array( $type, $this->chillList ) );
+		return (bool) ( in_array( $type, $this->chillList ) );
 	}
 
 	/**
@@ -11535,6 +11544,7 @@ namespace RedBeanPHP {
 use RedBeanPHP\ToolBox as ToolBox;
 use RedBeanPHP\AssociationManager as AssociationManager;
 use RedBeanPHP\OODBBean as OODBBean;
+use RedBeanPHP\SimpleModelInterface as SimpleModelInterface;
 
 /**
  * RedBeanPHP Tag Manager.
@@ -11650,7 +11660,7 @@ class TagManager
 	 * or 'horror' this operation will return FALSE because the third parameter
 	 * has been set to TRUE.
 	 *
-	 * @param  OODBBean     $bean bean to check for tags
+	 * @param  OODBBean|SimpleModelInterface     $bean bean to check for tags
 	 * @param  array|string $tags list of tags
 	 * @param  boolean      $all  whether they must all match or just some
 	 *
@@ -11658,6 +11668,10 @@ class TagManager
 	 */
 	public function hasTag( $bean, $tags, $all = FALSE )
 	{
+		if ($bean instanceof SimpleModelInterface) {
+			$bean = $bean->unbox();
+		}
+
 		$foundtags = $this->tag( $bean );
 
 		$tags = $this->extractTagsIfNeeded( $tags );
@@ -11686,13 +11700,17 @@ class TagManager
 	 * In the example above, the $blog bean will no longer
 	 * be associated with the tags 'smart' and 'interesting'.
 	 *
-	 * @param  OODBBean     $bean    tagged bean
+	 * @param  OODBBean|SimpleModelInterface     $bean    tagged bean
 	 * @param  array|string $tagList list of tags (names)
 	 *
 	 * @return void
 	 */
 	public function untag( $bean, $tagList )
 	{
+		if ($bean instanceof SimpleModelInterface) {
+			$bean = $bean->unbox();
+		}
+
 		$tags = $this->extractTagsIfNeeded( $tagList );
 
 		foreach ( $tags as $tag ) {
@@ -11722,13 +11740,17 @@ class TagManager
 	 * as 'TexMex' and 'Mexican Cuisine'. The second line will
 	 * retrieve all tags attached to the meal object.
 	 *
-	 * @param OODBBean $bean    bean to tag
+	 * @param OODBBean|SimpleModelInterface $bean    bean to tag
 	 * @param mixed    $tagList tags to attach to the specified bean
 	 *
 	 * @return string
 	 */
-	public function tag( OODBBean $bean, $tagList = NULL )
+	public function tag( $bean, $tagList = NULL )
 	{
+		if ($bean instanceof SimpleModelInterface) {
+			$bean = $bean->unbox();
+		}
+
 		if ( is_null( $tagList ) ) {
 
 			$tags = $bean->sharedTag;
@@ -11763,13 +11785,18 @@ class TagManager
 	 * The example adds the tag 'halloween' to the $blog
 	 * bean.
 	 *
-	 * @param OODBBean           $bean    bean to tag
+	 * @param OODBBean|SimpleModelInterface        $bean    bean to tag
 	 * @param array|string|false $tagList list of tags to add to bean
 	 *
 	 * @return void
 	 */
-	public function addTags( OODBBean $bean, $tagList )
+	public function addTags( $bean, $tagList )
 	{
+
+		if ($bean instanceof SimpleModelInterface) {
+			$bean = $bean->unbox();
+		}
+
 		$tags = $this->extractTagsIfNeeded( $tagList );
 
 		if ( $tagList === FALSE ) {
@@ -12106,6 +12133,7 @@ use RedBeanPHP\Util\Look as Look;
 use RedBeanPHP\Util\Diff as Diff;
 use RedBeanPHP\Util\Tree as Tree;
 use RedBeanPHP\Util\Feature;
+use RedBeanPHP\SimpleModelInterface as SimpleModelInterface;
 
 /**
  * RedBean Facade
@@ -13773,12 +13801,12 @@ class Facade
 	 * as 'TexMex' and 'Mexican Cuisine'. The second line will
 	 * retrieve all tags attached to the meal object.
 	 *
-	 * @param OODBBean      $bean    bean to tag
+	 * @param OODBBean|SimpleModelInterface $bean    bean to tag
 	 * @param string[]|NULL $tagList tags to attach to the specified bean
 	 *
 	 * @return string[]
 	 */
-	public static function tag( OODBBean $bean, $tagList = NULL )
+	public static function tag( $bean, $tagList = NULL )
 	{
 		return self::$tagManager->tag( $bean, $tagList );
 	}
@@ -13798,12 +13826,12 @@ class Facade
 	 * The example adds the tag 'halloween' to the $blog
 	 * bean.
 	 *
-	 * @param OODBBean        $bean    bean to tag
+	 * @param OODBBean|SimpleModelInterface        $bean    bean to tag
 	 * @param string|string[] $tagList list of tags to add to bean
 	 *
 	 * @return void
 	 */
-	public static function addTags( OODBBean $bean, $tagList )
+	public static function addTags( $bean, $tagList )
 	{
 		self::$tagManager->addTags( $bean, $tagList );
 	}
@@ -16140,7 +16168,7 @@ class DispenseHelper
 	 */
 	public static function setEnforceNamingPolicy( $yesNo )
 	{
-		self::$enforceNamingPolicy = (boolean) $yesNo;
+		self::$enforceNamingPolicy = (bool) $yesNo;
 	}
 
 	/**
@@ -16587,7 +16615,7 @@ class QuickExport
 		$out = '';
 		switch( $name ) {
 			case 'test':
-				self::$test = (boolean) $arg1;
+				self::$test = (bool) $arg1;
 				break;
 			case 'header':
 				$out = ( self::$test ) ? $arg1 : header( $arg1, $arg2 );
@@ -16638,10 +16666,20 @@ class QuickExport
 		list( $delimiter, $enclosure, $escapeChar ) = $options;
 		$path = sprintf( $path, date('Ymd_his') );
 		$handle = fopen( $path, 'w' );
-		if ($columns) if (PHP_VERSION_ID>=505040) fputcsv($handle, $columns, $delimiter, $enclosure, $escapeChar ); else fputcsv($handle, $columns, $delimiter, $enclosure );
+		if ($columns) {
+			if (PHP_VERSION_ID>=50504) {
+				fputcsv($handle, $columns, $delimiter, $enclosure, $escapeChar );
+			} else {
+				fputcsv($handle, $columns, $delimiter, $enclosure );
+			}
+		}
 		$cursor = $this->toolbox->getDatabaseAdapter()->getCursor( $sql, $bindings );
 		while( $row = $cursor->getNextItem() ) {
-			if (PHP_VERSION_ID>=505040) fputcsv($handle, $row, $delimiter, $enclosure, $escapeChar ); else fputcsv($handle, $row, $delimiter, $enclosure );
+			if (PHP_VERSION_ID>=50504) {
+				fputcsv($handle, $row, $delimiter, $enclosure, $escapeChar ); 
+			} else { 
+				fputcsv($handle, $row, $delimiter, $enclosure );
+			}
 		}
 		fclose($handle);
 		if ( $output ) {
@@ -17414,12 +17452,16 @@ class Either {
 	 */
 	public function first() {
 		if (is_array($this->result)) {
-			reset($this->result);
-			$key = key($this->result);
-			if (isset($this->result[$key])) {
-				$this->result = $this->result[$key];
-			} else {
+			if (!count($this->result)) {
 				$this->result = NULL;
+			} else {
+				reset($this->result);
+				$key = key($this->result);
+				if (isset($this->result[$key])) {
+					$this->result = $this->result[$key];
+				} else {
+					$this->result = NULL;
+				}
 			}
 		}
 		return $this;
@@ -17434,12 +17476,16 @@ class Either {
 	 */
 	public function last() {
 		if (is_array($this->result)) {
-			end($this->result);
-			$key = key($this->result);
-			if (isset($this->result[$key])) {
-				$this->result = $this->result[$key];
-			} else {
+			if (!count($this->result)) {
 				$this->result = NULL;
+			} else {
+				end($this->result);
+				$key = key($this->result);
+				if (isset($this->result[$key])) {
+					$this->result = $this->result[$key];
+				} else {
+					$this->result = NULL;
+				}
 			}
 		}
 		return $this;
@@ -17648,5 +17694,11 @@ if ( !function_exists( 'DBPrefix' ) ) {
 	}
 }
 
-
+if (!defined('RB_PDO_MYSQL_ATTR_INIT_COMMAND')) {
+	if (defined('Pdo\Mysql::ATTR_INIT_COMMAND')) {
+		define('RB_PDO_MYSQL_ATTR_INIT_COMMAND', Pdo\Mysql::ATTR_INIT_COMMAND);
+	} elseif (defined('\PDO::MYSQL_ATTR_INIT_COMMAND')) {
+		define('RB_PDO_MYSQL_ATTR_INIT_COMMAND', \PDO::MYSQL_ATTR_INIT_COMMAND);
+	}
+}
 }
